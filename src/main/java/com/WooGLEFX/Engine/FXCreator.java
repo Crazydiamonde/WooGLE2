@@ -1,0 +1,1339 @@
+package com.WooGLEFX.Engine;
+
+import com.WooGLEFX.File.FileManager;
+import com.WooGLEFX.GUI.Alarms;
+import com.WooGLEFX.GUI.PaletteReconfigurator;
+import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
+import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.Structures.*;
+import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
+import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
+import com.WooGLEFX.Structures.WorldLevel;
+import com.WorldOfGoo.Ball.Part;
+import com.WorldOfGoo.Resrc.ResrcImage;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.cell.TextFieldTreeTableCell;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.control.skin.TableColumnHeader;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+public class FXCreator {
+
+    private static boolean contextMenuShowing = false;
+
+    public static boolean isContextMenuShowing() {
+        return contextMenuShowing;
+    }
+
+    public static void setContextMenuShowing(boolean contextMenuShowing) {
+        FXCreator.contextMenuShowing = contextMenuShowing;
+    }
+
+    public static Button createTemplateForBall(int size, _Ball ball) {
+
+        double minX = 0;
+        double minY = 0;
+        double maxX = 0;
+        double maxY = 0;
+
+        for (EditorObject part : ball.getObjects()) {
+            String state = "standing";
+
+            if (part instanceof Part) {
+
+                boolean ok = false;
+
+                if (part.getAttribute("state").equals("")) {
+                    ok = true;
+                } else {
+                    String word = part.getAttribute("state");
+                    while (word.contains(",")) {
+                        if (word.substring(0, word.indexOf(",")).equals(state)) {
+                            ok = true;
+                            break;
+                        }
+                        word = word.substring(word.indexOf(",") + 1);
+                    }
+                    if (word.equals(state)) {
+                        ok = true;
+                    }
+                }
+                if (ok) {
+                    double lowX = 0;
+                    double highX = 0;
+                    double lowY = 0;
+                    double highY = 0;
+
+                    String x = part.getAttribute("x");
+                    String y = part.getAttribute("y");
+
+                    double scale = Double.parseDouble(part.getAttribute("scale"));
+
+                    if (x.contains(",")) {
+                        lowX = Double.parseDouble(x.substring(0, x.indexOf(",")));
+                        highX = Double.parseDouble(x.substring(x.indexOf(",") + 1));
+                    } else {
+                        lowX = Double.parseDouble(x);
+                        highX = lowX;
+                    }
+                    if (y.contains(",")) {
+                        lowY = Double.parseDouble(y.substring(0, y.indexOf(",")));
+                        highY = Double.parseDouble(y.substring(y.indexOf(",") + 1));
+                    } else {
+                        lowY = Double.parseDouble(y);
+                        highY = lowY;
+                    }
+
+                    double myX = 0.5 * (highX - lowX) + lowX;
+                    double myY = 0.5 * (highY - lowY) + lowY;
+
+                    Image img = ((Part) part).getImages().get(0);
+                    if (img != null) {
+                        BufferedImage image = SwingFXUtils.fromFXImage(img, null);
+
+                        double iWidth = image.getWidth() * scale;
+                        double iHeight = image.getHeight() * scale;
+
+                        if (myX - iWidth / 2 < minX) {
+                            minX = myX - iWidth / 2;
+                        }
+                        if (-myY - iHeight / 2 < minY) {
+                            minY = -myY - iHeight / 2;
+                        }
+                        if (myX + iWidth / 2 > maxX) {
+                            maxX = myX + iWidth / 2;
+                        }
+                        if (-myY + iHeight / 2 > maxY) {
+                            maxY = -myY + iHeight / 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        double width = maxX - minX;
+        double height = maxY - minY;
+
+        if (width > 0 && height > 0) {
+
+            BufferedImage toWriteOn = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
+            Graphics writeGraphics = toWriteOn.getGraphics();
+
+            for (EditorObject part : ball.getObjects()) {
+
+                String state = "standing";
+
+                if (part instanceof Part) {
+
+                    boolean ok = false;
+
+                    if (part.getAttribute("state").equals("")) {
+                        ok = true;
+                    } else {
+                        String word = part.getAttribute("state");
+                        while (word.contains(",")) {
+                            if (word.substring(0, word.indexOf(",")).equals(state)) {
+                                ok = true;
+                                break;
+                            }
+                            word = word.substring(word.indexOf(",") + 1);
+                        }
+                        if (word.equals(state)) {
+                            ok = true;
+                        }
+                    }
+
+                    if (ok) {
+                        Image img = ((Part) part).getImages().get(0);
+
+                        double scale = Double.parseDouble(part.getAttribute("scale"));
+
+                        double lowX = 0;
+                        double highX = 0;
+                        double lowY = 0;
+                        double highY = 0;
+
+                        String x = part.getAttribute("x");
+                        String y = part.getAttribute("y");
+
+                        if (x.contains(",")) {
+                            lowX = Double.parseDouble(x.substring(0, x.indexOf(",")));
+                            highX = Double.parseDouble(x.substring(x.indexOf(",") + 1));
+                        } else {
+                            lowX = Double.parseDouble(x);
+                            highX = lowX;
+                        }
+                        if (y.contains(",")) {
+                            lowY = Double.parseDouble(y.substring(0, y.indexOf(",")));
+                            highY = Double.parseDouble(y.substring(y.indexOf(",") + 1));
+                        } else {
+                            lowY = Double.parseDouble(y);
+                            highY = lowY;
+                        }
+
+                        double myX = 0.5 * (highX - lowX) + lowX;
+                        double myY = 0.5 * (highY - lowY) + lowY;
+
+                        if (myY == 0) {
+                            myY = -0;
+                        }
+
+                        if (img != null) {
+
+                            double screenX = myX + toWriteOn.getWidth() / 2 - img.getWidth() * scale / 2;
+                            double screenY = -myY + toWriteOn.getHeight() / 2 - img.getHeight() * scale / 2;
+
+                            writeGraphics.drawImage(SwingFXUtils.fromFXImage(img, null), (int) screenX, (int) screenY, (int) (img.getWidth() * scale), (int) (img.getHeight() * scale), null);
+
+                            if (((Part) part).getPupilImage() != null) {
+                                Image pupilImage = ((Part) part).getPupilImage();
+
+                                double screenX2 = myX + toWriteOn.getWidth() / 2 - pupilImage.getWidth() * scale / 2;
+                                double screenY2 = -myY + toWriteOn.getHeight() / 2 - pupilImage.getHeight() * scale / 2;
+
+                                writeGraphics.drawImage(SwingFXUtils.fromFXImage(pupilImage, null), (int) screenX2, (int) screenY2, (int) (pupilImage.getWidth() * scale), (int) (pupilImage.getHeight() * scale), null);
+                            }
+                        }
+                    }
+                }
+            }
+            Button idk = new Button();
+
+            double scaleFactor = (double) size / Math.max(toWriteOn.getWidth(), toWriteOn.getHeight());
+
+            java.awt.Image tmp = toWriteOn.getScaledInstance((int) (toWriteOn.getWidth() * scaleFactor), (int) (toWriteOn.getHeight() * scaleFactor), java.awt.Image.SCALE_SMOOTH);
+            BufferedImage dimg = new BufferedImage((int) (toWriteOn.getWidth() * scaleFactor), (int) (toWriteOn.getHeight() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g2d = dimg.createGraphics();
+            g2d.drawImage(tmp, 0, 0, null);
+            g2d.dispose();
+
+            idk.setGraphic(new ImageView(SwingFXUtils.toFXImage(dimg, null)));
+            idk.setOnAction(e -> Main.addBall(Main.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
+            return idk;
+        } else {
+            return null;
+        }
+    }
+
+    public static void addBallsTo() {
+        int size = 18;
+        try {
+            int i = 0;
+            for (String paletteBall : FileManager.getPaletteBalls()) {
+                for (_Ball ball : Main.getImportedBalls()) {
+                    if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall) && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
+                        Button button = createTemplateForBall(size, ball);
+                        if (button != null) {
+                            gooballsToolbar.getItems().add(button);
+                        }
+                    }
+                }
+                i++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static ToolBar gooballsToolbar;
+
+    public static ToolBar getGooballsToolbar() {
+        return gooballsToolbar;
+    }
+
+    public static Button buttonNewOld = new Button();
+    public static Button buttonNewNew = new Button();
+    public static Button buttonOpenOld = new Button();
+    public static Button buttonOpenNew = new Button();
+    public static Button buttonCloneOld = new Button();
+    public static Button buttonCloneNew = new Button();
+    public static Button buttonSaveOld = new Button();
+    public static Button buttonSaveNew = new Button();
+    public static Button buttonSaveAndPlayOld = new Button();
+    public static Button buttonSaveAndPlayNew = new Button();
+    public static Button buttonExport = new Button();
+    public static Button buttonDummyExport = new Button();
+    public static Button buttonUndo = new Button();
+    public static Button buttonRedo = new Button();
+    public static Button buttonCut = new Button();
+    public static Button buttonCopy = new Button();
+    public static Button buttonPaste = new Button();
+    public static Button buttonDelete = new Button();
+    public static Button buttonUpdateLevelResources = new Button();
+    public static Button buttonImportImages = new Button();
+    public static Button buttonAddTextResource = new Button();
+    public static Button buttonCleanResources = new Button();
+    public static Button buttonSetMusic = new Button();
+    public static Button buttonSetLoopsound = new Button();
+    public static Button buttonSelectMoveAndResize = new Button();
+    public static Button buttonZoomAndPanView = new Button();
+    public static Button buttonStrandMode = new Button();
+    public static Button buttonShowHideCamera = new Button();
+    public static Button buttonShowHideForcefields = new Button();
+    public static Button buttonShowHideGeometry = new Button();
+    public static Button buttonShowHideGraphics = new Button();
+    public static Button buttonShowHideGoos = new Button();
+    public static Button buttonShowHideParticles = new Button();
+    public static Button buttonShowHideLabels = new Button();
+    public static Button buttonShowHideAnim = new Button();
+
+
+
+    public static Button addLineButton = new Button();
+    public static Button addRectangleButton = new Button();
+    public static Button addCircleButton = new Button();
+    public static Button addSceneLayerButton = new Button();
+    public static Button addCompositegeomButton = new Button();
+    public static Button addHingeButton = new Button();
+    public static Button autoPipeButton = new Button();
+    public static Button addVertexButton = new Button();
+    public static Button addFireButton = new Button();
+    public static Button addLinearforcefieldButton = new Button();
+    public static Button addRadialforcefieldButton = new Button();
+    public static Button addParticlesButton = new Button();
+    public static Button addSignpostButton = new Button();
+    public static Button addLabelButton = new Button();
+
+    public static void buttons (VBox vBox) {
+
+        ToolBar functionsToolbar = new ToolBar();
+
+        try {
+            buttonNewOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
+            buttonNewNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
+            buttonOpenOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
+            buttonOpenNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
+            buttonCloneOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_old.png")));
+            buttonCloneNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
+            buttonSaveOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
+            buttonSaveNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
+            buttonSaveAndPlayOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_old.png")));
+            buttonSaveAndPlayNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_new.png")));
+            buttonExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_goomod.png")));
+            buttonDummyExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_dummy_goomod.png")));
+            buttonUndo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
+            buttonRedo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
+            buttonCut.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
+            buttonCopy.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
+            buttonPaste.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
+            buttonDelete.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
+            buttonUpdateLevelResources.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
+            buttonImportImages.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
+            buttonAddTextResource.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
+            buttonCleanResources.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
+            buttonSetMusic.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
+            buttonSetLoopsound.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
+            buttonSelectMoveAndResize.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\selection_mode.png")));
+            buttonZoomAndPanView.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\zoom_mode.png")));
+            buttonStrandMode.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\strand_mode.png")));
+            buttonShowHideCamera.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png")));
+            buttonShowHideForcefields.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png")));
+            buttonShowHideGeometry.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png")));
+            buttonShowHideGraphics.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png")));
+            buttonShowHideGoos.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png")));
+            buttonShowHideParticles.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png")));
+            buttonShowHideLabels.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png")));
+            buttonShowHideAnim.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png")));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        buttonNewOld.setOnAction(e -> Main.newLevel(1.3));
+        buttonNewNew.setOnAction(e -> Main.newLevel(1.5));
+        buttonOpenOld.setOnAction(e -> Main.openLevel(1.3));
+        buttonOpenNew.setOnAction(e -> Main.openLevel(1.5));
+        buttonCloneOld.setOnAction(e -> Main.cloneLevel(1.3));
+        buttonCloneNew.setOnAction(e -> Main.cloneLevel(1.5));
+        buttonSaveOld.setOnAction(e -> Main.saveLevel(1.3));
+        buttonSaveNew.setOnAction(e -> Main.saveLevel(1.5));
+        buttonSaveAndPlayOld.setOnAction(e -> Main.playLevel(1.3));
+        buttonSaveAndPlayNew.setOnAction(e -> Main.playLevel(1.5));
+        buttonExport.setOnAction(e -> Main.exportLevel(true));
+        buttonDummyExport.setOnAction(e -> Main.exportLevel(false));
+        buttonUndo.setOnAction(e -> Main.undo());
+        buttonRedo.setOnAction(e -> Main.redo());
+        buttonCut.setOnAction(e -> Main.cut());
+        buttonCopy.setOnAction(e -> Main.copy());
+        buttonPaste.setOnAction(e -> Main.paste());
+        buttonDelete.setOnAction(e -> Main.delete());
+        buttonUpdateLevelResources.setOnAction(e -> Main.updateLevelResources());
+        buttonImportImages.setOnAction(e -> Main.importImage());
+        buttonAddTextResource.setOnAction(e -> Main.newTextResource());
+        buttonCleanResources.setOnAction(e -> Main.cleanLevelResources());
+        buttonSetMusic.setOnAction(e -> Main.importMusic());
+        buttonSetLoopsound.setOnAction(e -> Main.importLoopsound());
+        buttonSelectMoveAndResize.setOnAction(e -> Main.selectionMode());
+        buttonZoomAndPanView.setOnAction(e -> Main.zoomMode());
+        buttonStrandMode.setOnAction(e -> Main.strandMode());
+        buttonShowHideCamera.setOnAction(e -> Main.showHideCameras());
+        buttonShowHideForcefields.setOnAction(e -> Main.showHideForcefields());
+        buttonShowHideGeometry.setOnAction(e -> Main.showHideGeometry());
+        buttonShowHideGraphics.setOnAction(e -> Main.showHideGraphics());
+        buttonShowHideGoos.setOnAction(e -> Main.showHideGoos());
+        buttonShowHideParticles.setOnAction(e -> Main.showHideParticles());
+        buttonShowHideLabels.setOnAction(e -> Main.showHideLabels());
+        buttonShowHideAnim.setOnAction(e -> Main.showHideAnim());
+
+        Tooltip saveOld = new Tooltip("Save level (1.3)");
+        Tooltip saveNew = new Tooltip("Save level (1.5)");
+        saveOld.setStyle("-fx-border-color: #767676; -fx-background-color: #FFFFFF; -fx-text-fill: #000000;");
+        saveNew.setStyle("-fx-border-color: #767676; -fx-background-color: #FFFFFF; -fx-text-fill: #000000;");
+        Tooltip openOld = new Tooltip("Open level (1.3)");
+        Tooltip openNew = new Tooltip("Open level (1.5)");
+        openOld.setStyle("-fx-border-color: #767676; -fx-background-color: #FFFFFF; -fx-text-fill: #000000;");
+        openNew.setStyle("-fx-border-color: #767676; -fx-background-color: #FFFFFF; -fx-text-fill: #000000;");
+
+        buttonSaveOld.setTooltip(saveOld);
+        buttonSaveNew.setTooltip(saveNew);
+        buttonOpenOld.setTooltip(openOld);
+        buttonOpenNew.setTooltip(openNew);
+
+        functionsToolbar.getItems().addAll(buttonNewOld, buttonOpenOld, buttonCloneOld, new Separator());
+        functionsToolbar.getItems().addAll(buttonNewNew, buttonOpenNew, buttonCloneNew, new Separator());
+        functionsToolbar.getItems().addAll(buttonSaveOld, buttonSaveAndPlayOld, buttonSaveNew, buttonSaveAndPlayNew, new Separator());
+        functionsToolbar.getItems().addAll(buttonDummyExport, buttonExport, new Separator());
+        functionsToolbar.getItems().addAll(buttonUndo, buttonRedo, new Separator());
+        functionsToolbar.getItems().addAll(buttonCut, buttonCopy, buttonPaste, new Separator());
+        functionsToolbar.getItems().addAll(buttonDelete, new Separator());
+        functionsToolbar.getItems().addAll(buttonUpdateLevelResources, buttonImportImages, buttonAddTextResource, new Separator());
+        functionsToolbar.getItems().addAll(buttonCleanResources, new Separator());
+        functionsToolbar.getItems().addAll(buttonSetMusic, buttonSetLoopsound, new Separator());
+        functionsToolbar.getItems().addAll(buttonSelectMoveAndResize, buttonZoomAndPanView, buttonStrandMode, new Separator());
+        functionsToolbar.getItems().addAll(buttonShowHideCamera, buttonShowHideForcefields, buttonShowHideGeometry, buttonShowHideGraphics, buttonShowHideGoos, buttonShowHideParticles, buttonShowHideLabels, buttonShowHideAnim, new Separator());
+
+        for (Node node : functionsToolbar.getItems()) {
+            node.setDisable(true);
+        }
+
+        vBox.getChildren().add(functionsToolbar);
+
+        gooballsToolbar = new ToolBar();
+
+        addBallsTo();
+
+        gooballsToolbar.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                    ContextMenu contextMenu = new ContextMenu();
+                    MenuItem menuItem = new MenuItem("Configure Palette...");
+                    menuItem.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+                            try {
+                                new PaletteReconfigurator().start(new Stage());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    contextMenu.getItems().add(menuItem);
+                    gooballsToolbar.setContextMenu(contextMenu);
+                }
+            }
+        });
+
+        for (Node node : gooballsToolbar.getItems()) {
+            node.setDisable(true);
+        }
+
+        vBox.getChildren().add(gooballsToolbar);
+
+        ToolBar addObjectsToolbar = new ToolBar();
+
+        try {
+            addLineButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\line.png")));
+            addRectangleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\rectangle.png")));
+            addCircleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\circle.png")));
+            addSceneLayerButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\SceneLayer.png")));
+            addCompositegeomButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\compositegeom.png")));
+            addHingeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\hinge.png")));
+            autoPipeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\pipe.png")));
+            addVertexButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\Vertex.png")));
+            addFireButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\fire.png")));
+            addLinearforcefieldButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\linearforcefield.png")));
+            addRadialforcefieldButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\radialforcefield.png")));
+            addParticlesButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\particles.png")));
+            addSignpostButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\signpost.png")));
+            addLabelButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\label.png")));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        addLineButton.setOnAction(e -> Main.addLine(Main.getLevel().getSceneObject()));
+        addRectangleButton.setOnAction(e -> Main.addRectangle(Main.getLevel().getSceneObject()));
+        addCircleButton.setOnAction(e -> Main.addCircle(Main.getLevel().getSceneObject()));
+        addSceneLayerButton.setOnAction(e -> Main.addSceneLayer(Main.getLevel().getSceneObject()));
+        addCompositegeomButton.setOnAction(e -> Main.addCompositegeom(Main.getLevel().getSceneObject()));
+        addHingeButton.setOnAction(e -> Main.addHinge(Main.getLevel().getSceneObject()));
+        autoPipeButton.setOnAction(e -> Main.autoPipe(Main.getLevel().getSceneObject()));
+        addVertexButton.setOnAction(e -> Main.addPipeVertex(Main.getLevel().getSceneObject()));
+        addFireButton.setOnAction(e -> Main.addFire(Main.getLevel().getSceneObject()));
+        addLinearforcefieldButton.setOnAction(e -> Main.addLinearForcefield(Main.getLevel().getSceneObject()));
+        addRadialforcefieldButton.setOnAction(e -> Main.addRadialForcefield(Main.getLevel().getSceneObject()));
+        addParticlesButton.setOnAction(e -> Main.addParticle(Main.getLevel().getSceneObject()));
+        addSignpostButton.setOnAction(e -> Main.addSign(Main.getLevel().getSceneObject()));
+        addLabelButton.setOnAction(e -> Main.addLabel(Main.getLevel().getSceneObject()));
+
+        addObjectsToolbar.getItems().addAll(addLineButton, addRectangleButton, addCircleButton, addSceneLayerButton, addCompositegeomButton, addHingeButton, new Separator());
+        addObjectsToolbar.getItems().addAll(autoPipeButton, addVertexButton, new Separator());
+        addObjectsToolbar.getItems().addAll(addFireButton, addLinearforcefieldButton, addRadialforcefieldButton, addParticlesButton, new Separator());
+        addObjectsToolbar.getItems().addAll(addSignpostButton, addLabelButton, new Separator());
+
+        for (Node node : addObjectsToolbar.getItems()) {
+            node.setDisable(true);
+        }
+
+        vBox.getChildren().add(addObjectsToolbar);
+
+        functionsToolbar.setId("thing");
+        gooballsToolbar.setId("thing");
+        addObjectsToolbar.setId("thing");
+    }
+
+    private static int currentlySelectedRow = -1;
+
+    public static final Paint notSelectedPaint = Paint.valueOf("FFFFFFFF");
+    public static final Paint notSelectedHoverPaint = Paint.valueOf("B0D0FFFF");
+    public static final Paint selectedPaint = Paint.valueOf("0000D0FF");
+
+    /** Generates the TreeTableView representing all objects in a "scene", "level", or "resources" of a level.
+     * @return The TreeTableView. */
+    public static TreeTableView<EditorObject> makeHierarchy(){
+
+        //Create the TreeTableView.
+        TreeTableView<EditorObject> hierarchy = new TreeTableView<>();
+
+        hierarchy.setPlaceholder(new Label());
+
+        //Create the columns the hierarchy uses ("Element" and its "ID or Name")
+        TreeTableColumn<EditorObject, String> hierarchyElements = new TreeTableColumn<>();
+        hierarchyElements.setGraphic(new Label("Elements"));
+        hierarchyElements.setCellValueFactory(new TreeItemPropertyValueFactory<>("realName"));
+        hierarchy.getColumns().add(hierarchyElements);
+        hierarchyElements.setPrefWidth(200);
+
+        TreeTableColumn<EditorObject, String> hierarchyNames = new TreeTableColumn<>();
+        hierarchyNames.setGraphic(new Label("ID or Name"));
+        hierarchyNames.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<EditorObject, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<EditorObject, String> param) {
+                if (param.getValue().getValue().getObjName() != null) {
+                    return param.getValue().getValue().getObjName().valueProperty();
+                } else {
+                    return new EditorAttribute("AAAAA", "AAAAA", "AAAAA", new InputField("AAAAA", InputField.ANY), false).valueProperty();
+                }
+            }
+        });
+
+        /* ChatGPT */
+        // Event filter for the TreeTableView to handle column header click
+        hierarchy.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
+            // Check if the source of the event is a column header
+            if (event.getTarget() instanceof TableColumnHeader) {
+                event.consume();
+            }
+        });
+
+
+        hierarchy.getColumns().add(hierarchyNames);
+
+        hierarchyElements.setCellFactory(column -> new TreeTableCell<>(){
+
+            private boolean f = false;
+
+            @Override
+            protected void updateItem(String item, boolean empty){
+                super.updateItem(item, empty);
+                if (empty){
+                    //If this is an empty cell, set its text and graphic to empty.
+                    //This prevents the cell from retaining other cells' information.
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    //Update this cell's text.
+                    setText(item);
+                    //Override the default padding that ruins the text.
+                    setPadding(new Insets(0, 0, 0, 0));
+
+                    if (getTableRow().getItem() != null) {
+                        ImageView imageView;
+                        try {
+                            imageView = new ImageView(FileManager.getObjectIcon(getTableRow().getItem().getClass().getSimpleName()));
+                        } catch (FileNotFoundException e) {
+                            imageView = null;
+                        }
+
+                        //If the cell's EditorObject is invalid, display its graphic with a warning symbol.
+                        //Otherwise, just display its graphic.
+                        if (!getTableRow().getItem().isValid()) {
+                            ImageView failedImg = new ImageView(FileManager.getFailedImage());
+                            setGraphic(new StackPane(imageView, failedImg));
+                        } else {
+                            setGraphic(imageView);
+                        }
+                    }
+                }
+            }
+        });
+
+        hierarchyNames.setCellFactory(column -> new TreeTableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    //If this is an empty cell, set its text and graphic to empty.
+                    //This prevents the cell from retaining other cells' information.
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    //setTextFill(Paint.valueOf("FFFFFFFF"));
+                    //Update this cell's text.
+                    setText(item);
+                    //Override the default padding that ruins the text.
+                    setPadding(new Insets(0, 0, 0, 0));
+                }
+            }
+        });
+
+        //If a cell is clicked from the hierarchy, update the selected object and properties view.
+        hierarchy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Main.setSelected(newValue.getValue());
+                Main.changeTableView(newValue.getValue());
+            }
+        });
+
+        //Make the rows small.
+        hierarchy.setFixedCellSize(18);
+
+        hierarchy.setRowFactory(treeTableView -> {
+            final TreeTableRow<EditorObject> row = new TreeTableRow<>();
+
+            row.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    contextMenuShowing = false;
+                    //row.setFont(Font.font("Helvetica", 12));
+                }
+            });
+
+            /*
+            row.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (hierarchy.getTreeItem(row.getIndex()) != null) {
+                        Main.setSelected(hierarchy.getTreeItem(row.getIndex()).getValue());
+                        Main.changeTableView(hierarchy.getTreeItem(row.getIndex()).getValue());
+                        if (event.getButton().equals(MouseButton.SECONDARY)) {
+                            row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
+                            System.out.println(row.getContextMenu().getItems().size());
+                            contextMenuShowing = true;
+                        }
+                    }
+                }
+            });
+
+             */
+
+            row.setOnDragDetected(event -> {
+                TreeItem<EditorObject> selected2 = (TreeItem<EditorObject>) hierarchy.getSelectionModel().getSelectedItem();
+                if (selected2 != null) {
+                    Dragboard db = hierarchy.startDragAndDrop(TransferMode.ANY);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(selected2.getValue().getClass().getName());
+                    db.setContent(content);
+                    Main.setMoving(row.getItem());
+                    Main.setOldDropIndex(row.getIndex());
+                    //System.out.println("started");
+                    event.consume();
+                }
+            });
+
+            row.setOnDragExited(event -> {
+                //row.setStyle("");
+            });
+
+            row.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (event.getDragboard().hasString()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                    //row.setStyle("-fx-font-size: 12pt, -fx-background-color: #D0F0FFFF");
+                }
+                event.consume();
+            });
+
+            row.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (event.getDragboard().hasString()) {
+
+                    if (!row.isEmpty()) {
+                        //System.out.println("ended");
+                        int dropIndex = row.getIndex();
+                        hierarchy.getTreeItem(Main.getOldDropIndex()).setValue(hierarchy.getTreeItem(dropIndex).getValue());
+                        hierarchy.getTreeItem(dropIndex).setValue(Main.getMoving());
+                        hierarchy.getSelectionModel().select(dropIndex);
+                        //row.setItem((EditorObject) db.getContent(null));
+
+                        success = true;
+                    }
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            });
+
+
+            return row;
+        });
+
+        hierarchy.setColumnResizePolicy(TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
+
+        hierarchyNames.prefWidthProperty().bind(hierarchy.widthProperty().subtract(hierarchyElements.widthProperty()));
+
+        //hierarchy.getStyleClass().add("column-header");
+
+        return hierarchy;
+    }
+
+    /** Creates the lower right "Properties" view.
+     * This is where an object's attributes are shown and can be modified.
+     * @return The TreeTableView configured to show object properties. */
+    public static TreeTableView<EditorAttribute> makePropertiesView(){
+
+        //Create the properties view.
+        TreeTableView<EditorAttribute> propertiesView = new TreeTableView<>();
+
+        propertiesView.setPlaceholder(new Label());
+
+        //Create the columns the properties view uses (Attribute name and attribute value).
+        TreeTableColumn<EditorAttribute, String> name = new TreeTableColumn<>();
+        name.setGraphic(new Label("Name"));
+        name.setCellValueFactory(param -> param.getValue().getValue().nameProperty());
+        propertiesView.getColumns().add(name);
+
+        TreeTableColumn<EditorAttribute, String> value = new TreeTableColumn<>();
+        value.setGraphic(new Label("Value"));
+        value.setCellValueFactory(param -> param.getValue().getValue().valueProperty());
+        propertiesView.getColumns().add(value);
+
+        //Limit the width of the "names" column.
+        name.setPrefWidth(200);
+
+        //Hide the empty "root" attribute. This allows all of its children to be displayed at once at the top of the TreeTableView.
+        propertiesView.setShowRoot(false);
+
+        //For each row of the properties view:
+        propertiesView.setRowFactory(tableView -> {
+            final TreeTableRow<EditorAttribute> row = new TreeTableRow<>();
+
+            //Manually change the row's font size to prevent clipping.
+            row.setStyle("-fx-font-size: 11");
+
+            row.hoverProperty().addListener((observable) -> {
+                if (row.isHover() && row.getItem() != null) {
+                    //If the user is hovering over this row, select it.
+                    propertiesView.getSelectionModel().select(row.getIndex());
+                } else {
+                    //If the user is not hovering over this row, deselect all rows.
+                    //This works because hovering off a row is processed before hovering onto another row.
+                    propertiesView.getSelectionModel().clearSelection();
+                }
+            });
+
+            row.pressedProperty().addListener((observable, oldValue, newValue) -> {
+                //If we are editing a cell with null content or an uneditable cell, cancel the edit.
+                if (row.getTreeItem() == null || row.getTreeItem().getValue().getInput().getType() == InputField.NULL) {
+                    Platform.runLater(() -> propertiesView.edit(-1, null));
+                }
+            });
+
+            return row;
+        });
+
+        name.setCellFactory(column -> new TreeTableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    //If this is an empty cell, set its text and graphic to empty.
+                    //This prevents the cell from retaining other cells' information.
+                    setText(null);
+                } else {
+                    //Update this cell's text.
+                    setText(item);
+                    //Override the default padding that ruins the text.
+                    setPadding(new Insets(0, 0, 0, 0));
+                }
+            }
+        });
+
+        value.setCellFactory(new Callback<>() {
+            @Override
+            public TreeTableCell<EditorAttribute, String> call(TreeTableColumn<EditorAttribute, String> editorAttributeStringTreeTableColumn) {
+                StringConverter<String> stringConverter = new StringConverter<>() {
+                    @Override
+                    public String toString(String s) {
+                        return s;
+                    }
+
+                    @Override
+                    public String fromString(String s) {
+                        return s;
+                    }
+                };
+                TextFieldTreeTableCell<EditorAttribute, String> cell = new TextFieldTreeTableCell<>(stringConverter) {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        //Override the default padding that ruins the text.
+                        setPadding(new Insets(0, 0, 0, 2));
+                    }
+
+                    private String before;
+
+                    @Override
+                    public void startEdit() {
+                        super.startEdit();
+                        before = getItem();
+
+                        Bounds bounds = localToScreen(getBoundsInLocal());
+
+                        if (bounds != null) {
+
+                            double x = bounds.getMinX();
+                            double y = bounds.getMinY() + 18;
+
+                            FXCreator.possibleAttributeValues(this).show(Main.getStage(), x, y);
+                        }
+                    }
+
+                    @Override
+                    public void cancelEdit() {
+                        super.cancelEdit();
+                        if (getContextMenu() != null) {
+                            getContextMenu().hide();
+                        }
+                    }
+
+                    @Override
+                    public void commitEdit(String s) {
+                        super.commitEdit(getTableRow().getItem().getInput().verify(s) ? s : before);
+                    }
+                };
+
+                cell.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        /*
+                        cell.setContextMenu(FXCreator.possibleAttributeValues(this));
+                        cell.getContextMenu().show(propertiesView, Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(), 100);
+                        propertiesView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<EditorAttribute>>() {
+                            @Override
+                            public void changed(ObservableValue<? extends TreeItem<EditorAttribute>> observable, TreeItem<EditorAttribute> oldValue, TreeItem<EditorAttribute> newValue) {
+                                if (newValue != null) {
+                                    cell.getContextMenu().hide();
+                                }
+                            }
+                        });
+
+                         */
+                        if (cell.getContextMenu() != null) {
+                            cell.getContextMenu().show(propertiesView, Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(), 100);
+                        }
+                        if (!cell.isSelected() && cell.getContextMenu() != null) {
+                            cell.getContextMenu().hide();
+                        }
+                    }
+                });
+
+                return cell;
+            }
+        });
+
+        //value.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+
+        value.setOnEditCommit(e -> {
+            //When editing a cell:
+
+            //Change the actual attribute to reflect the edit.
+            EditorAttribute attribute = propertiesView.getTreeItem(e.getTreeTablePosition().getRow()).getValue();
+            String oldValue = attribute.getValue();
+            if (attribute.getInput().verify(e.getNewValue())) {
+                attribute.setValue(e.getNewValue());
+            }
+
+            //If the edit was actually valid:
+            if (e.getNewValue().equals("") || attribute.getInput().verify(e.getNewValue())) {
+
+                //Push an attribute change to the undo buffer.
+                Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), oldValue, attribute.getValue()));
+
+                //If we have edited the name or ID of the object, change the object's "Name or ID" value.
+                if (attribute.getName().equals("name") || attribute.getName().equals("id")) {
+                    Main.getSelected().setNameAttribute(attribute);
+                }
+
+            } else {
+                //Reset the attribute.
+                attribute.setValue(oldValue);
+                //If the user entered an invalid value, refresh to clear the edit.
+                propertiesView.refresh();
+            }
+
+
+        });
+
+        //Adjust the row height to fit more attributes on screen at once.
+        //This currently breaks the text.
+        propertiesView.setFixedCellSize(18);
+
+        //Set the "value" column and the entire TreeTableView to be editable.
+        value.setEditable(true);
+        propertiesView.setEditable(true);
+
+        //Set the "value" column to extend to the very edge of the TreeTableView.
+        value.prefWidthProperty().bind(propertiesView.widthProperty().subtract(name.widthProperty()));
+
+        return propertiesView;
+    }
+
+    public static MenuBar createMenu() {
+        MenuBar bar = new MenuBar();
+
+        Menu fileMenu = new Menu("File");
+
+        Menu levelMenu = new Menu("Level");
+
+        MenuItem reloadWorldOfGooOldItem = new MenuItem("Reload World of Goo");
+        MenuItem reloadWorldOfGooNewItem = new MenuItem("Reload World of Goo");
+        MenuItem changeWorldOfGooDirectoryOldItem = new MenuItem("Change World of Goo Directory (1.3)...");
+        MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
+        MenuItem quitItem = new MenuItem("Quit");
+
+        try {
+            reloadWorldOfGooOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
+            reloadWorldOfGooNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
+            changeWorldOfGooDirectoryOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
+            changeWorldOfGooDirectoryNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
+            quitItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\quit.png")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        reloadWorldOfGooOldItem.setOnAction(e -> Main.reloadWorldOfGoo(1.3));
+        reloadWorldOfGooNewItem.setOnAction(e -> Main.reloadWorldOfGoo(1.5));
+        changeWorldOfGooDirectoryOldItem.setOnAction(e -> Main.changeWorldOfGooDirectory(1.3));
+        changeWorldOfGooDirectoryNewItem.setOnAction(e -> Main.changeWorldOfGooDirectory(1.5));
+        quitItem.setOnAction(e -> Main.quit());
+
+        fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem, changeWorldOfGooDirectoryNewItem, quitItem);
+
+        MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
+        MenuItem newLevelNewItem = new MenuItem("New Level (1.5)...");
+        MenuItem openLevelOldItem = new MenuItem("Open Level (1.3)...");
+        MenuItem openLevelNewItem = new MenuItem("Open Level (1.5)...");
+        MenuItem cloneLevelOldItem = new MenuItem("Clone Level (1.3)...");
+        MenuItem cloneLevelNewItem = new MenuItem("Clone Level (1.5)...");
+        MenuItem saveLevelOldItem = new MenuItem("Save Level (1.3)...");
+        MenuItem saveLevelNewItem = new MenuItem("Save Level (1.5)...");
+        MenuItem saveAndPlayLevelOldItem = new MenuItem("Save and Play Level (1.3)...");
+        MenuItem saveAndPlayLevelNewItem = new MenuItem("Save and Play Level (1.5)...");
+
+        try {
+            newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
+            newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
+            openLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
+            openLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
+            cloneLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_old.png")));
+            cloneLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
+            saveLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
+            saveLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
+            saveAndPlayLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_old.png")));
+            saveAndPlayLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_new.png")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        newLevelOldItem.setOnAction(e -> Main.newLevel(1.3));
+        newLevelNewItem.setOnAction(e -> Main.newLevel(1.5));
+        openLevelOldItem.setOnAction(e -> Main.openLevel(1.3));
+        openLevelNewItem.setOnAction(e -> Main.openLevel(1.5));
+        cloneLevelOldItem.setOnAction(e -> Main.cloneLevel(1.3));
+        cloneLevelNewItem.setOnAction(e -> Main.cloneLevel(1.5));
+        saveLevelOldItem.setOnAction(e -> Main.saveLevel(1.3));
+        saveLevelNewItem.setOnAction(e -> Main.saveLevel(1.5));
+        saveAndPlayLevelOldItem.setOnAction(e -> Main.playLevel(1.3));
+        saveAndPlayLevelNewItem.setOnAction(e -> Main.playLevel(1.5));
+
+        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem, saveAndPlayLevelOldItem, newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem, saveAndPlayLevelNewItem);
+
+        Menu editMenu = new Menu("Edit");
+
+        MenuItem undoItem = new MenuItem("Undo");
+        MenuItem redoItem = new MenuItem("Redo");
+        MenuItem cutItem = new MenuItem("Cut");
+        MenuItem copyItem = new MenuItem("Copy");
+        MenuItem pasteItem = new MenuItem("Paste");
+        MenuItem deleteItem = new MenuItem("Delete");
+
+        try {
+            undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
+            redoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
+            cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
+            copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
+            pasteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
+            deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        undoItem.setOnAction(e -> Main.undo());
+        redoItem.setOnAction(e -> Main.redo());
+        cutItem.setOnAction(e -> Main.cut());
+        copyItem.setOnAction(e -> Main.copy());
+        pasteItem.setOnAction(e -> Main.paste());
+        deleteItem.setOnAction(e -> Main.delete());
+
+        editMenu.getItems().addAll(undoItem, redoItem, cutItem, copyItem, pasteItem, deleteItem);
+
+        Menu resourcesMenu = new Menu("Resources");
+
+        MenuItem updateLevelResourcesItem = new MenuItem("Update Level Resources...");
+        MenuItem importImageItem = new MenuItem("Import Images...");
+        MenuItem newTextResourceItem = new MenuItem("New Text Resource");
+        MenuItem cleanLevelResourcesItem = new MenuItem("Clean Resources");
+        MenuItem setMusicItem = new MenuItem("Set Music...");
+        MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
+
+        try {
+            //updateLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\resources.png")));
+            importImageItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
+            //newTextResourceItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\cut.png")));
+            //cleanLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\copy.png")));
+            setMusicItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
+            setLoopsoundItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        updateLevelResourcesItem.setOnAction(e -> Main.updateLevelResources());
+        importImageItem.setOnAction(e -> Main.importImage());
+        newTextResourceItem.setOnAction(e -> Main.newTextResource());
+        cleanLevelResourcesItem.setOnAction(e -> Main.cleanLevelResources());
+        setMusicItem.setOnAction(e -> Main.importMusic());
+        setLoopsoundItem.setOnAction(e -> Main.importLoopsound());
+
+        resourcesMenu.getItems().addAll(updateLevelResourcesItem, importImageItem, newTextResourceItem, cleanLevelResourcesItem, setMusicItem, setLoopsoundItem);
+
+        bar.getMenus().addAll(fileMenu, levelMenu, editMenu, resourcesMenu);
+        return bar;
+    }
+
+
+    /** Generates a right-click menu for an editor object.
+     * @param object The editor object to generate the menu for.
+     * @return The ContextMenu for right-clicking on that object. */
+    public static ContextMenu contextMenuForEditorObject(EditorObject object) {
+
+        //Create the content menu.
+        ContextMenu menu = new ContextMenu();
+
+        //Create the Cut, Copy, Paste in Place, and Delete buttons. These should be present for every object.
+        MenuItem cutItem = new MenuItem("Cut");
+        MenuItem copyItem = new MenuItem("Copy");
+        MenuItem pasteInPlaceItem = new MenuItem("Paste in Place");
+        MenuItem deleteItem = new MenuItem("Delete");
+
+        //Attempt to set graphics for the Cut, Copy, Paste, and Delete buttons.
+        try {
+            cutItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\cut.png")));
+            copyItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\copy.png")));
+            pasteInPlaceItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\paste.png")));
+            deleteItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\delete.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        menu.getItems().addAll(cutItem, copyItem, pasteInPlaceItem, deleteItem);
+
+        //For every object that can be created as a child of this object:
+        for (String childToAdd : object.getPossibleChildren()) {
+
+            //Create a menu item representing creating this child.
+            MenuItem addItemItem = new MenuItem("Add " + childToAdd);
+
+            //Attempt to set graphics for this menu item.
+            try {
+                addItemItem.setGraphic(new ImageView(FileManager.getObjectIcon(childToAdd)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //Set the item's action to creating the child, with the object as its parent.
+            addItemItem.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    switch (childToAdd) {
+                        case "BallInstance" -> Main.addBall(object, "");
+                        case "Strand" -> Main.addStrand(object);
+                        case "camera" -> Main.addCamera(object);
+                        case "poi" -> Main.addPoi(object);
+                        case "music" -> Main.addMusic(object);
+                        case "loopsound" -> Main.addLoopsound(object);
+                        case "linearforcefield" -> Main.addLinearForcefield(object);
+                        case "radialforcefield" -> Main.addRadialForcefield(object);
+                        case "particles" -> Main.addParticle(object);
+                        case "SceneLayer" -> Main.addSceneLayer(object);
+                        case "buttongroup" -> Main.addButtongroup(object);
+                        case "button" -> Main.addButton(object);
+                        case "circle" -> Main.addCircle(object);
+                        case "rectangle" -> Main.addRectangle(object);
+                        case "hinge" -> Main.addHinge(object);
+                        case "compositegeom" -> Main.addCompositegeom(object);
+                        case "label" -> Main.addLabel(object);
+                        case "line" -> Main.addLine(object);
+                        case "motor" -> Main.addMotor(object);
+                        case "slider" -> Main.addSlider(object);
+                        case "endoncollision" -> Main.addEndoncollision(object);
+                        case "endonnogeom" -> Main.addEndonnogeom(object);
+                        case "endonmessage" -> Main.addEndonmessage(object);
+                        case "targetheight" -> Main.addTargetheight(object);
+                        case "fire" -> Main.addFire(object);
+                        case "levelexit" -> Main.addLevelexit(object);
+                        case "pipe" -> Main.addPipe(object);
+                        case "signpost" -> Main.addSign(object);
+                    }
+                }
+            });
+
+            menu.getItems().add(addItemItem);
+        }
+
+        return menu;
+    }
+
+
+    /** Generates the Scene, Level, and Resrc buttons that switch between those object structures.
+     * @return The HBox object containing the buttons. */
+    public static TabPane hierarchySwitcherButtons() {
+
+        //Create and customize the parent container.
+        TabPane thing = new TabPane();
+
+        //Create the three buttons.
+        Tab sceneSelectButton = new Tab("Scene");
+        Tab levelSelectButton = new Tab("Level");
+        Tab resrcSelectButton = new Tab("Resrc");
+        Tab textSelectButton = new Tab("Text");
+        Tab addinSelectButton = new Tab("Addin");
+
+        thing.getTabs().addAll(sceneSelectButton, levelSelectButton, resrcSelectButton, textSelectButton, addinSelectButton);
+        thing.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        thing.setMinHeight(30);
+        thing.setMaxHeight(30);
+        thing.setPrefHeight(30);
+        thing.setPadding(new Insets(-6, -6, -6, -6));
+
+        thing.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observableValue, Tab tab, Tab t1) {
+                if (t1 == sceneSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getScene().get(0).getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getHierarchy().setShowRoot(true);
+                } else if (t1 == levelSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getLevel().get(0).getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getHierarchy().setShowRoot(true);
+                } else if (t1 == resrcSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getHierarchy().setShowRoot(false);
+                } else if (t1 == textSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getTextObject().getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getHierarchy().setShowRoot(false);
+                } else if (t1 == addinSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getAddinObject().getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getHierarchy().setShowRoot(true);
+                }
+            }
+        });
+
+        return thing;
+    }
+
+    /** Generates a list of attributes for an object, according to that object's meta attributes.
+     * @param object The editor object to generate the interface for.
+     * @return The root tree item representing the attributes for the object. */
+    public static TreeItem<EditorAttribute> makePropertiesViewTreeItem(EditorObject object) {
+
+        //Create the root tree item.
+        TreeItem<EditorAttribute> treeItem = new TreeItem<>(new EditorAttribute("", "", "", new InputField("", InputField.NULL), false));
+
+        //Loop over the object's meta attributes.
+        for (MetaEditorAttribute metaEditorAttribute : object.getMetaAttributes()) {
+
+            //Find the object's EditorAttribute associated with this meta attribute (sharing the same name).
+            EditorAttribute attribute;
+            if (object.getAttribute(metaEditorAttribute.getName()) != null) {
+                attribute = object.getAttribute2(metaEditorAttribute.getName());
+            } else {
+                //If no such attribute exists, this attribute is instead the name of a category of attributes.
+                //In this case, create a dummy attribute with no value.
+                attribute = new EditorAttribute(metaEditorAttribute.getName(), "", "", new InputField("", InputField.NULL), false);
+            }
+            TreeItem<EditorAttribute> thisAttribute = new TreeItem<>(attribute);
+
+            //If this attribute is set to be open by default, set its tree item to open.
+            if (metaEditorAttribute.getOpenByDefault()) {
+                thisAttribute.setExpanded(true);
+            }
+
+            //If this attribute represents a category of attributes, it will have children.
+            //Add the children's TreeItems as children of the category's TreeItem.
+            for (MetaEditorAttribute childAttribute : metaEditorAttribute.getChildren()) {
+                thisAttribute.getChildren().add(new TreeItem<>(object.getAttribute2(childAttribute.getName())));
+            }
+
+            //Add the attribute's TreeItem as a child of the root's TreeItem.
+            treeItem.getChildren().add(thisAttribute);
+        }
+
+        return treeItem;
+    }
+
+
+    /** Generates a JavaFX Tab representing one level.
+     * @param level The level to generate a tab from.
+     * @return The tab representing the level. */
+    public static LevelTab levelSelectButton(WorldLevel level) {
+
+        //Instantiate the tab.
+        LevelTab tab = new LevelTab(level.getLevelName(), level);
+
+        //Override the default close operation of the tab.
+        tab.setOnCloseRequest(event -> {
+            event.consume();
+            //If the level has unsaved changes:
+            if (level.getEditingStatus() == WorldLevel.UNSAVED_CHANGES) {
+                //Show a dialogue asking the user if they want to close the level without saving changes first.
+                Alarms.closeTabMessage(tab, level);
+            } else {
+                //Close the tab.
+                if (tab.getTabPane().getTabs().size() == 1) {
+                    Main.getLevelSelectPane().setMinHeight(0);
+                    Main.getLevelSelectPane().setMaxHeight(0);
+                }
+                tab.getTabPane().getTabs().remove(tab);
+            }
+        });
+
+        tab.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                //If the user has just selected this tab:
+                if (t1) {
+                    //Set this tab's level to be the currently selected level.
+                    Main.setLevel(level);
+                    Main.hierarchy.setRoot(level.getSceneObject().getTreeItem());
+                } else {
+                    //Destroy and replace the level tab to prevent an unknown freezing issue.
+                    if (level.getLevelTab() != null && level.getLevelTab().getTabPane() != null && level.getLevelTab().getTabPane().getTabs().contains(level.getLevelTab()) && level.getLevelTab().getTabPane().getTabs().size() != 0) {
+                        level.setEditingStatus(level.getEditingStatus(), false);
+                    }
+                }
+            }
+        });
+
+        return tab;
+    }
+
+    public static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell) {
+        ContextMenu contextMenu = new ContextMenu();
+        EditorAttribute attribute = cell.getTableRow().getItem();
+
+        switch (attribute.getInput().getType()) {
+            case InputField.IMAGE, InputField.IMAGE_REQUIRED:
+                for (EditorObject resource : Main.getLevel().getResources()) {
+                    if (resource instanceof ResrcImage) {
+                        MenuItem setImageItem = new MenuItem();
+
+                        Label label = new Label(resource.getAttribute("id"));
+                        label.setMaxHeight(17);
+                        label.setMinHeight(17);
+                        label.setPrefHeight(17);
+                        label.setStyle("-fx-font-size: 11");
+                        label.setPadding(new Insets(0, 0, 0, 0));
+
+                        setImageItem.setGraphic(label);
+
+                        setImageItem.setOnAction(event -> {
+                            Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), attribute.getValue(), resource.getAttribute("id")));
+                            attribute.setValue(resource.getAttribute("id"));
+                            if (contextMenu.isFocused()) {
+                                cell.commitEdit(attribute.getValue());
+                            }
+                        });
+
+                        contextMenu.getItems().add(setImageItem);
+                    }
+                }
+                break;
+            case InputField.BALL:
+                String path = Main.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
+                for (File ballFile : new File(path + "\\res\\balls").listFiles()) {
+                    MenuItem setImageItem = new MenuItem(ballFile.getName());
+
+                    setImageItem.setOnAction(event -> {
+                        Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), attribute.getValue(), ballFile.getName()));
+                        attribute.setValue(ballFile.getName());
+                        if (contextMenu.isFocused()) {
+                            cell.commitEdit(attribute.getValue());
+                        }
+                    });
+
+                    contextMenu.getItems().add(setImageItem);
+                }
+                break;
+        }
+
+
+        return contextMenu;
+    }
+
+}

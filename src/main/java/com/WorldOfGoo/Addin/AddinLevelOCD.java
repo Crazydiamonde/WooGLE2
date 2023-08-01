@@ -1,0 +1,16 @@
+package com.WorldOfGoo.Addin;
+
+import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
+
+public class AddinLevelOCD extends EditorObject {
+    public AddinLevelOCD(EditorObject _parent) {
+        super(_parent);
+        setRealName("ocd");
+        addAttribute("type", "", InputField.OCD_TYPE, true);
+        addAttribute("value", "", InputField.NUMBER_NON_NEGATIVE, true);
+        setNameAttribute(getAttribute2("type"));
+        setMetaAttributes(MetaEditorAttribute.parse("type,value,"));
+    }
+}
