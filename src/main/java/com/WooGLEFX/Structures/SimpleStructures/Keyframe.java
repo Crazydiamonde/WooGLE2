@@ -6,88 +6,45 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class Keyframe {
-    private float x;
-    private float y;
-    private float angle;
-    private int alpha;
-    private int color;
-    private int nextFrameIndex;
-    private int soundStrIdx;
-    private int interpolation;
+    private final float x;
+    private final float y;
+    private final float angle;
+    private final int alpha;
+    private final int color;
+    private final int nextFrameIndex;
+    private final int soundStrIdx;
+    private final int interpolation;
 
     public float getX() {
         return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
     }
 
     public float getY() {
         return y;
     }
 
-    public void setY(float y) {
-        this.y = y;
-    }
-
     public float getAngle() {
         return angle;
-    }
-
-    public void setAngle(float angle) {
-        this.angle = angle;
     }
 
     public int getAlpha() {
         return alpha;
     }
 
-    public void setAlpha(int alpha) {
-        this.alpha = alpha;
-    }
-
     public int getColor() {
         return color;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
     }
 
     public int getNextFrameIndex() {
         return nextFrameIndex;
     }
 
-    public void setNextFrameIndex(int nextFrameIndex) {
-        this.nextFrameIndex = nextFrameIndex;
-    }
-
     public int getSoundStrIdx() {
         return soundStrIdx;
     }
 
-    public void setSoundStrIdx(int soundStrIdx) {
-        this.soundStrIdx = soundStrIdx;
-    }
-
     public int getInterpolation() {
         return interpolation;
-    }
-
-    public void setInterpolation(int interpolation) {
-        this.interpolation = interpolation;
-    }
-
-    public Keyframe(float _x, float _y, float _angle, int _alpha, int _color, int _nextFrameIndex, int _soundStrIdx, int _interpolation){
-        this.x = _x;
-        this.y = _y;
-        this.angle = _angle;
-        this.alpha = _alpha;
-        this.color = _color;
-        this.nextFrameIndex = _nextFrameIndex;
-        this.soundStrIdx = _soundStrIdx;
-        this.interpolation = _interpolation;
     }
 
     public Keyframe(byte[] data){

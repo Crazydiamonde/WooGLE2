@@ -3,10 +3,6 @@ package com.WooGLEFX.GUI;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -19,7 +15,7 @@ import java.io.File;
 
 public class LevelSelector extends Application {
 
-    private double version;
+    private final double version;
 
     public LevelSelector(double version) {
         this.version = version;
@@ -94,7 +90,7 @@ public class LevelSelector extends Application {
     public static File levelDir = null;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 
         Pane all = new Pane();
 
@@ -121,34 +117,32 @@ public class LevelSelector extends Application {
         filter.setLayoutY(6);
         filter.setPrefWidth(186);
 
-        filter.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+        filter.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
 
-                allLevelsBox.getChildren().clear();
+            allLevelsBox.getChildren().clear();
 
-                if (levelDir != null) {
-                    for (File levelFile : levelDir.listFiles()) {
+            if (levelDir != null) {
+                File[] levels = levelDir.listFiles();
+                if (levels != null) {
+                    for (File levelFile : levels) {
                         boolean ok = false;
-                        switch(t1) {
-                            case "Original Levels Only":
+                        switch (t1) {
+                            case "Original Levels Only" -> {
                                 for (String levelName : originalLevels) {
                                     if (levelName.equals(levelFile.getName())) {
                                         ok = true;
                                     }
                                 }
-                                break;
-                            case "Customizable Levels Only":
+                            }
+                            case "Customizable Levels Only" -> {
                                 ok = true;
                                 for (String levelName : originalLevels) {
                                     if (levelName.equals(levelFile.getName())) {
                                         ok = false;
                                     }
                                 }
-                                break;
-                            case "All Levels":
-                                ok = true;
-                                break;
+                            }
+                            case "All Levels" -> ok = true;
                         }
                         if (ok) {
                             Label label = new Label(levelFile.getName());
@@ -181,20 +175,12 @@ public class LevelSelector extends Application {
         cancelButton.setLayoutX(315);
         cancelButton.setLayoutY(332);
 
-        openButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Main.openLevel(selected, version);
-                stage.close();
-            }
+        openButton.setOnAction(actionEvent -> {
+            Main.openLevel(selected, version);
+            stage.close();
         });
 
-        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                stage.close();
-            }
-        });
+        cancelButton.setOnAction(actionEvent -> stage.close());
 
         all.getChildren().addAll(realPane, selectLevelToEdit, filter, openButton, cancelButton);
 

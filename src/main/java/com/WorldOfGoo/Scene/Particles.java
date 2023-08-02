@@ -39,7 +39,6 @@ public class Particles extends EditorObject {
     @Override
     public void update() {
         setNameAttribute(getAttribute2("effect"));
-        setDepth(getDouble("depth"));
     }
 
     private ArrayList<Integer> counts = new ArrayList<>();

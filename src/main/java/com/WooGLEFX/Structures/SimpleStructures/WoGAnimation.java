@@ -1,24 +1,18 @@
 package com.WooGLEFX.Structures.SimpleStructures;
 
-import com.WooGLEFX.Structures.SimpleStructures.Keyframe;
-
 import java.util.ArrayList;
 
 public class WoGAnimation {
 
-    private Keyframe[][] transformFrames;
-    private Keyframe[] alphaFrames;
-    private Keyframe[] colorFrames;
-    private Keyframe[] soundFrames;
+    private final Keyframe[][] transformFrames;
+    private final Keyframe[] alphaFrames;
+    private final Keyframe[] colorFrames;
+    private final Keyframe[] soundFrames;
 
-    private float[] frameTimes;
+    private final float[] frameTimes;
 
     public float[] getFrameTimes() {
         return frameTimes;
-    }
-
-    public void setFrameTimes(float[] frameTimes) {
-        this.frameTimes = frameTimes;
     }
 
     private String name;
@@ -27,32 +21,16 @@ public class WoGAnimation {
         return transformFrames;
     }
 
-    public void setTransformFrames(Keyframe[][] transformFrames) {
-        this.transformFrames = transformFrames;
-    }
-
     public Keyframe[] getAlphaFrames() {
         return alphaFrames;
-    }
-
-    public void setAlphaFrames(Keyframe[] alphaFrames) {
-        this.alphaFrames = alphaFrames;
     }
 
     public Keyframe[] getColorFrames() {
         return colorFrames;
     }
 
-    public void setColorFrames(Keyframe[] colorFrames) {
-        this.colorFrames = colorFrames;
-    }
-
     public Keyframe[] getSoundFrames() {
         return soundFrames;
-    }
-
-    public void setSoundFrames(Keyframe[] soundFrames) {
-        this.soundFrames = soundFrames;
     }
 
     public String getName() {

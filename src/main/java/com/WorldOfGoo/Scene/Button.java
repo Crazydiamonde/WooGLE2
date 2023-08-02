@@ -3,6 +3,7 @@ package com.WorldOfGoo.Scene;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -67,12 +68,11 @@ public class Button extends EditorObject {
 
     @Override
     public void update() {
-        setDepth(getDouble("depth"));
         setNameAttribute(getAttribute2("name"));
         try {
             image = GlobalResourceManager.getImage(getAttribute("up"), Main.getLevel().getVersion());
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Alarms.errorMessage(e);
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
@@ -119,7 +119,7 @@ public class Button extends EditorObject {
                 image = writableImage;
 
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Alarms.errorMessage(e);
             }
         };
 

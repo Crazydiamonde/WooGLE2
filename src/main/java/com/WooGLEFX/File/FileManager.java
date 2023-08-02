@@ -14,8 +14,10 @@ import com.WooGLEFX.Structures.WorldLevel;
 import javafx.scene.image.Image;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -51,12 +53,8 @@ public class FileManager {
         return failedImage;
     }
 
-    public static void openFailedImage() {
-        try {
-            failedImage = openImageFromFilePath(editorLocation + "ObjectIcons\\failed.png");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void openFailedImage() throws FileNotFoundException {
+        failedImage = openImageFromFilePath(editorLocation + "ObjectIcons\\failed.png");
     }
 
     private static ArrayList<String> paletteBalls = new ArrayList<>();
@@ -88,16 +86,12 @@ public class FileManager {
         FileManager.oldWOGdir = oldWOGdir;
     }
 
-    public static void readWOGdirs() {
-        try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            SimpleHandler defaultHandler = new SimpleHandler();
-            File properties = new File(editorLocation + "properties.xml");
-            saxParser.parse(properties, defaultHandler);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void readWOGdirs() throws ParserConfigurationException, SAXException, IOException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+        SimpleHandler defaultHandler = new SimpleHandler();
+        File properties = new File(editorLocation + "properties.xml");
+        saxParser.parse(properties, defaultHandler);
     }
 
     public static String getNewWOGdir() {
@@ -198,285 +192,160 @@ public class FileManager {
     public static ArrayList<EditorObject> commonBallData;
     public static ArrayList<EditorObject> commonBallResrcData;
 
-    public static WorldLevel openLevel(String levelName, double version) {
-        try {
-            scene = new ArrayList<>();
-            level = new ArrayList<>();
-            resources = new ArrayList<>();
-            addin = new ArrayList<>();
-            text = new ArrayList<>();
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            ThingHandler defaultHandler = new ThingHandler();
+    public static WorldLevel openLevel(String levelName, double version) throws ParserConfigurationException, SAXException, IOException {
+        scene = new ArrayList<>();
+        level = new ArrayList<>();
+        resources = new ArrayList<>();
+        addin = new ArrayList<>();
+        text = new ArrayList<>();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+        ThingHandler defaultHandler = new ThingHandler();
 
-            if (version == 1.3) {
-                File levelF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".level.bin");
-                File resrcF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".resrc.bin");
-                File sceneF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".scene.bin");
-                File addinF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".addin.xml");
-                File textF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".text.xml");
+        if (version == 1.3) {
+            File levelF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".level.bin");
+            File resrcF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".resrc.bin");
+            File sceneF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".scene.bin");
+            File addinF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".addin.xml");
+            File textF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".text.xml");
 
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(levelF)))), defaultHandler);
-                defaultHandler.mode = 1;
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(resrcF)))), defaultHandler);
-                defaultHandler.mode = 2;
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(sceneF)))), defaultHandler);
-                if (addinF.exists()) {
-                    defaultHandler.mode = 3;
-                    saxParser.parse(addinF, defaultHandler);
-                } else {
-                    Main.supremeAddToList(addin, Main.generateBlankAddinObject());
-                }
-                if (textF.exists()) {
-                    defaultHandler.mode = 4;
-                    saxParser.parse(textF, defaultHandler);
-                } else {
-                    Main.supremeAddToList(text, Main.generateBlankTextObject());
-                }
-            } else if (version == 1.5) {
-                File levelF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".level");
-                File resrcF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".resrc");
-                File sceneF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".scene");
-                File addinF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".addin.xml");
-                File textF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".text.xml");
-                saxParser.parse(levelF, defaultHandler);
-                defaultHandler.mode = 1;
-                saxParser.parse(resrcF, defaultHandler);
-                defaultHandler.mode = 2;
-                saxParser.parse(sceneF, defaultHandler);
-                if (addinF.exists()) {
-                    defaultHandler.mode = 3;
-                    saxParser.parse(addinF, defaultHandler);
-                } else {
-                    Main.supremeAddToList(addin, Main.generateBlankAddinObject());
-                }
-                if (textF.exists()) {
-                    defaultHandler.mode = 4;
-                    saxParser.parse(textF, defaultHandler);
-                } else {
-                    Main.supremeAddToList(text, Main.generateBlankTextObject());
-                }
-            }
-            return new WorldLevel(scene, level, resources, addin, text, version);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static ArrayList<EditorObject> getScene(String levelName, double version) {
-        try {
-            scene = new ArrayList<>();
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            ThingHandler defaultHandler = new ThingHandler();
-
-            if (version == 1.3) {
-                File sceneF = new File(oldWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".scene.bin");
-                defaultHandler.mode = 2;
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(sceneF)))), defaultHandler);
-            } else if (version == 1.5) {
-                File sceneF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".scene");
-                defaultHandler.mode = 2;
-                saxParser.parse(sceneF, defaultHandler);
-            }
-            return scene;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static _Ball openBall(String ballName, double version) {
-        try {
-            commonBallData = new ArrayList<>();
-            commonBallResrcData = new ArrayList<>();
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            BallFileOpener defaultHandler = new BallFileOpener();
-            if (version == 1.3) {
-                File ballFile = new File(oldWOGdir + "\\res\\balls\\" + ballName + "\\balls.xml.bin");
-                File ballFileR = new File(oldWOGdir + "\\res\\balls\\" + ballName + "\\resources.xml.bin");
-                BallFileOpener.impossible = null;
-                BallFileOpener.mode = 0;
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
-                BallFileOpener.mode = 1;
-                BallFileOpener.impossible = null;
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFileR)))), defaultHandler);
-                //for (EditorObject object : objects){
-                //    object.makeImage(resources);
-                //}
-                return new _Ball(commonBallData, commonBallResrcData);
-            } else if (version == 1.5) {
-                File ballFile = new File(newWOGdir + "\\res\\balls\\" + ballName + "\\balls.xml");
-                File ballFileR = new File(newWOGdir + "\\res\\balls\\" + ballName + "\\resources.xml");
-                BallFileOpener.impossible = null;
-                BallFileOpener.mode = 0;
-                saxParser.parse(ballFile, defaultHandler);
-                BallFileOpener.mode = 1;
-                BallFileOpener.impossible = null;
-                saxParser.parse(ballFileR, defaultHandler);
-                //for (EditorObject object : objects){
-                //    object.makeImage(resources);
-                //}
-                return new _Ball(commonBallData, commonBallResrcData);
+            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(levelF)))), defaultHandler);
+            defaultHandler.mode = 1;
+            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(resrcF)))), defaultHandler);
+            defaultHandler.mode = 2;
+            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(sceneF)))), defaultHandler);
+            if (addinF.exists()) {
+                defaultHandler.mode = 3;
+                saxParser.parse(addinF, defaultHandler);
             } else {
-                return null;
+                Main.supremeAddToList(addin, Main.generateBlankAddinObject());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            if (textF.exists()) {
+                defaultHandler.mode = 4;
+                saxParser.parse(textF, defaultHandler);
+            } else {
+                Main.supremeAddToList(text, Main.generateBlankTextObject());
+            }
+        } else if (version == 1.5) {
+            File levelF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".level");
+            File resrcF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".resrc");
+            File sceneF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".scene");
+            File addinF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".addin.xml");
+            File textF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".text.xml");
+            saxParser.parse(levelF, defaultHandler);
+            defaultHandler.mode = 1;
+            saxParser.parse(resrcF, defaultHandler);
+            defaultHandler.mode = 2;
+            saxParser.parse(sceneF, defaultHandler);
+            if (addinF.exists()) {
+                defaultHandler.mode = 3;
+                saxParser.parse(addinF, defaultHandler);
+            } else {
+                Main.supremeAddToList(addin, Main.generateBlankAddinObject());
+            }
+            if (textF.exists()) {
+                defaultHandler.mode = 4;
+                saxParser.parse(textF, defaultHandler);
+            } else {
+                Main.supremeAddToList(text, Main.generateBlankTextObject());
+            }
         }
+        return new WorldLevel(scene, level, resources, addin, text, version);
     }
 
-    public static ArrayList<EditorObject> openResources(double version) {
-        try {
-            commonBallResrcData = new ArrayList<>();
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            BallFileOpener defaultHandler = new BallFileOpener();
+    public static _Ball openBall(String ballName, double version) throws ParserConfigurationException, SAXException, IOException {
+        commonBallData = new ArrayList<>();
+        commonBallResrcData = new ArrayList<>();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+        BallFileOpener defaultHandler = new BallFileOpener();
+        if (version == 1.3) {
+            File ballFile = new File(oldWOGdir + "\\res\\balls\\" + ballName + "\\balls.xml.bin");
+            File ballFileR = new File(oldWOGdir + "\\res\\balls\\" + ballName + "\\resources.xml.bin");
             BallFileOpener.impossible = null;
+            BallFileOpener.mode = 0;
+            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
             BallFileOpener.mode = 1;
-            File ballFile = null;
-            String dir = "";
-            if (version == 1.3) {
-                dir = oldWOGdir;
-                ballFile = new File(dir + "\\properties\\resources.xml.bin");
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
-            } else if (version == 1.5) {
-                dir = newWOGdir;
-                ballFile = new File(dir + "\\properties\\resources.xml");
-                saxParser.parse(ballFile, defaultHandler);
-            }
-            return commonBallResrcData;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static ArrayList<EditorObject> openParticles(double version) {
-        try {
-            commonBallData = new ArrayList<>();
-            commonBallResrcData = new ArrayList<>();
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            BallFileOpener defaultHandler = new BallFileOpener();
+            BallFileOpener.impossible = null;
+            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFileR)))), defaultHandler);
+            return new _Ball(commonBallData, commonBallResrcData);
+        } else if (version == 1.5) {
+            File ballFile = new File(newWOGdir + "\\res\\balls\\" + ballName + "\\balls.xml");
+            File ballFileR = new File(newWOGdir + "\\res\\balls\\" + ballName + "\\resources.xml");
             BallFileOpener.impossible = null;
             BallFileOpener.mode = 0;
-            if (version == 1.3 && hasOldWOG) {
-                File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\fx.xml.bin");
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
-            } else if (version == 1.5 && hasNewWOG) {
-                File ballFile2 = new File(FileManager.getNewWOGdir() + "\\properties\\fx.xml");
-                saxParser.parse(ballFile2, defaultHandler);
-            }
-            return commonBallResrcData;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static ArrayList<EditorObject> openText(double version) {
-            try {
-            commonBallData = new ArrayList<>();
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            BallFileOpener defaultHandler = new BallFileOpener();
+            saxParser.parse(ballFile, defaultHandler);
+            BallFileOpener.mode = 1;
             BallFileOpener.impossible = null;
-            BallFileOpener.mode = 0;
-            if (version == 1.3 && hasOldWOG) {
-                File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\text.xml.bin");
-                saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
-            } else if (version == 1.5 && hasNewWOG) {
-                File ballFile2 = new File(FileManager.getNewWOGdir() + "\\properties\\text.xml");
-                saxParser.parse(ballFile2, defaultHandler);
-            }
-            return commonBallData;
-        } catch (Exception e) {
-            e.printStackTrace();
+            saxParser.parse(ballFileR, defaultHandler);
+            return new _Ball(commonBallData, commonBallResrcData);
+        } else {
             return null;
         }
     }
 
-    public static void main(String[] args) {
-        try {
+    public static ArrayList<EditorObject> openResources(double version) throws ParserConfigurationException, SAXException, IOException {
+        commonBallResrcData = new ArrayList<>();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+        BallFileOpener defaultHandler = new BallFileOpener();
+        BallFileOpener.impossible = null;
+        BallFileOpener.mode = 1;
+        File ballFile;
+        String dir;
+        if (version == 1.3) {
+            dir = oldWOGdir;
+            ballFile = new File(dir + "\\properties\\resources.xml.bin");
+            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
+        } else if (version == 1.5) {
+            dir = newWOGdir;
+            ballFile = new File(dir + "\\properties\\resources.xml");
+            saxParser.parse(ballFile, defaultHandler);
+        }
+        return commonBallResrcData;
+    }
 
-            ArrayList<String> names = new ArrayList<>();
-            ArrayList<ArrayList<String>> attributeNames = new ArrayList<>();
-
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            for (File file : new File(FileManager.getNewWOGdir() + "\\res\\levels").listFiles()) {
-                for (File inFile : file.listFiles()) {
-                    if (inFile.getName().endsWith(".scene") || inFile.getName().endsWith(".level") || inFile.getName().endsWith(".resrc")) {
-                        saxParser.parse(inFile, new DefaultHandler() {
-
-                            @Override
-                            public void startElement(String uri, String localName, String qName, Attributes attributes) {
-                                if (!names.contains(qName)) {
-                                    names.add(qName);
-                                    ArrayList<String> these = new ArrayList<>();
-                                    for (int j = 0; j < attributes.getLength(); j++) {
-                                        these.add(attributes.getQName(j));
-                                    }
-                                    attributeNames.add(these);
-                                } else {
-                                    for (String attributeName : attributeNames.get(names.indexOf(qName)).toArray(new String[0])) {
-                                        boolean contains = false;
-                                        for (int j = 0; j < attributes.getLength(); j++) {
-                                            if(attributes.getQName(j).equals(attributeName)) {
-                                                contains = true;
-                                            }
-                                        }
-                                        if (!contains) {
-                                            attributeNames.get(names.indexOf(qName)).remove(attributeName);
-                                        }
-                                    }
-                                }
-
-                            }
-
-                            @Override
-                            public void endElement(String uri, String localName, String qName) {
-                            }
-
-                            @Override
-                            public void characters(char[] ch, int start, int length) {
-                            }
-                        });
-                    }
-                }
-            }
-
-            for (int i = 0; i < names.size(); i++) {
-                System.out.print(names.get(i) + ": {");
-                for (String attribute : attributeNames.get(i)) {
-                    System.out.print(attribute);
-                    if (!attribute.equals(attributeNames.get(i).get(attributeNames.get(i).size() - 1))) {
-                        System.out.print(", ");
-                    }
-                }
-                System.out.println("}");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void openParticles(double version) throws ParserConfigurationException, SAXException, IOException {
+        commonBallData = new ArrayList<>();
+        commonBallResrcData = new ArrayList<>();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+        BallFileOpener defaultHandler = new BallFileOpener();
+        BallFileOpener.impossible = null;
+        BallFileOpener.mode = 0;
+        if (version == 1.3 && hasOldWOG) {
+            File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\fx.xml.bin");
+            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
+        } else if (version == 1.5 && hasNewWOG) {
+            File ballFile2 = new File(FileManager.getNewWOGdir() + "\\properties\\fx.xml");
+            saxParser.parse(ballFile2, defaultHandler);
         }
     }
 
-    public static void saveProperties() {
+    public static ArrayList<EditorObject> openText(double version) throws ParserConfigurationException, SAXException, IOException {
+        commonBallData = new ArrayList<>();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+        BallFileOpener defaultHandler = new BallFileOpener();
+        BallFileOpener.impossible = null;
+        BallFileOpener.mode = 0;
+        if (version == 1.3 && hasOldWOG) {
+            File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\text.xml.bin");
+            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
+        } else if (version == 1.5 && hasNewWOG) {
+            File ballFile2 = new File(FileManager.getNewWOGdir() + "\\properties\\text.xml");
+            saxParser.parse(ballFile2, defaultHandler);
+        }
+        return commonBallData;
+    }
+
+    public static void saveProperties() throws IOException {
         StringBuilder export = new StringBuilder("<properties>\n\n<oldWOG filepath=\"" + oldWOGdir + "\"/>\n<newWOG filepath=\"" + newWOGdir + "\"/>\n<gooBallPalette>\n");
         for (int i = 0; i < paletteBalls.size(); i++) {
             export.append("\t<Ball ball=\"").append(paletteBalls.get(i)).append("\" version=\"").append(paletteVersions.get(i)).append("\"/>\n");
         }
         export.append("</gooBallPalette>\n</properties>");
 
-        try {
-            Files.write(Paths.get(editorLocation + "properties.xml"), Collections.singleton(export.toString()), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Files.write(Paths.get(editorLocation + "properties.xml"), Collections.singleton(export.toString()), StandardCharsets.UTF_8);
     }
 }

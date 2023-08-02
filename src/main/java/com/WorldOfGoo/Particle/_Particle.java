@@ -1,5 +1,6 @@
 package com.WorldOfGoo.Particle;
 
+import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Structures.InputField;
@@ -60,7 +61,7 @@ public class _Particle extends EditorObject {
             }
             images.add(GlobalResourceManager.getImage(mogus, version));
         } catch (Exception e) {
-            e.printStackTrace();
+            Alarms.errorMessage(e);
         }
     }
 }

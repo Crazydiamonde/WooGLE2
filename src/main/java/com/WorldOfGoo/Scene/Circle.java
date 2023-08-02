@@ -1,10 +1,10 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.EditorObjects.GeometryImage;
+import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
@@ -47,7 +47,7 @@ public class Circle extends EditorObject {
             try {
                 image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Alarms.errorMessage(e);
             }
         }
 
@@ -56,7 +56,7 @@ public class Circle extends EditorObject {
                 try {
                     image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    Alarms.errorMessage(e);
                 }
             }
         });
@@ -98,7 +98,7 @@ public class Circle extends EditorObject {
     }
 
     @Override
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
         graphicsContext.save();
         if (Main.getLevel().isShowGeometry()) {
             double x2 = Double.parseDouble(getAttribute("x"));

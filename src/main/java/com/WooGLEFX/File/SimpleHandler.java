@@ -1,32 +1,33 @@
 package com.WooGLEFX.File;
-import com.WooGLEFX.File.FileManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.util.ArrayList;
 
 public class SimpleHandler extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
         //System.out.println("Started: " + qName);
-        if (qName.equals("oldWOG")) {
-            if (!attributes.getValue(attributes.getIndex("filepath")).equals("")) {
-                FileManager.setOldWOGdir(attributes.getValue(attributes.getIndex("filepath")));
+        switch (qName) {
+            case "oldWOG" -> {
+                if (!attributes.getValue(attributes.getIndex("filepath")).equals("")) {
+                    FileManager.setOldWOGdir(attributes.getValue(attributes.getIndex("filepath")));
+                }
+                if (!FileManager.getOldWOGdir().equals("")) {
+                    FileManager.setHasOldWOG(true);
+                }
             }
-            if (!FileManager.getOldWOGdir().equals("")) {
-                FileManager.setHasOldWOG(true);
+            case "newWOG" -> {
+                if (!attributes.getValue(attributes.getIndex("filepath")).equals("")) {
+                    FileManager.setNewWOGdir(attributes.getValue(attributes.getIndex("filepath")));
+                }
+                if (!FileManager.getNewWOGdir().equals("")) {
+                    FileManager.setHasNewWOG(true);
+                }
             }
-        } else if (qName.equals("newWOG")) {
-            if (!attributes.getValue(attributes.getIndex("filepath")).equals("")) {
-                FileManager.setNewWOGdir(attributes.getValue(attributes.getIndex("filepath")));
+            case "Ball" -> {
+                FileManager.getPaletteBalls().add(attributes.getValue(attributes.getIndex("ball")));
+                FileManager.getPaletteVersions().add(Double.valueOf(attributes.getValue(attributes.getIndex("version"))));
             }
-            if (!FileManager.getNewWOGdir().equals("")) {
-                FileManager.setHasNewWOG(true);
-            }
-        } else if (qName.equals("Ball")) {
-            FileManager.getPaletteBalls().add(attributes.getValue(attributes.getIndex("ball")));
-            FileManager.getPaletteVersions().add(Double.valueOf(attributes.getValue(attributes.getIndex("version"))));
         }
     }
 

@@ -12,11 +12,7 @@ import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Ball.Part;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -28,7 +24,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
-import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -37,23 +32,16 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class FXCreator {
-
-    private static boolean contextMenuShowing = false;
-
-    public static boolean isContextMenuShowing() {
-        return contextMenuShowing;
-    }
-
-    public static void setContextMenuShowing(boolean contextMenuShowing) {
-        FXCreator.contextMenuShowing = contextMenuShowing;
-    }
 
     public static Button createTemplateForBall(int size, _Ball ball) {
 
@@ -85,10 +73,10 @@ public class FXCreator {
                     }
                 }
                 if (ok) {
-                    double lowX = 0;
-                    double highX = 0;
-                    double lowY = 0;
-                    double highY = 0;
+                    double lowX;
+                    double highX;
+                    double lowY;
+                    double highY;
 
                     String x = part.getAttribute("x");
                     String y = part.getAttribute("y");
@@ -174,10 +162,10 @@ public class FXCreator {
 
                         double scale = Double.parseDouble(part.getAttribute("scale"));
 
-                        double lowX = 0;
-                        double highX = 0;
-                        double lowY = 0;
-                        double highY = 0;
+                        double lowX;
+                        double highX;
+                        double lowY;
+                        double highY;
 
                         String x = part.getAttribute("x");
                         String y = part.getAttribute("y");
@@ -206,16 +194,16 @@ public class FXCreator {
 
                         if (img != null) {
 
-                            double screenX = myX + toWriteOn.getWidth() / 2 - img.getWidth() * scale / 2;
-                            double screenY = -myY + toWriteOn.getHeight() / 2 - img.getHeight() * scale / 2;
+                            double screenX = myX + toWriteOn.getWidth() / 2.0 - img.getWidth() * scale / 2;
+                            double screenY = -myY + toWriteOn.getHeight() / 2.0 - img.getHeight() * scale / 2;
 
                             writeGraphics.drawImage(SwingFXUtils.fromFXImage(img, null), (int) screenX, (int) screenY, (int) (img.getWidth() * scale), (int) (img.getHeight() * scale), null);
 
                             if (((Part) part).getPupilImage() != null) {
                                 Image pupilImage = ((Part) part).getPupilImage();
 
-                                double screenX2 = myX + toWriteOn.getWidth() / 2 - pupilImage.getWidth() * scale / 2;
-                                double screenY2 = -myY + toWriteOn.getHeight() / 2 - pupilImage.getHeight() * scale / 2;
+                                double screenX2 = myX + toWriteOn.getWidth() / 2.0 - pupilImage.getWidth() * scale / 2;
+                                double screenY2 = -myY + toWriteOn.getHeight() / 2.0 - pupilImage.getHeight() * scale / 2;
 
                                 writeGraphics.drawImage(SwingFXUtils.fromFXImage(pupilImage, null), (int) screenX2, (int) screenY2, (int) (pupilImage.getWidth() * scale), (int) (pupilImage.getHeight() * scale), null);
                             }
@@ -244,21 +232,17 @@ public class FXCreator {
 
     public static void addBallsTo() {
         int size = 18;
-        try {
-            int i = 0;
-            for (String paletteBall : FileManager.getPaletteBalls()) {
-                for (_Ball ball : Main.getImportedBalls()) {
-                    if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall) && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
-                        Button button = createTemplateForBall(size, ball);
-                        if (button != null) {
-                            gooballsToolbar.getItems().add(button);
-                        }
+        int i = 0;
+        for (String paletteBall : FileManager.getPaletteBalls()) {
+            for (_Ball ball : Main.getImportedBalls()) {
+                if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall) && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
+                    Button button = createTemplateForBall(size, ball);
+                    if (button != null) {
+                        gooballsToolbar.getItems().add(button);
                     }
                 }
-                i++;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            i++;
         }
     }
 
@@ -321,49 +305,45 @@ public class FXCreator {
     public static Button addSignpostButton = new Button();
     public static Button addLabelButton = new Button();
 
-    public static void buttons (VBox vBox) {
+    public static void buttons (VBox vBox) throws IOException {
 
         ToolBar functionsToolbar = new ToolBar();
 
-        try {
-            buttonNewOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
-            buttonNewNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
-            buttonOpenOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
-            buttonOpenNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
-            buttonCloneOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_old.png")));
-            buttonCloneNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
-            buttonSaveOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
-            buttonSaveNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
-            buttonSaveAndPlayOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_old.png")));
-            buttonSaveAndPlayNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_new.png")));
-            buttonExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_goomod.png")));
-            buttonDummyExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_dummy_goomod.png")));
-            buttonUndo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
-            buttonRedo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
-            buttonCut.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
-            buttonCopy.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
-            buttonPaste.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
-            buttonDelete.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
-            buttonUpdateLevelResources.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
-            buttonImportImages.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
-            buttonAddTextResource.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
-            buttonCleanResources.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
-            buttonSetMusic.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
-            buttonSetLoopsound.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
-            buttonSelectMoveAndResize.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\selection_mode.png")));
-            buttonZoomAndPanView.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\zoom_mode.png")));
-            buttonStrandMode.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\strand_mode.png")));
-            buttonShowHideCamera.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png")));
-            buttonShowHideForcefields.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png")));
-            buttonShowHideGeometry.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png")));
-            buttonShowHideGraphics.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png")));
-            buttonShowHideGoos.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png")));
-            buttonShowHideParticles.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png")));
-            buttonShowHideLabels.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png")));
-            buttonShowHideAnim.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png")));
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        buttonNewOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
+        buttonNewNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
+        buttonOpenOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
+        buttonOpenNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
+        buttonCloneOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_old.png")));
+        buttonCloneNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
+        buttonSaveOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
+        buttonSaveNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
+        buttonSaveAndPlayOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_old.png")));
+        buttonSaveAndPlayNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_new.png")));
+        buttonExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_goomod.png")));
+        buttonDummyExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_dummy_goomod.png")));
+        buttonUndo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
+        buttonRedo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
+        buttonCut.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
+        buttonCopy.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
+        buttonPaste.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
+        buttonDelete.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
+        buttonUpdateLevelResources.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
+        buttonImportImages.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
+        buttonAddTextResource.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
+        buttonCleanResources.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
+        buttonSetMusic.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
+        buttonSetLoopsound.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
+        buttonSelectMoveAndResize.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\selection_mode.png")));
+        buttonZoomAndPanView.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\zoom_mode.png")));
+        buttonStrandMode.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\strand_mode.png")));
+        buttonShowHideCamera.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png")));
+        buttonShowHideForcefields.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png")));
+        buttonShowHideGeometry.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png")));
+        buttonShowHideGraphics.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png")));
+        buttonShowHideGoos.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png")));
+        buttonShowHideParticles.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png")));
+        buttonShowHideLabels.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png")));
+        buttonShowHideAnim.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png")));
 
         buttonNewOld.setOnAction(e -> Main.newLevel(1.3));
         buttonNewNew.setOnAction(e -> Main.newLevel(1.5));
@@ -438,25 +418,19 @@ public class FXCreator {
 
         addBallsTo();
 
-        gooballsToolbar.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    ContextMenu contextMenu = new ContextMenu();
-                    MenuItem menuItem = new MenuItem("Configure Palette...");
-                    menuItem.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            try {
-                                new PaletteReconfigurator().start(new Stage());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    contextMenu.getItems().add(menuItem);
-                    gooballsToolbar.setContextMenu(contextMenu);
-                }
+        gooballsToolbar.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem menuItem = new MenuItem("Configure Palette...");
+                menuItem.setOnAction(actionEvent -> {
+                    try {
+                        new PaletteReconfigurator().start(new Stage());
+                    } catch (ParserConfigurationException | SAXException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                contextMenu.getItems().add(menuItem);
+                gooballsToolbar.setContextMenu(contextMenu);
             }
         });
 
@@ -468,24 +442,20 @@ public class FXCreator {
 
         ToolBar addObjectsToolbar = new ToolBar();
 
-        try {
-            addLineButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\line.png")));
-            addRectangleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\rectangle.png")));
-            addCircleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\circle.png")));
-            addSceneLayerButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\SceneLayer.png")));
-            addCompositegeomButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\compositegeom.png")));
-            addHingeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\hinge.png")));
-            autoPipeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\pipe.png")));
-            addVertexButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\Vertex.png")));
-            addFireButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\fire.png")));
-            addLinearforcefieldButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\linearforcefield.png")));
-            addRadialforcefieldButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\radialforcefield.png")));
-            addParticlesButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\particles.png")));
-            addSignpostButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\signpost.png")));
-            addLabelButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\label.png")));
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        addLineButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\line.png")));
+        addRectangleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\rectangle.png")));
+        addCircleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\circle.png")));
+        addSceneLayerButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\SceneLayer.png")));
+        addCompositegeomButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\compositegeom.png")));
+        addHingeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\hinge.png")));
+        autoPipeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\pipe.png")));
+        addVertexButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\Vertex.png")));
+        addFireButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\fire.png")));
+        addLinearforcefieldButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\linearforcefield.png")));
+        addRadialforcefieldButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\radialforcefield.png")));
+        addParticlesButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\particles.png")));
+        addSignpostButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\signpost.png")));
+        addLabelButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\label.png")));
 
         addLineButton.setOnAction(e -> Main.addLine(Main.getLevel().getSceneObject()));
         addRectangleButton.setOnAction(e -> Main.addRectangle(Main.getLevel().getSceneObject()));
@@ -518,15 +488,13 @@ public class FXCreator {
         addObjectsToolbar.setId("thing");
     }
 
-    private static int currentlySelectedRow = -1;
-
     public static final Paint notSelectedPaint = Paint.valueOf("FFFFFFFF");
     public static final Paint notSelectedHoverPaint = Paint.valueOf("B0D0FFFF");
     public static final Paint selectedPaint = Paint.valueOf("0000D0FF");
 
     /** Generates the TreeTableView representing all objects in a "scene", "level", or "resources" of a level.
      * @return The TreeTableView. */
-    public static TreeTableView<EditorObject> makeHierarchy(){
+    public static TreeTableView<EditorObject> makeHierarchy() {
 
         //Create the TreeTableView.
         TreeTableView<EditorObject> hierarchy = new TreeTableView<>();
@@ -542,32 +510,17 @@ public class FXCreator {
 
         TreeTableColumn<EditorObject, String> hierarchyNames = new TreeTableColumn<>();
         hierarchyNames.setGraphic(new Label("ID or Name"));
-        hierarchyNames.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<EditorObject, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<EditorObject, String> param) {
-                if (param.getValue().getValue().getObjName() != null) {
-                    return param.getValue().getValue().getObjName().valueProperty();
-                } else {
-                    return new EditorAttribute("AAAAA", "AAAAA", "AAAAA", new InputField("AAAAA", InputField.ANY), false).valueProperty();
-                }
+        hierarchyNames.setCellValueFactory(param -> {
+            if (param.getValue().getValue().getObjName() != null) {
+                return param.getValue().getValue().getObjName().valueProperty();
+            } else {
+                return new EditorAttribute("AAAAA", "AAAAA", "AAAAA", new InputField("AAAAA", InputField.ANY), false).valueProperty();
             }
         });
-
-        /* ChatGPT */
-        // Event filter for the TreeTableView to handle column header click
-        hierarchy.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
-            // Check if the source of the event is a column header
-            if (event.getTarget() instanceof TableColumnHeader) {
-                event.consume();
-            }
-        });
-
 
         hierarchy.getColumns().add(hierarchyNames);
 
         hierarchyElements.setCellFactory(column -> new TreeTableCell<>(){
-
-            private boolean f = false;
 
             @Override
             protected void updateItem(String item, boolean empty){
@@ -585,10 +538,11 @@ public class FXCreator {
 
                     if (getTableRow().getItem() != null) {
                         ImageView imageView;
+
                         try {
                             imageView = new ImageView(FileManager.getObjectIcon(getTableRow().getItem().getClass().getSimpleName()));
                         } catch (FileNotFoundException e) {
-                            imageView = null;
+                            throw new RuntimeException(e);
                         }
 
                         //If the cell's EditorObject is invalid, display its graphic with a warning symbol.
@@ -637,34 +591,23 @@ public class FXCreator {
         hierarchy.setRowFactory(treeTableView -> {
             final TreeTableRow<EditorObject> row = new TreeTableRow<>();
 
-            row.selectedProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    contextMenuShowing = false;
-                    //row.setFont(Font.font("Helvetica", 12));
-                }
-            });
-
-            /*
-            row.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (hierarchy.getTreeItem(row.getIndex()) != null) {
-                        Main.setSelected(hierarchy.getTreeItem(row.getIndex()).getValue());
-                        Main.changeTableView(hierarchy.getTreeItem(row.getIndex()).getValue());
-                        if (event.getButton().equals(MouseButton.SECONDARY)) {
+            row.setOnMousePressed(event -> {
+                if (hierarchy.getTreeItem(row.getIndex()) != null) {
+                    Main.setSelected(hierarchy.getTreeItem(row.getIndex()).getValue());
+                    Main.changeTableView(hierarchy.getTreeItem(row.getIndex()).getValue());
+                    if (event.getButton().equals(MouseButton.SECONDARY)) {
+                        try {
                             row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
-                            System.out.println(row.getContextMenu().getItems().size());
-                            contextMenuShowing = true;
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
                         }
+                        System.out.println(row.getContextMenu().getItems().size());
                     }
                 }
             });
 
-             */
-
             row.setOnDragDetected(event -> {
-                TreeItem<EditorObject> selected2 = (TreeItem<EditorObject>) hierarchy.getSelectionModel().getSelectedItem();
+                TreeItem<EditorObject> selected2 = hierarchy.getSelectionModel().getSelectedItem();
                 if (selected2 != null) {
                     Dragboard db = hierarchy.startDragAndDrop(TransferMode.ANY);
                     ClipboardContent content = new ClipboardContent();
@@ -682,7 +625,6 @@ public class FXCreator {
             });
 
             row.setOnDragOver(event -> {
-                Dragboard db = event.getDragboard();
                 if (event.getDragboard().hasString()) {
                     event.acceptTransferModes(TransferMode.MOVE);
                     //row.setStyle("-fx-font-size: 12pt, -fx-background-color: #D0F0FFFF");
@@ -691,7 +633,6 @@ public class FXCreator {
             });
 
             row.setOnDragDropped(event -> {
-                Dragboard db = event.getDragboard();
                 boolean success = false;
                 if (event.getDragboard().hasString()) {
 
@@ -849,28 +790,21 @@ public class FXCreator {
                     }
                 };
 
-                cell.setOnMousePressed(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        /*
-                        cell.setContextMenu(FXCreator.possibleAttributeValues(this));
-                        cell.getContextMenu().show(propertiesView, Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(), 100);
-                        propertiesView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<EditorAttribute>>() {
-                            @Override
-                            public void changed(ObservableValue<? extends TreeItem<EditorAttribute>> observable, TreeItem<EditorAttribute> oldValue, TreeItem<EditorAttribute> newValue) {
-                                if (newValue != null) {
-                                    cell.getContextMenu().hide();
-                                }
-                            }
-                        });
+                cell.setOnMousePressed(event -> {
 
-                         */
-                        if (cell.getContextMenu() != null) {
-                            cell.getContextMenu().show(propertiesView, Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(), 100);
-                        }
-                        if (!cell.isSelected() && cell.getContextMenu() != null) {
+                    cell.setContextMenu(FXCreator.possibleAttributeValues(cell));
+                    cell.getContextMenu().show(propertiesView, Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(), 100);
+                    propertiesView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue != null) {
                             cell.getContextMenu().hide();
                         }
+                    });
+
+                    if (cell.getContextMenu() != null) {
+                        cell.getContextMenu().show(propertiesView, Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(), 100);
+                    }
+                    if (!cell.isSelected() && cell.getContextMenu() != null) {
+                        cell.getContextMenu().hide();
                     }
                 });
 
@@ -925,7 +859,7 @@ public class FXCreator {
         return propertiesView;
     }
 
-    public static MenuBar createMenu() {
+    public static MenuBar createMenu() throws FileNotFoundException {
         MenuBar bar = new MenuBar();
 
         Menu fileMenu = new Menu("File");
@@ -938,15 +872,11 @@ public class FXCreator {
         MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
         MenuItem quitItem = new MenuItem("Quit");
 
-        try {
-            reloadWorldOfGooOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
-            reloadWorldOfGooNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
-            changeWorldOfGooDirectoryOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
-            changeWorldOfGooDirectoryNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
-            quitItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\quit.png")));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        reloadWorldOfGooOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
+        reloadWorldOfGooNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
+        changeWorldOfGooDirectoryOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
+        changeWorldOfGooDirectoryNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
+        quitItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\quit.png")));
 
         reloadWorldOfGooOldItem.setOnAction(e -> Main.reloadWorldOfGoo(1.3));
         reloadWorldOfGooNewItem.setOnAction(e -> Main.reloadWorldOfGoo(1.5));
@@ -967,20 +897,16 @@ public class FXCreator {
         MenuItem saveAndPlayLevelOldItem = new MenuItem("Save and Play Level (1.3)...");
         MenuItem saveAndPlayLevelNewItem = new MenuItem("Save and Play Level (1.5)...");
 
-        try {
-            newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
-            newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
-            openLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
-            openLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
-            cloneLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_old.png")));
-            cloneLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
-            saveLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
-            saveLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
-            saveAndPlayLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_old.png")));
-            saveAndPlayLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_new.png")));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
+        newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
+        openLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
+        openLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
+        cloneLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_old.png")));
+        cloneLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
+        saveLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
+        saveLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
+        saveAndPlayLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_old.png")));
+        saveAndPlayLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_new.png")));
 
         newLevelOldItem.setOnAction(e -> Main.newLevel(1.3));
         newLevelNewItem.setOnAction(e -> Main.newLevel(1.5));
@@ -1004,16 +930,12 @@ public class FXCreator {
         MenuItem pasteItem = new MenuItem("Paste");
         MenuItem deleteItem = new MenuItem("Delete");
 
-        try {
-            undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
-            redoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
-            cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
-            copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
-            pasteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
-            deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
+        redoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
+        cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
+        copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
+        pasteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
+        deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
 
         undoItem.setOnAction(e -> Main.undo());
         redoItem.setOnAction(e -> Main.redo());
@@ -1033,16 +955,12 @@ public class FXCreator {
         MenuItem setMusicItem = new MenuItem("Set Music...");
         MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
 
-        try {
-            //updateLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\resources.png")));
-            importImageItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
-            //newTextResourceItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\cut.png")));
-            //cleanLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\copy.png")));
-            setMusicItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
-            setLoopsoundItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        updateLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
+        importImageItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
+        newTextResourceItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
+        cleanLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
+        setMusicItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
+        setLoopsoundItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
 
         updateLevelResourcesItem.setOnAction(e -> Main.updateLevelResources());
         importImageItem.setOnAction(e -> Main.importImage());
@@ -1061,7 +979,7 @@ public class FXCreator {
     /** Generates a right-click menu for an editor object.
      * @param object The editor object to generate the menu for.
      * @return The ContextMenu for right-clicking on that object. */
-    public static ContextMenu contextMenuForEditorObject(EditorObject object) {
+    public static ContextMenu contextMenuForEditorObject(EditorObject object) throws FileNotFoundException {
 
         //Create the content menu.
         ContextMenu menu = new ContextMenu();
@@ -1073,14 +991,12 @@ public class FXCreator {
         MenuItem deleteItem = new MenuItem("Delete");
 
         //Attempt to set graphics for the Cut, Copy, Paste, and Delete buttons.
-        try {
-            cutItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\cut.png")));
-            copyItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\copy.png")));
-            pasteInPlaceItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\paste.png")));
-            deleteItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\delete.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        cutItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\cut.png")));
+        copyItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\copy.png")));
+        pasteInPlaceItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\paste.png")));
+        deleteItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\delete.png")));
+
 
         menu.getItems().addAll(cutItem, copyItem, pasteInPlaceItem, deleteItem);
 
@@ -1091,46 +1007,39 @@ public class FXCreator {
             MenuItem addItemItem = new MenuItem("Add " + childToAdd);
 
             //Attempt to set graphics for this menu item.
-            try {
-                addItemItem.setGraphic(new ImageView(FileManager.getObjectIcon(childToAdd)));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            addItemItem.setGraphic(new ImageView(FileManager.getObjectIcon(childToAdd)));
 
             //Set the item's action to creating the child, with the object as its parent.
-            addItemItem.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    switch (childToAdd) {
-                        case "BallInstance" -> Main.addBall(object, "");
-                        case "Strand" -> Main.addStrand(object);
-                        case "camera" -> Main.addCamera(object);
-                        case "poi" -> Main.addPoi(object);
-                        case "music" -> Main.addMusic(object);
-                        case "loopsound" -> Main.addLoopsound(object);
-                        case "linearforcefield" -> Main.addLinearForcefield(object);
-                        case "radialforcefield" -> Main.addRadialForcefield(object);
-                        case "particles" -> Main.addParticle(object);
-                        case "SceneLayer" -> Main.addSceneLayer(object);
-                        case "buttongroup" -> Main.addButtongroup(object);
-                        case "button" -> Main.addButton(object);
-                        case "circle" -> Main.addCircle(object);
-                        case "rectangle" -> Main.addRectangle(object);
-                        case "hinge" -> Main.addHinge(object);
-                        case "compositegeom" -> Main.addCompositegeom(object);
-                        case "label" -> Main.addLabel(object);
-                        case "line" -> Main.addLine(object);
-                        case "motor" -> Main.addMotor(object);
-                        case "slider" -> Main.addSlider(object);
-                        case "endoncollision" -> Main.addEndoncollision(object);
-                        case "endonnogeom" -> Main.addEndonnogeom(object);
-                        case "endonmessage" -> Main.addEndonmessage(object);
-                        case "targetheight" -> Main.addTargetheight(object);
-                        case "fire" -> Main.addFire(object);
-                        case "levelexit" -> Main.addLevelexit(object);
-                        case "pipe" -> Main.addPipe(object);
-                        case "signpost" -> Main.addSign(object);
-                    }
+            addItemItem.setOnAction(event -> {
+                switch (childToAdd) {
+                    case "BallInstance" -> Main.addBall(object, "");
+                    case "Strand" -> Main.addStrand(object);
+                    case "camera" -> Main.addCamera(object);
+                    case "poi" -> Main.addPoi(object);
+                    case "music" -> Main.addMusic(object);
+                    case "loopsound" -> Main.addLoopsound(object);
+                    case "linearforcefield" -> Main.addLinearForcefield(object);
+                    case "radialforcefield" -> Main.addRadialForcefield(object);
+                    case "particles" -> Main.addParticle(object);
+                    case "SceneLayer" -> Main.addSceneLayer(object);
+                    case "buttongroup" -> Main.addButtongroup(object);
+                    case "button" -> Main.addButton(object);
+                    case "circle" -> Main.addCircle(object);
+                    case "rectangle" -> Main.addRectangle(object);
+                    case "hinge" -> Main.addHinge(object);
+                    case "compositegeom" -> Main.addCompositegeom(object);
+                    case "label" -> Main.addLabel(object);
+                    case "line" -> Main.addLine(object);
+                    case "motor" -> Main.addMotor(object);
+                    case "slider" -> Main.addSlider(object);
+                    case "endoncollision" -> Main.addEndoncollision(object);
+                    case "endonnogeom" -> Main.addEndonnogeom(object);
+                    case "endonmessage" -> Main.addEndonmessage(object);
+                    case "targetheight" -> Main.addTargetheight(object);
+                    case "fire" -> Main.addFire(object);
+                    case "levelexit" -> Main.addLevelexit(object);
+                    case "pipe" -> Main.addPipe(object);
+                    case "signpost" -> Main.addSign(object);
                 }
             });
 
@@ -1162,35 +1071,32 @@ public class FXCreator {
         thing.setPrefHeight(30);
         thing.setPadding(new Insets(-6, -6, -6, -6));
 
-        thing.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> observableValue, Tab tab, Tab t1) {
-                if (t1 == sceneSelectButton) {
-                    Main.hierarchy.setRoot(Main.getLevel().getScene().get(0).getTreeItem());
-                    Main.hierarchy.refresh();
-                    Main.hierarchy.getRoot().setExpanded(true);
-                    Main.getHierarchy().setShowRoot(true);
-                } else if (t1 == levelSelectButton) {
-                    Main.hierarchy.setRoot(Main.getLevel().getLevel().get(0).getTreeItem());
-                    Main.hierarchy.refresh();
-                    Main.hierarchy.getRoot().setExpanded(true);
-                    Main.getHierarchy().setShowRoot(true);
-                } else if (t1 == resrcSelectButton) {
-                    Main.hierarchy.setRoot(Main.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
-                    Main.hierarchy.refresh();
-                    Main.hierarchy.getRoot().setExpanded(true);
-                    Main.getHierarchy().setShowRoot(false);
-                } else if (t1 == textSelectButton) {
-                    Main.hierarchy.setRoot(Main.getLevel().getTextObject().getTreeItem());
-                    Main.hierarchy.refresh();
-                    Main.hierarchy.getRoot().setExpanded(true);
-                    Main.getHierarchy().setShowRoot(false);
-                } else if (t1 == addinSelectButton) {
-                    Main.hierarchy.setRoot(Main.getLevel().getAddinObject().getTreeItem());
-                    Main.hierarchy.refresh();
-                    Main.hierarchy.getRoot().setExpanded(true);
-                    Main.getHierarchy().setShowRoot(true);
-                }
+        thing.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
+            if (t1 == sceneSelectButton) {
+                Main.hierarchy.setRoot(Main.getLevel().getScene().get(0).getTreeItem());
+                Main.hierarchy.refresh();
+                Main.hierarchy.getRoot().setExpanded(true);
+                Main.getHierarchy().setShowRoot(true);
+            } else if (t1 == levelSelectButton) {
+                Main.hierarchy.setRoot(Main.getLevel().getLevel().get(0).getTreeItem());
+                Main.hierarchy.refresh();
+                Main.hierarchy.getRoot().setExpanded(true);
+                Main.getHierarchy().setShowRoot(true);
+            } else if (t1 == resrcSelectButton) {
+                Main.hierarchy.setRoot(Main.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
+                Main.hierarchy.refresh();
+                Main.hierarchy.getRoot().setExpanded(true);
+                Main.getHierarchy().setShowRoot(false);
+            } else if (t1 == textSelectButton) {
+                Main.hierarchy.setRoot(Main.getLevel().getTextObject().getTreeItem());
+                Main.hierarchy.refresh();
+                Main.hierarchy.getRoot().setExpanded(true);
+                Main.getHierarchy().setShowRoot(false);
+            } else if (t1 == addinSelectButton) {
+                Main.hierarchy.setRoot(Main.getLevel().getAddinObject().getTreeItem());
+                Main.hierarchy.refresh();
+                Main.hierarchy.getRoot().setExpanded(true);
+                Main.getHierarchy().setShowRoot(true);
             }
         });
 
@@ -1263,19 +1169,16 @@ public class FXCreator {
             }
         });
 
-        tab.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                //If the user has just selected this tab:
-                if (t1) {
-                    //Set this tab's level to be the currently selected level.
-                    Main.setLevel(level);
-                    Main.hierarchy.setRoot(level.getSceneObject().getTreeItem());
-                } else {
-                    //Destroy and replace the level tab to prevent an unknown freezing issue.
-                    if (level.getLevelTab() != null && level.getLevelTab().getTabPane() != null && level.getLevelTab().getTabPane().getTabs().contains(level.getLevelTab()) && level.getLevelTab().getTabPane().getTabs().size() != 0) {
-                        level.setEditingStatus(level.getEditingStatus(), false);
-                    }
+        tab.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+            //If the user has just selected this tab:
+            if (t1) {
+                //Set this tab's level to be the currently selected level.
+                Main.setLevel(level);
+                Main.hierarchy.setRoot(level.getSceneObject().getTreeItem());
+            } else {
+                //Destroy and replace the level tab to prevent an unknown freezing issue.
+                if (level.getLevelTab() != null && level.getLevelTab().getTabPane() != null && level.getLevelTab().getTabPane().getTabs().contains(level.getLevelTab()) && level.getLevelTab().getTabPane().getTabs().size() != 0) {
+                    level.setEditingStatus(level.getEditingStatus(), false);
                 }
             }
         });
@@ -1288,7 +1191,7 @@ public class FXCreator {
         EditorAttribute attribute = cell.getTableRow().getItem();
 
         switch (attribute.getInput().getType()) {
-            case InputField.IMAGE, InputField.IMAGE_REQUIRED:
+            case InputField.IMAGE, InputField.IMAGE_REQUIRED -> {
                 for (EditorObject resource : Main.getLevel().getResources()) {
                     if (resource instanceof ResrcImage) {
                         MenuItem setImageItem = new MenuItem();
@@ -1313,25 +1216,27 @@ public class FXCreator {
                         contextMenu.getItems().add(setImageItem);
                     }
                 }
-                break;
-            case InputField.BALL:
+            }
+            case InputField.BALL -> {
                 String path = Main.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
-                for (File ballFile : new File(path + "\\res\\balls").listFiles()) {
-                    MenuItem setImageItem = new MenuItem(ballFile.getName());
+                File[] ballFiles = new File(path + "\\res\\balls").listFiles();
+                if (ballFiles != null) {
+                    for (File ballFile : ballFiles) {
+                        MenuItem setImageItem = new MenuItem(ballFile.getName());
 
-                    setImageItem.setOnAction(event -> {
-                        Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), attribute.getValue(), ballFile.getName()));
-                        attribute.setValue(ballFile.getName());
-                        if (contextMenu.isFocused()) {
-                            cell.commitEdit(attribute.getValue());
-                        }
-                    });
+                        setImageItem.setOnAction(event -> {
+                            Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), attribute.getValue(), ballFile.getName()));
+                            attribute.setValue(ballFile.getName());
+                            if (contextMenu.isFocused()) {
+                                cell.commitEdit(attribute.getValue());
+                            }
+                        });
 
-                    contextMenu.getItems().add(setImageItem);
+                        contextMenu.getItems().add(setImageItem);
+                    }
                 }
-                break;
+            }
         }
-
 
         return contextMenu;
     }

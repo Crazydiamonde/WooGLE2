@@ -1,6 +1,5 @@
 package com.WooGLEFX.Engine;
 
-import com.WooGLEFX.Engine.Main;
 import javafx.animation.AnimationTimer;
 
 public class EditorWindow extends AnimationTimer {
@@ -19,9 +18,6 @@ public class EditorWindow extends AnimationTimer {
         }
 
         timeElapsed = (now - timeStarted) / 1000000000f;
-
-        //System.out.println(timeElapsed);
-        //Main.hierarchy.refresh();
 
         Main.updateAnimations(timeElapsed);
         Main.draw();

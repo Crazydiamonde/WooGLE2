@@ -5,6 +5,7 @@ import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.EditorObjects.GeometryImage;
+import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
@@ -47,7 +48,7 @@ public class Compositegeom extends EditorObject {
             try {
                 image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Alarms.errorMessage(e);
             }
         }
 
@@ -56,13 +57,13 @@ public class Compositegeom extends EditorObject {
                 try {
                     image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    Alarms.errorMessage(e);
                 }
             }
         });
     }
 
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
         if (Main.getLevel().isShowGeometry()) {
 
             double size = 10 * Main.getLevel().getZoom();
@@ -195,7 +196,7 @@ public class Compositegeom extends EditorObject {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Alarms.errorMessage(e);
             }
         }
         return new DragSettings(DragSettings.NONE);

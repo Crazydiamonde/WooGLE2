@@ -1,8 +1,8 @@
 package com.WooGLEFX.Structures;
 
 import com.WooGLEFX.Engine.FXCreator;
-import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.WoGAnimation;
@@ -25,7 +25,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -43,16 +42,6 @@ public class EditorObject {
     }
 
     private EditorObject parent;
-
-    private double depth = 0;
-
-    public double getDepth() {
-        return depth;
-    }
-
-    public void setDepth(double depth) {
-        this.depth = depth;
-    }
 
     public EditorAttribute getObjName() {
         return nameAttribute;
@@ -181,7 +170,7 @@ public class EditorObject {
             case "Vertex" -> toAdd = new Vertex(_parent == null ? Main.getLevel().getLevelObject() : null);
             default -> System.out.println(_name);
         }
-        if (_parent != null) {
+        if (_parent != null && toAdd != null) {
             toAdd.setParent(_parent);
             if (!_parent.getChildren().contains(toAdd)) {
                 _parent.getChildren().add(toAdd);
@@ -197,10 +186,6 @@ public class EditorObject {
         return toAdd;
     }
 
-    public void setToScreenCenter() {
-
-    }
-
     public DragSettings mouseIntersection(double mX2, double mY2) { return new DragSettings(DragSettings.NONE); }
 
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
@@ -209,10 +194,6 @@ public class EditorObject {
 
     public DragSettings mouseImageIntersection(double mX2, double mY2) { return new DragSettings(DragSettings.NONE); }
 
-    public DragSettings mouseImageIntersectingCorners(double mX2, double mY2) {
-        return new DragSettings(DragSettings.NONE);
-    }
-
     public static Point2D rotate(Point2D input, double theta, Point2D center){
 
         double rotatedX = (input.getX() - center.getX()) * Math.cos(theta) - (input.getY() - center.getY()) * Math.sin(theta);
@@ -220,24 +201,6 @@ public class EditorObject {
 
         return new Point2D(rotatedX + center.getX(), rotatedY + center.getY());
 
-    }
-
-    private int spacesInFile = 1;
-
-    public int getSpacesInFile() {
-        return spacesInFile;
-    }
-
-    public void setSpacesInFile(int spacesInFile) {
-        this.spacesInFile = spacesInFile;
-    }
-
-    public EditorObject cloneThis() {
-        ArrayList<EditorAttribute> editorAttributes = new ArrayList<>();
-        for (EditorAttribute attribute : attributes) {
-            editorAttributes.add(new EditorAttribute(attribute.getName(), attribute.getValue(), attribute.getDefaultValue(), attribute.getInput(), false));
-        }
-        return EditorObject.create(getRealName(), editorAttributes.toArray(new EditorAttribute[0]), getParent());
     }
 
     public EditorObject deepClone(EditorObject parent) {
@@ -262,24 +225,6 @@ public class EditorObject {
         } else {
             return (c - b) / (a - b);
         }
-    }
-
-    public int fix(int a){
-        if (a != -1){
-            return a;
-        } else {
-            return 0;
-        }
-    }
-
-    private InputField[] inputs;
-
-    public InputField[] getInputs() {
-        return inputs;
-    }
-
-    public void setInputs(InputField[] inputs) {
-        this.inputs = inputs;
     }
 
     private EditorAttribute[] attributes = new EditorAttribute[0];
@@ -314,10 +259,6 @@ public class EditorObject {
 
     public TreeItem<EditorAttribute> getPropertiesTreeItem() {
         return propertiesTreeItem;
-    }
-
-    public void setPropertiesTreeItem(TreeItem<EditorAttribute> propertiesTreeItem) {
-        this.propertiesTreeItem = propertiesTreeItem;
     }
 
     public void setAttribute(String name, Object value){
@@ -367,7 +308,7 @@ public class EditorObject {
                 }
             }
         } catch (NumberFormatException e){
-            e.printStackTrace();
+            Alarms.errorMessage(e);
         }
         throw new RuntimeException("Could not find attribute " + attributeName + " for " + getRealName());
     }
@@ -384,14 +325,10 @@ public class EditorObject {
         return changes.toArray(new AttributeChangeAction[0]);
     }
 
-    private ArrayList<EditorObject> children = new ArrayList<>();
+    private final ArrayList<EditorObject> children = new ArrayList<>();
 
     public ArrayList<EditorObject> getChildren() {
         return children;
-    }
-
-    public void setChildren(ArrayList<EditorObject> children) {
-        this.children = children;
     }
 
     public EditorAttribute[] cloneAttributes(){
@@ -432,7 +369,7 @@ public class EditorObject {
 
     }
 
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
 
     }
 

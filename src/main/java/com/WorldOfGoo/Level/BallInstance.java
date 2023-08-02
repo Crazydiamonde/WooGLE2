@@ -16,7 +16,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -45,7 +48,6 @@ public class BallInstance extends EditorObject {
         addAttribute("id", "", InputField.ANY_REQUIRED, true);
         addAttribute("discovered", "", InputField.FLAG, false);
         addAttribute("angle", "0", InputField.NUMBER, true);
-        setDepth(0.002);
         randomSeed = (int)(Math.random() * 10000000);
         setMetaAttributes(MetaEditorAttribute.parse("id,type,x,y,angle,discovered,"));
     }
@@ -68,7 +70,12 @@ public class BallInstance extends EditorObject {
                 }
             }
             if (!found) {
-                _Ball ball2 = FileManager.openBall(getAttribute("type"), Main.getLevel().getVersion());
+                _Ball ball2 = null;
+                try {
+                    ball2 = FileManager.openBall(getAttribute("type"), Main.getLevel().getVersion());
+                } catch (ParserConfigurationException | SAXException | IOException e) {
+                    throw new RuntimeException(e);
+                }
 
                 for (EditorObject resrc : FileManager.commonBallResrcData){
                     GlobalResourceManager.addResource(resrc, Main.getLevel().getVersion());

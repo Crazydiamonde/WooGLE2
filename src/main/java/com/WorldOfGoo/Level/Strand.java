@@ -5,6 +5,7 @@ import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
@@ -51,7 +52,6 @@ public class Strand extends EditorObject {
 
     public Strand(EditorObject _parent) {
         super(_parent);
-        setDepth(-0.001);
         setRealName("Strand");
         addAttribute("gb1", "", InputField.ANY, true);
         addAttribute("gb2", "", InputField.ANY, true);
@@ -99,7 +99,7 @@ public class Strand extends EditorObject {
             try {
                 strandImage = GlobalResourceManager.getImage(strand.getAttribute("image"), Main.getLevel().getVersion());
             } catch (Exception e) {
-                e.printStackTrace();
+                Alarms.errorMessage(e);
             }
         }
     }

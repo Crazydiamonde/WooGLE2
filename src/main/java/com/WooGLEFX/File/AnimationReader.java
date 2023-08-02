@@ -10,6 +10,8 @@ import java.util.Arrays;
 
 public class AnimationReader {
 
+    private static final boolean debug = false;
+
     public static byte[] subsection(byte[] input, int i1, int i2){
         byte[] output = new byte[i2 - i1];
         if (i2 - i1 >= 0) System.arraycopy(input, i1, output, 0, i2 - i1);
@@ -51,11 +53,11 @@ public class AnimationReader {
         byte[] ALPHA_FRAMES = subsection(binuni, intFromBytes(ALPHA_FRAMES_OFFSET), intFromBytes(COLOR_FRAMES_OFFSET));
         byte[] COLOR_FRAMES = subsection(binuni, intFromBytes(COLOR_FRAMES_OFFSET), intFromBytes(SOUND_FRAMES_OFFSET));
         byte[] SOUND_FRAMES = subsection(binuni, intFromBytes(SOUND_FRAMES_OFFSET), intFromBytes(STRING_TABLE_OFFSET));
-        byte[] STRING_TABLE = subsection(binuni, intFromBytes(STRING_TABLE_OFFSET), intFromBytes(STRING_TABLE_OFFSET) + 8);
+        //byte[] STRING_TABLE = subsection(binuni, intFromBytes(STRING_TABLE_OFFSET), intFromBytes(STRING_TABLE_OFFSET) + 8);
 
-        String header = "";
+        StringBuilder header = new StringBuilder();
         for (int i = 0; i < 8; i++){
-            header += (char)HEADER[i];
+            header.append((char) HEADER[i]);
         }
 
         boolean hasColor = (HAS_COLOR[0] > 0);
@@ -99,51 +101,43 @@ public class AnimationReader {
             soundFrames[i] = intFromBytes(subsection(SOUND_FRAMES, i * 8, (i + 1) * 8));
         }
 
+        if (debug) {
+            System.out.println("Header: " + header);
 
-        //System.out.println("Header: " + header);
+            System.out.println("Has color: " + hasColor);
+            System.out.println("Has alpha: " + hasAlpha);
+            System.out.println("Has sound: " + hasSound);
+            System.out.println("Has transform: " + hasTransform);
+            System.out.println("Transform count: " + numTransform);
+            System.out.println("Frame count: " + numFrames);
 
-        //System.out.println("Has color: " + hasColor);
-        //System.out.println("Has alpha: " + hasAlpha);
-        //System.out.println("Has sound: " + hasSound);
-        //System.out.println("Has transform: " + hasTransform);
-        //System.out.println("Transform count: " + numTransform);
-        //System.out.println("Frame count: " + numFrames);
-
-        //System.out.println("Transform types:");
-        for (int type : transformTypes) {
-            //System.out.print(type);
-            switch(type){
-                case 0 -> {
-                    //System.out.println(" (Scale)");
-                }
-                case 1 -> {
-                    //System.out.println(" (Rotate)");
-                }
-                case 2 -> {
-                    //System.out.println(" (Translate)");
+            System.out.println("Transform types:");
+            for (int type : transformTypes) {
+                switch(type){
+                    case 0 -> System.out.println(" (Scale)");
+                    case 1 -> System.out.println(" (Rotate)");
+                    case 2 -> System.out.println(" (Translate)");
                 }
             }
         }
 
-        //System.out.println(Arrays.toString(X_FORM_FRAMES));
-        //
-        if (name.equals("blink.anim.binuni")) {
-            //System.out.println("Frame times: " + Arrays.toString(frameTimes));
-            //System.out.println("X form frames:");
+        if (debug) {
+            System.out.println("Frame times: " + Arrays.toString(frameTimes));
+            System.out.println("X form frames:");
             for (int[] xFrame : xFormFrames) {
-                //System.out.println(Arrays.toString(xFrame));
+                System.out.println(Arrays.toString(xFrame));
                 for (int i1 = 0; i1 < xFrame.length; i1++) {
                     if (i1 < xFrame.length - 1) {
-                        //System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
+                        System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
                     } else {
-                        //System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
+                        System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
                     }
                 }
             }
         }
-        //System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
-        //System.out.println("Color frames: " + Arrays.toString(colorFrames));
-        //System.out.println("Sound frames: " + Arrays.toString(soundFrames));
+        System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
+        System.out.println("Color frames: " + Arrays.toString(colorFrames));
+        System.out.println("Sound frames: " + Arrays.toString(soundFrames));
 
 
         //System.out.println("X FORM FRAMES");
@@ -153,9 +147,8 @@ public class AnimationReader {
         }
         for (int i = 0; i < transformTypes.length; i++){
             int[] xFrames = xFormFrames[i];
-            for (int j = 0; j < xFrames.length; j++){
-                int xFrame = xFrames[j];
-                if (xFrame == 0){
+            for (int xFrame : xFrames) {
+                if (xFrame == 0) {
                     keyframes1.get(transformTypes[i]).add(null);
                 } else {
                     Keyframe test = new Keyframe(subsection(binuni, xFrame, xFrame + 32));
@@ -193,29 +186,28 @@ public class AnimationReader {
 
         WoGAnimation animation = new WoGAnimation(keyframes1, keyframes2, keyframes3, keyframes4, name, frameTimes);
 
-
-        /*
-        for (int i2 = 0; i2 < (binuni.length - intFromBytes(STRING_TABLE_OFFSET)) / 4 - 2; i2++){
-            int i = i2 + 1;
-            //System.out.println(Arrays.toString(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))));
-            System.out.print("Index " + i2 + " (" + (i * 4 + intFromBytes(STRING_TABLE_OFFSET)) + ") (");
-            switch (i2 % 8) {
-                case 0 -> System.out.print("x");
-                case 1 -> System.out.print("y");
-                case 2 -> System.out.print("rotation");
-                case 3 -> System.out.print("alpha");
-                case 4 -> System.out.print("color");
-                case 5 -> System.out.print("next frame");
-                case 6 -> System.out.print("soundStrIdx");
-                case 7 -> System.out.print("interpolation type");
-            }
-            if (Math.abs(ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt()) > 999) {
-                System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getFloat());
-            } else {
-                System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt());
+        if (debug) {
+            for (int i2 = 0; i2 < (binuni.length - intFromBytes(STRING_TABLE_OFFSET)) / 4 - 2; i2++) {
+                int i = i2 + 1;
+                //System.out.println(Arrays.toString(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))));
+                System.out.print("Index " + i2 + " (" + (i * 4 + intFromBytes(STRING_TABLE_OFFSET)) + ") (");
+                switch (i2 % 8) {
+                    case 0 -> System.out.print("x");
+                    case 1 -> System.out.print("y");
+                    case 2 -> System.out.print("rotation");
+                    case 3 -> System.out.print("alpha");
+                    case 4 -> System.out.print("color");
+                    case 5 -> System.out.print("next frame");
+                    case 6 -> System.out.print("soundStrIdx");
+                    case 7 -> System.out.print("interpolation type");
+                }
+                if (Math.abs(ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt()) > 999) {
+                    System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getFloat());
+                } else {
+                    System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt());
+                }
             }
         }
-         */
 
 
         return animation;
@@ -224,8 +216,6 @@ public class AnimationReader {
     }
 
     public static WoGAnimation readBinltl(byte[] binuni, String name){
-
-        //System.out.println(Arrays.toString(binuni));
 
         byte[] HAS_COLOR = subsection(binuni, 0, 4);
         byte[] HAS_ALPHA = subsection(binuni, 4, 8);
@@ -289,48 +279,42 @@ public class AnimationReader {
             soundFrames[i] = intFromBytes(subsection(SOUND_FRAMES, i * 4, (i + 1) * 4));
         }
 
-        //System.out.println("Has color: " + hasColor);
-        //System.out.println("Has alpha: " + hasAlpha);
-        //System.out.println("Has sound: " + hasSound);
-        //System.out.println("Has transform: " + hasTransform);
-        //System.out.println("Transform count: " + numTransform);
-        //System.out.println("Frame count: " + numFrames);
+        if (debug) {
 
-        //System.out.println("Transform types:");
-        for (int type : transformTypes) {
-            //System.out.print(type);
-            switch(type){
-                case 0 -> {
-                    //System.out.println(" (Scale)");
-                }
-                case 1 -> {
-                    //System.out.println(" (Rotate)");
-                }
-                case 2 -> {
-                    //System.out.println(" (Translate)");
+            System.out.println("Has color: " + hasColor);
+            System.out.println("Has alpha: " + hasAlpha);
+            System.out.println("Has sound: " + hasSound);
+            System.out.println("Has transform: " + hasTransform);
+            System.out.println("Transform count: " + numTransform);
+            System.out.println("Frame count: " + numFrames);
+
+            System.out.println("Transform types:");
+            for (int type : transformTypes) {
+                switch (type) {
+                    case 0 -> System.out.println(" (Scale)");
+                    case 1 -> System.out.println(" (Rotate)");
+                    case 2 -> System.out.println(" (Translate)");
                 }
             }
-        }
 
-        //System.out.println(Arrays.toString(X_FORM_FRAMES));
-        //
-        if (name.equals("blink.anim.binuni")) {
-            //System.out.println("Frame times: " + Arrays.toString(frameTimes));
-            //System.out.println("X form frames:");
+            System.out.println(Arrays.toString(X_FORM_FRAMES));
+            System.out.println("Frame times: " + Arrays.toString(frameTimes));
+            System.out.println("X form frames:");
             for (int[] xFrame : xFormFrames) {
-                //System.out.println(Arrays.toString(xFrame));
+                System.out.println(Arrays.toString(xFrame));
                 for (int i1 = 0; i1 < xFrame.length; i1++) {
                     if (i1 < xFrame.length - 1) {
-                        //System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
+                        System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
                     } else {
-                        //System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
+                        System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
                     }
                 }
             }
+            System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
+            System.out.println("Color frames: " + Arrays.toString(colorFrames));
+            System.out.println("Sound frames: " + Arrays.toString(soundFrames));
+
         }
-        //System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
-        //System.out.println("Color frames: " + Arrays.toString(colorFrames));
-        //System.out.println("Sound frames: " + Arrays.toString(soundFrames));
 
 
         //System.out.println("X FORM FRAMES");
@@ -340,9 +324,8 @@ public class AnimationReader {
         }
         for (int i = 0; i < transformTypes.length; i++){
             int[] xFrames = xFormFrames[i];
-            for (int j = 0; j < xFrames.length; j++){
-                int xFrame = xFrames[j];
-                if (xFrame == 0){
+            for (int xFrame : xFrames) {
+                if (xFrame == 0) {
                     keyframes1.get(transformTypes[i]).add(null);
                 } else {
                     Keyframe test = new Keyframe(subsection(binuni, xFrame, xFrame + 32));
@@ -380,29 +363,28 @@ public class AnimationReader {
 
         WoGAnimation animation = new WoGAnimation(keyframes1, keyframes2, keyframes3, keyframes4, name, frameTimes);
 
-
-        /*
-        for (int i2 = 0; i2 < (binuni.length - intFromBytes(STRING_TABLE_OFFSET)) / 4 - 2; i2++){
-            int i = i2 + 1;
-            //System.out.println(Arrays.toString(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))));
-            System.out.print("Index " + i2 + " (" + (i * 4 + intFromBytes(STRING_TABLE_OFFSET)) + ") (");
-            switch (i2 % 8) {
-                case 0 -> System.out.print("x");
-                case 1 -> System.out.print("y");
-                case 2 -> System.out.print("rotation");
-                case 3 -> System.out.print("alpha");
-                case 4 -> System.out.print("color");
-                case 5 -> System.out.print("next frame");
-                case 6 -> System.out.print("soundStrIdx");
-                case 7 -> System.out.print("interpolation type");
-            }
-            if (Math.abs(ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt()) > 999) {
-                System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getFloat());
-            } else {
-                System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt());
+        if (debug) {
+            for (int i2 = 0; i2 < (binuni.length - intFromBytes(STRING_TABLE_OFFSET)) / 4 - 2; i2++) {
+                int i = i2 + 1;
+                //System.out.println(Arrays.toString(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))));
+                System.out.print("Index " + i2 + " (" + (i * 4 + intFromBytes(STRING_TABLE_OFFSET)) + ") (");
+                switch (i2 % 8) {
+                    case 0 -> System.out.print("x");
+                    case 1 -> System.out.print("y");
+                    case 2 -> System.out.print("rotation");
+                    case 3 -> System.out.print("alpha");
+                    case 4 -> System.out.print("color");
+                    case 5 -> System.out.print("next frame");
+                    case 6 -> System.out.print("soundStrIdx");
+                    case 7 -> System.out.print("interpolation type");
+                }
+                if (Math.abs(ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt()) > 999) {
+                    System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getFloat());
+                } else {
+                    System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt());
+                }
             }
         }
-         */
 
 
         return animation;

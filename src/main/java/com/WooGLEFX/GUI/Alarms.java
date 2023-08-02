@@ -4,8 +4,6 @@ import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Structures.WorldLevel;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,35 +11,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Alarms {
 
-    public static void errorMessage(String header, String content) {
+    public static void errorMessage(Exception error) {
         Alert alert = new Alert(AlertType.ERROR);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.show();
-    }
-
-    public static void confirmationMessage(String header, String content) {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-
-        alert.setOnCloseRequest(new EventHandler<DialogEvent>() {
-            @Override
-            public void handle(DialogEvent dialogEvent) {
-                if (alert.getResult().getText().equals("OK")) {
-                    //OK
-                } else if (alert.getResult().getText().equals("Cancel")) {
-                    //Cancel
-                }
-            }
-        });
-
+        alert.setHeaderText("Error");
+        alert.setContentText(error.getMessage());
         alert.show();
     }
 
@@ -124,33 +102,24 @@ public class Alarms {
         stage.show();
         stage.setAlwaysOnTop(true);
 
-        if (purpose.equals("new")) {
-            stage.setTitle("Create New Level");
-            okButton.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
+        switch (purpose) {
+            case "new" -> {
+                stage.setTitle("Create New Level");
+                okButton.setOnAction(event -> {
                     Main.newLevel(enterNameHere.getText(), version);
                     stage.close();
-                }
-            });
-        } else if (purpose.equals("clone")) {
-            stage.setTitle("Clone Level");
-            okButton.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
+                });
+            }
+            case "clone" -> {
+                stage.setTitle("Clone Level");
+                okButton.setOnAction(event -> {
                     Main.cloneLevel(enterNameHere.getText(), version);
                     stage.close();
-                }
-            });
-        } else if (purpose.equals("changename")) {
-            stage.setTitle("Change Level Name");
-        }
-        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                stage.close();
+                });
             }
-        });
+            case "changename" -> stage.setTitle("Change Level Name");
+        }
+        cancelButton.setOnAction(actionEvent -> stage.close());
 
         System.out.println(stage.getWidth());
     }
@@ -167,25 +136,19 @@ public class Alarms {
         Button selectNewButton = new Button("Select 1.5 version...");
         Stage stage = new Stage();
 
-        selectOldButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (Main.changeWorldOfGooDirectory(1.3)) {
-                    FileManager.setHasOldWOG(true);
-                    Main.startWithWorldOfGooVersion();
-                    stage.close();
-                }
+        selectOldButton.setOnAction(actionEvent -> {
+            if (Main.changeWorldOfGooDirectory(1.3)) {
+                FileManager.setHasOldWOG(true);
+                Main.startWithWorldOfGooVersion();
+                stage.close();
             }
         });
 
-        selectNewButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (Main.changeWorldOfGooDirectory(1.5)) {
-                    FileManager.setHasNewWOG(true);
-                    Main.startWithWorldOfGooVersion();
-                    stage.close();
-                }
+        selectNewButton.setOnAction(actionEvent -> {
+            if (Main.changeWorldOfGooDirectory(1.5)) {
+                FileManager.setHasNewWOG(true);
+                Main.startWithWorldOfGooVersion();
+                stage.close();
             }
         });
 

@@ -16,6 +16,7 @@ import javafx.scene.paint.Stop;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Renderer {
@@ -212,7 +213,7 @@ public class Renderer {
 
     }
 
-    public static void drawEverything(WorldLevel level, Canvas canvas, Canvas imageCanvas){
+    public static void drawEverything(WorldLevel level, Canvas canvas, Canvas imageCanvas) throws FileNotFoundException {
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         GraphicsContext imageGraphicsContext = imageCanvas.getGraphicsContext2D();
 

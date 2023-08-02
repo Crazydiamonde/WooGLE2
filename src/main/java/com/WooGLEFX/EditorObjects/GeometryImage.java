@@ -13,6 +13,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
 
+import java.io.FileNotFoundException;
+
 public class GeometryImage {
 
     private final EditorObject parent;
@@ -31,14 +33,9 @@ public class GeometryImage {
         this.parent = parent;
     }
 
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
         if (Main.getLevel().isShowGraphics()) {
-
-            try {
-                image = GlobalResourceManager.getImage(parent.getAttribute("image"), Main.getLevel().getVersion());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            image = GlobalResourceManager.getImage(parent.getAttribute("image"), Main.getLevel().getVersion());
 
             Position imagePos = Position.parse(parent.getAttribute("imagepos"));
             double x = imagePos.getX();
@@ -54,76 +51,72 @@ public class GeometryImage {
             double scaleX = imageScale.getX();
             double scaleY = imageScale.getY();
 
-            try {
-                double imgWidth = image.getWidth() * scaleX;
-                double imgHeight = image.getHeight() * scaleY;
+            double imgWidth = image.getWidth() * scaleX;
+            double imgHeight = image.getHeight() * scaleY;
 
-                Affine t = imageGraphicsContext.getTransform();
-                t.appendRotation(-rotation, x, -y);
-                imageGraphicsContext.setTransform(t);
+            Affine t = imageGraphicsContext.getTransform();
+            t.appendRotation(-rotation, x, -y);
+            imageGraphicsContext.setTransform(t);
 
-                imageGraphicsContext.drawImage(image, x - imgWidth / 2.0, -y - imgHeight / 2.0, imgWidth, imgHeight);
+            imageGraphicsContext.drawImage(image, x - imgWidth / 2.0, -y - imgHeight / 2.0, imgWidth, imgHeight);
 
-                if (parent == Main.getSelected()) {
+            if (parent == Main.getSelected()) {
 
-                    Point2D rotated2 = EditorObject.rotate(new Point2D(x - image.getWidth() * scaleX / 2, -y - image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
-                    Point2D rotated3 = EditorObject.rotate(new Point2D(x + image.getWidth() * scaleX / 2, -y + image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
+                Point2D rotated2 = EditorObject.rotate(new Point2D(x - image.getWidth() * scaleX / 2, -y - image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
+                Point2D rotated3 = EditorObject.rotate(new Point2D(x + image.getWidth() * scaleX / 2, -y + image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
 
-                    Point2D rotated4 = EditorObject.rotate(new Point2D(x - image.getWidth() * scaleX / 2, -y), -Math.toRadians(rotation), new Point2D(x, -y));
-                    Point2D rotated5 = EditorObject.rotate(new Point2D(x + image.getWidth() * scaleX / 2, -y), -Math.toRadians(rotation), new Point2D(x, -y));
+                Point2D rotated4 = EditorObject.rotate(new Point2D(x - image.getWidth() * scaleX / 2, -y), -Math.toRadians(rotation), new Point2D(x, -y));
+                Point2D rotated5 = EditorObject.rotate(new Point2D(x + image.getWidth() * scaleX / 2, -y), -Math.toRadians(rotation), new Point2D(x, -y));
 
-                    Point2D rotated6 = EditorObject.rotate(new Point2D(x - image.getWidth() * scaleX / 2, -y + image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
-                    Point2D rotated7 = EditorObject.rotate(new Point2D(x + image.getWidth() * scaleX / 2, -y - image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
+                Point2D rotated6 = EditorObject.rotate(new Point2D(x - image.getWidth() * scaleX / 2, -y + image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
+                Point2D rotated7 = EditorObject.rotate(new Point2D(x + image.getWidth() * scaleX / 2, -y - image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
 
-                    double screenX2 = x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                    double screenY2 = -y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX2 = x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
+                double screenY2 = -y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
-                    graphicsContext.setStroke(Renderer.selectionOutline);
+                graphicsContext.setStroke(Renderer.selectionOutline);
 
-                    double screenX3 = (rotated2.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                    double screenY3 = (rotated2.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX3 = (rotated2.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
+                double screenY3 = (rotated2.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
-                    double screenX4 = (rotated3.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                    double screenY4 = (rotated3.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX4 = (rotated3.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
+                double screenY4 = (rotated3.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
-                    double screenX5 = (rotated4.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                    double screenY5 = (rotated4.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX5 = (rotated4.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
+                double screenY5 = (rotated4.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
-                    double screenX6 = (rotated5.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                    double screenY6 = (rotated5.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX6 = (rotated5.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
+                double screenY6 = (rotated5.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
-                    double screenX7 = (rotated6.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                    double screenY7 = (rotated6.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX7 = (rotated6.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
+                double screenY7 = (rotated6.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
-                    double screenX8 = (rotated7.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                    double screenY8 = (rotated7.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX8 = (rotated7.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
+                double screenY8 = (rotated7.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
-                    graphicsContext.setLineWidth(1);
-                    graphicsContext.setFill(Renderer.selectionOutline);
-                    graphicsContext.fillRect(screenX3 - 4, screenY3 - 4, 8, 8);
-                    graphicsContext.fillRect(screenX4 - 4, screenY4 - 4, 8, 8);
-                    graphicsContext.fillRect(screenX7 - 4, screenY7 - 4, 8, 8);
-                    graphicsContext.fillRect(screenX8 - 4, screenY8 - 4, 8, 8);
-                    graphicsContext.fillOval(screenX5 - 4, screenY5 - 4, 8, 8);
-                    graphicsContext.fillOval(screenX6 - 4, screenY6 - 4, 8, 8);
-                    graphicsContext.setStroke(Renderer.selectionOutline2);
-                    graphicsContext.strokeRect(screenX3 - 4, screenY3 - 4, 8, 8);
-                    graphicsContext.strokeRect(screenX4 - 4, screenY4 - 4, 8, 8);
-                    graphicsContext.strokeRect(screenX7 - 4, screenY7 - 4, 8, 8);
-                    graphicsContext.strokeRect(screenX8 - 4, screenY8 - 4, 8, 8);
-                    graphicsContext.strokeOval(screenX5 - 4, screenY5 - 4, 8, 8);
-                    graphicsContext.strokeOval(screenX6 - 4, screenY6 - 4, 8, 8);
+                graphicsContext.setLineWidth(1);
+                graphicsContext.setFill(Renderer.selectionOutline);
+                graphicsContext.fillRect(screenX3 - 4, screenY3 - 4, 8, 8);
+                graphicsContext.fillRect(screenX4 - 4, screenY4 - 4, 8, 8);
+                graphicsContext.fillRect(screenX7 - 4, screenY7 - 4, 8, 8);
+                graphicsContext.fillRect(screenX8 - 4, screenY8 - 4, 8, 8);
+                graphicsContext.fillOval(screenX5 - 4, screenY5 - 4, 8, 8);
+                graphicsContext.fillOval(screenX6 - 4, screenY6 - 4, 8, 8);
+                graphicsContext.setStroke(Renderer.selectionOutline2);
+                graphicsContext.strokeRect(screenX3 - 4, screenY3 - 4, 8, 8);
+                graphicsContext.strokeRect(screenX4 - 4, screenY4 - 4, 8, 8);
+                graphicsContext.strokeRect(screenX7 - 4, screenY7 - 4, 8, 8);
+                graphicsContext.strokeRect(screenX8 - 4, screenY8 - 4, 8, 8);
+                graphicsContext.strokeOval(screenX5 - 4, screenY5 - 4, 8, 8);
+                graphicsContext.strokeOval(screenX6 - 4, screenY6 - 4, 8, 8);
 
-                    Affine t2 = graphicsContext.getTransform();
-                    t2.appendRotation(-rotation, screenX2, screenY2);
-                    graphicsContext.setTransform(t2);
+                Affine t2 = graphicsContext.getTransform();
+                t2.appendRotation(-rotation, screenX2, screenY2);
+                graphicsContext.setTransform(t2);
 
-                    graphicsContext.setStroke(Renderer.selectionOutline);
-                    graphicsContext.strokeRect(screenX2 - image.getWidth() * scaleX * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaleY * Main.getLevel().getZoom() / 2, image.getWidth() * scaleX * Main.getLevel().getZoom(), image.getHeight() * scaleY * Main.getLevel().getZoom());
+                graphicsContext.setStroke(Renderer.selectionOutline);
+                graphicsContext.strokeRect(screenX2 - image.getWidth() * scaleX * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaleY * Main.getLevel().getZoom() / 2, image.getWidth() * scaleX * Main.getLevel().getZoom(), image.getHeight() * scaleY * Main.getLevel().getZoom());
 
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }

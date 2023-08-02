@@ -8,7 +8,6 @@ public class MetaEditorAttribute {
     private final MetaEditorAttribute parent;
     private final ArrayList<MetaEditorAttribute> children = new ArrayList<>();
 
-    private final boolean hasAttributes;
     private final boolean openByDefault;
 
     public String getName() {
@@ -23,10 +22,6 @@ public class MetaEditorAttribute {
         return children;
     }
 
-    public boolean getHasAttributes() {
-        return hasAttributes;
-    }
-
     public boolean getOpenByDefault() {
         return openByDefault;
     }
@@ -34,22 +29,17 @@ public class MetaEditorAttribute {
     public MetaEditorAttribute(String name, MetaEditorAttribute parent, boolean hasAttributes, boolean openByDefault) {
         this.name = name;
         this.parent = parent;
-        this.hasAttributes = hasAttributes;
         this.openByDefault = openByDefault;
     }
-
-    static boolean parsingChildren = false;
-    static ArrayList<MetaEditorAttribute> output = new ArrayList<>();
-    static String currentAttribute = "";
-    static MetaEditorAttribute currentAttributeObject = null;
-    static String currentChildAttribute = "";
 
     //a<b,c,d>e<f,g,h>i<k>,k<l>
     public static ArrayList<MetaEditorAttribute> parse(String str) {
 
-        output = new ArrayList<>();
-
-        parsingChildren = false;
+        boolean parsingChildren = false;
+        ArrayList<MetaEditorAttribute> output = new ArrayList<>();
+        MetaEditorAttribute currentAttributeObject = null;
+        StringBuilder currentAttribute = new StringBuilder();
+        StringBuilder currentChildAttribute = new StringBuilder();
 
         for (int i = 0; i < str.length(); i++) {
 
@@ -60,28 +50,30 @@ public class MetaEditorAttribute {
                 if (currentAttribute.charAt(0) == '?') {
                     currentAttributeObject = new MetaEditorAttribute(currentAttribute.substring(1), null, false, false);
                 } else {
-                    currentAttributeObject = new MetaEditorAttribute(currentAttribute, null, false, true);
+                    currentAttributeObject = new MetaEditorAttribute(currentAttribute.toString(), null, false, true);
                 }
-                currentAttribute = "";
+                currentAttribute = new StringBuilder();
             } else if (c == ',') {
                 if (parsingChildren) {
-                    currentAttributeObject.getChildren().add(new MetaEditorAttribute(currentChildAttribute, currentAttributeObject, true, false));
-                    currentChildAttribute = "";
+                    currentAttributeObject.getChildren().add(new MetaEditorAttribute(currentChildAttribute.toString(), currentAttributeObject, true, false));
+                    currentChildAttribute = new StringBuilder();
                 } else {
-                    output.add(new MetaEditorAttribute(currentAttribute, null, true, false));
-                    currentAttribute = "";
+                    output.add(new MetaEditorAttribute(currentAttribute.toString(), null, true, false));
+                    currentAttribute = new StringBuilder();
                 }
             } else if (c == '>') {
-                currentAttributeObject.getChildren().add(new MetaEditorAttribute(currentChildAttribute, currentAttributeObject, true, false));
-                currentChildAttribute = "";
+                if (currentAttributeObject != null) {
+                    currentAttributeObject.getChildren().add(new MetaEditorAttribute(currentChildAttribute.toString(), currentAttributeObject, true, false));
+                }
+                currentChildAttribute = new StringBuilder();
                 output.add(currentAttributeObject);
                 currentAttributeObject = null;
                 parsingChildren = false;
             } else {
                 if (parsingChildren) {
-                    currentChildAttribute += c;
+                    currentChildAttribute.append(c);
                 } else {
-                    currentAttribute += c;
+                    currentAttribute.append(c);
                 }
             }
 

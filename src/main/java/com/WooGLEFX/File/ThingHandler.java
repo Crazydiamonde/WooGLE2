@@ -4,12 +4,8 @@ import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Addin.AddinLevel;
-import com.WorldOfGoo.Addin.AddinLevels;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.util.Arrays;
 
 public class ThingHandler extends DefaultHandler {
     public static EditorObject parent = null;
@@ -58,12 +54,12 @@ public class ThingHandler extends DefaultHandler {
     @Override
     public void characters(char[] ch, int start, int length) {
         if (currentObject.getParent() instanceof Addin && currentObject.getChildren().size() == 0 && currentObject.getAttributes().length == 1) {
-            String total = "";
+            StringBuilder total = new StringBuilder();
             for (int i = start; i < start + length; i++) {
-                total += ch[i];
+                total.append(ch[i]);
             }
-            if (!total.equals("\n\t")) {
-                currentObject.getAttributes()[0].setValue(total);
+            if (!total.toString().equals("\n\t")) {
+                currentObject.getAttributes()[0].setValue(total.toString());
             }
         }
     }

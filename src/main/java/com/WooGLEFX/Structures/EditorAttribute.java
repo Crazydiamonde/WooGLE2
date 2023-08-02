@@ -1,6 +1,5 @@
 package com.WooGLEFX.Structures;
 
-import com.WooGLEFX.Structures.InputField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;

@@ -4,6 +4,7 @@ import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Engine.FXCreator;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.GUI.Alarms;
 import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Level.Level;
 import com.WorldOfGoo.Level.Signpost;
@@ -403,7 +404,7 @@ public class WorldLevel {
                             EditorObject myString = GlobalResourceManager.getText(label.getAttribute("text"), version).deepClone(textObject);
                             text.add(myString);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            Alarms.errorMessage(e);
                         }
                     }
                 }
@@ -426,9 +427,9 @@ public class WorldLevel {
                         try {
                             GlobalResourceManager.getText(signpost.getAttribute("text"), version).deepClone(textObject);
                         } catch (Exception e) {
+                            Alarms.errorMessage(e);
                             EditorObject string = EditorObject.create("string", new EditorAttribute[0], textObject);
                             string.setAttribute("id", signpost.getAttribute("text"));
-                            e.printStackTrace();
                         }
                     }
                 }

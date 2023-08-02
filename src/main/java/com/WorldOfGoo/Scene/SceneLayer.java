@@ -4,6 +4,7 @@ import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.*;
 import javafx.beans.value.ChangeListener;
@@ -56,13 +57,12 @@ public class SceneLayer extends EditorObject {
 
     @Override
     public void update() {
-        setDepth(getDouble("depth"));
         setNameAttribute(getAttribute2("name"));
         if (!getAttribute("image").equals("")) {
             try {
                 image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Alarms.errorMessage(e);
             }
         }
 
@@ -110,7 +110,7 @@ public class SceneLayer extends EditorObject {
                 image = writableImage;
 
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Alarms.errorMessage(e);
             }
         };
 
