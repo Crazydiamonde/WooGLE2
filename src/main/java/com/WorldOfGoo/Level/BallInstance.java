@@ -49,6 +49,7 @@ public class BallInstance extends EditorObject {
         addAttribute("discovered", "", InputField.FLAG, false);
         addAttribute("angle", "0", InputField.NUMBER, true);
         randomSeed = (int)(Math.random() * 10000000);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,type,x,y,angle,discovered,"));
     }
 

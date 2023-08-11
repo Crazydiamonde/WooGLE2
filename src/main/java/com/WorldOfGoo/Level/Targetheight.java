@@ -8,5 +8,6 @@ public class Targetheight extends EditorObject {
         super(_parent);
         setRealName("targetheight");
         addAttribute("y", "1000", InputField.NUMBER, true);
+        setNameAttribute(getAttribute2("y"));
     }
 }

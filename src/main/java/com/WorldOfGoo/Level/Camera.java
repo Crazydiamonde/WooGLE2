@@ -18,6 +18,7 @@ public class Camera extends EditorObject {
         addAttribute("aspect", "normal", InputField.ANY, false);
         addAttribute("endpos", "0,0", InputField.POSITION, false);
         addAttribute("endzoom", "1", InputField.NUMBER, false);
+        setNameAttribute(getAttribute2("aspect"));
         setMetaAttributes(MetaEditorAttribute.parse("aspect,endpos,endzoom"));
     }
     @Override

@@ -404,7 +404,7 @@ public class WorldLevel {
                             EditorObject myString = GlobalResourceManager.getText(label.getAttribute("text"), version).deepClone(textObject);
                             text.add(myString);
                         } catch (Exception e) {
-                            Alarms.errorMessage(e);
+                            Main.failedResources.add(("\"" + label.getAttribute("text") + "\" (version " + version + ")"));
                         }
                     }
                 }
@@ -427,7 +427,7 @@ public class WorldLevel {
                         try {
                             GlobalResourceManager.getText(signpost.getAttribute("text"), version).deepClone(textObject);
                         } catch (Exception e) {
-                            Alarms.errorMessage(e);
+                            Main.failedResources.add(("\"" + signpost.getAttribute("text") + "\" (version " + version + ")"));
                             EditorObject string = EditorObject.create("string", new EditorAttribute[0], textObject);
                             string.setAttribute("id", signpost.getAttribute("text"));
                         }

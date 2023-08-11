@@ -12,6 +12,7 @@ import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 import javafx.scene.image.Image;
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

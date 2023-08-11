@@ -37,12 +37,12 @@ public class Circle extends EditorObject {
         addAttribute("imagescale", "1,1", InputField.POSITION, false);
         addAttribute("rotspeed", "", InputField.NUMBER, false);
         addAttribute("nogeomcollisions", "", InputField.FLAG, false);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,radius,Geometry<static,mass,material,tag,break,rotspeed,contacts,nogeomcollisions>?Image<image,imagepos,imagerot,imagescale>"));
     }
 
     @Override
     public void update() {
-        setNameAttribute(getAttribute2("name"));
         if (!getAttribute("image").equals("")) {
             try {
                 image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));

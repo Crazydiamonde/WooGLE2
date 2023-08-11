@@ -21,6 +21,7 @@ public class Label extends EditorObject {
         addAttribute("font", "", InputField.ANY, true); //???
         addAttribute("text", "", InputField.TEXT, true);
         addAttribute("colorize", "255,255,255", InputField.COLOR, true);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation,scale,depth,colorize,overlay,screenspace,Text<text,font,align>"));
     }
 

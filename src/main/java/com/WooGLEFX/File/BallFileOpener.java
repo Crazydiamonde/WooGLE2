@@ -18,11 +18,10 @@ public class BallFileOpener extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
         //System.out.println("Started: " + qName);
-        EditorAttribute[] glumbus = new EditorAttribute[attributes.getLength()];
+        EditorObject obj = EditorObject.create(qName, new EditorAttribute[0], parent);
         for (int i = 0; i < attributes.getLength(); i++){
-            glumbus[i] = new EditorAttribute(attributes.getQName(i), attributes.getValue(i), "", new InputField(attributes.getQName(i), InputField.NULL), false);
+            obj.setAttribute(attributes.getQName(i), attributes.getValue(i));
         }
-        EditorObject obj = EditorObject.create(qName, glumbus, parent);
         obj.setRealName(qName);
         if (mode == 0) {
             FileManager.commonBallData.add(obj);

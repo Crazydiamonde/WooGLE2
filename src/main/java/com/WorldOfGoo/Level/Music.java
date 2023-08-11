@@ -10,6 +10,7 @@ public class Music extends EditorObject {
         super(_parent);
         setRealName("music");
         addAttribute("id", "", InputField.ANY, true);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,"));
     }
 }

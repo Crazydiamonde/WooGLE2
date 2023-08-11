@@ -1,5 +1,6 @@
 package com.WooGLEFX.EditorObjects;
 
+import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.File.GlobalResourceManager;
@@ -127,7 +128,7 @@ public class _Ball {
                         try {
                             ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
                         } catch (Exception e) {
-                            Alarms.errorMessage(e);
+                            Main.failedResources.add(("\"" + word + "\" (version " + version + ")"));
                         }
                         word = "";
                     } else {
@@ -137,14 +138,14 @@ public class _Ball {
                 try {
                     ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
                 } catch (Exception e) {
-                    Alarms.errorMessage(e);
+                    Main.failedResources.add(("\"" + word + "\" (version " + version + ")"));
                 }
 
                 if (!obj.getAttribute("pupil").equals("")){
                     try {
                         ((Part) obj).setPupilImage(GlobalResourceManager.getImage(obj.getAttribute("pupil"), version));
                     } catch (Exception e) {
-                        Alarms.errorMessage(e);
+                        Main.failedResources.add(("\"" + obj.getAttribute("pupil") + "\" (version " + version + ")"));
                     }
                 }
             }

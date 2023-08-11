@@ -23,6 +23,7 @@ public class Fire extends EditorObject {
         addAttribute("x", "0", InputField.NUMBER, true);
         addAttribute("y", "0", InputField.NUMBER, true);
         addAttribute("radius", "50", InputField.NUMBER, true);
+        setNameAttribute(getAttribute2("particles"));
         setMetaAttributes(MetaEditorAttribute.parse("x,y,radius,particles,depth,"));
     }
 

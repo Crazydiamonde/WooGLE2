@@ -62,6 +62,7 @@ public class Button extends EditorObject {
         addAttribute("overlay", "", InputField.ANY, false);
         addAttribute("screenspace", "", InputField.ANY, false);
         addAttribute("context", "", InputField.ANY, false);
+        setNameAttribute(getAttribute2("id"));
 
         setMetaAttributes(MetaEditorAttribute.parse("id,center,anchor,depth,alpha,rotation,scale,colorize,?Graphics<up,over,down,downover,armed,downarmed,disabled,downdisabled>latch,?Events<onclick,onmouseenter,onmouseexit>?Text<font,text,tooltip,textcolorup,textcolorupover,textcoloruparmed,textcolorupdisabled,textcolordown,textcolordownover,textcolordownarmed,textcolordowndisabled>overlay,screenspace,context,"));
     }
@@ -72,7 +73,7 @@ public class Button extends EditorObject {
         try {
             image = GlobalResourceManager.getImage(getAttribute("up"), Main.getLevel().getVersion());
         } catch (FileNotFoundException e) {
-            Alarms.errorMessage(e);
+            Main.failedResources.add("\"" + getAttribute("up") + "\" (version " + Main.getLevel().getVersion() + ")");
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
@@ -119,7 +120,7 @@ public class Button extends EditorObject {
                 image = writableImage;
 
             } catch (FileNotFoundException e) {
-                Alarms.errorMessage(e);
+                Main.failedResources.add("\"" + getAttribute("up") + "\" (version " + Main.getLevel().getVersion() + ")");
             }
         };
 

@@ -9,8 +9,9 @@ public class Sound extends EditorObject {
     public Sound(EditorObject _parent) {
         super(_parent);
         setRealName("Sound");
-        addAttribute("id", "image", InputField.ANY, true);
+        addAttribute("id", "", InputField.ANY, true);
         addAttribute("path", "", InputField.ANY, true);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,path,"));
     }
 }

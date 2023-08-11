@@ -9,6 +9,7 @@ public class Loopsound extends EditorObject {
         super(_parent);
         setRealName("loopsound");
         addAttribute("id", "", InputField.ANY, true);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,"));
     }
 }

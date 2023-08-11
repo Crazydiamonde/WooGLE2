@@ -38,12 +38,12 @@ public class Compositegeom extends EditorObject {
         addAttribute("rotspeed", "0", InputField.NUMBER, false);
         addAttribute("contacts", "", InputField.FLAG, false);
         addAttribute("nogeomcollisions", "", InputField.FLAG, false);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation,Geometry<static,mass,material,tag,break,rotspeed,contacts,nogeomcollisions>?Image<image,imagepos,imagerot,imagescale>"));
     }
 
     @Override
     public void update() {
-        setNameAttribute(getAttribute2("name"));
         if (!getAttribute("image").equals("")) {
             try {
                 image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));

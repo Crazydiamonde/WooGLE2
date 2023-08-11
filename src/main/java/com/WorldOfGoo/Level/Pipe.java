@@ -12,6 +12,7 @@ public class Pipe extends EditorObject {
         addAttribute("type", "", InputField.ANY, false);
         addAttribute("id", "", InputField.ANY, true);
         addAttribute("depth", "0", InputField.ANY, true);
+        setNameAttribute(getAttribute2("type"));
         setMetaAttributes(MetaEditorAttribute.parse("type,id,depth,"));
     }
 }

@@ -44,6 +44,7 @@ import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
@@ -223,41 +224,52 @@ public class Main extends Application {
             FXCreator.buttonNewOld.setDisable(true);
             FXCreator.buttonOpenOld.setDisable(true);
             FXCreator.buttonSaveOld.setDisable(true);
-            FXCreator.buttonSaveAndPlayOld.setDisable(true);
             FXCreator.buttonCloneOld.setDisable(true);
         }
         if (!FileManager.isHasNewWOG()) {
             FXCreator.buttonNewNew.setDisable(true);
             FXCreator.buttonOpenNew.setDisable(true);
             FXCreator.buttonSaveNew.setDisable(true);
-            FXCreator.buttonSaveAndPlayNew.setDisable(true);
             FXCreator.buttonCloneNew.setDisable(true);
+        }
+        if (FileManager.isHasOldWOG() || FileManager.isHasNewWOG()) {
+            FXCreator.buttonSaveAndPlay.setDisable(false);
         }
     }
 
+    public static final ArrayList<String> failedResources = new ArrayList<>();
+
     public static void openLevel(String levelName, double version) {
+        failedResources.clear();
+
         try {
             level = FileManager.openLevel(levelName, version);
-            level.setLevelName(levelName);
-            enableAllButtons(false);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Alarms.errorMessage(e);
+            return;
+        }
 
-            for (int i = 0; i < FileManager.getPaletteBalls().size(); i++) {
-                FXCreator.getGooballsToolbar().getItems().get(i).setDisable(FileManager.getPaletteVersions().get(i) != version);
-            }
+        level.setLevelName(levelName);
+        enableAllButtons(false);
 
-            levelSelectPane.setMinHeight(30);
-            levelSelectPane.setMaxHeight(30);
+        for (int i = 0; i < FileManager.getPaletteBalls().size(); i++) {
+            FXCreator.getGooballsToolbar().getItems().get(i).setDisable(FileManager.getPaletteVersions().get(i) != version);
+        }
 
-            for (EditorObject object : level.getLevel()) {
-                if (object instanceof BallInstance) {
-                    boolean alreadyIn = false;
-                    for (_Ball ball : importedBalls) {
-                        if (ball.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type")) && ball.getVersion() == level.getVersion()) {
-                            alreadyIn = true;
-                            break;
-                        }
+        levelSelectPane.setMinHeight(30);
+        levelSelectPane.setMaxHeight(30);
+
+        for (EditorObject object : level.getLevel()) {
+            if (object instanceof BallInstance) {
+                boolean alreadyIn = false;
+                for (_Ball ball : importedBalls) {
+                    if (ball.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type")) && ball.getVersion() == level.getVersion()) {
+                        alreadyIn = true;
+                        break;
                     }
-                    if (!alreadyIn) {
+                }
+                if (!alreadyIn) {
+                    try {
                         _Ball ball2 = FileManager.openBall(object.getAttribute("type"), version);
 
                         for (EditorObject resrc : FileManager.commonBallResrcData) {
@@ -270,50 +282,61 @@ public class Main extends Application {
 
                             importedBalls.add(ball2);
                         }
+                    } catch (ParserConfigurationException | SAXException | IOException e) {
+                        Alarms.errorMessage(e);
                     }
                 }
             }
-
-            for (EditorObject object : level.getResources()) {
-                if (object instanceof ResrcImage) {
-                    GlobalResourceManager.addResource(object, level.getVersion());
-                }
-            }
-
-            for (EditorObject object : level.getScene()) {
-                object.update();
-            }
-
-            for (EditorObject object : level.getLevel()) {
-                object.update();
-            }
-
-            for (EditorObject object : level.getResources()) {
-                object.update();
-            }
-
-            //Put everything in the hierarchy
-            level.getSceneObject().getTreeItem().setExpanded(true);
-            hierarchy.setRoot(level.getSceneObject().getTreeItem());
-
-            //Add items from the Scene to it
-            propertiesView.setRoot(level.getSceneObject().getPropertiesTreeItem());
-
-            Tab levelSelectButton = FXCreator.levelSelectButton(level);
-            levelSelectPane.getTabs().add(levelSelectButton);
-
-            int numTabs = levelSelectPane.getTabs().size();
-            double tabSize = 1 / (numTabs + 1.0);
-            levelSelectPane.setTabMaxWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
-            levelSelectPane.setTabMinWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
-
-            level.setLevelTab(levelSelectButton);
-            level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
-            levelSelectPane.getSelectionModel().select(levelSelectButton);
-            onSetLevel();
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            Alarms.errorMessage(e);
         }
+
+        for (EditorObject object : level.getResources()) {
+            if (object instanceof ResrcImage) {
+                GlobalResourceManager.addResource(object, level.getVersion());
+            }
+        }
+
+        for (EditorObject object : level.getScene()) {
+            object.update();
+            object.setLevel(level);
+        }
+
+        for (EditorObject object : level.getLevel()) {
+            object.update();
+            object.setLevel(level);
+        }
+
+        for (EditorObject object : level.getResources()) {
+            object.update();
+            object.setLevel(level);
+        }
+
+        //Put everything in the hierarchy
+        level.getSceneObject().getTreeItem().setExpanded(true);
+        hierarchy.setRoot(level.getSceneObject().getTreeItem());
+
+        //Add items from the Scene to it
+        propertiesView.setRoot(level.getSceneObject().getPropertiesTreeItem());
+
+        Tab levelSelectButton = FXCreator.levelSelectButton(level);
+        levelSelectPane.getTabs().add(levelSelectButton);
+
+        int numTabs = levelSelectPane.getTabs().size();
+        double tabSize = 1 / (numTabs + 1.0);
+        levelSelectPane.setTabMaxWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
+        levelSelectPane.setTabMinWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
+
+        if (failedResources.size() > 0) {
+            StringBuilder fullError = new StringBuilder();
+            for (String resource : failedResources) {
+                fullError.append("\n").append(resource);
+            }
+            Alarms.loadingResourcesError(fullError.toString().substring(1));
+        }
+
+        level.setLevelTab(levelSelectButton);
+        level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+        levelSelectPane.getSelectionModel().select(levelSelectButton);
+        onSetLevel();
     }
 
     public static Canvas getCanvas() {
@@ -411,10 +434,10 @@ public class Main extends Application {
         }
     }
 
-    public static void playLevel(double version) {
+    public static void playLevel() {
         System.out.println("Play level");
 
-        if (level.getVersion() == 1.3 && version == 1.3) {
+        if (level.getVersion() == 1.3) {
             try {
                 ProcessBuilder processBuilder = new ProcessBuilder(FileManager.getOldWOGdir() + "\\WorldOfGoo.exe", level.getLevelName());
                 processBuilder.directory(new File(FileManager.getOldWOGdir()));
@@ -711,10 +734,10 @@ public class Main extends Application {
             }
 
             String imageResourceName = "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_" + resrcFile.getName().split("\\.")[0].toUpperCase();
-            EditorObject imageResourceObject = EditorObject.create("Image", new EditorAttribute[]{
-                    new EditorAttribute("id", imageResourceName, "", new InputField("id", InputField.ANY), false),
-                    new EditorAttribute("path", "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0], "", new InputField("path", InputField.ANY), false),
-            }, null);
+            EditorObject imageResourceObject = EditorObject.create("Image", new EditorAttribute[0], null);
+
+            imageResourceObject.setAttribute("id", imageResourceName);
+            imageResourceObject.setAttribute("path", "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
 
             int whereToPlaceResource = 0;
             int count = 0;
@@ -832,6 +855,7 @@ public class Main extends Application {
         hierarchy.scrollTo(hierarchy.getRow(obj.getTreeItem()));
         hierarchy.getSelectionModel().select(hierarchy.getRow(obj.getTreeItem()));
         obj.update();
+        obj.setLevel(level);
         selected = obj;
         changeTableView(selected);
 
@@ -1632,14 +1656,10 @@ public class Main extends Application {
         }
     }
 
-    private static ArrayList<EditorObject> particles;
+    private static final ArrayList<EditorObject> particles = new ArrayList<>();
 
     public static ArrayList<EditorObject> getParticles() {
         return particles;
-    }
-
-    public static void setParticles(ArrayList<EditorObject> particles) {
-        Main.particles = particles;
     }
 
     public static EditorObject generateBlankAddinObject() {
@@ -1673,6 +1693,8 @@ public class Main extends Application {
     private static void importGameResources(double version) {
 
         System.out.println("lag 1 (decrypting global resource file)");
+
+        ArrayList<String> allFailedResources = new ArrayList<>();
 
         //Open resources.xml for 1.3
         //This takes forever to finish
@@ -1708,19 +1730,22 @@ public class Main extends Application {
             }
         }
 
-        particles = new ArrayList<>();
-
         if (version == 1.3 && FileManager.isHasOldWOG()) {
             try {
                 FileManager.openParticles(1.3);
-                particles = FileManager.commonBallData;
-                for (EditorObject particle : particles) {
-                    if (particle instanceof _Particle) {
-                        ((_Particle) particle).update(1.3);
-                    } else {
-                        particle.update();
+                ArrayList<EditorObject> particles2 = FileManager.commonBallData;
+                for (EditorObject particle : particles2) {
+                    try {
+                        if (particle instanceof _Particle) {
+                            ((_Particle) particle).update(1.3);
+                        } else {
+                            particle.update();
+                        }
+                    } catch (Exception e) {
+                        allFailedResources.add("Particle: " + particle.getParent().getAttribute("name") + " (version 1.3)");
                     }
                 }
+                particles.addAll(particles2);
             } catch (ParserConfigurationException | SAXException | IOException e) {
                 Alarms.errorMessage(e);
             }
@@ -1731,10 +1756,14 @@ public class Main extends Application {
                 FileManager.openParticles(1.5);
                 ArrayList<EditorObject> particles2 = FileManager.commonBallData;
                 for (EditorObject particle : particles2) {
-                    if (particle instanceof _Particle) {
-                        ((_Particle) particle).update(1.5);
-                    } else {
-                        particle.update();
+                    try {
+                        if (particle instanceof _Particle) {
+                            ((_Particle) particle).update(1.5);
+                        } else {
+                            particle.update();
+                        }
+                    } catch (Exception e) {
+                        allFailedResources.add("Particle: " + particle.getParent().getAttribute("name") + " (version 1.5)");
                     }
                 }
                 particles.addAll(particles2);
@@ -1802,6 +1831,14 @@ public class Main extends Application {
                 Alarms.errorMessage(e);
             }
         }
+
+        if (allFailedResources.size() > 0) {
+            StringBuilder fullError = new StringBuilder();
+            for (String resource : allFailedResources) {
+                fullError.append("\n").append(resource);
+            }
+            Alarms.loadingInitialResourcesError(fullError.toString().substring(1));
+        }
     }
 
     public static SplitPane getSplitPane() {
@@ -1835,6 +1872,9 @@ public class Main extends Application {
 
         //Initialize stage name/icon
         stage.setTitle("World of Goo Anniversary Editor");
+
+        stage.setScene(new Scene(new Pane()));
+        stage.show();
         //try {
             //stage.getIcons().add(FileManager.openImageFromFilePath(FileManager.superTemporary + "stolenlogo.png"));
         //} catch (Exception e){
@@ -1890,7 +1930,7 @@ public class Main extends Application {
 
             //Configure PropertiesView
             propertiesView.prefWidthProperty().bind(hierarchy.widthProperty());
-            propertiesView.setRoot(new TreeItem<>(new EditorAttribute("", "", "", new InputField("", InputField.ANY), false)));
+            propertiesView.setRoot(new TreeItem<>(new EditorAttribute(null,"", "", "", new InputField("", InputField.ANY), false)));
 
             //Combine everything weirdly
             splitPane = new SplitPane();
@@ -1971,7 +2011,8 @@ public class Main extends Application {
             stage.addEventFilter(KeyEvent.KEY_PRESSED, Main::keyPressed);
             stage.addEventFilter(KeyEvent.KEY_RELEASED, Main::keyReleased);
 
-            scene = new Scene(vBox, 1920, 1080);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            scene = new Scene(vBox,  screenSize.width * 0.75, screenSize.height * 0.75 - 30);
             scene.getStylesheets().add("style.css");
             stage.setScene(scene);
 
@@ -1991,6 +2032,7 @@ public class Main extends Application {
             imageCanvas.heightProperty().bind(splitPane.heightProperty());
             splitPane.maxHeightProperty().bind(stage.heightProperty());
             splitPane.prefHeightProperty().bind(stage.heightProperty());
+            propertiesView.prefHeightProperty().bind(viewPane.heightProperty().subtract(propertiesView.layoutYProperty()).subtract(100));
 
             levelSelectPane.setTabDragPolicy(TabPane.TabDragPolicy.REORDER);
             levelSelectPane.setStyle("-fx-open-tab-animation: NONE");

@@ -55,12 +55,18 @@ public class Strand extends EditorObject {
         setRealName("Strand");
         addAttribute("gb1", "", InputField.ANY, true);
         addAttribute("gb2", "", InputField.ANY, true);
+        setNameAttribute(getAttribute2("gb1"));
+        setNameAttribute2(getAttribute2("gb2"));
+        setChangeListener("gb2", (observableValue, s, t1) -> {
+            String bruh = getAttribute("gb1");
+            setAttribute("gb1", "AAAAA");
+            setAttribute("gb1", bruh);
+        });
         setMetaAttributes(MetaEditorAttribute.parse("gb1,gb2,"));
     }
 
     @Override
     public void update() {
-        setNameAttribute(new EditorAttribute("", "", "", new InputField("", InputField.NULL), true));
         for (EditorObject object : Main.getLevel().getLevel()) {
             if (object instanceof BallInstance && object.getAttribute("id").equals(getAttribute("gb2"))) {
                 goo2 = (BallInstance)object;

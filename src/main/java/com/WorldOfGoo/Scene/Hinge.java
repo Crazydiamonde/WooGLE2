@@ -7,6 +7,8 @@ import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
@@ -23,6 +25,13 @@ public class Hinge extends EditorObject {
         addAttribute("bounce", "", InputField.NUMBER, false);
         addAttribute("stopcfm", "", InputField.NUMBER, false);
         addAttribute("stoperp", "", InputField.NUMBER, false);
+        setNameAttribute(getAttribute2("body1"));
+        setNameAttribute2(getAttribute2("body2"));
+        setChangeListener("body2", (observableValue, s, t1) -> {
+            String bruh = getAttribute("body1");
+            setAttribute("body1", "AAAAA");
+            setAttribute("body1", bruh);
+        });
         setMetaAttributes(MetaEditorAttribute.parse("anchor,body1,body2,?Hinge<bounce,histop,lostop,stopcfm,stoperp>"));
     }
 

@@ -134,10 +134,10 @@ public class AnimationReader {
                     }
                 }
             }
+            System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
+            System.out.println("Color frames: " + Arrays.toString(colorFrames));
+            System.out.println("Sound frames: " + Arrays.toString(soundFrames));
         }
-        System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
-        System.out.println("Color frames: " + Arrays.toString(colorFrames));
-        System.out.println("Sound frames: " + Arrays.toString(soundFrames));
 
 
         //System.out.println("X FORM FRAMES");

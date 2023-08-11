@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
@@ -16,6 +17,7 @@ public class Scene extends EditorObject {
         addAttribute("maxx", "500", InputField.NUMBER, false);
         addAttribute("maxy", "1000", InputField.NUMBER, false);
         addAttribute("backgroundcolor", "0,0,0", InputField.COLOR, true);
+        setNameAttribute(new EditorAttribute(this, "", "", "", new InputField("", InputField.NULL), false));
         setMetaAttributes(MetaEditorAttribute.parse("backgroundcolor,minx,miny,maxx,maxy,"));
     }
 

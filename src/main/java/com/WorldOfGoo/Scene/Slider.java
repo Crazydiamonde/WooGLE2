@@ -21,6 +21,13 @@ public class Slider extends EditorObject {
         addAttribute("lostop", "", InputField.NUMBER, false);
         addAttribute("stopcfm", "", InputField.NUMBER, false);
         addAttribute("stoperp", "", InputField.NUMBER, false);
+        setNameAttribute(getAttribute2("body1"));
+        setNameAttribute2(getAttribute2("body2"));
+        setChangeListener("body2", (observableValue, s, t1) -> {
+            String bruh = getAttribute("body1");
+            setAttribute("body1", "AAAAA");
+            setAttribute("body1", bruh);
+        });
         setMetaAttributes(MetaEditorAttribute.parse("body1,body2,axis,Slider<bounce,histop,lostop,stopcfm,stoperp>"));
     }
 

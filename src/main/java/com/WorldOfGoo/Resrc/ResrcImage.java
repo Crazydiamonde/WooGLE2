@@ -8,7 +8,7 @@ public class ResrcImage extends EditorObject {
     public ResrcImage(EditorObject _parent) {
         super(_parent);
         setRealName("Image");
-        addAttribute("id", "image", InputField.ANY, true);
+        addAttribute("id", "", InputField.ANY, true);
         addAttribute("path", "", InputField.ANY, true);
         setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,path,"));

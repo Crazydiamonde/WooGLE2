@@ -66,7 +66,7 @@ public class InputField {
         this.requiredInSave = requiredInSave;
     }
 
-    public boolean verify(String potential) {
+    public boolean verify(EditorObject object, String potential) {
         if (potential.equals("")){
             return !required && !(type == ANY_REQUIRED || type == IMAGE_REQUIRED);
         }
@@ -100,7 +100,7 @@ public class InputField {
                     return false;
                 }
             case IMAGE, IMAGE_REQUIRED:
-                for (EditorObject resrc : Main.getLevel().getResources()) {
+                for (EditorObject resrc : object.getLevel().getResources()) {
                     if (resrc.getAttribute("id") != null && resrc.getAttribute("id").equals(potential)) {
                         return true;
                     }
@@ -118,7 +118,7 @@ public class InputField {
             case FLAG:
                 return potential.equals("true") || potential.equals("false");
             case BALL:
-                String path = Main.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
+                String path = object.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
                 for (File ballFile : new File(path + "\\res\\balls").listFiles()) {
                     if (ballFile.getName().equals(potential)) {
                         return true;

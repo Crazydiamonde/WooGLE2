@@ -41,6 +41,7 @@ public class Signpost extends EditorObject {
         addAttribute("text", "", InputField.TEXT, true);
         addAttribute("particles", "", InputField.PARTICLES, false);
         addAttribute("pulse", "", InputField.ANY, false);
+        setNameAttribute(getAttribute2("name"));
         setMetaAttributes(MetaEditorAttribute.parse("name,text,particles,pulse,Image<x,y,scalex,scaley,image,rotation,depth,alpha,colorize>"));
     }
 
@@ -405,8 +406,8 @@ public class Signpost extends EditorObject {
         double y2 = -Double.parseDouble(getAttribute("y"));
 
         if (getParent() instanceof Compositegeom){
-            x2 += getParent().getX();
-            y2 -= getParent().getY();
+            x2 += getParent().getDouble("x");
+            y2 -= getParent().getDouble("y");
         }
 
         double rotation2 = Math.toDegrees(Renderer.angleTo(new Point2D(mouseX, mouseY), new Point2D(x2, y2)));

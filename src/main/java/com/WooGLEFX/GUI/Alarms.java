@@ -10,21 +10,43 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.util.Arrays;
 
 public class Alarms {
 
     public static void errorMessage(Exception error) {
         Alert alert = new Alert(AlertType.ERROR);
+        alert.setResizable(true);
         alert.setHeaderText("Error");
-        alert.setContentText(error.getMessage());
+        alert.setContentText(error.getClass().getSimpleName() + ": " + error.getMessage() + "\n" + Arrays.toString(error.getStackTrace()));
+        alert.show();
+    }
+
+    public static void loadingResourcesError(String error) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setResizable(true);
+        alert.setHeaderText("Level resources could not be loaded");
+        alert.setContentText(error);
+        alert.show();
+    }
+
+    public static void loadingInitialResourcesError(String error) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setResizable(true);
+        alert.setHeaderText("Resources could not be loaded");
+        alert.setContentText(error);
+
+        alert.initOwner(Main.getStage());
+
         alert.show();
     }
 
     public static void closeTabMessage(Tab tab, WorldLevel level) {
-
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setHeaderText("Unsaved Changes");
         alert.setContentText("Ignore unsaved changes?");

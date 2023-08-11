@@ -18,6 +18,7 @@ public class Levelexit extends EditorObject {
         addAttribute("pos", "0,0", InputField.POSITION, true);
         addAttribute("radius", "75", InputField.NUMBER, true);
         addAttribute("filter", "", InputField.ANY, true);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,pos,radius,filter,"));
     }
 

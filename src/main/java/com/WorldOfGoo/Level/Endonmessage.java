@@ -9,6 +9,7 @@ public class Endonmessage extends EditorObject {
         super(_parent);
         setRealName("endonmessage");
         addAttribute("id", "", InputField.ANY, true);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id"));
     }
 }

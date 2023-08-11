@@ -9,10 +9,15 @@ public class EditorAttribute {
     private final StringProperty value = new SimpleStringProperty("");
     private final String defaultValue;
     private final InputField input;
+    private final EditorObject object;
+
+    public EditorObject getObject() {
+        return object;
+    }
 
     private final boolean requiredInFile;
 
-    public static final EditorAttribute NULL = new EditorAttribute("", "", "", new InputField("", InputField.NULL), false);
+    public static final EditorAttribute NULL = new EditorAttribute(null, "", "", "", new InputField("", InputField.NULL), false);
 
     public boolean getRequiredInFile() {
         return requiredInFile;
@@ -50,7 +55,8 @@ public class EditorAttribute {
     }
 
 
-    public EditorAttribute(String name, String defaultValue, String initialValue, InputField inputField, boolean requiredInFile) {
+    public EditorAttribute(EditorObject object, String name, String defaultValue, String initialValue, InputField inputField, boolean requiredInFile) {
+        this.object = object;
         this.name.setValue(name);
         this.defaultValue = defaultValue;
         this.value.setValue(initialValue);

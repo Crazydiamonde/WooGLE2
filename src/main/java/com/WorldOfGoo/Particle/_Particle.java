@@ -46,22 +46,18 @@ public class _Particle extends EditorObject {
         addAttribute("acceleration", "0,0", InputField.POSITION, true);
     }
 
-    public void update(double version){
+    public void update(double version) throws Exception {
         this.version = version;
         for (EditorObject thing : Main.getParticles()) {
             if (thing instanceof Axialsinoffset && thing.getParent() == this) {
                 axialsinoffsets.add((Axialsinoffset)thing);
             }
         }
-        try {
-            String mogus = getAttribute("image");
-            while (mogus.contains(",")) {
-                images.add(GlobalResourceManager.getImage(mogus.substring(0, mogus.indexOf(",")), version));
-                mogus = mogus.substring(mogus.indexOf(",") + 1);
-            }
-            images.add(GlobalResourceManager.getImage(mogus, version));
-        } catch (Exception e) {
-            Alarms.errorMessage(e);
+        String mogus = getAttribute("image");
+        while (mogus.contains(",")) {
+            images.add(GlobalResourceManager.getImage(mogus.substring(0, mogus.indexOf(",")), version));
+            mogus = mogus.substring(mogus.indexOf(",") + 1);
         }
+        images.add(GlobalResourceManager.getImage(mogus, version));
     }
 }

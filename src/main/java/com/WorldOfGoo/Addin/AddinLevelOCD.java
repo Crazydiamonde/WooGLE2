@@ -11,6 +11,12 @@ public class AddinLevelOCD extends EditorObject {
         addAttribute("type", "", InputField.OCD_TYPE, true);
         addAttribute("value", "", InputField.NUMBER_NON_NEGATIVE, true);
         setNameAttribute(getAttribute2("type"));
+        setNameAttribute2(getAttribute2("value"));
+        setChangeListener("value", (observableValue, s, t1) -> {
+            String bruh = getAttribute("type");
+            setAttribute("type", "AAAAA");
+            setAttribute("type", bruh);
+        });
         setMetaAttributes(MetaEditorAttribute.parse("type,value,"));
     }
 }

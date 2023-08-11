@@ -1,6 +1,5 @@
 package com.WooGLEFX.Engine;
 
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;

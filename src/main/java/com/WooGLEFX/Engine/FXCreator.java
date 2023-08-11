@@ -12,6 +12,7 @@ import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Ball.Part;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -260,8 +261,7 @@ public class FXCreator {
     public static Button buttonCloneNew = new Button();
     public static Button buttonSaveOld = new Button();
     public static Button buttonSaveNew = new Button();
-    public static Button buttonSaveAndPlayOld = new Button();
-    public static Button buttonSaveAndPlayNew = new Button();
+    public static Button buttonSaveAndPlay = new Button();
     public static Button buttonExport = new Button();
     public static Button buttonDummyExport = new Button();
     public static Button buttonUndo = new Button();
@@ -317,8 +317,7 @@ public class FXCreator {
         buttonCloneNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
         buttonSaveOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
         buttonSaveNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
-        buttonSaveAndPlayOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_old.png")));
-        buttonSaveAndPlayNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_new.png")));
+        buttonSaveAndPlay.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
         buttonExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_goomod.png")));
         buttonDummyExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_dummy_goomod.png")));
         buttonUndo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
@@ -353,8 +352,7 @@ public class FXCreator {
         buttonCloneNew.setOnAction(e -> Main.cloneLevel(1.5));
         buttonSaveOld.setOnAction(e -> Main.saveLevel(1.3));
         buttonSaveNew.setOnAction(e -> Main.saveLevel(1.5));
-        buttonSaveAndPlayOld.setOnAction(e -> Main.playLevel(1.3));
-        buttonSaveAndPlayNew.setOnAction(e -> Main.playLevel(1.5));
+        buttonSaveAndPlay.setOnAction(e -> Main.playLevel());
         buttonExport.setOnAction(e -> Main.exportLevel(true));
         buttonDummyExport.setOnAction(e -> Main.exportLevel(false));
         buttonUndo.setOnAction(e -> Main.undo());
@@ -381,23 +379,44 @@ public class FXCreator {
         buttonShowHideLabels.setOnAction(e -> Main.showHideLabels());
         buttonShowHideAnim.setOnAction(e -> Main.showHideAnim());
 
-        Tooltip saveOld = new Tooltip("Save level (1.3)");
-        Tooltip saveNew = new Tooltip("Save level (1.5)");
-        saveOld.setStyle("-fx-border-color: #767676; -fx-background-color: #FFFFFF; -fx-text-fill: #000000;");
-        saveNew.setStyle("-fx-border-color: #767676; -fx-background-color: #FFFFFF; -fx-text-fill: #000000;");
-        Tooltip openOld = new Tooltip("Open level (1.3)");
-        Tooltip openNew = new Tooltip("Open level (1.5)");
-        openOld.setStyle("-fx-border-color: #767676; -fx-background-color: #FFFFFF; -fx-text-fill: #000000;");
-        openNew.setStyle("-fx-border-color: #767676; -fx-background-color: #FFFFFF; -fx-text-fill: #000000;");
-
-        buttonSaveOld.setTooltip(saveOld);
-        buttonSaveNew.setTooltip(saveNew);
-        buttonOpenOld.setTooltip(openOld);
-        buttonOpenNew.setTooltip(openNew);
+        buttonNewOld.setTooltip(new Tooltip("New Level (1.3)"));
+        buttonNewNew.setTooltip(new Tooltip("New Level (1.5)"));
+        buttonOpenOld.setTooltip(new Tooltip("Open Level (1.3)"));
+        buttonOpenNew.setTooltip(new Tooltip("Open Level (1.5)"));
+        buttonCloneOld.setTooltip(new Tooltip("Clone Level (1.3)"));
+        buttonCloneNew.setTooltip(new Tooltip("Clone Level (1.5)"));
+        buttonSaveOld.setTooltip(new Tooltip("Save Level (1.3)"));
+        buttonSaveNew.setTooltip(new Tooltip("Save Level (1.5)"));
+        buttonSaveAndPlay.setTooltip(new Tooltip("Save and Play Level on Level Version"));
+        buttonExport.setTooltip(new Tooltip("Export Level"));
+        buttonDummyExport.setTooltip(new Tooltip("Export Level Without Addin Info"));
+        buttonUndo.setTooltip(new Tooltip("Undo"));
+        buttonRedo.setTooltip(new Tooltip("Redo"));
+        buttonCut.setTooltip(new Tooltip("Cut"));
+        buttonCopy.setTooltip(new Tooltip("Copy"));
+        buttonPaste.setTooltip(new Tooltip("Paste"));
+        buttonDelete.setTooltip(new Tooltip("Delete"));
+        buttonUpdateLevelResources.setTooltip(new Tooltip("Update Level Resources"));
+        buttonImportImages.setTooltip(new Tooltip("Import Images"));
+        buttonAddTextResource.setTooltip(new Tooltip("Add Text Resource"));
+        buttonCleanResources.setTooltip(new Tooltip("Clean Level Resources"));
+        buttonSetMusic.setTooltip(new Tooltip("Set Music"));
+        buttonSetLoopsound.setTooltip(new Tooltip("Set Loop Sound"));
+        buttonSelectMoveAndResize.setTooltip(new Tooltip("Select, Move and Resize"));
+        buttonZoomAndPanView.setTooltip(new Tooltip("Zoom and Pan View"));
+        buttonStrandMode.setTooltip(new Tooltip("Place Strands"));
+        buttonShowHideCamera.setTooltip(new Tooltip("Show/Hide Camera"));
+        buttonShowHideForcefields.setTooltip(new Tooltip("Show/Hide Force Fields"));
+        buttonShowHideGeometry.setTooltip(new Tooltip("Show/Hide Geometry"));
+        buttonShowHideGraphics.setTooltip(new Tooltip("Show/Hide Graphics"));
+        buttonShowHideGoos.setTooltip(new Tooltip("Show/Hide Goo Balls"));
+        buttonShowHideParticles.setTooltip(new Tooltip("Show/Hide Particles"));
+        buttonShowHideLabels.setTooltip(new Tooltip("Show/Hide Labels"));
+        buttonShowHideAnim.setTooltip(new Tooltip("Show/Hide Animations"));
 
         functionsToolbar.getItems().addAll(buttonNewOld, buttonOpenOld, buttonCloneOld, new Separator());
         functionsToolbar.getItems().addAll(buttonNewNew, buttonOpenNew, buttonCloneNew, new Separator());
-        functionsToolbar.getItems().addAll(buttonSaveOld, buttonSaveAndPlayOld, buttonSaveNew, buttonSaveAndPlayNew, new Separator());
+        functionsToolbar.getItems().addAll(buttonSaveOld, buttonSaveNew, buttonSaveAndPlay, new Separator());
         functionsToolbar.getItems().addAll(buttonDummyExport, buttonExport, new Separator());
         functionsToolbar.getItems().addAll(buttonUndo, buttonRedo, new Separator());
         functionsToolbar.getItems().addAll(buttonCut, buttonCopy, buttonPaste, new Separator());
@@ -472,6 +491,21 @@ public class FXCreator {
         addSignpostButton.setOnAction(e -> Main.addSign(Main.getLevel().getSceneObject()));
         addLabelButton.setOnAction(e -> Main.addLabel(Main.getLevel().getSceneObject()));
 
+        addLineButton.setTooltip(new Tooltip("Add Line"));
+        addRectangleButton.setTooltip(new Tooltip("Add Rectangle"));
+        addCircleButton.setTooltip(new Tooltip("Add Circle"));
+        addSceneLayerButton.setTooltip(new Tooltip("Add Scene Layer"));
+        addCompositegeomButton.setTooltip(new Tooltip("Add Composite Geometry"));
+        addHingeButton.setTooltip(new Tooltip("Add Hinge"));
+        autoPipeButton.setTooltip(new Tooltip("Auto Pipe"));
+        addVertexButton.setTooltip(new Tooltip("Add Vertex"));
+        addFireButton.setTooltip(new Tooltip("Add Fire"));
+        addLinearforcefieldButton.setTooltip(new Tooltip("Add Linear Force Field"));
+        addRadialforcefieldButton.setTooltip(new Tooltip("Add Radial Force Field"));
+        addParticlesButton.setTooltip(new Tooltip("Add Particles"));
+        addSignpostButton.setTooltip(new Tooltip("Add Signpost"));
+        addLabelButton.setTooltip(new Tooltip("Add Label"));
+
         addObjectsToolbar.getItems().addAll(addLineButton, addRectangleButton, addCircleButton, addSceneLayerButton, addCompositegeomButton, addHingeButton, new Separator());
         addObjectsToolbar.getItems().addAll(autoPipeButton, addVertexButton, new Separator());
         addObjectsToolbar.getItems().addAll(addFireButton, addLinearforcefieldButton, addRadialforcefieldButton, addParticlesButton, new Separator());
@@ -510,11 +544,16 @@ public class FXCreator {
 
         TreeTableColumn<EditorObject, String> hierarchyNames = new TreeTableColumn<>();
         hierarchyNames.setGraphic(new Label("ID or Name"));
+
         hierarchyNames.setCellValueFactory(param -> {
             if (param.getValue().getValue().getObjName() != null) {
-                return param.getValue().getValue().getObjName().valueProperty();
+                if (param.getValue().getValue().getObjName2() != null && !param.getValue().getValue().getObjName2().getValue().equals("")) {
+                    return param.getValue().getValue().getObjName().valueProperty().concat(",").concat(param.getValue().getValue().getObjName2().valueProperty());
+                } else {
+                    return param.getValue().getValue().getObjName().valueProperty();
+                }
             } else {
-                return new EditorAttribute("AAAAA", "AAAAA", "AAAAA", new InputField("AAAAA", InputField.ANY), false).valueProperty();
+                return new EditorAttribute(param.getValue().getValue(), "AAAAA", "AAAAA", "AAAAA", new InputField("AAAAA", InputField.ANY), false).valueProperty();
             }
         });
 
@@ -786,7 +825,7 @@ public class FXCreator {
 
                     @Override
                     public void commitEdit(String s) {
-                        super.commitEdit(getTableRow().getItem().getInput().verify(s) ? s : before);
+                        super.commitEdit(getTableRow().getItem().getInput().verify(getTableRow().getItem().getObject(), s) ? s : before);
                     }
                 };
 
@@ -820,12 +859,12 @@ public class FXCreator {
             //Change the actual attribute to reflect the edit.
             EditorAttribute attribute = propertiesView.getTreeItem(e.getTreeTablePosition().getRow()).getValue();
             String oldValue = attribute.getValue();
-            if (attribute.getInput().verify(e.getNewValue())) {
+            if (attribute.getInput().verify(attribute.getObject(), e.getNewValue())) {
                 attribute.setValue(e.getNewValue());
             }
 
             //If the edit was actually valid:
-            if (e.getNewValue().equals("") || attribute.getInput().verify(e.getNewValue())) {
+            if (e.getNewValue().equals("") || attribute.getInput().verify(attribute.getObject(), e.getNewValue())) {
 
                 //Push an attribute change to the undo buffer.
                 Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), oldValue, attribute.getValue()));
@@ -894,8 +933,7 @@ public class FXCreator {
         MenuItem cloneLevelNewItem = new MenuItem("Clone Level (1.5)...");
         MenuItem saveLevelOldItem = new MenuItem("Save Level (1.3)...");
         MenuItem saveLevelNewItem = new MenuItem("Save Level (1.5)...");
-        MenuItem saveAndPlayLevelOldItem = new MenuItem("Save and Play Level (1.3)...");
-        MenuItem saveAndPlayLevelNewItem = new MenuItem("Save and Play Level (1.5)...");
+        MenuItem saveAndPlayLevelItem = new MenuItem("Save and Play Level");
 
         newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
         newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
@@ -905,8 +943,7 @@ public class FXCreator {
         cloneLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
         saveLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
         saveLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
-        saveAndPlayLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_old.png")));
-        saveAndPlayLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play_new.png")));
+        saveAndPlayLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
 
         newLevelOldItem.setOnAction(e -> Main.newLevel(1.3));
         newLevelNewItem.setOnAction(e -> Main.newLevel(1.5));
@@ -916,10 +953,9 @@ public class FXCreator {
         cloneLevelNewItem.setOnAction(e -> Main.cloneLevel(1.5));
         saveLevelOldItem.setOnAction(e -> Main.saveLevel(1.3));
         saveLevelNewItem.setOnAction(e -> Main.saveLevel(1.5));
-        saveAndPlayLevelOldItem.setOnAction(e -> Main.playLevel(1.3));
-        saveAndPlayLevelNewItem.setOnAction(e -> Main.playLevel(1.5));
+        saveAndPlayLevelItem.setOnAction(e -> Main.playLevel());
 
-        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem, saveAndPlayLevelOldItem, newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem, saveAndPlayLevelNewItem);
+        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem, newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem, saveAndPlayLevelItem);
 
         Menu editMenu = new Menu("Edit");
 
@@ -992,10 +1028,10 @@ public class FXCreator {
 
         //Attempt to set graphics for the Cut, Copy, Paste, and Delete buttons.
 
-        cutItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\cut.png")));
-        copyItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\copy.png")));
-        pasteInPlaceItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\paste.png")));
-        deleteItem.setGraphic(new ImageView(FileManager.getIcon("Edit\\delete.png")));
+        cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
+        copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
+        pasteInPlaceItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
+        deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
 
 
         menu.getItems().addAll(cutItem, copyItem, pasteInPlaceItem, deleteItem);
@@ -1109,7 +1145,7 @@ public class FXCreator {
     public static TreeItem<EditorAttribute> makePropertiesViewTreeItem(EditorObject object) {
 
         //Create the root tree item.
-        TreeItem<EditorAttribute> treeItem = new TreeItem<>(new EditorAttribute("", "", "", new InputField("", InputField.NULL), false));
+        TreeItem<EditorAttribute> treeItem = new TreeItem<>(new EditorAttribute(object, "", "", "", new InputField("", InputField.NULL), false));
 
         //Loop over the object's meta attributes.
         for (MetaEditorAttribute metaEditorAttribute : object.getMetaAttributes()) {
@@ -1121,7 +1157,7 @@ public class FXCreator {
             } else {
                 //If no such attribute exists, this attribute is instead the name of a category of attributes.
                 //In this case, create a dummy attribute with no value.
-                attribute = new EditorAttribute(metaEditorAttribute.getName(), "", "", new InputField("", InputField.NULL), false);
+                attribute = new EditorAttribute(object, metaEditorAttribute.getName(), "", "", new InputField("", InputField.NULL), false);
             }
             TreeItem<EditorAttribute> thisAttribute = new TreeItem<>(attribute);
 

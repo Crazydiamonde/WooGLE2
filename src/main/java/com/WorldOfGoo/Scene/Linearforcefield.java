@@ -30,6 +30,7 @@ public class Linearforcefield extends EditorObject {
         addAttribute("water", "false", InputField.FLAG, false);
         addAttribute("color", "", InputField.COLOR, false);
         addAttribute("depth", "", InputField.NUMBER, false);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,center,width,height,Force Field<type,force,dampeningfactor,rotationaldampeningfactor,antigrav,geomonly,enabled>Water<water,color,depth>"));
     }
 

@@ -52,17 +52,17 @@ public class SceneLayer extends EditorObject {
         addAttribute("animloop", "false", InputField.FLAG, false);
         addAttribute("anchor", "", InputField.ANY, false); //geometry specific?
         addAttribute("context", "screen", InputField.ANY, false); //"screen" is the only option?
+        setNameAttribute(getAttribute2("name"));
         setMetaAttributes(MetaEditorAttribute.parse("id,name,x,y,scalex,scaley,rotation,Image<image,depth,tilex,tiley,tilecountx,tilecounty,alpha,colorize,anchor,context>?Anim<anim,animspeed,animdelay,animloop>"));
     }
 
     @Override
     public void update() {
-        setNameAttribute(getAttribute2("name"));
         if (!getAttribute("image").equals("")) {
             try {
                 image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
             } catch (FileNotFoundException e) {
-                Alarms.errorMessage(e);
+                Main.failedResources.add("\"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
             }
         }
 
@@ -110,7 +110,7 @@ public class SceneLayer extends EditorObject {
                 image = writableImage;
 
             } catch (FileNotFoundException e) {
-                Alarms.errorMessage(e);
+                Main.failedResources.add("\"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
             }
         };
 
@@ -516,8 +516,8 @@ public class SceneLayer extends EditorObject {
         double y2 = -Double.parseDouble(getAttribute("y"));
 
         if (getParent() instanceof Compositegeom){
-            x2 += getParent().getX();
-            y2 -= getParent().getY();
+            x2 += getParent().getDouble("x");
+            y2 -= getParent().getDouble("y");
         }
 
         double rotation2 = Math.toDegrees(Renderer.angleTo(new Point2D(mouseX, mouseY), new Point2D(x2, y2)));

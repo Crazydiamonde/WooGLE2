@@ -10,6 +10,7 @@ public class SetDefaults extends EditorObject {
         setRealName("SetDefaults");
         addAttribute("path", "./", InputField.ANY, true);
         addAttribute("idprefix", "", InputField.ANY, true);
+        setNameAttribute(getAttribute2("path"));
         setMetaAttributes(MetaEditorAttribute.parse("path,idprefix,"));
     }
 }

@@ -2,6 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -18,6 +19,7 @@ public class Poi extends EditorObject {
         addAttribute("traveltime", "3", InputField.NUMBER, true);
         addAttribute("pause", "0", InputField.NUMBER, true);
         addAttribute("zoom", "1", InputField.NUMBER, true);
+        setNameAttribute(new EditorAttribute(this, "", "", "", new InputField("", InputField.NULL), false));
         setMetaAttributes(MetaEditorAttribute.parse("pos,traveltime,pause,zoom,"));
     }
 

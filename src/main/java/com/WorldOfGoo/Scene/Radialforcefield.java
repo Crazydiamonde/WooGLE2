@@ -19,6 +19,7 @@ public class Radialforcefield extends EditorObject {
         addAttribute("antigrav", "false", InputField.FLAG, true);
         addAttribute("geomonly", "", InputField.FLAG, true);
         addAttribute("enabled", "true", InputField.FLAG, true);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,center,radius,forceatcenter,forceatedge,dampeningfactor,rotationaldampeningfactor,antigrav,"));
     }
 }

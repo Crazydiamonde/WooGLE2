@@ -9,6 +9,7 @@ public class Resources extends EditorObject {
         super(_parent);
         setRealName("Resources");
         addAttribute("id", "", InputField.ANY, true);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,"));
     }
 }

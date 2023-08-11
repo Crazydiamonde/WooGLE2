@@ -23,7 +23,6 @@ public class Rectangle extends EditorObject {
     public Rectangle(EditorObject _parent) {
         super(_parent);
         setRealName("rectangle");
-        setNameAttribute(getAttribute2("id"));
         addAttribute("id", "", InputField.ANY, true);
         addAttribute("mass", "", InputField.NUMBER, false);
         addAttribute("static", "true", InputField.FLAG, false);
@@ -43,6 +42,7 @@ public class Rectangle extends EditorObject {
         addAttribute("rotspeed", "", InputField.NUMBER, false);
         addAttribute("collide", "", InputField.FLAG, false);
         addAttribute("nogeomcollisions", "", InputField.FLAG, false);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,width,height,rotation,Geometry<static,mass,material,tag,break,rotspeed,contacts,collide,nogeomcollisions>?Image<image,imagepos,imagerot,imagescale>"));
     }
 

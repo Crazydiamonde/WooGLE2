@@ -16,10 +16,6 @@ public class ThingHandler extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
-        EditorAttribute[] glumbus = new EditorAttribute[attributes.getLength()];
-        for (int i = 0; i < attributes.getLength(); i++){
-            glumbus[i] = new EditorAttribute(attributes.getQName(i), attributes.getValue(i), "", new InputField(attributes.getQName(i), InputField.NULL), false);
-        }
         String zName = qName;
         if (mode == 3) {
             if (parent instanceof AddinLevel && zName.equals("name")) {
@@ -28,7 +24,10 @@ public class ThingHandler extends DefaultHandler {
                 zName = "Addin_" + zName;
             }
         }
-        EditorObject obj = EditorObject.create(zName, glumbus, parent);
+        EditorObject obj = EditorObject.create(zName, new EditorAttribute[0], parent);
+        for (int i = 0; i < attributes.getLength(); i++){
+            obj.setAttribute(attributes.getQName(i), attributes.getValue(i));
+        }
         currentObject = obj;
         obj.setRealName(qName);
         if (mode == 0) {

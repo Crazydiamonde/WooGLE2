@@ -17,6 +17,13 @@ public class Vertex extends EditorObject {
         setRealName("Vertex");
         addAttribute("x", "0", InputField.NUMBER, true);
         addAttribute("y", "0", InputField.NUMBER, true);
+        setNameAttribute(getAttribute2("x"));
+        setNameAttribute2(getAttribute2("y"));
+        setChangeListener("y", (observableValue, s, t1) -> {
+            String bruh = getAttribute("x");
+            setAttribute("x", "AAAAA");
+            setAttribute("x", bruh);
+        });
         setMetaAttributes(MetaEditorAttribute.parse("x,y,"));
     }
 

@@ -33,6 +33,7 @@ public class Particles extends EditorObject {
         addAttribute("pos", "0,0", InputField.POSITION, false);
         addAttribute("pretick", "0", InputField.NUMBER, false);
         addAttribute("enabled", "true", InputField.FLAG, false);
+        setNameAttribute(getAttribute2("effect"));
         setMetaAttributes(MetaEditorAttribute.parse("effect,pos,depth,pretick,enabled,"));
     }
 

@@ -11,6 +11,7 @@ public class Buttongroup extends EditorObject {
         addAttribute("id", "levelMarkerGroup", InputField.ANY, true);
         addAttribute("osx", "150,1.08", InputField.POSITION, true);
         setMetaAttributes(MetaEditorAttribute.parse("id,osx"));
+        setNameAttribute(getAttribute2("id"));
     }
 
     @Override

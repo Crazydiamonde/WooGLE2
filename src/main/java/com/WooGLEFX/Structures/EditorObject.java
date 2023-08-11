@@ -31,49 +31,23 @@ import java.util.ArrayList;
 
 public class EditorObject {
 
+    /** The name that World of Goo assigns to this object.
+     * This is the same for every object of the same type. */
     private String realName;
-
     public String getRealName() {
         return realName;
     }
-
     public void setRealName(String realName) {
         this.realName = realName;
     }
 
+
+    /** The parent of this object.
+     * Every object is required to have a parent except for level/scene/resrc/addin/text root objects. */
     private EditorObject parent;
-
-    public EditorAttribute getObjName() {
-        return nameAttribute;
-    }
-
-    public void setNameAttribute(EditorAttribute nameAttribute) {
-        this.nameAttribute = nameAttribute;
-    }
-
-    private EditorAttribute nameAttribute = null;
-
-    public TreeItem<EditorObject> getTreeItem() {
-        return treeItem;
-    }
-
-    public void setTreeItem(TreeItem<EditorObject> treeItem) {
-        this.treeItem = treeItem;
-    }
-
-    private TreeItem<EditorObject> treeItem;
-
     public EditorObject getParent() {
         return parent;
     }
-
-    public void setParent(EditorObject parent, int row) {
-        this.parent = parent;
-        if (this.parent != null) {
-            this.parent.getChildren().add(row, this);
-        }
-    }
-
     public void setParent(EditorObject parent) {
         this.parent = parent;
         if (this.parent != null) {
@@ -81,19 +55,129 @@ public class EditorObject {
         }
     }
 
-    public void setChangeListener(String attributeName, ChangeListener<String> changeListener) {
-        this.getAttribute2(attributeName).setChangeListener(changeListener);
+
+    /** The attribute that is used to display the object's name.
+     * This gets set to another attribute when the object is created. */
+    private EditorAttribute nameAttribute = null;
+    public EditorAttribute getObjName() {
+        return nameAttribute;
+    }
+    public void setNameAttribute(EditorAttribute nameAttribute) {
+        this.nameAttribute = nameAttribute;
     }
 
-    private ArrayList<MetaEditorAttribute> metaAttributes = new ArrayList<>();
 
+    /** The optional secondary that is used to display the object's name.
+     * This gets set to another attribute when the object is created. */
+    private EditorAttribute nameAttribute2 = null;
+    public EditorAttribute getObjName2() {
+        return nameAttribute2;
+    }
+    public void setNameAttribute2(EditorAttribute nameAttribute2) {
+        this.nameAttribute2 = nameAttribute2;
+    }
+
+
+    /** The TreeItem associated with this object. */
+    private TreeItem<EditorObject> treeItem;
+    public TreeItem<EditorObject> getTreeItem() {
+        return treeItem;
+    }
+    public void setTreeItem(TreeItem<EditorObject> treeItem) {
+        this.treeItem = treeItem;
+    }
+    public void setParent(EditorObject parent, int row) {
+        this.parent = parent;
+        if (this.parent != null) {
+            this.parent.getChildren().add(row, this);
+        }
+    }
+
+
+    /** The level that this object is inside. */
+    private WorldLevel level;
+    public WorldLevel getLevel() {
+        return level;
+    }
+    public void setLevel(WorldLevel level) {
+        this.level = level;
+    }
+
+
+    /** The EditorAttributes for this object.
+     * All of these are added when the object is created. */
+    private EditorAttribute[] attributes = new EditorAttribute[0];
+    public EditorAttribute[] getAttributes(){
+        return this.attributes;
+    }
+    public String getAttribute(String name) {
+        for (EditorAttribute attribute : this.attributes) {
+            if (attribute.getName().equals(name)) {
+                if (attribute.getValue().equals("")) {
+                    return attribute.getDefaultValue();
+                } else {
+                    return attribute.getValue();
+                }
+            }
+        }
+        return null;
+    }
+    public EditorAttribute getAttribute2(String name) {
+        for (EditorAttribute attribute : this.attributes) {
+            if (attribute.getName().equals(name)) {
+                return attribute;
+            }
+        }
+        return null;
+    }
+    public void setAttribute(String name, Object value) {
+        for (EditorAttribute attribute : this.attributes) {
+            if (attribute.getName().equals(name)) {
+                attribute.setValue(String.valueOf(value));
+                return;
+            }
+        }
+    }
+    public void addAttribute(String name, String value, int inputFieldType, boolean required) {
+
+        EditorAttribute[] newAttributes = new EditorAttribute[this.attributes.length + 1];
+        int i2 = 0;
+        for (EditorAttribute attribute : this.attributes){
+            newAttributes[i2] = attribute;
+            i2++;
+        }
+        newAttributes[i2] = new EditorAttribute(this, name, value, "", new InputField(name, inputFieldType), required);
+        this.attributes = newAttributes;
+    }
+    public EditorAttribute[] cloneAttributes() {
+        ArrayList<EditorAttribute> output = new ArrayList<>();
+        for (EditorAttribute attribute : this.attributes) {
+            output.add(new EditorAttribute(this, attribute.getName(), attribute.getDefaultValue(), attribute.getValue(), attribute.getInput(), attribute.getRequiredInFile()));
+        }
+        return output.toArray(new EditorAttribute[0]);
+    }
+
+
+    /** The children of this object. */
+    private final ArrayList<EditorObject> children = new ArrayList<>();
+    public ArrayList<EditorObject> getChildren() {
+        return children;
+    }
+
+
+    /** The meta attributes of the object.
+     * These control how attributes are displayed to the user. */
+    private ArrayList<MetaEditorAttribute> metaAttributes = new ArrayList<>();
     public ArrayList<MetaEditorAttribute> getMetaAttributes() {
         return metaAttributes;
     }
-
     public void setMetaAttributes(ArrayList<MetaEditorAttribute> metaAttributes) {
         this.metaAttributes = metaAttributes;
         this.propertiesTreeItem = FXCreator.makePropertiesViewTreeItem(this);
+    }
+
+    public void setChangeListener(String attributeName, ChangeListener<String> changeListener) {
+        this.getAttribute2(attributeName).setChangeListener(changeListener);
     }
 
     public EditorObject(EditorObject _parent) {
@@ -227,68 +311,19 @@ public class EditorObject {
         }
     }
 
-    private EditorAttribute[] attributes = new EditorAttribute[0];
-
-    public EditorAttribute[] getAttributes(){
-        return this.attributes;
-    }
-
-    public String getAttribute(String name){
-        for (EditorAttribute attribute : this.attributes) {
-            if (attribute.getName().equals(name)) {
-                if (attribute.getValue().equals("")) {
-                    return attribute.getDefaultValue();
-                } else {
-                    return attribute.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
-    public EditorAttribute getAttribute2(String name){
-        for (EditorAttribute attribute : this.attributes) {
-            if (attribute.getName().equals(name)) {
-                return attribute;
-            }
-        }
-        return null;
-    }
-
-    private TreeItem<EditorAttribute> propertiesTreeItem = new TreeItem<>(new EditorAttribute("", "", "", new InputField("", InputField.NULL), false));
+    private TreeItem<EditorAttribute> propertiesTreeItem = new TreeItem<>(new EditorAttribute(this, "", "", "", new InputField("", InputField.NULL), false));
 
     public TreeItem<EditorAttribute> getPropertiesTreeItem() {
         return propertiesTreeItem;
     }
 
-    public void setAttribute(String name, Object value){
-        for (EditorAttribute attribute : this.attributes) {
-            if (attribute.getName().equals(name)) {
-                attribute.setValue(String.valueOf(value));
-                return;
-            }
-        }
-    }
-
-    public void addAttribute(String name, String value, int inputFieldType, boolean required) {
-
-        EditorAttribute[] newAttributes = new EditorAttribute[this.attributes.length + 1];
-        int i2 = 0;
-        for (EditorAttribute attribute : this.attributes){
-            newAttributes[i2] = attribute;
-            i2++;
-        }
-        newAttributes[i2] = new EditorAttribute(name, value, "", new InputField(name, inputFieldType), required);
-        this.attributes = newAttributes;
-    }
-
     public boolean isValid() {
         for (EditorAttribute attribute : this.attributes) {
             if (attribute.getValue().equals("")) {
-                if (!attribute.getInput().verify(attribute.getDefaultValue())) {
+                if (!attribute.getInput().verify(this, attribute.getDefaultValue())) {
                     return false;
                 }
-            } else if (!attribute.getInput().verify(attribute.getValue())) {
+            } else if (!attribute.getInput().verify(this, attribute.getValue())) {
                 System.out.println("failed to verify " + attribute.getValue());
                 return false;
             }
@@ -325,20 +360,6 @@ public class EditorObject {
         return changes.toArray(new AttributeChangeAction[0]);
     }
 
-    private final ArrayList<EditorObject> children = new ArrayList<>();
-
-    public ArrayList<EditorObject> getChildren() {
-        return children;
-    }
-
-    public EditorAttribute[] cloneAttributes(){
-        ArrayList<EditorAttribute> output = new ArrayList<>();
-        for (EditorAttribute attribute : this.attributes) {
-            output.add(new EditorAttribute(attribute.getName(), attribute.getDefaultValue(), attribute.getValue(), attribute.getInput(), attribute.getRequiredInFile()));
-        }
-        return output.toArray(new EditorAttribute[0]);
-    }
-
     public EditorObject getAbsoluteParent() {
         if (getParent() == null) {
             return this;
@@ -355,14 +376,6 @@ public class EditorObject {
 
     public String[] getPossibleChildren() {
         return new String[0];
-    }
-
-    public double getX(){
-        return 0;
-    }
-
-    public double getY(){
-        return 0;
     }
 
     public void updateWithAnimation(WoGAnimation animation, float timer){

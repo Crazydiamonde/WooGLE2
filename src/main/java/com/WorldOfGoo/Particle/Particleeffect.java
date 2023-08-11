@@ -30,7 +30,7 @@ public class Particleeffect extends EditorObject {
     @Override
     public void update(){
         for (EditorObject thing : Main.getParticles()) {
-            if (thing instanceof _Particle && thing.getParent() == this) {
+            if (thing instanceof _Particle && thing.getParent().getAttribute("name").equals(getAttribute("name"))) {
                 particles.add((_Particle) thing);
             }
         }

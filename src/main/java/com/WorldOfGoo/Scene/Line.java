@@ -21,6 +21,7 @@ public class Line extends EditorObject {
         addAttribute("anchor", "0,0", InputField.POSITION, true);
         addAttribute("normal", "1,0", InputField.POSITION, true);
         addAttribute("break", "", InputField.NUMBER, false);
+        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,anchor,normal,material,tag,break,"));
     }
 
