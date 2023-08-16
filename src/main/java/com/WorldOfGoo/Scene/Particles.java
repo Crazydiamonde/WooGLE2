@@ -159,7 +159,8 @@ public class Particles extends EditorObject {
                                     t.appendRotation(rotation, particleGraphicsInstance.getPos().getX(), -particleGraphicsInstance.getPos().getY());
                                     imageGraphicsContext.setTransform(t);
                                     if (particleGraphicsInstance.getAdditive()) {
-                                        imageGraphicsContext.setGlobalBlendMode(BlendMode.ADD);
+                                        //TODO fix particles drawing with high opacity so that this can go back to ADD
+                                        imageGraphicsContext.setGlobalBlendMode(BlendMode.SRC_OVER);
                                     }
                                     imageGraphicsContext.drawImage(img, particleGraphicsInstance.getPos().getX() - img.getWidth() * scale / 2, -particleGraphicsInstance.getPos().getY() - img.getHeight() * scale / 2, img.getWidth() * scale, img.getHeight() * scale);
                                     if (particleGraphicsInstance.update()) {

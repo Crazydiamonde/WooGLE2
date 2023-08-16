@@ -4,6 +4,9 @@ import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Addin.AddinLevel;
+import com.WorldOfGoo.Resrc.ResrcImage;
+import com.WorldOfGoo.Resrc.SetDefaults;
+import com.WorldOfGoo.Resrc.Sound;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -13,6 +16,8 @@ public class ThingHandler extends DefaultHandler {
     public int mode = 0;
 
     private EditorObject currentObject = null;
+
+    public static SetDefaults impossible = null;
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
@@ -34,6 +39,15 @@ public class ThingHandler extends DefaultHandler {
             FileManager.level.add(obj);
         } else if (mode == 1) {
             FileManager.resources.add(obj);
+            if (impossible != null && (obj instanceof ResrcImage || obj instanceof Sound)) {
+                obj.setAttribute("REALid", obj.getAttribute("id"));
+                obj.setAttribute("REALpath", obj.getAttribute("path"));
+                obj.setAttribute("id", impossible.getAttribute("idprefix") + obj.getAttribute("id"));
+                obj.setAttribute("path", impossible.getAttribute("path") + obj.getAttribute("path"));
+            }
+            if (obj instanceof SetDefaults) {
+                impossible = (SetDefaults) obj;
+            }
         } else if (mode == 2) {
             FileManager.scene.add(obj);
         } else if (mode == 3) {

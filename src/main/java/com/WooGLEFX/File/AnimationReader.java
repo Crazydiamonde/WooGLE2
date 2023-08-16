@@ -230,6 +230,7 @@ public class AnimationReader {
         byte[] COLOR_FRAMES_OFFSET = subsection(binuni, 40, 44);
         byte[] SOUND_FRAMES_OFFSET = subsection(binuni, 44, 48);
         byte[] STRING_TABLE_OFFSET = subsection(binuni, 48, 52);
+
         byte[] TRANSFORM_TYPES = subsection(binuni, intFromBytes(TRANSFORM_TYPES_OFFSET), intFromBytes(FRAME_TIMES_OFFSET));
         byte[] FRAME_TIMES = subsection(binuni, intFromBytes(FRAME_TIMES_OFFSET), intFromBytes(X_FORM_FRAMES_OFFSET));
         byte[] X_FORM_FRAMES = subsection(binuni, intFromBytes(X_FORM_FRAMES_OFFSET) + intFromBytes(NUM_TRANSFORM) * 4, intFromBytes(ALPHA_FRAMES_OFFSET));

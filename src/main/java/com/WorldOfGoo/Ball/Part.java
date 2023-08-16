@@ -30,19 +30,19 @@ public class Part extends EditorObject {
 
     public Part(EditorObject _parent) {
         super(_parent);
-        addAttribute("name", "", InputField.ANY, false);
-        addAttribute("image", "", InputField.ANY, false);
-        addAttribute("x", "0", InputField.NUMBER, false);
-        addAttribute("y", "0", InputField.NUMBER, false);
-        addAttribute("layer", "0", InputField.NUMBER, false);
-        addAttribute("state", "", InputField.ANY, false);
-        addAttribute("scale", "1", InputField.NUMBER, false);
+        addAttribute("name", "", InputField.ANY, true);
+        addAttribute("layer", "", InputField.NUMBER, true);
+        addAttribute("x", "", InputField.NUMBER, true);
+        addAttribute("y", "", InputField.NUMBER, true);
+        addAttribute("image", "", InputField.ANY, true);
+        addAttribute("scale", "1", InputField.NUMBER, true);
         addAttribute("rotate", "", InputField.FLAG, false);
         addAttribute("stretch", "", InputField.NUMBER, false);
+        addAttribute("xrange", "", InputField.POSITION, false);
+        addAttribute("yrange", "", InputField.POSITION, false);
         addAttribute("eye", "", InputField.FLAG, false);
         addAttribute("pupil", "", InputField.IMAGE, false);
         addAttribute("pupilinset", "", InputField.NUMBER, false);
-        addAttribute("xrange", "", InputField.POSITION, false);
-        addAttribute("yrange", "", InputField.POSITION, false);
+        addAttribute("state", "", InputField.ANY, false);
     }
 }

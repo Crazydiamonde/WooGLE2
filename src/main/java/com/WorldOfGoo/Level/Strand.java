@@ -118,7 +118,7 @@ public class Strand extends EditorObject {
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         if (Main.getLevel().getShowGoos() == 2) {
-            if (goo1 != null && goo2 != null) {
+            if (goo1 != null && goo2 != null && strand != null) {
                 Position pos1 = new Position(goo1.getDouble("x"), -goo1.getDouble("y"));;
                 Position pos2 = new Position(goo2.getDouble("x"), -goo2.getDouble("y"));
                 if (strandImage == null) {

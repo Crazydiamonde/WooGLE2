@@ -7,6 +7,7 @@ import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Slider extends EditorObject {
@@ -106,7 +107,10 @@ public class Slider extends EditorObject {
                 double x = geometry2.getDouble("x");
                 double y = geometry2.getDouble("y");
 
-                //TODO: Account for geometry possibly being in compositegeoms
+                if (geometry2.getParent() instanceof Compositegeom) {
+                    x += geometry2.getParent().getDouble("x");
+                    y += geometry2.getParent().getDouble("y");
+                }
 
                 double screenX = x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
                 double screenY = -y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();

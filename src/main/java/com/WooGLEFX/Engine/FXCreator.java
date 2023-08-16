@@ -102,24 +102,26 @@ public class FXCreator {
                     double myX = 0.5 * (highX - lowX) + lowX;
                     double myY = 0.5 * (highY - lowY) + lowY;
 
-                    Image img = ((Part) part).getImages().get(0);
-                    if (img != null) {
-                        BufferedImage image = SwingFXUtils.fromFXImage(img, null);
+                    if (((Part) part).getImages().size() > 0) {
+                        Image img = ((Part) part).getImages().get(0);
+                        if (img != null) {
+                            BufferedImage image = SwingFXUtils.fromFXImage(img, null);
 
-                        double iWidth = image.getWidth() * scale;
-                        double iHeight = image.getHeight() * scale;
+                            double iWidth = image.getWidth() * scale;
+                            double iHeight = image.getHeight() * scale;
 
-                        if (myX - iWidth / 2 < minX) {
-                            minX = myX - iWidth / 2;
-                        }
-                        if (-myY - iHeight / 2 < minY) {
-                            minY = -myY - iHeight / 2;
-                        }
-                        if (myX + iWidth / 2 > maxX) {
-                            maxX = myX + iWidth / 2;
-                        }
-                        if (-myY + iHeight / 2 > maxY) {
-                            maxY = -myY + iHeight / 2;
+                            if (myX - iWidth / 2 < minX) {
+                                minX = myX - iWidth / 2;
+                            }
+                            if (-myY - iHeight / 2 < minY) {
+                                minY = -myY - iHeight / 2;
+                            }
+                            if (myX + iWidth / 2 > maxX) {
+                                maxX = myX + iWidth / 2;
+                            }
+                            if (-myY + iHeight / 2 > maxY) {
+                                maxY = -myY + iHeight / 2;
+                            }
                         }
                     }
                 }
@@ -158,7 +160,7 @@ public class FXCreator {
                         }
                     }
 
-                    if (ok) {
+                    if (ok && ((Part) part).getImages().size() > 0) {
                         Image img = ((Part) part).getImages().get(0);
 
                         double scale = Double.parseDouble(part.getAttribute("scale"));
@@ -227,7 +229,10 @@ public class FXCreator {
             idk.setOnAction(e -> Main.addBall(Main.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
             return idk;
         } else {
-            return null;
+            Button idk = new Button();
+            idk.setPrefSize(size, size);
+            idk.setOnAction(e -> Main.addBall(Main.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
+            return idk;
         }
     }
 
@@ -238,8 +243,10 @@ public class FXCreator {
             for (_Ball ball : Main.getImportedBalls()) {
                 if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall) && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
                     Button button = createTemplateForBall(size, ball);
-                    if (button != null) {
-                        gooballsToolbar.getItems().add(button);
+                    if (ball.getVersion() == 1.3) {
+                        oldGooballsToolbar.getItems().add(button);
+                    } else {
+                        newGooballsToolbar.getItems().add(button);
                     }
                 }
             }
@@ -247,10 +254,22 @@ public class FXCreator {
         }
     }
 
-    private static ToolBar gooballsToolbar;
+    private static ToolBar oldGooballsToolbar;
 
-    public static ToolBar getGooballsToolbar() {
-        return gooballsToolbar;
+    public static ToolBar getOldGooballsToolbar() {
+        return oldGooballsToolbar;
+    }
+
+    private static ToolBar newGooballsToolbar;
+
+    public static ToolBar getNewGooballsToolbar() {
+        return newGooballsToolbar;
+    }
+
+    private static ToolBar nullGooballsToolbar;
+
+    public static ToolBar getNullGooballsToolbar() {
+        return nullGooballsToolbar;
     }
 
     public static Button buttonNewOld = new Button();
@@ -433,11 +452,17 @@ public class FXCreator {
 
         vBox.getChildren().add(functionsToolbar);
 
-        gooballsToolbar = new ToolBar();
+        oldGooballsToolbar = new ToolBar();
+        newGooballsToolbar = new ToolBar();
+        nullGooballsToolbar = new ToolBar();
+
+        oldGooballsToolbar.setMinHeight(27);
+        newGooballsToolbar.setMinHeight(27);
+        nullGooballsToolbar.setMinHeight(27);
 
         addBallsTo();
 
-        gooballsToolbar.setOnMouseClicked(mouseEvent -> {
+        oldGooballsToolbar.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
                 ContextMenu contextMenu = new ContextMenu();
                 MenuItem menuItem = new MenuItem("Configure Palette...");
@@ -449,15 +474,25 @@ public class FXCreator {
                     }
                 });
                 contextMenu.getItems().add(menuItem);
-                gooballsToolbar.setContextMenu(contextMenu);
+                oldGooballsToolbar.setContextMenu(contextMenu);
             }
         });
 
-        for (Node node : gooballsToolbar.getItems()) {
-            node.setDisable(true);
-        }
-
-        vBox.getChildren().add(gooballsToolbar);
+        newGooballsToolbar.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem menuItem = new MenuItem("Configure Palette...");
+                menuItem.setOnAction(actionEvent -> {
+                    try {
+                        new PaletteReconfigurator().start(new Stage());
+                    } catch (ParserConfigurationException | SAXException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                contextMenu.getItems().add(menuItem);
+                newGooballsToolbar.setContextMenu(contextMenu);
+            }
+        });
 
         ToolBar addObjectsToolbar = new ToolBar();
 
@@ -484,7 +519,7 @@ public class FXCreator {
         addHingeButton.setOnAction(e -> Main.addHinge(Main.getLevel().getSceneObject()));
         autoPipeButton.setOnAction(e -> Main.autoPipe(Main.getLevel().getSceneObject()));
         addVertexButton.setOnAction(e -> Main.addPipeVertex(Main.getLevel().getSceneObject()));
-        addFireButton.setOnAction(e -> Main.addFire(Main.getLevel().getSceneObject()));
+        addFireButton.setOnAction(e -> Main.addFire(Main.getLevel().getLevelObject()));
         addLinearforcefieldButton.setOnAction(e -> Main.addLinearForcefield(Main.getLevel().getSceneObject()));
         addRadialforcefieldButton.setOnAction(e -> Main.addRadialForcefield(Main.getLevel().getSceneObject()));
         addParticlesButton.setOnAction(e -> Main.addParticle(Main.getLevel().getSceneObject()));
@@ -515,10 +550,12 @@ public class FXCreator {
             node.setDisable(true);
         }
 
-        vBox.getChildren().add(addObjectsToolbar);
+        vBox.getChildren().addAll(nullGooballsToolbar, addObjectsToolbar);
 
         functionsToolbar.setId("thing");
-        gooballsToolbar.setId("thing");
+        nullGooballsToolbar.setId("thing");
+        oldGooballsToolbar.setId("thing");
+        newGooballsToolbar.setId("thing");
         addObjectsToolbar.setId("thing");
     }
 
@@ -909,21 +946,27 @@ public class FXCreator {
         MenuItem reloadWorldOfGooNewItem = new MenuItem("Reload World of Goo");
         MenuItem changeWorldOfGooDirectoryOldItem = new MenuItem("Change World of Goo Directory (1.3)...");
         MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
+        MenuItem saveOldBallToNewItem = new MenuItem("Copy Ball from 1.3 to 1.5");
+        MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
         MenuItem quitItem = new MenuItem("Quit");
 
         reloadWorldOfGooOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
         reloadWorldOfGooNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
         changeWorldOfGooDirectoryOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
         changeWorldOfGooDirectoryNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
+        saveOldBallToNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_old_version.png")));
+        saveNewBallToOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_new_version.png")));
         quitItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\quit.png")));
 
         reloadWorldOfGooOldItem.setOnAction(e -> Main.reloadWorldOfGoo(1.3));
         reloadWorldOfGooNewItem.setOnAction(e -> Main.reloadWorldOfGoo(1.5));
         changeWorldOfGooDirectoryOldItem.setOnAction(e -> Main.changeWorldOfGooDirectory(1.3));
         changeWorldOfGooDirectoryNewItem.setOnAction(e -> Main.changeWorldOfGooDirectory(1.5));
+        saveOldBallToNewItem.setOnAction(e -> Main.saveBallInVersion(1.3, 1.5));
+        saveNewBallToOldItem.setOnAction(e -> Main.saveBallInVersion(1.5, 1.3));
         quitItem.setOnAction(e -> Main.quit());
 
-        fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem, changeWorldOfGooDirectoryNewItem, quitItem);
+        fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem, changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, quitItem);
 
         MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
         MenuItem newLevelNewItem = new MenuItem("New Level (1.5)...");

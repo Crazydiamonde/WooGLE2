@@ -1,9 +1,6 @@
 package com.WooGLEFX.Engine;
 
-import com.WooGLEFX.File.AnimationReader;
-import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.GlobalResourceManager;
-import com.WooGLEFX.File.LevelExporter;
+import com.WooGLEFX.File.*;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.GUI.*;
 import com.WooGLEFX.Structures.*;
@@ -16,6 +13,7 @@ import com.WorldOfGoo.Level.*;
 import com.WorldOfGoo.Particle._Particle;
 import com.WorldOfGoo.Resrc.ResourceManifest;
 import com.WorldOfGoo.Resrc.ResrcImage;
+import com.WorldOfGoo.Resrc.Sound;
 import com.WorldOfGoo.Scene.Label;
 import com.WorldOfGoo.Scene.*;
 import com.WorldOfGoo.Scene.Rectangle;
@@ -32,6 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -49,6 +48,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
@@ -215,9 +215,11 @@ public class Main extends Application {
     }
 
     public static void enableAllButtons(boolean disable) {
-        for (int i = 1; i < 4; i++) {
-            for (Node node : ((ToolBar) (vBox.getChildren().get(i))).getItems()) {
-                node.setDisable(disable);
+        for (int i : new int[]{1, 3}) {
+            if (vBox.getChildren().get(i) instanceof ToolBar toolBar) {
+                for (Node node : toolBar.getItems()) {
+                    node.setDisable(disable);
+                }
             }
         }
         if (!FileManager.isHasOldWOG()) {
@@ -252,10 +254,6 @@ public class Main extends Application {
         level.setLevelName(levelName);
         enableAllButtons(false);
 
-        for (int i = 0; i < FileManager.getPaletteBalls().size(); i++) {
-            FXCreator.getGooballsToolbar().getItems().get(i).setDisable(FileManager.getPaletteVersions().get(i) != version);
-        }
-
         levelSelectPane.setMinHeight(30);
         levelSelectPane.setMaxHeight(30);
 
@@ -283,7 +281,9 @@ public class Main extends Application {
                             importedBalls.add(ball2);
                         }
                     } catch (ParserConfigurationException | SAXException | IOException e) {
-                        Alarms.errorMessage(e);
+                        if (!failedResources.contains("Ball: " + object.getAttribute("type") + " (version " + version + ")")) {
+                            failedResources.add("Ball: " + object.getAttribute("type") + " (version " + version + ")");
+                        }
                     }
                 }
             }
@@ -516,7 +516,11 @@ public class Main extends Application {
                 } else if (change instanceof ObjectDestructionAction) {
                     deleteItem(change.getObject(), false);
                 } else if (change instanceof ImportResourceAction) {
-                    importImage(new File(((ImportResourceAction) change).getPath()));
+                    if (change.getObject() instanceof ResrcImage) {
+                        importImage(new File(((ImportResourceAction) change).getPath()));
+                    } else if (change.getObject() instanceof Sound) {
+                        importMusic(new File(((ImportResourceAction) change).getPath()), false);
+                    }
                 }
             }
         }
@@ -593,6 +597,7 @@ public class Main extends Application {
             if (clipboard != null) {
                 EditorObject object = ClipboardHandler.importFromClipboardString(clipboard);
                 if (object != null) {
+                    object.setLevel(level);
                     object.setParent(selected.getParent());
                     if (object instanceof BallInstance) {
                         fixGooball(object);
@@ -674,12 +679,7 @@ public class Main extends Application {
             hierarchy.getSelectionModel().select(hierarchy.getRow(selected.getTreeItem()));
         }
     }
-
-    public static void registerChange(UserAction action) {
-        registerChange(new UserAction[]{action});
-    }
-
-    public static void registerChange(UserAction[] actions) {
+    public static void registerChange(UserAction... actions) {
         userActions.add(actions);
         if (level.getEditingStatus() == WorldLevel.NO_UNSAVED_CHANGES) {
             level.setEditingStatus(WorldLevel.UNSAVED_CHANGES, true);
@@ -775,6 +775,79 @@ public class Main extends Application {
 
     public static void importMusic() {
         System.out.println("Import music");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
+
+        File resrcFile = fileChooser.showOpenDialog(new Stage());
+
+        if (resrcFile != null) {
+            importMusic(resrcFile, true);
+        }
+    }
+
+    public static void importMusic(File resrcFile, boolean fromUser) {
+
+        /* If resrcFile is not already present in res\music, copy resrcFile into res\music.  */
+
+        boolean alreadyInstalled = false;
+        /* check for file in 1.3 version */
+        if (level.getVersion() == 1.3 && new File(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
+            alreadyInstalled = true;
+        }
+        /* check for file in 1.5 version */
+        if (level.getVersion() == 1.5 && new File(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
+            alreadyInstalled = true;
+        }
+        /* copy file */
+        if (!alreadyInstalled) {
+            try {
+                if (level.getVersion() == 1.3) {
+                    Files.copy(resrcFile.toPath(), Paths.get(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()));
+                } else if (level.getVersion() == 1.5) {
+                    Files.copy(resrcFile.toPath(), Paths.get(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()));
+                }
+            } catch (Exception e) {
+                Alarms.errorMessage(e);
+            }
+        }
+
+        /* Add a new sound resource with a default ID and path leading to resrcFile in res\music. */
+        String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_" + resrcFile.getName().split("\\.")[0].toUpperCase();
+        EditorObject soundResourceObject = EditorObject.create("Sound", new EditorAttribute[0], null);
+
+        soundResourceObject.setAttribute("id", soundResourceName);
+        soundResourceObject.setAttribute("path", "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
+
+        int whereToPlaceResource = 0;
+        int count = 0;
+        for (EditorObject resourceThing : level.getResourcesObject().getChildren().get(0).getChildren()) {
+            count++;
+            if (resourceThing instanceof Sound) {
+                whereToPlaceResource = count;
+            }
+        }
+
+        level.getResources().add(soundResourceObject);
+        soundResourceObject.setParent(level.getResourcesObject().getChildren().get(0), whereToPlaceResource);
+        level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource, soundResourceObject.getTreeItem());
+
+        /* If a music object already exists, change its sound attribute. */
+        for (EditorObject music : level.getLevel()) {
+            if (music instanceof Music) {
+                String oldID = music.getAttribute("id");
+                music.setAttribute("id", soundResourceName);
+                registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()), new AttributeChangeAction(music, "id", oldID, soundResourceName));
+                return;
+            }
+        }
+
+        /* Otherwise, create a new music object set to the sound resource's ID. */
+        EditorObject musicObject = EditorObject.create("music", new EditorAttribute[0], level.getLevelObject());
+        musicObject.setAttribute("id", soundResourceName);
+        level.getLevel().add(musicObject);
+        registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()), new ObjectCreationAction(soundResourceObject, whereToPlaceResource), new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
+
     }
 
     public static void importLoopsound() {
@@ -850,8 +923,8 @@ public class Main extends Application {
     }
 
     public static void addAnything(EditorObject obj, EditorObject parent) {
-        obj.setTreeItem(new TreeItem<>(obj));
-        parent.getTreeItem().getChildren().add(obj.getTreeItem());
+        //obj.setTreeItem(new TreeItem<>(obj));
+        //parent.getTreeItem().getChildren().add(obj.getTreeItem());
         hierarchy.scrollTo(hierarchy.getRow(obj.getTreeItem()));
         hierarchy.getSelectionModel().select(hierarchy.getRow(obj.getTreeItem()));
         obj.update();
@@ -1137,6 +1210,23 @@ public class Main extends Application {
         System.out.println("Add Label");
     }
 
+    public static void saveBallInVersion(double oldVersion, double newVersion) {
+        new BallSelector(oldVersion, newVersion).start(new Stage());
+    }
+
+    public static void saveBallInVersion(String ball, double oldVersion, double newVersion) {
+        System.out.println("Saving " + ball + " from version " + oldVersion + " to version " + newVersion);
+        try {
+            if (newVersion == 1.3) {
+                LevelExporter.exportBallAsXML(FileManager.openBall(ball, oldVersion), FileManager.getOldWOGdir() + "\\res\\balls\\" + ball, 1.3, false);
+            } else if (newVersion == 1.5) {
+                LevelExporter.exportBallAsXML(FileManager.openBall(ball, oldVersion), FileManager.getNewWOGdir() + "\\res\\balls\\" + ball, 1.5, false);
+            }
+        } catch (Exception e) {
+            Alarms.errorMessage(e);
+        }
+    }
+
 
     private static EditorObject selected;
 
@@ -1197,17 +1287,17 @@ public class Main extends Application {
 
         if (level != null) {
 
-            if (selected != null) {
-                if (propertiesView.getEditingCell() == null || propertiesView.getFocusModel().focusedIndexProperty().get() == -1) {
-                    propertiesView.edit(-1, null);
-                }
-                oldAttributes = selected.cloneAttributes();
-                oldSelected = selected;
-            }
-
             double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth();
 
             if (event.getButton().equals(MouseButton.PRIMARY)) {
+
+                if (selected != null) {
+                    if (propertiesView.getEditingCell() == null || propertiesView.getFocusModel().focusedIndexProperty().get() == -1) {
+                        propertiesView.edit(-1, null);
+                    }
+                    oldAttributes = selected.cloneAttributes();
+                    oldSelected = selected;
+                }
 
                 if (mode == SELECTION) {
                     if (event.getX() < editorViewWidth && event.getY() > getMouseYOffset()) {
@@ -1315,7 +1405,7 @@ public class Main extends Application {
      */
     public static void eventMouseReleased(MouseEvent event) {
         //If the mouse was released inside the editor window:
-        if (event.getX() < splitPane.getDividerPositions()[0] * splitPane.getWidth() && level != null) {
+        if (event.getButton() == MouseButton.PRIMARY && event.getX() < splitPane.getDividerPositions()[0] * splitPane.getWidth() && level != null) {
             //Record the changes made to the selected object.
             //Clear all possible redos if changes have been made.
             if (selected != null && selected == oldSelected && oldAttributes != null) {
@@ -1499,10 +1589,6 @@ public class Main extends Application {
         level = _level;
         enableAllButtons(false);
 
-        for (int i = 0; i < FileManager.getPaletteBalls().size(); i++) {
-            FXCreator.getGooballsToolbar().getItems().get(i).setDisable(FileManager.getPaletteVersions().get(i) != _level.getVersion());
-        }
-
         //Transform the canvas according to the updated translation and scale.
         t = new Affine();
         t.appendTranslation(level.getOffsetX(), level.getOffsetY());
@@ -1513,9 +1599,16 @@ public class Main extends Application {
     }
 
     public static void onSetLevel() {
+        vBox.getChildren().remove(2);
         if (level == null) {
             stage.setTitle("World of Goo Anniversary Editor");
+            vBox.getChildren().add(2, FXCreator.getNullGooballsToolbar());
         } else {
+            if (level.getVersion() == 1.3) {
+                vBox.getChildren().add(2, FXCreator.getOldGooballsToolbar());
+            } else {
+                vBox.getChildren().add(2, FXCreator.getNewGooballsToolbar());
+            }
             stage.setTitle(level.getLevelName() + " (version " + level.getVersion() + ") — World of Goo Anniversary Editor");
             FXCreator.buttonShowHideAnim.setGraphic(new ImageView(level.isShowAnimations() ? WorldLevel.showHideAnim : WorldLevel.showHideAnim0));
             FXCreator.buttonShowHideCamera.setGraphic(new ImageView(level.isShowCameras() ? WorldLevel.showHideCam1 : WorldLevel.showHideCam0));
@@ -1662,7 +1755,7 @@ public class Main extends Application {
         return particles;
     }
 
-    public static EditorObject generateBlankAddinObject() {
+    public static EditorObject generateBlankAddinObject(String levelName) {
         EditorObject addin = EditorObject.create("Addin_addin", new EditorAttribute[0], null);
         EditorObject levels = EditorObject.create("Addin_levels", new EditorAttribute[0], addin);
         EditorObject level = EditorObject.create("Addin_level", new EditorAttribute[0], levels);
@@ -1672,10 +1765,13 @@ public class Main extends Application {
         EditorObject.create("Addin_version", new EditorAttribute[0], addin);
         EditorObject.create("Addin_description", new EditorAttribute[0], addin);
         EditorObject.create("Addin_author", new EditorAttribute[0], addin);
-        EditorObject.create("Addin_dir", new EditorAttribute[0], level);
-        EditorObject.create("Addin_wtf_name", new EditorAttribute[0], level);
+        EditorObject addinLevelDir = EditorObject.create("Addin_dir", new EditorAttribute[0], level);
+        EditorObject addinLevelName = EditorObject.create("Addin_wtf_name", new EditorAttribute[0], level);
         EditorObject.create("Addin_subtitle", new EditorAttribute[0], level);
         EditorObject.create("Addin_ocd", new EditorAttribute[0], level);
+
+        addinLevelDir.setAttribute("value", levelName);
+
         return addin;
     }
 
@@ -1783,6 +1879,8 @@ public class Main extends Application {
                         try (FileInputStream test2 = new FileInputStream(second)) {
                             byte[] allBytes = test2.readAllBytes();
                             animations.add(AnimationReader.readBinltl(allBytes, second.getName()));
+                        } catch (Exception e) {
+                            allFailedResources.add("Animation: " + second.getName() + " (version 1.3)");
                         }
                     }
                 }
@@ -1795,6 +1893,8 @@ public class Main extends Application {
                         try (FileInputStream test2 = new FileInputStream(second)) {
                             byte[] allBytes = test2.readAllBytes();
                             animations.add(AnimationReader.readBinuni(allBytes, second.getName()));
+                        } catch (Exception e) {
+                            allFailedResources.add("Animation: " + second.getName() + " (version 1.5)");
                         }
                     }
                 }
@@ -2072,6 +2172,7 @@ public class Main extends Application {
                     resumeLevelClosing();
                 }
             });
+            //LevelExporter.exportBallAsXML(Main.getImportedBalls().get(0), "");
         } catch (FileNotFoundException e) {
             Alarms.errorMessage(e);
         }

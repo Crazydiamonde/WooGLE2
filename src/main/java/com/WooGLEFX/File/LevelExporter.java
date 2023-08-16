@@ -1,6 +1,7 @@
 package com.WooGLEFX.File;
 
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -9,6 +10,7 @@ import com.WorldOfGoo.Level.*;
 import com.WorldOfGoo.Resrc.ResourceManifest;
 import com.WorldOfGoo.Resrc.Resources;
 import com.WorldOfGoo.Resrc.ResrcImage;
+import com.WorldOfGoo.Resrc.Sound;
 import com.WorldOfGoo.Scene.*;
 import com.WorldOfGoo.Text.TextStrings;
 import javafx.embed.swing.SwingFXUtils;
@@ -31,11 +33,20 @@ public class LevelExporter {
         export += "\t".repeat(spaces) + "<" + object.getRealName() + " ";
         StringBuilder exportBuilder = new StringBuilder(export);
         for (EditorAttribute attribute : object.getAttributes()) {
+            if (object instanceof Sound || object instanceof ResrcImage) {
+                if (attribute.getName().equals("id") || attribute.getName().equals("path")) {
+                    continue;
+                }
+            }
             if (!attribute.getValue().equals("") || attribute.getRequiredInFile()) {
                 if (ding && (attribute.getName().equals("up") || attribute.getName().equals("over") || attribute.getName().equals("disabled"))) {
                     exportBuilder.append(attribute.getName()).append("=\"\" ");
                 } else {
-                    exportBuilder.append(attribute.getName()).append("=\"").append(attribute.getValue()).append("\" ");
+                    if (object instanceof Sound || object instanceof ResrcImage) {
+                        exportBuilder.append(attribute.getName().substring(4)).append("=\"").append(attribute.getValue()).append("\" ");
+                    } else {
+                        exportBuilder.append(attribute.getName()).append("=\"").append(attribute.getValue()).append("\" ");
+                    }
                 }
             }
         }
@@ -273,10 +284,10 @@ public class LevelExporter {
             levelPathText += ".xml";
             resrcPathText += ".xml";
         } else if (version == 1.3) {
-            //If not exporting and on the older version, add .bin to the end of each path.
-            scenePathText += ".bin";
-            levelPathText += ".bin";
-            resrcPathText += ".bin";
+            //If not exporting and on the older version, add .xml.bin to the end of each path.
+            scenePathText += ".xml.bin";
+            levelPathText += ".xml.bin";
+            resrcPathText += ".xml.bin";
         }
 
         String addinPathText = "addin.xml";
@@ -355,6 +366,81 @@ public class LevelExporter {
             Files.write(addinPath, Collections.singleton(fullAddinXMLExport("", worldLevel.getAddinObject(), 0)), StandardCharsets.UTF_8);
         }
         Files.write(textPath, Collections.singleton(text), StandardCharsets.UTF_8);
+    }
+
+    public static void exportBallAsXML(_Ball ball, String outputPathString, double version, boolean exportingInGoomod) throws IOException {
+        /* General Parts */
+        /* Walking Animations */
+        /* Attached Animations */
+        /* Dragging Animations */
+        /* Climbing Animations */
+        /* Tank State Animations */
+        /* Sound FX */
+
+        //TODO add XML comments to files
+
+        String ballXML = recursiveXMLexport("", ball.objects.get(0), 0, true);
+        System.out.println(ballXML);
+
+        String resrcXML = recursiveXMLexport("", ball.resources.get(0), 0, true);
+        System.out.println(resrcXML);
+
+        String name = ball.objects.get(0).getAttribute("name");
+
+        String ballsPathText = outputPathString + "\\balls.xml";
+        String resourcesPathText = outputPathString + "\\resources.xml";
+
+        if (!exportingInGoomod && version == 1.3) {
+            ballsPathText += ".bin";
+            resourcesPathText += ".bin";
+        }
+
+        Path ballsPath = Path.of(ballsPathText);
+        Path resourcesPath = Path.of(resourcesPathText);
+        Path outputPath = Path.of(outputPathString);
+
+        if (!Files.exists(outputPath)) {
+            Files.createDirectories(outputPath);
+        }
+        if (!Files.exists(ballsPath)) {
+            Files.createFile(ballsPath);
+        }
+        if (!Files.exists(resourcesPath)) {
+            Files.createFile(resourcesPath);
+        }
+
+        if (version == 1.3) {
+            AESBinFormat.encodeFile(new File(ballsPathText), ballXML.getBytes());
+            AESBinFormat.encodeFile(new File(resourcesPathText), resrcXML.getBytes());
+            if (Files.exists(Path.of(FileManager.getNewWOGdir() + "\\res\\balls\\" + name))) {
+                File[] images = new File(FileManager.getNewWOGdir() + "\\res\\balls\\" + name).listFiles();
+                if (images != null) {
+                    for (File imageFile : images) {
+                        if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
+                            if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
+                                Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (version == 1.5) {
+            Files.write(ballsPath, Collections.singleton(ballXML), StandardCharsets.UTF_8);
+            Files.write(resourcesPath, Collections.singleton(resrcXML), StandardCharsets.UTF_8);
+            if (Files.exists(Path.of(FileManager.getOldWOGdir() + "\\res\\balls\\" + name))) {
+                File[] images = new File(FileManager.getOldWOGdir() + "\\res\\balls\\" + name).listFiles();
+                if (images != null) {
+                    for (File imageFile : images) {
+                        if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
+                            if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
+                                Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     //TODO export balls with the level

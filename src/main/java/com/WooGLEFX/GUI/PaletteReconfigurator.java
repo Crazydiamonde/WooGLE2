@@ -117,7 +117,8 @@ public class PaletteReconfigurator extends Application {
             FileManager.setPaletteBalls(paletteBalls);
             FileManager.setPaletteVersions(paletteVersions);
 
-            FXCreator.getGooballsToolbar().getItems().clear();
+            FXCreator.getOldGooballsToolbar().getItems().clear();
+            FXCreator.getNewGooballsToolbar().getItems().clear();
             FXCreator.addBallsTo();
 
             try {

@@ -1,4 +1,4 @@
-package com.WorldOfGoo.Ball;
+package com.WorldOfGoo.Particle;
 
 import com.WooGLEFX.Structures.EditorObject;
 

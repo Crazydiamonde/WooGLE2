@@ -3,6 +3,7 @@ package com.WooGLEFX.Structures;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 public class EditorAttribute {
     private final StringProperty name = new SimpleStringProperty();

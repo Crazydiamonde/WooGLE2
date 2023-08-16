@@ -2,7 +2,6 @@ package com.WooGLEFX.Structures.Resources;
 
 import javafx.scene.image.Image;
 
-//TODO make this a thing
 public class SoundResource extends Resource {
 
     private Image sound;

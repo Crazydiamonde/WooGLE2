@@ -2,18 +2,14 @@ package com.WooGLEFX.Structures;
 
 import com.WooGLEFX.Engine.FXCreator;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.GUI.Alarms;
-import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
-import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import com.WooGLEFX.Structures.SimpleStructures.WoGAnimation;
+import com.WooGLEFX.Structures.SimpleStructures.*;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
 import com.WorldOfGoo.Addin.*;
 import com.WorldOfGoo.Ball.*;
 import com.WorldOfGoo.Level.*;
-import com.WorldOfGoo.Particle.Ambientparticleeffect;
-import com.WorldOfGoo.Particle.Axialsinoffset;
-import com.WorldOfGoo.Particle.Particleeffect;
-import com.WorldOfGoo.Particle._Particle;
+import com.WorldOfGoo.Particle.*;
 import com.WorldOfGoo.Resrc.*;
 import com.WorldOfGoo.Scene.*;
 import com.WorldOfGoo.Scene.Label;
@@ -23,8 +19,10 @@ import com.WorldOfGoo.Text.TextString;
 import com.WorldOfGoo.Text.TextStrings;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -204,6 +202,8 @@ public class EditorObject {
             case "axialsinoffset" -> toAdd = new Axialsinoffset(_parent);
             case "ball", "font" -> toAdd = new Ball(_parent);
             case "BallInstance" -> toAdd = new BallInstance(_parent == null ? Main.getLevel().getLevelObject() : null);
+            case "ball_particles" -> toAdd = new BallParticles(_parent);
+            case "ball_sound" -> toAdd = new BallSound(_parent);
             case "button" -> toAdd = new Button(_parent == null ? Main.getLevel().getSceneObject() : null);
             case "buttongroup" -> toAdd = new Buttongroup(_parent == null ? Main.getLevel().getSceneObject() : null);
             case "camera" -> toAdd = new Camera(_parent == null ? Main.getLevel().getLevelObject() : null);
@@ -333,19 +333,46 @@ public class EditorObject {
 
     public double getDouble(String attributeName) {
         try {
-            for (EditorAttribute attribute : this.attributes) {
-                if (attribute.getName().equals(attributeName)) {
-                    if (attribute.getValue().equals("")) {
-                        return Double.parseDouble(attribute.getDefaultValue());
-                    } else {
-                        return Double.parseDouble(attribute.getValue());
-                    }
-                }
-            }
+            return Double.parseDouble(getAttribute(attributeName));
         } catch (NumberFormatException e){
             Alarms.errorMessage(e);
         }
-        throw new RuntimeException("Could not find attribute " + attributeName + " for " + getRealName());
+        throw new RuntimeException("Could not find double attribute " + attributeName + " for " + getRealName());
+    }
+
+    public Position getPosition(String attributeName) {
+        try {
+            return Position.parse(getAttribute(attributeName));
+        } catch (NumberFormatException e){
+            Alarms.errorMessage(e);
+        }
+        throw new RuntimeException("Could not find position attribute " + attributeName + " for " + getRealName());
+    }
+
+    public Color getColor(String attributeName) {
+        try {
+            return Color.parse(getAttribute(attributeName));
+        } catch (NumberFormatException e){
+            Alarms.errorMessage(e);
+        }
+        throw new RuntimeException("Could not find color attribute " + attributeName + " for " + getRealName());
+    }
+
+    public String getString(String attributeName) {
+        String attribute = getAttribute(attributeName);
+        if (attribute != null) {
+            return attribute;
+        }
+        throw new RuntimeException("Could not find string attribute " + attributeName + " for " + getRealName());
+    }
+
+    public Image getImage(String attributeName) {
+        try {
+            return GlobalResourceManager.getImage(getAttribute(attributeName), level.getVersion());
+        } catch (FileNotFoundException e){
+            Alarms.errorMessage(e);
+        }
+        throw new RuntimeException("Could not find double attribute " + attributeName + " for " + getRealName());
     }
 
     public AttributeChangeAction[] getUserActions(EditorAttribute[] oldAttributes){

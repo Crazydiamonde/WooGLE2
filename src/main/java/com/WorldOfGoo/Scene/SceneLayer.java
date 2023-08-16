@@ -56,13 +56,57 @@ public class SceneLayer extends EditorObject {
         setMetaAttributes(MetaEditorAttribute.parse("id,name,x,y,scalex,scaley,rotation,Image<image,depth,tilex,tiley,tilecountx,tilecounty,alpha,colorize,anchor,context>?Anim<anim,animspeed,animdelay,animloop>"));
     }
 
+    public static Image colorize(Image image, Color colorize) {
+        double rScale = colorize.getR() / 255;
+        double gScale = colorize.getG() / 255;
+        double bScale = colorize.getB() / 255;
+
+        WritableImage writableImage = new WritableImage((int)image.getWidth(), (int)image.getHeight());
+        PixelWriter pixelWriter = writableImage.getPixelWriter();
+
+        int[] pixelBuffer = new int[(int)image.getWidth() * (int)image.getHeight()];
+
+        for (int x = 0; x < image.getWidth() - 1; x++) {
+            for (int y = 0; y < image.getHeight() - 1; y++) {
+
+                long pixel = (image.getPixelReader().getArgb(x, y));
+
+                if (pixel < 0) {
+                    pixel += 4294967296L;
+                }
+
+                // AAAAAAAA RRRRRRRR GGGGGGGG BBBBBBBB
+
+                int pixelA = (int)(pixel / (2 << 23));
+                int pixelR = (int)((pixel % (2 << 23)) / (2 << 15));
+                int pixelG = (int)((pixel % (2 << 15)) / (2 << 7));
+                int pixelB = (int)(pixel % (2 << 7));
+
+                int scaledR = (int)(pixelR * rScale);
+                int scaledG = (int)(pixelG * gScale);
+                int scaledB = (int)(pixelB * bScale);
+
+                pixelBuffer[y * (int)image.getWidth() + x] = (pixelA * (2 << 23)) + (scaledR * (2 << 15)) + (scaledG * (2 << 7)) + scaledB;
+            }
+        }
+
+        pixelWriter.setPixels(0, 0, (int)image.getWidth(), (int)image.getHeight(), PixelFormat.getIntArgbInstance(), pixelBuffer, 0, (int)image.getWidth());
+
+        return writableImage;
+    }
+
     @Override
     public void update() {
         if (!getAttribute("image").equals("")) {
             try {
                 image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
+                Color color = Color.parse(getAttribute("colorize"));
+                image = colorize(image, color);
             } catch (FileNotFoundException e) {
-                Main.failedResources.add("\"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                image = null;
+                if (!Main.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
+                    Main.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                }
             }
         }
 
@@ -70,47 +114,14 @@ public class SceneLayer extends EditorObject {
             System.out.println("Image changed from " + oldValue + " to " + newValue);
             try {
                 image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
-
-                Color colorize = Color.parse(getAttribute("colorize"));
-                double rScale = colorize.getR() / 255;
-                double gScale = colorize.getG() / 255;
-                double bScale = colorize.getB() / 255;
-
-                WritableImage writableImage = new WritableImage((int)image.getWidth(), (int)image.getHeight());
-                PixelWriter pixelWriter = writableImage.getPixelWriter();
-
-                int[] pixelBuffer = new int[(int)image.getWidth() * (int)image.getHeight()];
-
-                for (int x = 0; x < image.getWidth() - 1; x++) {
-                    for (int y = 0; y < image.getHeight() - 1; y++) {
-
-                        long pixel = (image.getPixelReader().getArgb(x, y));
-
-                        if (pixel < 0) {
-                            pixel += 4294967296L;
-                        }
-
-                        // AAAAAAAA RRRRRRRR GGGGGGGG BBBBBBBB
-
-                        int pixelA = (int)(pixel / (2 << 23));
-                        int pixelR = (int)((pixel % (2 << 23)) / (2 << 15));
-                        int pixelG = (int)((pixel % (2 << 15)) / (2 << 7));
-                        int pixelB = (int)(pixel % (2 << 7));
-
-                        int scaledR = (int)(pixelR * rScale);
-                        int scaledG = (int)(pixelG * gScale);
-                        int scaledB = (int)(pixelB * bScale);
-
-                        pixelBuffer[y * (int)image.getWidth() + x] = (pixelA * (2 << 23)) + (scaledR * (2 << 15)) + (scaledG * (2 << 7)) + scaledB;
-                    }
-                }
-
-                pixelWriter.setPixels(0, 0, (int)image.getWidth(), (int)image.getHeight(), PixelFormat.getIntArgbInstance(), pixelBuffer, 0, (int)image.getWidth());
-
-                image = writableImage;
+                Color color = Color.parse(getAttribute("colorize"));
+                image = colorize(image, color);
 
             } catch (FileNotFoundException e) {
-                Main.failedResources.add("\"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                image = null;
+                if (!Main.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
+                    Main.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                }
             }
         };
 
@@ -475,7 +486,7 @@ public class SceneLayer extends EditorObject {
     @Override
     public void resizeFromMouse(double mouseX, double mouseY, double resizeDragSourceX, double resizeDragSourceY, double resizeDragAnchorX, double resizeDragAnchorY){
 
-        double rotation = Double.parseDouble(getAttribute("rotation"));
+        double rotation = getDouble("rotation");
 
         Point2D center = new Point2D((mouseX + resizeDragAnchorX) / 2, (mouseY + resizeDragAnchorY) / 2);
 
@@ -512,8 +523,8 @@ public class SceneLayer extends EditorObject {
 
     @Override
     public void rotateFromMouse(double mouseX, double mouseY, double rotateAngleOffset){
-        double x2 = Double.parseDouble(getAttribute("x"));
-        double y2 = -Double.parseDouble(getAttribute("y"));
+        double x2 = getDouble("x");
+        double y2 = -getDouble("y");
 
         if (getParent() instanceof Compositegeom){
             x2 += getParent().getDouble("x");

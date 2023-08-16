@@ -35,9 +35,9 @@ public class GeometryImage {
 
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
         if (Main.getLevel().isShowGraphics()) {
-            image = GlobalResourceManager.getImage(parent.getAttribute("image"), Main.getLevel().getVersion());
+            image = parent.getImage("image");
 
-            Position imagePos = Position.parse(parent.getAttribute("imagepos"));
+            Position imagePos = parent.getPosition("imagepos");
             double x = imagePos.getX();
             double y = imagePos.getY();
             if (parent.getParent() instanceof Compositegeom) {

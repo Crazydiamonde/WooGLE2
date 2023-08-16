@@ -173,7 +173,7 @@ public class BallInstance extends EditorObject {
                             }
                         }
 
-                        if (ok) {
+                        if (ok && ((Part) part).getImages().size() > 0) {
                             Random machine = new Random(randomSeed * i);
                             machine.nextDouble();
                             Image image = ((Part) part).getImages().get((int) (((Part) part).getImages().size() * machine.nextDouble()));
@@ -370,7 +370,7 @@ public class BallInstance extends EditorObject {
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().getShowGoos() == 2) {
+        if (Main.getLevel().getShowGoos() == 2 && ball != null) {
             double angle = Double.parseDouble(getAttribute("angle"));
 
             double width;

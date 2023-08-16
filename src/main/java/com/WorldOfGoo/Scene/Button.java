@@ -71,56 +71,21 @@ public class Button extends EditorObject {
     public void update() {
         setNameAttribute(getAttribute2("name"));
         try {
-            image = GlobalResourceManager.getImage(getAttribute("up"), Main.getLevel().getVersion());
+            image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
+            Color color = Color.parse(getAttribute("colorize"));
+            image = SceneLayer.colorize(image, color);
         } catch (FileNotFoundException e) {
-            Main.failedResources.add("\"" + getAttribute("up") + "\" (version " + Main.getLevel().getVersion() + ")");
+            Main.failedResources.add("From Button: image \"" + getAttribute("up") + "\" (version " + Main.getLevel().getVersion() + ")");
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
             System.out.println("Image changed from " + oldValue + " to " + newValue);
             try {
-                image = GlobalResourceManager.getImage(getAttribute("up"), Main.getLevel().getVersion());
-
-                Color colorize = Color.parse(getAttribute("colorize"));
-                double rScale = colorize.getR() / 255;
-                double gScale = colorize.getG() / 255;
-                double bScale = colorize.getB() / 255;
-
-                WritableImage writableImage = new WritableImage((int)image.getWidth(), (int)image.getHeight());
-                PixelWriter pixelWriter = writableImage.getPixelWriter();
-
-                int[] pixelBuffer = new int[(int)image.getWidth() * (int)image.getHeight()];
-
-                for (int x = 0; x < image.getWidth() - 1; x++) {
-                    for (int y = 0; y < image.getHeight() - 1; y++) {
-
-                        long pixel = (image.getPixelReader().getArgb(x, y));
-
-                        if (pixel < 0) {
-                            pixel += 4294967296L;
-                        }
-
-                        // AAAAAAAA RRRRRRRR GGGGGGGG BBBBBBBB
-
-                        int pixelA = (int)(pixel / (2 << 23));
-                        int pixelR = (int)((pixel % (2 << 23)) / (2 << 15));
-                        int pixelG = (int)((pixel % (2 << 15)) / (2 << 7));
-                        int pixelB = (int)(pixel % (2 << 7));
-
-                        int scaledR = (int)(pixelR * rScale);
-                        int scaledG = (int)(pixelG * gScale);
-                        int scaledB = (int)(pixelB * bScale);
-
-                        pixelBuffer[y * (int)image.getWidth() + x] = (pixelA * (2 << 23)) + (scaledR * (2 << 15)) + (scaledG * (2 << 7)) + scaledB;
-                    }
-                }
-
-                pixelWriter.setPixels(0, 0, (int)image.getWidth(), (int)image.getHeight(), PixelFormat.getIntArgbInstance(), pixelBuffer, 0, (int)image.getWidth());
-
-                image = writableImage;
-
+                image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
+                Color color = Color.parse(getAttribute("colorize"));
+                image = SceneLayer.colorize(image, color);
             } catch (FileNotFoundException e) {
-                Main.failedResources.add("\"" + getAttribute("up") + "\" (version " + Main.getLevel().getVersion() + ")");
+                Main.failedResources.add("From Button: Image \"" + getAttribute("up") + "\" (version " + Main.getLevel().getVersion() + ")");
             }
         };
 

@@ -23,7 +23,7 @@ public class Alarms {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setResizable(true);
         alert.setHeaderText("Error");
-        alert.setContentText(error.getClass().getSimpleName() + ": " + error.getMessage() + "\n" + Arrays.toString(error.getStackTrace()));
+        alert.setContentText(error.getClass().getSimpleName() + ": " + error.getMessage());
         alert.show();
     }
 
@@ -33,6 +33,11 @@ public class Alarms {
         alert.setHeaderText("Level resources could not be loaded");
         alert.setContentText(error);
         alert.show();
+        if (alert.getHeight() > 1080) {
+            alert.setHeight(1080);
+        }
+        alert.setY(0);
+        System.out.println(alert.getHeight());
     }
 
     public static void loadingInitialResourcesError(String error) {

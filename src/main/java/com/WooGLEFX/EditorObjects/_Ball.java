@@ -128,7 +128,7 @@ public class _Ball {
                         try {
                             ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
                         } catch (Exception e) {
-                            Main.failedResources.add(("\"" + word + "\" (version " + version + ")"));
+                            Main.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
                         }
                         word = "";
                     } else {
@@ -138,14 +138,14 @@ public class _Ball {
                 try {
                     ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
                 } catch (Exception e) {
-                    Main.failedResources.add(("\"" + word + "\" (version " + version + ")"));
+                    Main.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
                 }
 
                 if (!obj.getAttribute("pupil").equals("")){
                     try {
                         ((Part) obj).setPupilImage(GlobalResourceManager.getImage(obj.getAttribute("pupil"), version));
                     } catch (Exception e) {
-                        Main.failedResources.add(("\"" + obj.getAttribute("pupil") + "\" (version " + version + ")"));
+                        Main.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + obj.getAttribute("pupil") + "\" (version " + version + ")"));
                     }
                 }
             }

@@ -219,7 +219,7 @@ public class FileManager {
                 defaultHandler.mode = 3;
                 saxParser.parse(addinF, defaultHandler);
             } else {
-                Main.supremeAddToList(addin, Main.generateBlankAddinObject());
+                Main.supremeAddToList(addin, Main.generateBlankAddinObject(levelName));
             }
             if (textF.exists()) {
                 defaultHandler.mode = 4;
@@ -242,7 +242,7 @@ public class FileManager {
                 defaultHandler.mode = 3;
                 saxParser.parse(addinF, defaultHandler);
             } else {
-                Main.supremeAddToList(addin, Main.generateBlankAddinObject());
+                Main.supremeAddToList(addin, Main.generateBlankAddinObject(levelName));
             }
             if (textF.exists()) {
                 defaultHandler.mode = 4;
@@ -348,5 +348,34 @@ public class FileManager {
         export.append("</gooBallPalette>\n</properties>");
 
         Files.write(Paths.get(editorLocation + "properties.xml"), Collections.singleton(export.toString()), StandardCharsets.UTF_8);
+    }
+
+    public static ArrayList<ArrayList<String>> attributes = new ArrayList<>();
+    public static ArrayList<String> objectNames = new ArrayList<>();
+
+    public static void main(String[] args) {
+        newWOGdir = "D:\\Steam\\steamapps\\common\\World of Goo\\game";
+        for (File ballFile : new File("D:\\Steam\\steamapps\\common\\World of Goo\\game\\res\\balls").listFiles()) {
+            if (!ballFile.getName().equals("generic")) {
+                try {
+                    System.out.println("opening " + ballFile.getName());
+                    openBall(ballFile.getName(), 1.5);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        int i = 0;
+        for (String objectName : objectNames) {
+            System.out.print(objectName + ": {");
+            for (String attributeName : attributes.get(i)) {
+                System.out.print(attributeName);
+                if (attributes.get(i).indexOf(attributeName) != attributes.get(i).size() - 1) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.println("}");
+            i++;
+        }
     }
 }
