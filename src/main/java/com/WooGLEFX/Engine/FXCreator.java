@@ -954,8 +954,8 @@ public class FXCreator {
         reloadWorldOfGooNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
         changeWorldOfGooDirectoryOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
         changeWorldOfGooDirectoryNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
-        saveOldBallToNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_old_version.png")));
-        saveNewBallToOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_new_version.png")));
+        saveOldBallToNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_new_version.png")));
+        saveNewBallToOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_old_version.png")));
         quitItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\quit.png")));
 
         reloadWorldOfGooOldItem.setOnAction(e -> Main.reloadWorldOfGoo(1.3));

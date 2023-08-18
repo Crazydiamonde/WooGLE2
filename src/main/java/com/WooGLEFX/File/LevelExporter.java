@@ -2,6 +2,7 @@ package com.WooGLEFX.File;
 
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -285,9 +286,9 @@ public class LevelExporter {
             resrcPathText += ".xml";
         } else if (version == 1.3) {
             //If not exporting and on the older version, add .xml.bin to the end of each path.
-            scenePathText += ".xml.bin";
-            levelPathText += ".xml.bin";
-            resrcPathText += ".xml.bin";
+            scenePathText += ".bin";
+            levelPathText += ".bin";
+            resrcPathText += ".bin";
         }
 
         String addinPathText = "addin.xml";
@@ -332,7 +333,7 @@ public class LevelExporter {
             AESBinFormat.encodeFile(new File(scenePathText), scene.getBytes());
             AESBinFormat.encodeFile(new File(levelPathText), level.getBytes());
             AESBinFormat.encodeFile(new File(resrcPathText), recursiveXMLexport("", worldLevel.getResourcesObject(), 0, true).getBytes());
-            if (Files.exists(Path.of(FileManager.getNewWOGdir() + "\\res\\levels\\" + levelName))) {
+            if (!chumbusMode && Files.exists(Path.of(FileManager.getNewWOGdir() + "\\res\\levels\\" + levelName))) {
                 File[] images = new File(FileManager.getNewWOGdir() + "\\res\\levels\\" + levelName).listFiles();
                 if (images != null) {
                     for (File imageFile : images) {
@@ -349,7 +350,7 @@ public class LevelExporter {
             Files.write(scenePath, Collections.singleton(scene), StandardCharsets.UTF_8);
             Files.write(levelPath, Collections.singleton(level), StandardCharsets.UTF_8);
             Files.write(resrcPath, Collections.singleton(recursiveXMLexport("", worldLevel.getResourcesObject(), 0, true)), StandardCharsets.UTF_8);
-            if (Files.exists(Path.of(FileManager.getOldWOGdir() + "\\res\\levels\\" + levelName))) {
+            if (!chumbusMode && Files.exists(Path.of(FileManager.getOldWOGdir() + "\\res\\levels\\" + levelName))) {
                 File[] images = new File(FileManager.getOldWOGdir() + "\\res\\levels\\" + levelName).listFiles();
                 if (images != null) {
                     for (File imageFile : images) {
@@ -444,20 +445,58 @@ public class LevelExporter {
     }
 
     //TODO export balls with the level
-    public static void exportGoomod(File file, WorldLevel level, ArrayList<_Ball> balls, boolean includeAddinInfo) throws IOException {
+    public static void exportGoomod(File file, WorldLevel level, ArrayList<_Ball> balls, boolean includeAddinInfo) {
         String start = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
-        saveAsXML(level, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\levels\\" + level.getLevelName(), level.getVersion(), true, includeAddinInfo);
+        try {
+            saveAsXML(level, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\levels\\" + level.getLevelName(), level.getVersion(), true, includeAddinInfo);
+        } catch (Exception e) {
+            Alarms.errorMessage(e);
+        }
         for (EditorObject resource : level.getResources()) {
             if (resource instanceof ResrcImage) {
                 if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").substring(0, resource.getAttribute("path").lastIndexOf("/"))))) {
-                    Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").substring(0, resource.getAttribute("path").lastIndexOf("/"))));
+                    try {
+                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").substring(0, resource.getAttribute("path").lastIndexOf("/"))));
+                    } catch (Exception e) {
+                        Alarms.errorMessage(e);
+                    }
                 }
-                BufferedImage oldImage = SwingFXUtils.fromFXImage(GlobalResourceManager.getImage(resource.getAttribute("id"), level.getVersion()), null);
-                File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".png");
-                ImageIO.write(oldImage, "png", newImageFile);
+                try {
+                    BufferedImage oldImage = SwingFXUtils.fromFXImage(GlobalResourceManager.getImage(resource.getAttribute("id"), level.getVersion()), null);
+                    File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".png");
+                    ImageIO.write(oldImage, "png", newImageFile);
+                } catch (Exception e) {
+                    Alarms.errorMessage(e);
+                }
             }
         }
-        ZipCompress.compress(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod");
-        Files.move(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip"), file.toPath());
+
+        try {
+            ZipCompress.compress(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod");
+            if (Files.exists(file.toPath())) {
+                Files.delete(file.toPath());
+            }
+            Files.move(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip"), file.toPath());
+        } catch (Exception e) {
+            Alarms.errorMessage(e);
+        }
+
+        for (_Ball ball : balls) {
+            try {
+                exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ball.getObjects().get(0).getAttribute("name"), level.getVersion(), true);
+                for (EditorObject resource : ball.getResources()) {
+                    if (resource instanceof ResrcImage) {
+                        if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").substring(0, resource.getAttribute("path").lastIndexOf("/"))))) {
+                            Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").substring(0, resource.getAttribute("path").lastIndexOf("/"))));
+                        }
+                        BufferedImage oldImage = SwingFXUtils.fromFXImage(GlobalResourceManager.getImage(resource.getAttribute("id"), level.getVersion()), null);
+                        File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".png");
+                        ImageIO.write(oldImage, "png", newImageFile);
+                    }
+                }
+            } catch (Exception e) {
+                Alarms.errorMessage(e);
+            }
+        }
     }
 }

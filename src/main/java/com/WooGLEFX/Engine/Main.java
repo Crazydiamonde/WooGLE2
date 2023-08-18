@@ -9,6 +9,7 @@ import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.SimpleStructures.WoGAnimation;
 import com.WooGLEFX.Structures.UserActions.*;
 import com.WorldOfGoo.Addin.AddinLevelName;
+import com.WorldOfGoo.Ball.Ball;
 import com.WorldOfGoo.Level.*;
 import com.WorldOfGoo.Particle._Particle;
 import com.WorldOfGoo.Resrc.ResourceManifest;
@@ -155,7 +156,7 @@ public class Main extends Application {
         ArrayList<EditorObject> resourcesList = new ArrayList<>();
         resourcesList.add(EditorObject.create("ResourceManifest", new EditorAttribute[0], null));
         ArrayList<EditorObject> addinList = new ArrayList<>();
-        addinList.add(EditorObject.create("Addin", new EditorAttribute[0], null));
+        addinList.add(EditorObject.create("Addin_addin", new EditorAttribute[0], null));
         ArrayList<EditorObject> textList = new ArrayList<>();
         textList.add(EditorObject.create("strings", new EditorAttribute[0], null));
 
@@ -468,12 +469,17 @@ public class Main extends Application {
         fileChooser.setInitialFileName(level.getLevelName());
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("World of Goo mod (*.goomod)", "*.goomod"));
         File export = fileChooser.showSaveDialog(stage);
-        if (export != null) {
-            try {
-                LevelExporter.exportGoomod(export, level, new ArrayList<>(), includeAddinInfo);
-            } catch (IOException e) {
-                Alarms.errorMessage(e);
+
+        ArrayList<_Ball> balls = new ArrayList<>();
+        for (EditorObject object : level.getLevel()) {
+            if (object instanceof BallInstance ballInstance) {
+                if (!balls.contains(ballInstance.getBall())) {
+                    balls.add(ballInstance.getBall());
+                }
             }
+        }
+        if (export != null) {
+            LevelExporter.exportGoomod(export, level, balls, includeAddinInfo);
         }
     }
 
