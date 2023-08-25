@@ -99,7 +99,7 @@ public class SceneLayer extends EditorObject {
     public void update() {
         if (!getAttribute("image").equals("")) {
             try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
+                image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));
                 image = colorize(image, color);
             } catch (FileNotFoundException e) {

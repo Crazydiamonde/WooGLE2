@@ -102,6 +102,7 @@ public class WorldLevel {
     private boolean showParticles = true;
     private boolean showLabels = true;
     private boolean showAnimations = true;
+    private boolean showSceneBGColor = false;
 
 
     public boolean isShowCameras() {
@@ -180,6 +181,15 @@ public class WorldLevel {
         FXCreator.buttonShowHideAnim.setGraphic(new ImageView(showAnimations ? showHideAnim : showHideAnim0));
     }
 
+    public boolean isShowSceneBGColor() {
+        return showSceneBGColor;
+    }
+
+    public void setShowSceneBGColor(boolean showSceneBGColor) {
+        this.showSceneBGColor = showSceneBGColor;
+        FXCreator.buttonShowHideSceneBGColor.setGraphic(new ImageView(showSceneBGColor ? showHideSceneBGColor1 : showHideSceneBGColor0));
+    }
+
     public static Image showHideAnim0;
     public static Image showHideAnim;
     public static Image showHideCam0;
@@ -197,6 +207,8 @@ public class WorldLevel {
     public static Image showHideLabels1;
     public static Image showHideParticles0;
     public static Image showHideParticles1;
+    public static Image showHideSceneBGColor0;
+    public static Image showHideSceneBGColor1;
 
     static {
         try {
@@ -217,6 +229,8 @@ public class WorldLevel {
             showHideLabels1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png");
             showHideParticles0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles_disabled.png");
             showHideParticles1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png");
+            showHideSceneBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
+            showHideSceneBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

@@ -30,19 +30,19 @@ public class Scene extends EditorObject {
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         double sceneLeft = Double.parseDouble(getAttribute("minx"));
-        double sceneTop = Double.parseDouble(getAttribute("miny"));
+        double sceneTop = -Double.parseDouble(getAttribute("maxy"));
         double sceneRight = Double.parseDouble(getAttribute("maxx"));
-        double sceneBottom = Double.parseDouble(getAttribute("maxy"));
+        double sceneBottom = -Double.parseDouble(getAttribute("miny"));
 
         graphicsContext.setStroke(Renderer.selectionOutline2);
         graphicsContext.setLineWidth(0.9 * Main.getLevel().getZoom());
         graphicsContext.setLineDashes(3 * Main.getLevel().getZoom());
         graphicsContext.setLineDashOffset(0);
-        graphicsContext.strokeRect(sceneLeft * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), (sceneTop - sceneBottom) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), (sceneRight - sceneLeft) * Main.getLevel().getZoom(), (sceneBottom - sceneTop) * Main.getLevel().getZoom());
+        graphicsContext.strokeRect(sceneLeft * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), sceneTop * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), (sceneRight - sceneLeft) * Main.getLevel().getZoom(), (sceneBottom - sceneTop) * Main.getLevel().getZoom());
         graphicsContext.setStroke(Renderer.selectionOutline);
         graphicsContext.setLineWidth(Main.getLevel().getZoom());
         graphicsContext.setLineDashOffset(3 * Main.getLevel().getZoom());
-        graphicsContext.strokeRect(sceneLeft * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), (sceneTop - sceneBottom) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), (sceneRight - sceneLeft) * Main.getLevel().getZoom(), (sceneBottom - sceneTop) * Main.getLevel().getZoom());
+        graphicsContext.strokeRect(sceneLeft * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), sceneTop * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), (sceneRight - sceneLeft) * Main.getLevel().getZoom(), (sceneBottom - sceneTop) * Main.getLevel().getZoom());
         graphicsContext.setLineDashes(0);
     }
 }

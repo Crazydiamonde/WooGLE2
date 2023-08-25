@@ -36,6 +36,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -166,6 +167,7 @@ public class Main extends Application {
 
         level.getSceneObject().setRealName("scene");
         level.getSceneObject().setTreeItem(new TreeItem<>(level.getSceneObject()));
+        level.getSceneObject().setAttribute("backgroundcolor", "255,255,255");
         level.getLevelObject().setRealName("level");
         level.getLevelObject().setTreeItem(new TreeItem<>(level.getLevelObject()));
         level.getResourcesObject().setRealName("ResourceManifest");
@@ -297,18 +299,18 @@ public class Main extends Application {
         }
 
         for (EditorObject object : level.getScene()) {
-            object.update();
             object.setLevel(level);
+            object.update();
         }
 
         for (EditorObject object : level.getLevel()) {
-            object.update();
             object.setLevel(level);
+            object.update();
         }
 
         for (EditorObject object : level.getResources()) {
-            object.update();
             object.setLevel(level);
+            object.update();
         }
 
         //Put everything in the hierarchy
@@ -928,6 +930,11 @@ public class Main extends Application {
         level.setShowAnimations(!level.isShowAnimations());
     }
 
+    public static void showHideSceneBGColor() {
+        System.out.println("Show/Hide Scene Background Color");
+        level.setShowSceneBGColor(!level.isShowSceneBGColor());
+    }
+
     public static void addAnything(EditorObject obj, EditorObject parent) {
         //obj.setTreeItem(new TreeItem<>(obj));
         //parent.getTreeItem().getChildren().add(obj.getTreeItem());
@@ -1511,11 +1518,7 @@ public class Main extends Application {
                 }
 
                 //Redraw the canvas.
-                try {
-                    Renderer.drawEverything(level, canvas, imageCanvas);
-                } catch (FileNotFoundException e2) {
-                    Alarms.errorMessage(e2);
-                }
+                Renderer.drawEverything(level, canvas, imageCanvas);
             }
         }
 
@@ -1628,6 +1631,7 @@ public class Main extends Application {
             FXCreator.buttonShowHideGraphics.setGraphic(new ImageView(level.isShowGraphics() ? WorldLevel.showHideImages1 : WorldLevel.showHideImages0));
             FXCreator.buttonShowHideLabels.setGraphic(new ImageView(level.isShowLabels() ? WorldLevel.showHideLabels1 : WorldLevel.showHideLabels0));
             FXCreator.buttonShowHideParticles.setGraphic(new ImageView(level.isShowParticles() ? WorldLevel.showHideParticles1 : WorldLevel.showHideParticles0));
+            FXCreator.buttonShowHideSceneBGColor.setGraphic(new ImageView(level.isShowSceneBGColor() ? WorldLevel.showHideSceneBGColor1 : WorldLevel.showHideSceneBGColor0));
         }
     }
 
@@ -1743,13 +1747,14 @@ public class Main extends Application {
     public static void draw() {
 
         if (level != null) {
-            imageCanvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
-            canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
-            try {
-                Renderer.drawEverything(level, canvas, imageCanvas);
-            } catch (FileNotFoundException e) {
-                Alarms.errorMessage(e);
+            if (level.isShowSceneBGColor()) {
+                imageCanvas.getGraphicsContext2D().setFill(Paint.valueOf(level.getSceneObject().getColor("backgroundcolor").toHexRGBA()));
+                imageCanvas.getGraphicsContext2D().fillRect(-5000000, -5000000, 10000000, 10000000);
+            } else {
+                imageCanvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
             }
+            canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
+            Renderer.drawEverything(level, canvas, imageCanvas);
         } else {
             Renderer.clear(level, canvas, imageCanvas);
         }
@@ -1882,11 +1887,13 @@ public class Main extends Application {
                 File[] animationsArray = bruh1.listFiles();
                 if (animationsArray != null) {
                     for (File second : animationsArray) {
-                        try (FileInputStream test2 = new FileInputStream(second)) {
-                            byte[] allBytes = test2.readAllBytes();
-                            animations.add(AnimationReader.readBinltl(allBytes, second.getName()));
-                        } catch (Exception e) {
-                            allFailedResources.add("Animation: " + second.getName() + " (version 1.3)");
+                        if (!second.getName().substring(second.getName().lastIndexOf(".")).equals(".binltl64")) {
+                            try (FileInputStream test2 = new FileInputStream(second)) {
+                                byte[] allBytes = test2.readAllBytes();
+                                animations.add(AnimationReader.readBinltl(allBytes, second.getName()));
+                            } catch (Exception e) {
+                                allFailedResources.add("Animation: " + second.getName() + " (version 1.3)");
+                            }
                         }
                     }
                 }
@@ -1905,7 +1912,7 @@ public class Main extends Application {
                     }
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Alarms.errorMessage(e);
         }
 

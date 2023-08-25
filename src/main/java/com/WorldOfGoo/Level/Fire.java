@@ -32,15 +32,13 @@ public class Fire extends EditorObject {
 
     @Override
     public void update() {
-        if (Main.getLevel().isShowParticles()) {
-            for (EditorObject particle : Main.getParticles()) {
-                if (particle.getAttribute("name") != null && particle.getAttribute("name").equals(getAttribute("particles"))) {
-                    particleEffect = new Particles(null);
-                    particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
-                    particleEffect.setAttribute("depth", getAttribute("depth"));
-                    particleEffect.setAttribute("effect", getAttribute("particles"));
-                    particleEffect.update();
-                }
+        for (EditorObject particle : Main.getParticles()) {
+            if (particle.getAttribute("name") != null && particle.getAttribute("name").equals(getAttribute("particles"))) {
+                particleEffect = new Particles(null);
+                particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
+                particleEffect.setAttribute("depth", getAttribute("depth"));
+                particleEffect.setAttribute("effect", getAttribute("particles"));
+                particleEffect.update();
             }
         }
         setChangeListener("x", (observableValue, s, t1) -> particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y")));
@@ -52,7 +50,7 @@ public class Fire extends EditorObject {
         if (particleEffect != null && Main.getLevel().isShowParticles()) {
             particleEffect.draw(graphicsContext, imageGraphicsContext);
         }
-        if (Main.getLevel().isShowGraphics()) {
+        if (Main.getLevel().isShowGeometry()) {
             double x2 = Double.parseDouble(getAttribute("x"));
             double y2 = Double.parseDouble(getAttribute("y"));
 

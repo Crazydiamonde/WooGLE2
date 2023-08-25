@@ -32,7 +32,7 @@ public class Circle extends EditorObject {
         addAttribute("radius", "75", InputField.NUMBER, true);
         addAttribute("break", "", InputField.NUMBER, false);
         addAttribute("image", "", InputField.IMAGE, false);
-        addAttribute("imagepos", "0,0", InputField.POSITION, false);
+        addAttribute("imagepos", "", InputField.POSITION, false);
         addAttribute("imagerot", "0", InputField.NUMBER, false);
         addAttribute("imagescale", "1,1", InputField.POSITION, false);
         addAttribute("rotspeed", "", InputField.NUMBER, false);
@@ -98,7 +98,7 @@ public class Circle extends EditorObject {
     }
 
     @Override
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         graphicsContext.save();
         if (Main.getLevel().isShowGeometry()) {
             double x2 = Double.parseDouble(getAttribute("x"));
@@ -144,7 +144,11 @@ public class Circle extends EditorObject {
         }
 
         if (!getAttribute("image").equals("")) {
-            image.draw(graphicsContext, imageGraphicsContext);
+            try {
+                image.draw(graphicsContext, imageGraphicsContext);
+            } catch (Exception e) {
+                //nothing
+            }
         }
         graphicsContext.restore();
     }
@@ -212,7 +216,12 @@ public class Circle extends EditorObject {
 
         if (Main.getLevel().isShowGraphics() && image.getImage() != null) {
 
-            Position pos = Position.parse(getAttribute("imagepos"));
+            Position pos;
+            if (getAttribute("imagepos").equals("")) {
+                pos = new Position(getDouble("x"), getDouble("y"));
+            } else {
+                pos = getPosition("imagepos");
+            }
             double x = pos.getX();
             double y = pos.getY();
 

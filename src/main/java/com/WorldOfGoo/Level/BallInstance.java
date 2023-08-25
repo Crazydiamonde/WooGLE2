@@ -50,6 +50,7 @@ public class BallInstance extends EditorObject {
         addAttribute("angle", "0", InputField.NUMBER, true);
         randomSeed = (int)(Math.random() * 10000000);
         setNameAttribute(getAttribute2("id"));
+        setNameAttribute2(getAttribute2("type"));
         setMetaAttributes(MetaEditorAttribute.parse("id,type,x,y,angle,discovered,"));
     }
 
@@ -57,14 +58,14 @@ public class BallInstance extends EditorObject {
     public void update(){
         setNameAttribute(getAttribute2("id"));
         for (_Ball ball2 : Main.getImportedBalls()) {
-            if (ball2.getObjects().get(0).getAttribute("name").equals(getAttribute("type"))) {
+            if (ball2.getVersion() == getLevel().getVersion() && ball2.getObjects().get(0).getAttribute("name").equals(getAttribute("type"))) {
                 ball = ball2;
             }
         }
         setChangeListener("type", ((observable, oldValue, newValue) -> {
             boolean found = false;
             for (_Ball ball2 : Main.getImportedBalls()) {
-                if (ball2.getObjects().get(0).getAttribute("name").equals(getAttribute("type"))) {
+                if (ball2.getVersion() == getLevel().getVersion() && ball2.getObjects().get(0).getAttribute("name").equals(getAttribute("type"))) {
                     found = true;
                     ball = ball2;
                     break;

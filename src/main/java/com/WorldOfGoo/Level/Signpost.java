@@ -50,10 +50,10 @@ public class Signpost extends EditorObject {
     public void update() {
         setNameAttribute(getAttribute2("name"));
         try {
-            image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
-            Color color = Color.parse(getAttribute("colorize"));
+            image = getImage("image");
+            Color color = getColor("colorize");
             image = SceneLayer.colorize(image, color);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             if (!Main.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
                 Main.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
             }
@@ -63,12 +63,12 @@ public class Signpost extends EditorObject {
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
             System.out.println("Image changed from " + oldValue + " to " + newValue);
             try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
-                Color color = Color.parse(getAttribute("colorize"));
+                image = getImage("image");
+                Color color = getColor("colorize");
                 image = SceneLayer.colorize(image, color);
-            } catch (FileNotFoundException e) {
-                if (!Main.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+            } catch (Exception e) {
+                if (!Main.failedResources.contains("From signpost: \"" + getString("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
+                    Main.failedResources.add("From signpost: \"" + getString("image") + "\" (version " + Main.getLevel().getVersion() + ")");
                 }
                 image = null;
             }
@@ -81,17 +81,17 @@ public class Signpost extends EditorObject {
     @Override
     public void drawImage(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         if (image != null) {
-            double x2 = Double.parseDouble(getAttribute("x"));
-            double y2 = Double.parseDouble(getAttribute("y"));
+            double x2 = getDouble("x");
+            double y2 = getDouble("y");
 
-            double rotation = Double.parseDouble(getAttribute("rotation"));
+            double rotation = getDouble("rotation");
 
-            double scalex = Double.parseDouble(getAttribute("scalex"));
-            double scaley = Double.parseDouble(getAttribute("scaley"));
+            double scalex = getDouble("scalex");
+            double scaley = getDouble("scaley");
 
             if (getParent() instanceof Compositegeom) {
-                x2 += Double.parseDouble(getParent().getAttribute("x"));
-                y2 += Double.parseDouble(getParent().getAttribute("y"));
+                x2 += getParent().getDouble("x");
+                y2 += getParent().getDouble("y");
             }
 
             double imgWidth = image.getWidth() * scalex;
@@ -378,8 +378,8 @@ public class Signpost extends EditorObject {
 
     @Override
     public void rotateFromMouse(double mouseX, double mouseY, double rotateAngleOffset){
-        double x2 = Double.parseDouble(getAttribute("x"));
-        double y2 = -Double.parseDouble(getAttribute("y"));
+        double x2 = getDouble("x");
+        double y2 = -getDouble("y");
 
         if (getParent() instanceof Compositegeom){
             x2 += getParent().getDouble("x");

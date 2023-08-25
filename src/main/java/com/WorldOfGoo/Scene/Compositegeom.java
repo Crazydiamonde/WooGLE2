@@ -32,7 +32,7 @@ public class Compositegeom extends EditorObject {
         addAttribute("material", "rock", InputField.MATERIAL, true);
         addAttribute("break", "", InputField.NUMBER, false);
         addAttribute("image", "", InputField.IMAGE, false);
-        addAttribute("imagepos", "0,0", InputField.POSITION, false);
+        addAttribute("imagepos", "", InputField.POSITION, false);
         addAttribute("imagerot", "0", InputField.NUMBER, false);
         addAttribute("imagescale", "1,1", InputField.POSITION, false);
         addAttribute("rotspeed", "0", InputField.NUMBER, false);
@@ -63,7 +63,7 @@ public class Compositegeom extends EditorObject {
         });
     }
 
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         if (Main.getLevel().isShowGeometry()) {
 
             double size = 10 * Main.getLevel().getZoom();
@@ -131,7 +131,11 @@ public class Compositegeom extends EditorObject {
 
         if (!getAttribute("image").equals("")) {
             imageGraphicsContext.save();
-            image.draw(graphicsContext, imageGraphicsContext);
+            try {
+                image.draw(graphicsContext, imageGraphicsContext);
+            } catch (Exception e) {
+                //nothing
+            }
             imageGraphicsContext.restore();
         }
     }

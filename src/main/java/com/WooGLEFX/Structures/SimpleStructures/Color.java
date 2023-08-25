@@ -1,36 +1,38 @@
 package com.WooGLEFX.Structures.SimpleStructures;
 
+import java.util.HexFormat;
+
 public class Color {
-    private final double a;
-    private final double r;
-    private final double g;
-    private final double b;
+    private final int a;
+    private final int r;
+    private final int g;
+    private final int b;
 
     public double getA() {
         return a;
     }
 
 
-    public double getR() {
+    public int getR() {
         return r;
     }
 
-    public double getG() {
+    public int getG() {
         return g;
     }
 
-    public double getB() {
+    public int getB() {
         return b;
     }
 
-    public Color(double r, double g, double b){
-        this.a = -1;
+    public Color(int r, int g, int b){
+        this.a = 255;
         this.r = r;
         this.g = g;
         this.b = b;
     }
 
-    public Color(double a, double r, double g, double b){
+    public Color(int a, int r, int g, int b){
         this.a = a;
         this.r = r;
         this.g = g;
@@ -45,24 +47,28 @@ public class Color {
                     count++;
                 }
             }
-            double first = Double.parseDouble(input.substring(0, input.indexOf(",")));
+            int first = Integer.parseInt(input.substring(0, input.indexOf(",")));
             if (count == 2) {
                 String after = input.substring(input.indexOf(",") + 1);
                 return new Color(first,
-                        Double.parseDouble(after.substring(0, after.indexOf(","))),
-                        Double.parseDouble(after.substring(after.indexOf(",") + 1)));
+                        Integer.parseInt(after.substring(0, after.indexOf(","))),
+                        Integer.parseInt(after.substring(after.indexOf(",") + 1)));
             } else if (count == 3) {
                 String after = input.substring(input.indexOf(",") + 1);
                 String after2 = after.substring(after.indexOf(",") + 1);
                 return new Color(first,
-                        Double.parseDouble(after.substring(0, after.indexOf(","))),
-                        Double.parseDouble(after2.substring(0, after2.indexOf(","))),
-                        Double.parseDouble(after2.substring(after2.indexOf(",") + 1)));
+                        Integer.parseInt(after.substring(0, after.indexOf(","))),
+                        Integer.parseInt(after2.substring(0, after2.indexOf(","))),
+                        Integer.parseInt(after2.substring(after2.indexOf(",") + 1)));
             } else {
                 throw new NumberFormatException();
             }
         } catch (Exception e){
             throw new NumberFormatException();
         }
+    }
+
+    public String toHexRGBA() {
+        return HexFormat.of().toHexDigits(r * (2 << 23) + g * (2 << 15) + b * (2 << 7) + a);
     }
 }

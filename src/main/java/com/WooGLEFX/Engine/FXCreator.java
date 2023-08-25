@@ -306,6 +306,7 @@ public class FXCreator {
     public static Button buttonShowHideParticles = new Button();
     public static Button buttonShowHideLabels = new Button();
     public static Button buttonShowHideAnim = new Button();
+    public static Button buttonShowHideSceneBGColor = new Button();
 
 
 
@@ -362,6 +363,7 @@ public class FXCreator {
         buttonShowHideParticles.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png")));
         buttonShowHideLabels.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png")));
         buttonShowHideAnim.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png")));
+        buttonShowHideSceneBGColor.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png")));
 
         buttonNewOld.setOnAction(e -> Main.newLevel(1.3));
         buttonNewNew.setOnAction(e -> Main.newLevel(1.5));
@@ -397,6 +399,7 @@ public class FXCreator {
         buttonShowHideParticles.setOnAction(e -> Main.showHideParticles());
         buttonShowHideLabels.setOnAction(e -> Main.showHideLabels());
         buttonShowHideAnim.setOnAction(e -> Main.showHideAnim());
+        buttonShowHideSceneBGColor.setOnAction(e -> Main.showHideSceneBGColor());
 
         buttonNewOld.setTooltip(new Tooltip("New Level (1.3)"));
         buttonNewNew.setTooltip(new Tooltip("New Level (1.5)"));
@@ -432,6 +435,7 @@ public class FXCreator {
         buttonShowHideParticles.setTooltip(new Tooltip("Show/Hide Particles"));
         buttonShowHideLabels.setTooltip(new Tooltip("Show/Hide Labels"));
         buttonShowHideAnim.setTooltip(new Tooltip("Show/Hide Animations"));
+        buttonShowHideSceneBGColor.setTooltip(new Tooltip("Show/Hide Scene Background Color"));
 
         functionsToolbar.getItems().addAll(buttonNewOld, buttonOpenOld, buttonCloneOld, new Separator());
         functionsToolbar.getItems().addAll(buttonNewNew, buttonOpenNew, buttonCloneNew, new Separator());
@@ -444,7 +448,7 @@ public class FXCreator {
         functionsToolbar.getItems().addAll(buttonCleanResources, new Separator());
         functionsToolbar.getItems().addAll(buttonSetMusic, buttonSetLoopsound, new Separator());
         functionsToolbar.getItems().addAll(buttonSelectMoveAndResize, buttonZoomAndPanView, buttonStrandMode, new Separator());
-        functionsToolbar.getItems().addAll(buttonShowHideCamera, buttonShowHideForcefields, buttonShowHideGeometry, buttonShowHideGraphics, buttonShowHideGoos, buttonShowHideParticles, buttonShowHideLabels, buttonShowHideAnim, new Separator());
+        functionsToolbar.getItems().addAll(buttonShowHideCamera, buttonShowHideForcefields, buttonShowHideGeometry, buttonShowHideGraphics, buttonShowHideGoos, buttonShowHideParticles, buttonShowHideLabels, buttonShowHideAnim, buttonShowHideSceneBGColor, new Separator());
 
         for (Node node : functionsToolbar.getItems()) {
             node.setDisable(true);

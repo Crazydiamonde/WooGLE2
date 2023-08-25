@@ -4,6 +4,9 @@ import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
+import com.WorldOfGoo.Particle.Ambientparticleeffect;
+import com.WorldOfGoo.Particle.Particleeffect;
+import com.WorldOfGoo.Particle._Particle;
 
 import java.io.File;
 
@@ -129,7 +132,7 @@ public class InputField {
                 return true;
             case PARTICLES:
                 for (EditorObject particle : Main.getParticles()) {
-                    if (particle.getAttribute("name").equals(potential)) {
+                    if ((particle instanceof Particleeffect || particle instanceof Ambientparticleeffect) && particle.getAttribute("name").equals(potential)) {
                         return true;
                     }
                 }

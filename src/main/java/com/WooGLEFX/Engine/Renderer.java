@@ -212,7 +212,7 @@ public class Renderer {
 
     }
 
-    public static void drawEverything(WorldLevel level, Canvas canvas, Canvas imageCanvas) throws FileNotFoundException {
+    public static void drawEverything(WorldLevel level, Canvas canvas, Canvas imageCanvas) {
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         GraphicsContext imageGraphicsContext = imageCanvas.getGraphicsContext2D();
 

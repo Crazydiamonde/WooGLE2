@@ -105,7 +105,9 @@ public class Strand extends EditorObject {
             try {
                 strandImage = GlobalResourceManager.getImage(strand.getAttribute("image"), Main.getLevel().getVersion());
             } catch (Exception e) {
-                Alarms.errorMessage(e);
+                if (!Main.failedResources.contains("From strand: \"" + strand.getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
+                    Main.failedResources.add("From strand: \"" + strand.getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                }
             }
         }
     }

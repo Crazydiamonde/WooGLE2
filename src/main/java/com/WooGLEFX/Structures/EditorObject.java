@@ -324,7 +324,7 @@ public class EditorObject {
                     return false;
                 }
             } else if (!attribute.getInput().verify(this, attribute.getValue())) {
-                System.out.println("failed to verify " + attribute.getValue());
+                //System.out.println("failed to verify " + attribute.getValue());
                 return false;
             }
         }
@@ -332,47 +332,68 @@ public class EditorObject {
     }
 
     public double getDouble(String attributeName) {
-        try {
-            return Double.parseDouble(getAttribute(attributeName));
-        } catch (NumberFormatException e){
-            Alarms.errorMessage(e);
+        if (getAttribute(attributeName) == null) {
+            throw new RuntimeException("Could not find attribute " + attributeName + " for " + getRealName());
+        } else {
+            try {
+                return Double.parseDouble(getAttribute(attributeName));
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Could not parse double " + attributeName + " for " + getRealName());
+            }
         }
-        throw new RuntimeException("Could not find double attribute " + attributeName + " for " + getRealName());
     }
 
     public Position getPosition(String attributeName) {
-        try {
-            return Position.parse(getAttribute(attributeName));
-        } catch (NumberFormatException e){
-            Alarms.errorMessage(e);
+        if (getAttribute(attributeName) == null) {
+            throw new RuntimeException("Could not find attribute " + attributeName + " for " + getRealName());
+        } else {
+            try {
+                return Position.parse(getAttribute(attributeName));
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Could not parse position " + attributeName + " for " + getRealName());
+            }
         }
-        throw new RuntimeException("Could not find position attribute " + attributeName + " for " + getRealName());
     }
 
     public Color getColor(String attributeName) {
-        try {
-            return Color.parse(getAttribute(attributeName));
-        } catch (NumberFormatException e){
-            Alarms.errorMessage(e);
+        if (getAttribute(attributeName) == null) {
+            throw new RuntimeException("Could not find attribute " + attributeName + " for " + getRealName());
+        } else {
+            try {
+                return Color.parse(getAttribute(attributeName));
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Could not parse color " + attributeName + " for " + getRealName());
+            }
         }
-        throw new RuntimeException("Could not find color attribute " + attributeName + " for " + getRealName());
     }
 
     public String getString(String attributeName) {
         String attribute = getAttribute(attributeName);
         if (attribute != null) {
             return attribute;
+        } else {
+            throw new RuntimeException("Could not find string attribute " + attributeName + " for " + getRealName());
         }
-        throw new RuntimeException("Could not find string attribute " + attributeName + " for " + getRealName());
     }
 
     public Image getImage(String attributeName) {
-        try {
-            return GlobalResourceManager.getImage(getAttribute(attributeName), level.getVersion());
-        } catch (FileNotFoundException e){
-            Alarms.errorMessage(e);
+        if (getAttribute(attributeName) == null) {
+            throw new RuntimeException("Could not find attribute " + attributeName + " for " + getRealName());
+        } else {
+            try {
+                return GlobalResourceManager.getImage(getAttribute(attributeName), level.getVersion());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException("Could not parse image " + attributeName + " for " + getRealName());
+            }
         }
-        throw new RuntimeException("Could not find double attribute " + attributeName + " for " + getRealName());
+    }
+
+    public Boolean getBoolean(String attributeName) {
+        if (getAttribute(attributeName) == null) {
+            throw new RuntimeException("Could not find attribute " + attributeName + " for " + getRealName());
+        } else {
+            return Boolean.parseBoolean(getAttribute(attributeName));
+        }
     }
 
     public AttributeChangeAction[] getUserActions(EditorAttribute[] oldAttributes){
@@ -409,7 +430,7 @@ public class EditorObject {
 
     }
 
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
 
     }
 

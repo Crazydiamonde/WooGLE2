@@ -29,7 +29,7 @@ public class Rectangle extends EditorObject {
         addAttribute("tag", "", InputField.ANY, false); //list of valid tags
         addAttribute("material", "", InputField.ANY, false); //valid material
         addAttribute("image", "", InputField.IMAGE, false);
-        addAttribute("imagepos", "0,0", InputField.POSITION, false);
+        addAttribute("imagepos", "", InputField.POSITION, false);
         addAttribute("imagerot", "0", InputField.NUMBER, false);
         addAttribute("imagescale", "1,1", InputField.POSITION, false);
         addAttribute("contacts", "", InputField.FLAG, false);
@@ -114,7 +114,7 @@ public class Rectangle extends EditorObject {
     }
 
     @Override
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         if (Main.getLevel().isShowGeometry()) {
 
             double x2 = Double.parseDouble(getAttribute("x"));
@@ -214,7 +214,11 @@ public class Rectangle extends EditorObject {
 
         if (!getAttribute("image").equals("")) {
             imageGraphicsContext.save();
-            image.draw(graphicsContext, imageGraphicsContext);
+            try {
+                image.draw(graphicsContext, imageGraphicsContext);
+            } catch (Exception e) {
+                //nothing
+            }
             imageGraphicsContext.restore();
         }
     }

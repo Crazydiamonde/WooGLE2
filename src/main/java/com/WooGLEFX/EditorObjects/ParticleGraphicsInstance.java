@@ -12,11 +12,11 @@ public class ParticleGraphicsInstance {
     private final double initialScale;
     private final double finalscale;
     private final Position acceleration;
-    private double rotation;
+    private final double rotation;
     private double displayRotation;
     private final double initialDisplayRotation;
-    private double rotspeed;
-    private double speed;
+    private final double rotspeed;
+    private final double speed;
     private final double lifespan;
     private final boolean fade;
     private double alpha;
@@ -55,7 +55,7 @@ public class ParticleGraphicsInstance {
         return alpha;
     }
 
-    public ParticleGraphicsInstance(Position pos, double scale, double finalscale, double rotation, double rotspeed, double speed, Position acceleration, double lifespan, boolean fade, boolean additive) {
+    public ParticleGraphicsInstance(Position pos, double scale, double finalscale, double visualrotation, double rotation, double rotspeed, double speed, Position acceleration, double lifespan, boolean fade, boolean additive) {
         this.originalPos = new Position(pos.getX(), pos.getY());
         this.pos = pos;
         this.scale = scale;
@@ -63,7 +63,7 @@ public class ParticleGraphicsInstance {
         this.finalscale = finalscale;
         this.rotation = rotation;
         this.rotspeed = rotspeed;
-        this.initialDisplayRotation = 0;
+        this.initialDisplayRotation = visualrotation;
         this.speed = speed;
         this.acceleration = acceleration;
         this.lifespan = lifespan;
@@ -94,7 +94,9 @@ public class ParticleGraphicsInstance {
         if (lifespan != -1) {
             double thing = dt / this.lifespan;
             this.scale = this.initialScale * (1 - thing) + this.finalscale * thing;
-            this.alpha = 1 - thing;
+            if (fade) {
+                this.alpha = 1 - thing;
+            }
         }
         return false;
     }

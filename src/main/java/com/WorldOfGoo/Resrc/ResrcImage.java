@@ -13,6 +13,6 @@ public class ResrcImage extends EditorObject {
         addAttribute("REALid", "", InputField.ANY, true);
         addAttribute("REALpath", "", InputField.ANY, true);
         setNameAttribute(getAttribute2("id"));
-        setMetaAttributes(MetaEditorAttribute.parse("id,path,"));
+        setMetaAttributes(MetaEditorAttribute.parse("REALid,REALpath,"));
     }
 }

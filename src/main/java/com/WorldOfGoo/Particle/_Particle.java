@@ -53,7 +53,7 @@ public class _Particle extends EditorObject {
                 axialsinoffsets.add((Axialsinoffset)thing);
             }
         }
-        String mogus = getAttribute("image");
+        String mogus = getString("image");
         while (mogus.contains(",")) {
             images.add(GlobalResourceManager.getImage(mogus.substring(0, mogus.indexOf(",")), version));
             mogus = mogus.substring(mogus.indexOf(",") + 1);

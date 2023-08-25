@@ -37,7 +37,12 @@ public class GeometryImage {
         if (Main.getLevel().isShowGraphics()) {
             image = parent.getImage("image");
 
-            Position imagePos = parent.getPosition("imagepos");
+            Position imagePos;
+            if (parent.getAttribute("imagepos").equals("")) {
+                imagePos = new Position(parent.getDouble("x"), parent.getDouble("y"));
+            } else {
+                imagePos = parent.getPosition("imagepos");
+            }
             double x = imagePos.getX();
             double y = imagePos.getY();
             if (parent.getParent() instanceof Compositegeom) {
@@ -129,7 +134,12 @@ public class GeometryImage {
 
     public DragSettings mouseIntersection(double mX2, double mY2) {
 
-        Position imagePos = Position.parse(parent.getAttribute("imagepos"));
+        Position imagePos;
+        if (parent.getAttribute("imagepos").equals("")) {
+            imagePos = new Position(parent.getDouble("x"), parent.getDouble("y"));
+        } else {
+            imagePos = parent.getPosition("imagepos");
+        }
         double x = imagePos.getX();
         double y = imagePos.getY();
         if (parent.getParent() instanceof Compositegeom) {
@@ -166,7 +176,12 @@ public class GeometryImage {
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
         if (Main.getLevel().isShowGraphics() && image != null) {
 
-            Position imagePos = Position.parse(parent.getAttribute("imagepos"));
+            Position imagePos;
+            if (parent.getAttribute("imagepos").equals("")) {
+                imagePos = new Position(parent.getDouble("x"), parent.getDouble("y"));
+            } else {
+                imagePos = parent.getPosition("imagepos");
+            }
             double x = imagePos.getX();
             double y = imagePos.getY();
             if (parent.getParent() instanceof Compositegeom) {
@@ -327,7 +342,12 @@ public class GeometryImage {
 
     public void rotateFromMouse(double mouseX, double mouseY, double rotateAngleOffset){
 
-        Position imagePos = Position.parse(parent.getAttribute("imagepos"));
+        Position imagePos;
+        if (parent.getAttribute("imagepos").equals("")) {
+            imagePos = new Position(parent.getDouble("x"), parent.getDouble("y"));
+        } else {
+            imagePos = parent.getPosition("imagepos");
+        }
         double x2 = imagePos.getX();
         double y2 = imagePos.getY();
         if (parent.getParent() instanceof Compositegeom) {

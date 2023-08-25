@@ -91,8 +91,16 @@ public class Particles extends EditorObject {
                                 double speed = InputField.getRange(particle.getAttribute("speed"), Math.random());
                                 double lifespan = InputField.getRange(particle.getAttribute("lifespan"), Math.random());
                                 Position acceleration = Position.parse(particle.getAttribute("acceleration"));
-                                boolean fade = true;
+                                boolean fade = particle.getBoolean("fade");
                                 boolean additive = Boolean.parseBoolean(particle.getAttribute("additive"));
+
+                                double visualrotation;
+                                if (particle.getBoolean("directed")) {
+                                    visualrotation = rotation;
+                                    visualrotation -= 90;
+                                } else {
+                                    visualrotation = Math.toDegrees(InputField.getRange(particle.getString("rotation"), Math.random()));
+                                }
 
                                 Position pos;
                                 if (obj instanceof Particleeffect) {
@@ -144,7 +152,7 @@ public class Particles extends EditorObject {
                                     lifespan = -1;
                                 }
 
-                                drawing.get(i).add(new ParticleGraphicsInstance(pos, scale, finalscale, rotation, rotspeed, speed, acceleration, lifespan, fade, additive));
+                                drawing.get(i).add(new ParticleGraphicsInstance(pos, scale, finalscale, visualrotation, rotation, rotspeed, speed, acceleration, lifespan, fade, additive));
                             }
 
                             ParticleGraphicsInstance toBeRemoved = null;

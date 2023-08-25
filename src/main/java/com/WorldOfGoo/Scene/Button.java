@@ -64,14 +64,13 @@ public class Button extends EditorObject {
         addAttribute("context", "", InputField.ANY, false);
         setNameAttribute(getAttribute2("id"));
 
-        setMetaAttributes(MetaEditorAttribute.parse("id,center,anchor,depth,alpha,rotation,scale,colorize,?Graphics<up,over,down,downover,armed,downarmed,disabled,downdisabled>latch,?Events<onclick,onmouseenter,onmouseexit>?Text<font,text,tooltip,textcolorup,textcolorupover,textcoloruparmed,textcolorupdisabled,textcolordown,textcolordownover,textcolordownarmed,textcolordowndisabled>overlay,screenspace,context,"));
+        setMetaAttributes(MetaEditorAttribute.parse("id,x,y,anchor,depth,alpha,rotation,scalex,scaley,colorize,?Graphics<up,over,down,downover,armed,downarmed,disabled,downdisabled>latch,?Events<onclick,onmouseenter,onmouseexit>?Text<font,text,tooltip,textcolorup,textcolorupover,textcoloruparmed,textcolorupdisabled,textcolordown,textcolordownover,textcolordownarmed,textcolordowndisabled>overlay,screenspace,context,"));
     }
 
     @Override
     public void update() {
-        setNameAttribute(getAttribute2("name"));
         try {
-            image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
+            image = GlobalResourceManager.getImage(getAttribute("up"), getLevel().getVersion());
             Color color = Color.parse(getAttribute("colorize"));
             image = SceneLayer.colorize(image, color);
         } catch (FileNotFoundException e) {
@@ -81,7 +80,7 @@ public class Button extends EditorObject {
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
             System.out.println("Image changed from " + oldValue + " to " + newValue);
             try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
+                image = GlobalResourceManager.getImage(getAttribute("up"), Main.getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));
                 image = SceneLayer.colorize(image, color);
             } catch (FileNotFoundException e) {

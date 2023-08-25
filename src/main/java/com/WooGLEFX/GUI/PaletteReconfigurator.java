@@ -49,6 +49,8 @@ public class PaletteReconfigurator extends Application {
 
         stage.setTitle("Configure Goo Ball Palette");
 
+        //TODO display version 1.3 balls and version 1.5 balls side by side instead of on top of each other
+
         if (FileManager.isHasOldWOG()) {
             File[] balls = new File(FileManager.getOldWOGdir() + "\\res\\balls").listFiles();
             if (balls != null) {
