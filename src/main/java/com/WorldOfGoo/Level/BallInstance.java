@@ -42,10 +42,10 @@ public class BallInstance extends EditorObject {
     public BallInstance(EditorObject _parent) {
         super(_parent);
         setRealName("BallInstance");
-        addAttribute("type", "common", InputField.BALL, true); //valid goo ball
-        addAttribute("x", "0", InputField.NUMBER, true);
-        addAttribute("y", "0", InputField.NUMBER, true);
-        addAttribute("id", "", InputField.ANY_REQUIRED, true);
+        addAttribute("type", "", InputField.BALL, true); //valid goo ball
+        addAttribute("x", "", InputField.NUMBER, true);
+        addAttribute("y", "", InputField.NUMBER, true);
+        addAttribute("id", "", InputField.UNIQUE_GOOBALL_ID, true);
         addAttribute("discovered", "", InputField.FLAG, false);
         addAttribute("angle", "0", InputField.NUMBER, true);
         randomSeed = (int)(Math.random() * 10000000);
@@ -101,6 +101,20 @@ public class BallInstance extends EditorObject {
 
         BallInstance thisBall = this;
 
+        //TODO possibly make it so that when you make two gooballs have the same ID strands don't permanently break
+        strands.clear();
+        for (EditorObject obj : Main.getLevel().getLevel()) {
+            if (obj instanceof Strand) {
+                if (obj.getAttribute("gb1").equals(getAttribute("id"))) {
+                    strands.add((Strand)obj);
+                    ((Strand) obj).setGoo1(thisBall);
+                }
+                if (obj.getAttribute("gb2").equals(getAttribute("id"))) {
+                    strands.add((Strand)obj);
+                    ((Strand) obj).setGoo2(thisBall);
+                }
+            }
+        }
         setChangeListener("id", new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {

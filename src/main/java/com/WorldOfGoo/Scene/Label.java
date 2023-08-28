@@ -20,7 +20,7 @@ public class Label extends EditorObject {
         addAttribute("screenspace", "true", InputField.FLAG, true);
         addAttribute("font", "", InputField.ANY, true); //???
         addAttribute("text", "", InputField.TEXT, true);
-        addAttribute("colorize", "255,255,255", InputField.COLOR, true);
+        addAttribute("colorize", "255,255,255", InputField.COLOR, false);
         setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation,scale,depth,colorize,overlay,screenspace,Text<text,font,align>"));
     }

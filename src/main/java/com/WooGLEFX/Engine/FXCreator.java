@@ -12,7 +12,6 @@ import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Ball.Part;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -498,6 +497,22 @@ public class FXCreator {
             }
         });
 
+        nullGooballsToolbar.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem menuItem = new MenuItem("Configure Palette...");
+                menuItem.setOnAction(actionEvent -> {
+                    try {
+                        new PaletteReconfigurator().start(new Stage());
+                    } catch (ParserConfigurationException | SAXException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                contextMenu.getItems().add(menuItem);
+                nullGooballsToolbar.setContextMenu(contextMenu);
+            }
+        });
+
         ToolBar addObjectsToolbar = new ToolBar();
 
         addLineButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\line.png")));
@@ -521,7 +536,7 @@ public class FXCreator {
         addSceneLayerButton.setOnAction(e -> Main.addSceneLayer(Main.getLevel().getSceneObject()));
         addCompositegeomButton.setOnAction(e -> Main.addCompositegeom(Main.getLevel().getSceneObject()));
         addHingeButton.setOnAction(e -> Main.addHinge(Main.getLevel().getSceneObject()));
-        autoPipeButton.setOnAction(e -> Main.autoPipe(Main.getLevel().getSceneObject()));
+        autoPipeButton.setOnAction(e -> Main.autoPipe());
         addVertexButton.setOnAction(e -> Main.addPipeVertex(Main.getLevel().getSceneObject()));
         addFireButton.setOnAction(e -> Main.addFire(Main.getLevel().getLevelObject()));
         addLinearforcefieldButton.setOnAction(e -> Main.addLinearForcefield(Main.getLevel().getSceneObject()));
@@ -834,6 +849,16 @@ public class FXCreator {
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
+
+                        if (!empty && getTableRow().getTreeItem() != null) {
+                            EditorAttribute editorAttribute = getTableRow().getTreeItem().getValue();
+                            if (editorAttribute.getInput().verify(editorAttribute.getObject(), item)) {
+                                setStyle("-fx-text-fill: #000000ff");
+                            } else {
+                                setStyle("-fx-text-fill: #ff0000ff");
+                            }
+                        }
+
                         //Override the default padding that ruins the text.
                         setPadding(new Insets(0, 0, 0, 2));
                     }
@@ -922,6 +947,8 @@ public class FXCreator {
                 propertiesView.refresh();
             }
 
+            Main.hierarchy.refresh();
+
 
         });
 
@@ -939,20 +966,53 @@ public class FXCreator {
         return propertiesView;
     }
 
+    public static Menu fileMenu = new Menu("File");
+
+    public static MenuItem reloadWorldOfGooOldItem = new MenuItem("Reload World of Goo (1.3)");
+    public static MenuItem reloadWorldOfGooNewItem = new MenuItem("Reload World of Goo (1.5)");
+    public static MenuItem changeWorldOfGooDirectoryOldItem = new MenuItem("Change World of Goo Directory (1.3)...");
+    public static MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
+    public static MenuItem saveOldBallToNewItem = new MenuItem("Copy Ball from 1.3 to 1.5");
+    public static MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
+    public static MenuItem quitItem = new MenuItem("Quit");
+
+
+    public static Menu levelMenu = new Menu("Level");
+
+    public static MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
+    public static MenuItem newLevelNewItem = new MenuItem("New Level (1.5)...");
+    public static MenuItem openLevelOldItem = new MenuItem("Open Level (1.3)...");
+    public static MenuItem openLevelNewItem = new MenuItem("Open Level (1.5)...");
+    public static MenuItem cloneLevelOldItem = new MenuItem("Clone Level (1.3)...");
+    public static MenuItem cloneLevelNewItem = new MenuItem("Clone Level (1.5)...");
+    public static MenuItem saveLevelOldItem = new MenuItem("Save Level (1.3)");
+    public static MenuItem saveLevelNewItem = new MenuItem("Save Level (1.5)");
+    public static MenuItem saveAndPlayLevelItem = new MenuItem("Save and Play Level");
+    public static MenuItem renameLevelItem = new MenuItem("Rename Level");
+    public static MenuItem deleteLevelItem = new MenuItem("Delete Level");
+
+
+    public static Menu editMenu = new Menu("Edit");
+
+    public static MenuItem undoItem = new MenuItem("Undo");
+    public static MenuItem redoItem = new MenuItem("Redo");
+    public static MenuItem cutItem = new MenuItem("Cut");
+    public static MenuItem copyItem = new MenuItem("Copy");
+    public static MenuItem pasteItem = new MenuItem("Paste");
+    public static MenuItem deleteItem = new MenuItem("Delete");
+
+
+    public static Menu resourcesMenu = new Menu("Resources");
+
+    public static MenuItem updateLevelResourcesItem = new MenuItem("Update Level Resources...");
+    public static MenuItem importImageItem = new MenuItem("Import Images...");
+    public static MenuItem newTextResourceItem = new MenuItem("New Text Resource");
+    public static MenuItem cleanLevelResourcesItem = new MenuItem("Clean Resources");
+    public static MenuItem setMusicItem = new MenuItem("Set Music...");
+    public static MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
+
     public static MenuBar createMenu() throws FileNotFoundException {
         MenuBar bar = new MenuBar();
-
-        Menu fileMenu = new Menu("File");
-
-        Menu levelMenu = new Menu("Level");
-
-        MenuItem reloadWorldOfGooOldItem = new MenuItem("Reload World of Goo");
-        MenuItem reloadWorldOfGooNewItem = new MenuItem("Reload World of Goo");
-        MenuItem changeWorldOfGooDirectoryOldItem = new MenuItem("Change World of Goo Directory (1.3)...");
-        MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
-        MenuItem saveOldBallToNewItem = new MenuItem("Copy Ball from 1.3 to 1.5");
-        MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
-        MenuItem quitItem = new MenuItem("Quit");
 
         reloadWorldOfGooOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
         reloadWorldOfGooNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
@@ -972,16 +1032,6 @@ public class FXCreator {
 
         fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem, changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, quitItem);
 
-        MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
-        MenuItem newLevelNewItem = new MenuItem("New Level (1.5)...");
-        MenuItem openLevelOldItem = new MenuItem("Open Level (1.3)...");
-        MenuItem openLevelNewItem = new MenuItem("Open Level (1.5)...");
-        MenuItem cloneLevelOldItem = new MenuItem("Clone Level (1.3)...");
-        MenuItem cloneLevelNewItem = new MenuItem("Clone Level (1.5)...");
-        MenuItem saveLevelOldItem = new MenuItem("Save Level (1.3)...");
-        MenuItem saveLevelNewItem = new MenuItem("Save Level (1.5)...");
-        MenuItem saveAndPlayLevelItem = new MenuItem("Save and Play Level");
-
         newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
         newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
         openLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
@@ -991,6 +1041,8 @@ public class FXCreator {
         saveLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
         saveLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
         saveAndPlayLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
+        renameLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\rename.png")));
+        deleteLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\delete.png")));
 
         newLevelOldItem.setOnAction(e -> Main.newLevel(1.3));
         newLevelNewItem.setOnAction(e -> Main.newLevel(1.5));
@@ -1001,17 +1053,10 @@ public class FXCreator {
         saveLevelOldItem.setOnAction(e -> Main.saveLevel(1.3));
         saveLevelNewItem.setOnAction(e -> Main.saveLevel(1.5));
         saveAndPlayLevelItem.setOnAction(e -> Main.playLevel());
+        renameLevelItem.setOnAction(e -> Main.renameLevel());
+        deleteLevelItem.setOnAction(e -> Main.deleteLevel());
 
-        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem, newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem, saveAndPlayLevelItem);
-
-        Menu editMenu = new Menu("Edit");
-
-        MenuItem undoItem = new MenuItem("Undo");
-        MenuItem redoItem = new MenuItem("Redo");
-        MenuItem cutItem = new MenuItem("Cut");
-        MenuItem copyItem = new MenuItem("Copy");
-        MenuItem pasteItem = new MenuItem("Paste");
-        MenuItem deleteItem = new MenuItem("Delete");
+        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem, newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem, saveAndPlayLevelItem, renameLevelItem, deleteLevelItem);
 
         undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
         redoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
@@ -1028,15 +1073,6 @@ public class FXCreator {
         deleteItem.setOnAction(e -> Main.delete());
 
         editMenu.getItems().addAll(undoItem, redoItem, cutItem, copyItem, pasteItem, deleteItem);
-
-        Menu resourcesMenu = new Menu("Resources");
-
-        MenuItem updateLevelResourcesItem = new MenuItem("Update Level Resources...");
-        MenuItem importImageItem = new MenuItem("Import Images...");
-        MenuItem newTextResourceItem = new MenuItem("New Text Resource");
-        MenuItem cleanLevelResourcesItem = new MenuItem("Clean Resources");
-        MenuItem setMusicItem = new MenuItem("Set Music...");
-        MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
 
         updateLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
         importImageItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
@@ -1159,26 +1195,31 @@ public class FXCreator {
                 Main.hierarchy.setRoot(Main.getLevel().getScene().get(0).getTreeItem());
                 Main.hierarchy.refresh();
                 Main.hierarchy.getRoot().setExpanded(true);
+                Main.getLevel().setCurrentlySelectedSection("Scene");
                 Main.getHierarchy().setShowRoot(true);
             } else if (t1 == levelSelectButton) {
                 Main.hierarchy.setRoot(Main.getLevel().getLevel().get(0).getTreeItem());
                 Main.hierarchy.refresh();
                 Main.hierarchy.getRoot().setExpanded(true);
+                Main.getLevel().setCurrentlySelectedSection("Level");
                 Main.getHierarchy().setShowRoot(true);
             } else if (t1 == resrcSelectButton) {
                 Main.hierarchy.setRoot(Main.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
                 Main.hierarchy.refresh();
                 Main.hierarchy.getRoot().setExpanded(true);
+                Main.getLevel().setCurrentlySelectedSection("Resrc");
                 Main.getHierarchy().setShowRoot(false);
             } else if (t1 == textSelectButton) {
                 Main.hierarchy.setRoot(Main.getLevel().getTextObject().getTreeItem());
                 Main.hierarchy.refresh();
                 Main.hierarchy.getRoot().setExpanded(true);
+                Main.getLevel().setCurrentlySelectedSection("Text");
                 Main.getHierarchy().setShowRoot(false);
             } else if (t1 == addinSelectButton) {
                 Main.hierarchy.setRoot(Main.getLevel().getAddinObject().getTreeItem());
                 Main.hierarchy.refresh();
                 Main.hierarchy.getRoot().setExpanded(true);
+                Main.getLevel().setCurrentlySelectedSection("Addin");
                 Main.getHierarchy().setShowRoot(true);
             }
         });
@@ -1257,7 +1298,22 @@ public class FXCreator {
             if (t1) {
                 //Set this tab's level to be the currently selected level.
                 Main.setLevel(level);
-                Main.hierarchy.setRoot(level.getSceneObject().getTreeItem());
+                switch (level.getCurrentlySelectedSection()) {
+                    case "Scene" -> Main.hierarchy.setRoot(level.getSceneObject().getTreeItem());
+                    case "Level" -> Main.hierarchy.setRoot(level.getLevelObject().getTreeItem());
+                    case "Resrc" -> Main.hierarchy.setRoot(level.getResourcesObject().getTreeItem());
+                    case "Addin" -> Main.hierarchy.setRoot(level.getAddinObject().getTreeItem());
+                    case "Text" -> Main.hierarchy.setRoot(level.getTextObject().getTreeItem());
+                }
+
+                switch (level.getCurrentlySelectedSection()) {
+                    case "Scene" -> Main.hierarchySwitcherButtons.getSelectionModel().select(0);
+                    case "Level" -> Main.hierarchySwitcherButtons.getSelectionModel().select(1);
+                    case "Resrc" -> Main.hierarchySwitcherButtons.getSelectionModel().select(2);
+                    case "Addin" -> Main.hierarchySwitcherButtons.getSelectionModel().select(3);
+                    case "Text" -> Main.hierarchySwitcherButtons.getSelectionModel().select(4);
+                }
+
             } else {
                 //Destroy and replace the level tab to prevent an unknown freezing issue.
                 if (level.getLevelTab() != null && level.getLevelTab().getTabPane() != null && level.getLevelTab().getTabPane().getTabs().contains(level.getLevelTab()) && level.getLevelTab().getTabPane().getTabs().size() != 0) {
@@ -1290,7 +1346,7 @@ public class FXCreator {
 
                         setImageItem.setOnAction(event -> {
                             Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), attribute.getValue(), resource.getAttribute("id")));
-                            attribute.setValue(resource.getAttribute("id"));
+                            attribute.setValue(resource.getAttribute("REALid"));
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.getValue());
                             }

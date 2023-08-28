@@ -49,12 +49,12 @@ public class Strand extends EditorObject {
     }
 
     private int strandomSeed;
-
+    //TODO make strands selectable
     public Strand(EditorObject _parent) {
         super(_parent);
         setRealName("Strand");
-        addAttribute("gb1", "", InputField.ANY, true);
-        addAttribute("gb2", "", InputField.ANY, true);
+        addAttribute("gb1", "", InputField.GOOBALL_ID, true);
+        addAttribute("gb2", "", InputField.GOOBALL_ID, true);
         setNameAttribute(getAttribute2("gb1"));
         setNameAttribute2(getAttribute2("gb2"));
         setChangeListener("gb2", (observableValue, s, t1) -> {

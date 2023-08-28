@@ -208,122 +208,125 @@ public class Signpost extends EditorObject {
     @Override
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
 
-        double x = getDouble("x");
-        double y = getDouble("y");
+        if (image != null) {
 
-        double rotation = getDouble("rotation");
+            double x = getDouble("x");
+            double y = getDouble("y");
 
-        double scalex = getDouble("scalex");
-        double scaley = getDouble("scaley");
+            double rotation = getDouble("rotation");
 
-        //image = EditorObject.rotateImageByDegrees(image, -rotation);
+            double scalex = getDouble("scalex");
+            double scaley = getDouble("scaley");
 
-        Point2D rotated2 = EditorObject.rotate(new Point2D(x - image.getWidth() * scalex / 2, -y - image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
-        Point2D rotated3 = EditorObject.rotate(new Point2D(x + image.getWidth() * scalex / 2, -y + image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
+            //image = EditorObject.rotateImageByDegrees(image, -rotation);
 
-        Point2D rotated4 = EditorObject.rotate(new Point2D(x - image.getWidth() * scalex / 2, -y), -Math.toRadians(rotation), new Point2D(x, -y));
-        Point2D rotated5 = EditorObject.rotate(new Point2D(x + image.getWidth() * scalex / 2, -y), -Math.toRadians(rotation), new Point2D(x, -y));
+            Point2D rotated2 = EditorObject.rotate(new Point2D(x - image.getWidth() * scalex / 2, -y - image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
+            Point2D rotated3 = EditorObject.rotate(new Point2D(x + image.getWidth() * scalex / 2, -y + image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
 
-        Point2D rotated6 = EditorObject.rotate(new Point2D(x - image.getWidth() * scalex / 2, -y + image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
-        Point2D rotated7 = EditorObject.rotate(new Point2D(x + image.getWidth() * scalex / 2, -y - image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
+            Point2D rotated4 = EditorObject.rotate(new Point2D(x - image.getWidth() * scalex / 2, -y), -Math.toRadians(rotation), new Point2D(x, -y));
+            Point2D rotated5 = EditorObject.rotate(new Point2D(x + image.getWidth() * scalex / 2, -y), -Math.toRadians(rotation), new Point2D(x, -y));
 
-        double screenX3 = (rotated2.getX());
-        double screenY3 = (rotated2.getY());
+            Point2D rotated6 = EditorObject.rotate(new Point2D(x - image.getWidth() * scalex / 2, -y + image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
+            Point2D rotated7 = EditorObject.rotate(new Point2D(x + image.getWidth() * scalex / 2, -y - image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
 
-        double screenX4 = (rotated3.getX());
-        double screenY4 = (rotated3.getY());
+            double screenX3 = (rotated2.getX());
+            double screenY3 = (rotated2.getY());
 
-        double screenX5 = (rotated4.getX());
-        double screenY5 = (rotated4.getY());
+            double screenX4 = (rotated3.getX());
+            double screenY4 = (rotated3.getY());
 
-        double screenX6 = (rotated5.getX());
-        double screenY6 = (rotated5.getY());
+            double screenX5 = (rotated4.getX());
+            double screenY5 = (rotated4.getY());
 
-        double screenX7 = (rotated6.getX());
-        double screenY7 = (rotated6.getY());
+            double screenX6 = (rotated5.getX());
+            double screenY6 = (rotated5.getY());
 
-        double screenX8 = (rotated7.getX());
-        double screenY8 = (rotated7.getY());
+            double screenX7 = (rotated6.getX());
+            double screenY7 = (rotated6.getY());
 
-        double distance = 4 / Main.getLevel().getZoom();
+            double screenX8 = (rotated7.getX());
+            double screenY8 = (rotated7.getY());
 
-        DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
-        resizeSettings.setInitialScaleX(scalex);
-        resizeSettings.setInitialScaleY(scaley);
+            double distance = 4 / Main.getLevel().getZoom();
 
-        DragSettings rotateSettings = new DragSettings(DragSettings.ROTATE);
-
-        double dragSourceX = 0;
-        double dragSourceY = 0;
-        double dragAnchorX = 0;
-        double dragAnchorY = 0;
-        double rotateAngleOffset = 0;
-
-        boolean resize = false;
-        boolean rotate = false;
-
-        if (mX2 > screenX3 - distance && mX2 < screenX3 + distance && mY2 > screenY3 - distance && mY2 < screenY3 + distance) {
-            resize = true;
-            dragSourceX = x - image.getWidth() * scalex / 2;
-            dragSourceY = -y - image.getHeight() * scaley / 2;
-            dragAnchorX = x + image.getWidth() * scalex / 2;
-            dragAnchorY = -y + image.getHeight() * scaley / 2;
-        }
-        if (mX2 > screenX4 - distance && mX2 < screenX4 + distance && mY2 > screenY4 - distance && mY2 < screenY4 + distance) {
-            resize = true;
-            dragSourceX = x + image.getWidth() * scalex / 2;
-            dragSourceY = -y + image.getHeight() * scaley / 2;
-            dragAnchorX = x - image.getWidth() * scalex / 2;
-            dragAnchorY = -y - image.getHeight() * scaley / 2;
-        }
-        if (mX2 > screenX5 - distance && mX2 < screenX5 + distance && mY2 > screenY5 - distance && mY2 < screenY5 + distance) {
-            rotate = true;
-            dragSourceX = x + image.getWidth() * scalex / 2;
-            dragSourceY = -y;
-            rotateAngleOffset = 0;
-        }
-        if (mX2 > screenX6 - distance && mX2 < screenX6 + distance && mY2 > screenY6 - distance && mY2 < screenY6 + distance) {
-            rotate = true;
-            dragSourceX = x - image.getWidth() * scalex / 2;
-            dragSourceY = -y;
-            rotateAngleOffset = 180;
-        }
-        if (mX2 > screenX7 - distance && mX2 < screenX7 + distance && mY2 > screenY7 - distance && mY2 < screenY7 + distance) {
-            resize = true;
-            dragSourceX = x - image.getWidth() * scalex / 2;
-            dragSourceY = -y + image.getHeight() * scaley / 2;
-            dragAnchorX = x + image.getWidth() * scalex / 2;
-            dragAnchorY = -y - image.getHeight() * scaley / 2;
-        }
-        if (mX2 > screenX8 - distance && mX2 < screenX8 + distance && mY2 > screenY8 - distance && mY2 < screenY8 + distance) {
-            resize = true;
-            dragSourceX = x + image.getWidth() * scalex / 2;
-            dragSourceY = -y - image.getHeight() * scaley / 2;
-            dragAnchorX = x - image.getWidth() * scalex / 2;
-            dragAnchorY = -y + image.getHeight() * scaley / 2;
-        }
-
-        if (resize) {
-            Point2D dragSourceRotated = EditorObject.rotate(new Point2D(dragSourceX, dragSourceY), -Math.toRadians(rotation), new Point2D(x, -y));
-            Point2D dragAnchorRotated = EditorObject.rotate(new Point2D(dragAnchorX, dragAnchorY), -Math.toRadians(rotation), new Point2D(x, -y));
-
-            resizeSettings.setInitialSourceX(dragSourceRotated.getX());
-            resizeSettings.setInitialSourceY(dragSourceRotated.getY());
-            resizeSettings.setAnchorX(dragAnchorRotated.getX());
-            resizeSettings.setAnchorY(dragAnchorRotated.getY());
+            DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
             resizeSettings.setInitialScaleX(scalex);
             resizeSettings.setInitialScaleY(scaley);
 
-            return resizeSettings;
-        }
-        if (rotate) {
-            Point2D dragSourceRotated = EditorObject.rotate(new Point2D(dragSourceX, dragSourceY), -Math.toRadians(rotation), new Point2D(x, -y));
+            DragSettings rotateSettings = new DragSettings(DragSettings.ROTATE);
 
-            rotateSettings.setInitialSourceX(dragSourceRotated.getX());
-            rotateSettings.setInitialSourceY(dragSourceRotated.getY());
-            rotateSettings.setRotateAngleOffset(rotateAngleOffset);
+            double dragSourceX = 0;
+            double dragSourceY = 0;
+            double dragAnchorX = 0;
+            double dragAnchorY = 0;
+            double rotateAngleOffset = 0;
 
-            return rotateSettings;
+            boolean resize = false;
+            boolean rotate = false;
+
+            if (mX2 > screenX3 - distance && mX2 < screenX3 + distance && mY2 > screenY3 - distance && mY2 < screenY3 + distance) {
+                resize = true;
+                dragSourceX = x - image.getWidth() * scalex / 2;
+                dragSourceY = -y - image.getHeight() * scaley / 2;
+                dragAnchorX = x + image.getWidth() * scalex / 2;
+                dragAnchorY = -y + image.getHeight() * scaley / 2;
+            }
+            if (mX2 > screenX4 - distance && mX2 < screenX4 + distance && mY2 > screenY4 - distance && mY2 < screenY4 + distance) {
+                resize = true;
+                dragSourceX = x + image.getWidth() * scalex / 2;
+                dragSourceY = -y + image.getHeight() * scaley / 2;
+                dragAnchorX = x - image.getWidth() * scalex / 2;
+                dragAnchorY = -y - image.getHeight() * scaley / 2;
+            }
+            if (mX2 > screenX5 - distance && mX2 < screenX5 + distance && mY2 > screenY5 - distance && mY2 < screenY5 + distance) {
+                rotate = true;
+                dragSourceX = x + image.getWidth() * scalex / 2;
+                dragSourceY = -y;
+                rotateAngleOffset = 0;
+            }
+            if (mX2 > screenX6 - distance && mX2 < screenX6 + distance && mY2 > screenY6 - distance && mY2 < screenY6 + distance) {
+                rotate = true;
+                dragSourceX = x - image.getWidth() * scalex / 2;
+                dragSourceY = -y;
+                rotateAngleOffset = 180;
+            }
+            if (mX2 > screenX7 - distance && mX2 < screenX7 + distance && mY2 > screenY7 - distance && mY2 < screenY7 + distance) {
+                resize = true;
+                dragSourceX = x - image.getWidth() * scalex / 2;
+                dragSourceY = -y + image.getHeight() * scaley / 2;
+                dragAnchorX = x + image.getWidth() * scalex / 2;
+                dragAnchorY = -y - image.getHeight() * scaley / 2;
+            }
+            if (mX2 > screenX8 - distance && mX2 < screenX8 + distance && mY2 > screenY8 - distance && mY2 < screenY8 + distance) {
+                resize = true;
+                dragSourceX = x + image.getWidth() * scalex / 2;
+                dragSourceY = -y - image.getHeight() * scaley / 2;
+                dragAnchorX = x - image.getWidth() * scalex / 2;
+                dragAnchorY = -y + image.getHeight() * scaley / 2;
+            }
+
+            if (resize) {
+                Point2D dragSourceRotated = EditorObject.rotate(new Point2D(dragSourceX, dragSourceY), -Math.toRadians(rotation), new Point2D(x, -y));
+                Point2D dragAnchorRotated = EditorObject.rotate(new Point2D(dragAnchorX, dragAnchorY), -Math.toRadians(rotation), new Point2D(x, -y));
+
+                resizeSettings.setInitialSourceX(dragSourceRotated.getX());
+                resizeSettings.setInitialSourceY(dragSourceRotated.getY());
+                resizeSettings.setAnchorX(dragAnchorRotated.getX());
+                resizeSettings.setAnchorY(dragAnchorRotated.getY());
+                resizeSettings.setInitialScaleX(scalex);
+                resizeSettings.setInitialScaleY(scaley);
+
+                return resizeSettings;
+            }
+            if (rotate) {
+                Point2D dragSourceRotated = EditorObject.rotate(new Point2D(dragSourceX, dragSourceY), -Math.toRadians(rotation), new Point2D(x, -y));
+
+                rotateSettings.setInitialSourceX(dragSourceRotated.getX());
+                rotateSettings.setInitialSourceY(dragSourceRotated.getY());
+                rotateSettings.setRotateAngleOffset(rotateAngleOffset);
+
+                return rotateSettings;
+            }
         }
         return new DragSettings(DragSettings.NONE);
     }

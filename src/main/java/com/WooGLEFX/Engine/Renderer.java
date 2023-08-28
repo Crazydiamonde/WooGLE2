@@ -36,6 +36,7 @@ public class Renderer {
     public static final Paint endWidescreen = Paint.valueOf("006030FF");
     public static final Paint noLevel = Paint.valueOf("A0A0A0FF");
     public static final Paint middleColor = Paint.valueOf("808080FF");
+    public static final Paint particleLabels = Paint.valueOf("A81CFF");
 
     public static final Stop[] stops = new Stop[] { new Stop(0, javafx.scene.paint.Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")) };
 

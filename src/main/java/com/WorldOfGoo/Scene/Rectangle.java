@@ -25,7 +25,7 @@ public class Rectangle extends EditorObject {
         setRealName("rectangle");
         addAttribute("id", "", InputField.ANY, true);
         addAttribute("mass", "", InputField.NUMBER, false);
-        addAttribute("static", "true", InputField.FLAG, false);
+        addAttribute("static", "", InputField.FLAG, false);
         addAttribute("tag", "", InputField.ANY, false); //list of valid tags
         addAttribute("material", "", InputField.ANY, false); //valid material
         addAttribute("image", "", InputField.IMAGE, false);

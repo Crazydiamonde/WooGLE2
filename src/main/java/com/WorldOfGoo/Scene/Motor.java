@@ -12,6 +12,6 @@ public class Motor extends EditorObject {
         addAttribute("speed", "-0.01", InputField.NUMBER, true);
         addAttribute("maxforce", "20", InputField.NUMBER, true);
         setNameAttribute(getAttribute2("body"));
-        setMetaAttributes(MetaEditorAttribute.parse("body,maxforce,speed"));
+        setMetaAttributes(MetaEditorAttribute.parse("body,maxforce,speed,"));
     }
 }

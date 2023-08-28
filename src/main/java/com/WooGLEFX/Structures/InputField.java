@@ -4,9 +4,13 @@ import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
+import com.WorldOfGoo.Level.BallInstance;
 import com.WorldOfGoo.Particle.Ambientparticleeffect;
 import com.WorldOfGoo.Particle.Particleeffect;
 import com.WorldOfGoo.Particle._Particle;
+import com.WorldOfGoo.Scene.Circle;
+import com.WorldOfGoo.Scene.Compositegeom;
+import com.WorldOfGoo.Scene.Rectangle;
 
 import java.io.File;
 
@@ -35,6 +39,11 @@ public class InputField {
     public static final int BALL = 19;
     public static final int OCD_TYPE = 20;
     public static final int IMAGE_TYPE = 21;
+    public static final int GOOBALL_ID = 21;
+    public static final int UNIQUE_GOOBALL_ID = 22;
+    public static final int IMAGE_PATH = 23;
+    public static final int SOUND_PATH = 24;
+    //TODO make imagepath and soundpath actual field types and make verifying them possible which is hard because of setdefaults
 
     public boolean required;
 
@@ -143,6 +152,29 @@ public class InputField {
                 return true;
             case OCD_TYPE:
                 return potential.equals("balls") || potential.equals("moves") || potential.equals("time");
+            case GOOBALL_ID:
+                for (EditorObject editorObject : Main.getLevel().getLevel()) {
+                    if (editorObject instanceof BallInstance && editorObject.getAttribute("id").equals(potential)) {
+                        return true;
+                    }
+                }
+                return false;
+            case UNIQUE_GOOBALL_ID:
+                for (EditorObject editorObject : Main.getLevel().getLevel()) {
+                    if (editorObject instanceof BallInstance && editorObject != object && editorObject.getAttribute("id").equals(potential)) {
+                        return false;
+                    }
+                }
+                return true;
+            case GEOMETRY:
+                for (EditorObject editorObject : Main.getLevel().getScene()) {
+                    if (editorObject instanceof Rectangle || editorObject instanceof Circle || editorObject instanceof Compositegeom) {
+                        if (editorObject.getAttribute("id").equals(potential)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             default:
                 return false;
         }

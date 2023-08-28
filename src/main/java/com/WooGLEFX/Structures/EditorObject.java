@@ -338,7 +338,7 @@ public class EditorObject {
             try {
                 return Double.parseDouble(getAttribute(attributeName));
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not parse double " + attributeName + " for " + getRealName());
+                throw new RuntimeException("Could not parse double " + attributeName + " for " + getRealName() + ": found value " + getAttribute(attributeName));
             }
         }
     }
@@ -350,7 +350,7 @@ public class EditorObject {
             try {
                 return Position.parse(getAttribute(attributeName));
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not parse position " + attributeName + " for " + getRealName());
+                throw new RuntimeException("Could not parse position " + attributeName + " for " + getRealName() + ": found value " + getAttribute(attributeName));
             }
         }
     }
@@ -362,7 +362,7 @@ public class EditorObject {
             try {
                 return Color.parse(getAttribute(attributeName));
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not parse color " + attributeName + " for " + getRealName());
+                throw new RuntimeException("Could not parse color " + attributeName + " for " + getRealName() + ": found value " + getAttribute(attributeName));
             }
         }
     }
@@ -383,7 +383,7 @@ public class EditorObject {
             try {
                 return GlobalResourceManager.getImage(getAttribute(attributeName), level.getVersion());
             } catch (FileNotFoundException e) {
-                throw new RuntimeException("Could not parse image " + attributeName + " for " + getRealName());
+                throw new RuntimeException("Could not parse image " + attributeName + " for " + getRealName() + ": found value " + getAttribute(attributeName));
             }
         }
     }

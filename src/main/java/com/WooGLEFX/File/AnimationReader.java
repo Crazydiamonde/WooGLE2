@@ -31,7 +31,11 @@ public class AnimationReader {
         return output;
     }
 
-    public static WoGAnimation readBinuni(byte[] binuni, String name){
+    public static WoGAnimation readBinuni(byte[] binuni, String name) {
+
+        if (debug) {
+            System.out.println("Opening binuni animation " + name);
+        }
 
         byte[] HEADER = subsection(binuni, 0, 8);
         byte[] HAS_COLOR = subsection(binuni, 8, 12);
@@ -215,7 +219,11 @@ public class AnimationReader {
 
     }
 
-    public static WoGAnimation readBinltl(byte[] binuni, String name){
+    public static WoGAnimation readBinltl(byte[] binuni, String name) {
+
+        if (debug) {
+            System.out.println("Opening binltl animation " + name);
+        }
 
         byte[] HAS_COLOR = subsection(binuni, 0, 4);
         byte[] HAS_ALPHA = subsection(binuni, 4, 8);
@@ -292,9 +300,9 @@ public class AnimationReader {
             System.out.println("Transform types:");
             for (int type : transformTypes) {
                 switch (type) {
-                    case 0 -> System.out.println(" (Scale)");
-                    case 1 -> System.out.println(" (Rotate)");
-                    case 2 -> System.out.println(" (Translate)");
+                    case 0 -> System.out.println("0 (Scale)");
+                    case 1 -> System.out.println("1 (Rotate)");
+                    case 2 -> System.out.println("2 (Translate)");
                 }
             }
 
@@ -303,14 +311,13 @@ public class AnimationReader {
             System.out.println("X form frames:");
             for (int[] xFrame : xFormFrames) {
                 System.out.println(Arrays.toString(xFrame));
-                for (int i1 = 0; i1 < xFrame.length; i1++) {
-                    if (i1 < xFrame.length - 1) {
-                        System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
-                    } else {
+                for (int i1 = 0; i1 < xFrame.length - 1; i1++) {
+                    if (xFrame[i1 + 1] != 0) {
                         System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
                     }
                 }
             }
+
             System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
             System.out.println("Color frames: " + Arrays.toString(colorFrames));
             System.out.println("Sound frames: " + Arrays.toString(soundFrames));
@@ -379,10 +386,10 @@ public class AnimationReader {
                     case 6 -> System.out.print("soundStrIdx");
                     case 7 -> System.out.print("interpolation type");
                 }
-                if (Math.abs(ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt()) > 999) {
-                    System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getFloat());
-                } else {
-                    System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt());
+                ByteBuffer byteBuffer = ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN);
+                switch (i2 % 8) {
+                    case 0, 1, 2 -> System.out.println("): " + byteBuffer.getFloat());
+                    case 3, 4, 5, 6, 7 -> System.out.println("): " + byteBuffer.getInt());
                 }
             }
         }

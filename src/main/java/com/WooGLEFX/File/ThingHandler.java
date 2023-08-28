@@ -30,7 +30,7 @@ public class ThingHandler extends DefaultHandler {
             }
         }
         EditorObject obj = EditorObject.create(zName, new EditorAttribute[0], parent);
-        for (int i = 0; i < attributes.getLength(); i++){
+        for (int i = 0; i < attributes.getLength(); i++) {
             obj.setAttribute(attributes.getQName(i), attributes.getValue(i));
         }
         currentObject = obj;
@@ -40,10 +40,10 @@ public class ThingHandler extends DefaultHandler {
         } else if (mode == 1) {
             FileManager.resources.add(obj);
             if (impossible != null && (obj instanceof ResrcImage || obj instanceof Sound)) {
-                obj.setAttribute("REALid", obj.getAttribute("id"));
-                obj.setAttribute("REALpath", obj.getAttribute("path"));
-                obj.setAttribute("id", impossible.getAttribute("idprefix") + obj.getAttribute("id"));
-                obj.setAttribute("path", impossible.getAttribute("path") + obj.getAttribute("path"));
+                obj.setAttribute("REALid", impossible.getAttribute("idprefix") + obj.getAttribute("id"));
+                obj.setAttribute("REALpath", impossible.getAttribute("path") + obj.getAttribute("path"));
+                obj.setAttribute("id", obj.getAttribute("id"));
+                obj.setAttribute("path", obj.getAttribute("path"));
             }
             if (obj instanceof SetDefaults) {
                 impossible = (SetDefaults) obj;
@@ -66,12 +66,12 @@ public class ThingHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) {
-        if (currentObject.getParent() instanceof Addin && currentObject.getChildren().size() == 0 && currentObject.getAttributes().length == 1) {
+        if ((currentObject.getParent() instanceof Addin || currentObject.getParent() instanceof AddinLevel) && currentObject.getChildren().size() == 0 && currentObject.getAttributes().length == 1) {
             StringBuilder total = new StringBuilder();
             for (int i = start; i < start + length; i++) {
                 total.append(ch[i]);
             }
-            if (!total.toString().equals("\n\t")) {
+            if (!total.toString().equals("\n\t") && !total.toString().equals("\n") && !total.toString().equals("\n\t\t") && !total.toString().equals("\n\t\t\t") && !total.toString().equals("")) {
                 currentObject.getAttributes()[0].setValue(total.toString());
             }
         }

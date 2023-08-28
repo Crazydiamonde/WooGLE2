@@ -19,11 +19,11 @@ public class Camera extends EditorObject {
         addAttribute("endpos", "0,0", InputField.POSITION, false);
         addAttribute("endzoom", "1", InputField.NUMBER, false);
         setNameAttribute(getAttribute2("aspect"));
-        setMetaAttributes(MetaEditorAttribute.parse("aspect,endpos,endzoom"));
+        setMetaAttributes(MetaEditorAttribute.parse("aspect,endpos,endzoom,"));
     }
     @Override
     public String[] getPossibleChildren() {
-        return new String[]{"Poi"};
+        return new String[]{"poi"};
     }
 
     @Override

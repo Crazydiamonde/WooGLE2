@@ -7,8 +7,6 @@ public class ClipboardHandler {
 
     public static EditorObject importFromClipboardString(String clipboard) {
 
-        System.out.println(clipboard);
-
         //WOGEditor:circle<id=wheel;x=2;y=1024.9834;radius=120;material=machine;tag=mostlydeadly>
 
         EditorObject object = null;

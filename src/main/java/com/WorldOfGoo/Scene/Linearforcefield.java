@@ -16,7 +16,7 @@ public class Linearforcefield extends EditorObject {
     public Linearforcefield(EditorObject _parent) {
         super(_parent);
         setRealName("linearforcefield");
-        addAttribute("id", "", InputField.ANY, false);
+        addAttribute("id", "", InputField.ANY, true);
         addAttribute("type", "gravity", InputField.ANY, true);
         addAttribute("center", "0,0", InputField.POSITION, false);
         addAttribute("width", "0", InputField.NUMBER, false);
@@ -85,7 +85,9 @@ public class Linearforcefield extends EditorObject {
                 graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
                 graphicsContext.strokeLine(bottomLeft.getX(), bottomLeft.getY(), bottomRight.getX(), bottomRight.getY());
                 graphicsContext.strokeLine(bottomRight.getX(), bottomRight.getY(), topRight.getX(), topRight.getY());
+            }
 
+            if (force.getX() != 0 || force.getY() != 0) {
                 double screenX = x2 * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
                 double screenY = -y2 * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
@@ -133,7 +135,8 @@ public class Linearforcefield extends EditorObject {
                     graphicsContext.strokeRect(topLeft2.getX() - 4, topLeft2.getY() - 4, 8, 8);
                     graphicsContext.strokeRect(bottomLeft2.getX() - 4, bottomLeft2.getY() - 4, 8, 8);
                     graphicsContext.strokeRect(bottomRight2.getX() - 4, bottomRight2.getY() - 4, 8, 8);
-
+                }
+                if (force.getX() != 0 || force.getY() != 0) {
                     graphicsContext.strokeRect(forceRight.getX() - 4, forceRight.getY() - 4, 8, 8);
                 }
             }
@@ -201,10 +204,6 @@ public class Linearforcefield extends EditorObject {
             double width = Double.parseDouble(getAttribute("width"));
             double height = Double.parseDouble(getAttribute("height"));
 
-            if (width == 0 || height == 0) {
-                return new DragSettings(DragSettings.NONE);
-            }
-
             Position force = Position.parse(getAttribute("force"));
 
             double angle = Renderer.angleTo(new Point2D(0, 0), new Point2D(force.getX(), force.getY()));
@@ -236,28 +235,28 @@ public class Linearforcefield extends EditorObject {
             boolean resize = false;
             boolean anchor = false;
 
-            if (mX2 > topLeft.getX() - distance && mX2 < topLeft.getX() + distance && mY2 > topLeft.getY() - distance && mY2 < topLeft.getY() + distance) {
+            if (width != 0 && height != 0 && mX2 > topLeft.getX() - distance && mX2 < topLeft.getX() + distance && mY2 > topLeft.getY() - distance && mY2 < topLeft.getY() + distance) {
                 resize = true;
                 dragSourceX = x2 - width / 2;
                 dragSourceY = -y2 - height / 2;
                 dragAnchorX = x2 + width / 2;
                 dragAnchorY = -y2 + height / 2;
             }
-            if (mX2 > topRight.getX() - distance && mX2 < topRight.getX() + distance && mY2 > topRight.getY() - distance && mY2 < topRight.getY() + distance) {
+            if (width != 0 && height != 0 && mX2 > topRight.getX() - distance && mX2 < topRight.getX() + distance && mY2 > topRight.getY() - distance && mY2 < topRight.getY() + distance) {
                 resize = true;
                 dragSourceX = x2 + width / 2;
                 dragSourceY = -y2 - height / 2;
                 dragAnchorX = x2 - width / 2;
                 dragAnchorY = -y2 + height / 2;
             }
-            if (mX2 > bottomLeft.getX() - distance && mX2 < bottomLeft.getX() + distance && mY2 > bottomLeft.getY() - distance && mY2 < bottomLeft.getY() + distance) {
+            if (width != 0 && height != 0 && mX2 > bottomLeft.getX() - distance && mX2 < bottomLeft.getX() + distance && mY2 > bottomLeft.getY() - distance && mY2 < bottomLeft.getY() + distance) {
                 resize = true;
                 dragSourceX = x2 - width / 2;
                 dragSourceY = -y2 + height / 2;
                 dragAnchorX = x2 + width / 2;
                 dragAnchorY = -y2 - height / 2;
             }
-            if (mX2 > bottomRight.getX() - distance && mX2 < bottomRight.getX() + distance && mY2 > bottomRight.getY() - distance && mY2 < bottomRight.getY() + distance) {
+            if (width != 0 && height != 0 && mX2 > bottomRight.getX() - distance && mX2 < bottomRight.getX() + distance && mY2 > bottomRight.getY() - distance && mY2 < bottomRight.getY() + distance) {
                 resize = true;
                 dragSourceX = x2 + width / 2;
                 dragSourceY = -y2 + height / 2;
@@ -265,7 +264,7 @@ public class Linearforcefield extends EditorObject {
                 dragAnchorY = -y2 - height / 2;
             }
             Point2D rotated = rotate(new Point2D(mX2, mY2), -angle, new Point2D(x2, -y2));
-            if (rotated.getX() > right.getX() - 4 / Main.getLevel().getZoom() && rotated.getX() < right.getX() + 4 / Main.getLevel().getZoom() && rotated.getY() > right.getY() - 4 / Main.getLevel().getZoom() && rotated.getY() < right.getY() + 4 / Main.getLevel().getZoom()) {
+            if (forceMagnitude != 0 && rotated.getX() > right.getX() - 4 / Main.getLevel().getZoom() && rotated.getX() < right.getX() + 4 / Main.getLevel().getZoom() && rotated.getY() > right.getY() - 4 / Main.getLevel().getZoom() && rotated.getY() < right.getY() + 4 / Main.getLevel().getZoom()) {
                 anchor = true;
                 dragSourceX = x2;
                 dragSourceY = -y2;

@@ -34,7 +34,8 @@ public class Fire extends EditorObject {
     public void update() {
         for (EditorObject particle : Main.getParticles()) {
             if (particle.getAttribute("name") != null && particle.getAttribute("name").equals(getAttribute("particles"))) {
-                particleEffect = new Particles(null);
+                particleEffect = new Particles(this);
+                getChildren().remove(particleEffect);
                 particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
                 particleEffect.setAttribute("depth", getAttribute("depth"));
                 particleEffect.setAttribute("effect", getAttribute("particles"));

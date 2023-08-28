@@ -1,12 +1,15 @@
 package com.WorldOfGoo.Scene;
 
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
+import com.WorldOfGoo.Level.Fire;
 import com.WorldOfGoo.Particle.Ambientparticleeffect;
 import com.WorldOfGoo.Particle.Particleeffect;
 import com.WorldOfGoo.Particle._Particle;
@@ -14,7 +17,11 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
+import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 
@@ -80,13 +87,13 @@ public class Particles extends EditorObject {
                             if (drawing.size() == i) {
                                 drawing.add(new ArrayList<>());
                             }
-                            if (drawing.get(i).size() < obj.getDouble("maxparticles") && counts.get(i) > 1 / obj.getDouble("rate")) {
+                            if ((obj instanceof Particleeffect && counts.get(i) > obj.getDouble("rate") * 50) || (obj instanceof Ambientparticleeffect && drawing.get(i).size() < obj.getDouble("maxparticles"))) {
                                 counts.set(i, 0);
 
                                 double scale = InputField.getRange(particle.getAttribute("scale"), Math.random());
                                 double finalscale = InputField.getRange(particle.getAttribute("finalscale"), Math.random());
-                                double absvar = particle.getDouble("movedirvar");
-                                double rotation = particle.getDouble("movedir") + InputField.getRange(-absvar + "," + absvar, randomMovedir);
+                                double absvar = InputField.getRange(particle.getAttribute("movedirvar"), Math.random());
+                                double rotation = InputField.getRange(particle.getAttribute("movedir"), Math.random()) + InputField.getRange(-absvar + "," + absvar, randomMovedir);
                                 double rotspeed = InputField.getRange(particle.getAttribute("rotspeed"), Math.random());
                                 double speed = InputField.getRange(particle.getAttribute("speed"), Math.random());
                                 double lifespan = InputField.getRange(particle.getAttribute("lifespan"), Math.random());
@@ -153,6 +160,10 @@ public class Particles extends EditorObject {
                                 }
 
                                 drawing.get(i).add(new ParticleGraphicsInstance(pos, scale, finalscale, visualrotation, rotation, rotspeed, speed, acceleration, lifespan, fade, additive));
+
+                                if (drawing.get(i).size() > obj.getDouble("maxparticles")) {
+                                    drawing.get(i).remove(0);
+                                }
                             }
 
                             ParticleGraphicsInstance toBeRemoved = null;
@@ -186,5 +197,71 @@ public class Particles extends EditorObject {
                 }
             }
         }
+
+        if (!(getParent() instanceof Fire)) {
+            Font font = Font.font("Arial", FontWeight.BOLD, 30 * getLevel().getZoom());
+
+            Position pos = getPosition("pos");
+            double screenX2 = pos.getX() * getLevel().getZoom() + getLevel().getOffsetX();
+            double screenY2 = -pos.getY() * getLevel().getZoom() + getLevel().getOffsetY();
+
+            Text text = new Text(getString("effect"));
+            text.setFont(font);
+            double width = text.getLayoutBounds().getWidth();
+            double height = text.getLayoutBounds().getHeight();
+
+            graphicsContext.setFill(Renderer.particleLabels);
+            graphicsContext.setFont(font);
+            graphicsContext.fillText(getString("effect"), screenX2 - width / 2, screenY2 - height / 2);
+
+            if (this == Main.getSelected()) {
+
+                graphicsContext.setStroke(Renderer.selectionOutline2);
+                graphicsContext.setLineWidth(1);
+                graphicsContext.setLineDashes(3);
+                graphicsContext.setLineDashOffset(0);
+                graphicsContext.strokeRect(screenX2 - width / 2, screenY2 - height * 1.25, width, height);
+                graphicsContext.setStroke(Renderer.selectionOutline);
+                graphicsContext.setLineWidth(1);
+                graphicsContext.setLineDashOffset(3);
+                graphicsContext.strokeRect(screenX2 - width / 2, screenY2 - height * 1.25, width, height);
+                graphicsContext.setLineDashes(0);
+                graphicsContext.restore();
+
+            }
+
+        }
+
+    }
+
+    @Override
+    public DragSettings mouseIntersection(double mX2, double mY2) {
+        if (Main.getLevel().isShowParticles()) {
+            Position pos = getPosition("pos");
+
+            double x2 = pos.getX();
+            double y2 = -pos.getY();
+
+            Font font = Font.font("Arial", FontWeight.BOLD, 30);
+            Text text = new Text(getString("effect"));
+            text.setFont(font);
+            double width1 = text.getLayoutBounds().getWidth();
+            double height1 = text.getLayoutBounds().getHeight();
+
+            if (width1 != 0 && height1 != 0) {
+                if (mX2 > x2 - width1 / 2 && mX2 < x2 + width1 / 2 && mY2 > y2 - height1 * 1.25 && mY2 < y2 - height1 * 0.25) {
+                    DragSettings dragSettings = new DragSettings(DragSettings.MOVE);
+                    dragSettings.setInitialSourceX(mX2 - pos.getX());
+                    dragSettings.setInitialSourceY(mY2 + pos.getY());
+                    return dragSettings;
+                }
+            }
+        }
+        return new DragSettings(DragSettings.NONE);
+    }
+
+    @Override
+    public void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY) {
+        setAttribute("pos", (mouseX - dragSourceX) + "," + (dragSourceY - mouseY));
     }
 }

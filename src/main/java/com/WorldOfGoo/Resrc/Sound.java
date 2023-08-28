@@ -14,6 +14,6 @@ public class Sound extends EditorObject {
         addAttribute("REALid", "", InputField.ANY, true);
         addAttribute("REALpath", "", InputField.ANY, true);
         setNameAttribute(getAttribute2("id"));
-        setMetaAttributes(MetaEditorAttribute.parse("REALid,REALpath,"));
+        setMetaAttributes(MetaEditorAttribute.parse("id,path,"));
     }
 }

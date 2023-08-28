@@ -2,6 +2,7 @@ package com.WooGLEFX.GUI;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
+import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -15,6 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Alarms {
@@ -91,11 +94,54 @@ public class Alarms {
         });
     }
 
+    public static void confirmCleanResourcesMessage(ArrayList<EditorObject> resourceNames) {
+
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setHeaderText("Clean Level Resources");
+        StringBuilder content = new StringBuilder("Are you sure you want to remove unused resources?\nThe following resources will be cleaned:");
+
+        for (EditorObject resourceName : resourceNames) {
+            content.append("\n").append(resourceName.getAttribute("id"));
+        }
+
+        alert.setContentText(content.toString());
+
+        alert.showAndWait().ifPresent(buttonType -> {
+            if (buttonType.equals(ButtonType.OK)) {
+                Main.confirmedCleanLevelResources(resourceNames);
+            }
+        });
+    }
+
     public static void askForLevelName(String purpose, double version) {
-        Label newLevelNameText = new Label("New level name (directory name):");
+
+        String titleText = "";
+
+        String confirmText = "OK";
+        switch (purpose) {
+            case "new" -> {
+                confirmText = "Create";
+                titleText = "New level name (directory name):";
+            }
+            case "clone" -> {
+                confirmText = "Clone";
+                titleText = "New level name (directory name):";
+            }
+            case "changename" -> {
+                confirmText = "Rename";
+                titleText = "New level name (directory name):";
+            }
+            case "delete" -> {
+                confirmText = "Delete";
+                titleText = "Enter level name to confirm:";
+            }
+        }
+
+        Label newLevelNameText = new Label(titleText);
         TextField enterNameHere = new TextField();
         Label typeItCorrectly = new Label("(Letters, Numbers and \"_\" only)");
-        Button okButton = new Button("OK");
+
+        Button okButton = new Button(confirmText);
         Button cancelButton = new Button("Cancel");
 
         newLevelNameText.setStyle("-fx-font-size: 11");
@@ -144,11 +190,31 @@ public class Alarms {
                     stage.close();
                 });
             }
-            case "changename" -> stage.setTitle("Change Level Name");
+            case "changename" -> {
+                stage.setTitle("Change Level Name");
+                okButton.setOnAction(event -> {
+                    String start = version == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+                    for (File levelFile : new File(start + "\\res\\levels").listFiles()) {
+                        if (levelFile.getName().equals(enterNameHere.getText())) {
+                            //TODO Display a message saying it's already taken
+                            return;
+                        }
+                    }
+                    Main.renameLevel(enterNameHere.getText());
+                    stage.close();
+                });
+            }
+            case "delete" -> {
+                stage.setTitle("Delete Level");
+                okButton.setOnAction(event -> {
+                    if (enterNameHere.getText().equals(Main.getLevel().getLevelName())) {
+                        Main.deleteLevelForReal();
+                        stage.close();
+                    }
+                });
+            }
         }
         cancelButton.setOnAction(actionEvent -> stage.close());
-
-        System.out.println(stage.getWidth());
     }
 
     public static void missingWOG() {

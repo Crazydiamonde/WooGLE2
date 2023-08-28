@@ -16,6 +16,13 @@ public class GlobalResourceManager {
     private static final ArrayList<Resource> oldResources = new ArrayList<>();
     private static final ArrayList<Resource> newResources = new ArrayList<>();
 
+    public static ArrayList<Resource> getOldResources() {
+        return oldResources;
+    }
+    public static ArrayList<Resource> getNewResources() {
+        return newResources;
+    }
+
     /**
      * @param id The id (all caps property) of the resource.
      * @param version Specifies which version of WoG (1.3 or 1.5).
@@ -50,6 +57,22 @@ public class GlobalResourceManager {
 
         throw new FileNotFoundException("Invalid image resource ID: \"" + id + "\" (version " + version + ")");
 
+    }
+
+    public static void updateResource(String id, double version) throws FileNotFoundException {
+        if (version == 1.3) {
+            for (Resource resource : oldResources) {
+                if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
+                    imageResource.setImage(FileManager.openImageFromFilePath(FileManager.getOldWOGdir() + "\\" + ((ImageResource) resource).getPath() + ".png"));
+                }
+            }
+        } else if (version == 1.5) {
+            for (Resource resource : newResources) {
+                if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
+                    imageResource.setImage(FileManager.openImageFromFilePath(FileManager.getNewWOGdir() + "\\" + ((ImageResource) resource).getPath() + ".png"));
+                }
+            }
+        }
     }
 
     public static TextString getText(String id, double version) throws FileNotFoundException {

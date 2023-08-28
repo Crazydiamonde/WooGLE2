@@ -161,6 +161,7 @@ public class WorldLevel {
 
     public void setShowParticles(boolean showParticles) {
         this.showParticles = showParticles;
+        FXCreator.buttonShowHideParticles.setGraphic(new ImageView(showParticles ? showHideParticles1 : showHideParticles0));
     }
 
     public boolean isShowLabels() {
@@ -311,6 +312,31 @@ public class WorldLevel {
             god.getSelectionModel().select(levelTab);
             Main.getHierarchy().setRoot(root);
         }
+    }
+
+
+    private EditorObject selected = null;
+
+    public EditorObject getSelected() {
+        return selected;
+    }
+
+    public void setSelected(EditorObject selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected(EditorObject editorObject) {
+        return editorObject == selected;
+    }
+
+    private String currentlySelectedSection = "Scene";
+
+    public String getCurrentlySelectedSection() {
+        return currentlySelectedSection;
+    }
+
+    public void setCurrentlySelectedSection(String currentlySelectedSection) {
+        this.currentlySelectedSection = currentlySelectedSection;
     }
 
     private double offsetX = 0;

@@ -10,7 +10,7 @@ public class Addin extends EditorObject {
         super(_parent);
         setRealName("addin");
         addAttribute("spec-version", "", InputField.NUMBER_POSITIVE, true);
-        setNameAttribute(EditorAttribute.NULL);
+        setNameAttribute(getAttribute2("spec-version"));
         setMetaAttributes(MetaEditorAttribute.parse("spec-version,"));
     }
 }

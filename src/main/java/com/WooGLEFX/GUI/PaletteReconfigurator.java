@@ -45,17 +45,16 @@ public class PaletteReconfigurator extends Application {
 
     @Override
     public void start(Stage stage) throws ParserConfigurationException, SAXException, IOException {
-        VBox vBox = new VBox();
+        VBox oldVBox = new VBox();
+        VBox newVBox = new VBox();
 
         stage.setTitle("Configure Goo Ball Palette");
-
-        //TODO display version 1.3 balls and version 1.5 balls side by side instead of on top of each other
 
         if (FileManager.isHasOldWOG()) {
             File[] balls = new File(FileManager.getOldWOGdir() + "\\res\\balls").listFiles();
             if (balls != null) {
                 for (File ballFile : balls) {
-                    vBox.getChildren().add(getBallHBox(ballFile.getName(), 1.3));
+                    oldVBox.getChildren().add(getBallHBox(ballFile.getName(), 1.3));
                 }
             }
         }
@@ -63,12 +62,12 @@ public class PaletteReconfigurator extends Application {
             File[] balls = new File(FileManager.getNewWOGdir() + "\\res\\balls").listFiles();
             if (balls != null) {
                 for (File ballFile : balls) {
-                    vBox.getChildren().add(getBallHBox(ballFile.getName(), 1.5));
+                    newVBox.getChildren().add(getBallHBox(ballFile.getName(), 1.5));
                 }
             }
         }
 
-        ScrollPane pane = new ScrollPane(vBox);
+        ScrollPane pane = new ScrollPane(new HBox(oldVBox, newVBox));
 
         Button applyButton = new Button("Apply");
         Button cancelButton = new Button("Cancel");
@@ -77,7 +76,12 @@ public class PaletteReconfigurator extends Application {
             ArrayList<String> paletteBalls = new ArrayList<>();
             ArrayList<Double> paletteVersions = new ArrayList<>();
 
-            for (Node ballHBox : vBox.getChildren()) {
+            ArrayList<Node> nodeList = new ArrayList<>();
+
+            nodeList.addAll(oldVBox.getChildren());
+            nodeList.addAll(newVBox.getChildren());
+
+            for (Node ballHBox : nodeList) {
                 Label label = (Label)((HBox)ballHBox).getChildren().get(1);
                 CheckBox checkBox = (CheckBox)((HBox)ballHBox).getChildren().get(0);
                 if (checkBox.isSelected()) {
@@ -140,7 +144,7 @@ public class PaletteReconfigurator extends Application {
 
         Scene scene = new Scene(allBox);
 
-        stage.setWidth(240);
+        stage.setWidth(480);
         stage.setHeight(540);
 
         stage.setScene(scene);
