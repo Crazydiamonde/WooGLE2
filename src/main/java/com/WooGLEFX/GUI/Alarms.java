@@ -28,6 +28,8 @@ public class Alarms {
         alert.setHeaderText("Error");
         alert.setContentText(error.getClass().getSimpleName() + ": " + error.getMessage());
         alert.show();
+        // Show the exception in the console
+        error.printStackTrace();
     }
 
     public static void loadingResourcesError(String error) {
