@@ -332,7 +332,15 @@ public class FileManager {
         BallFileOpener.mode = 0;
         if (version == 1.3 && hasOldWOG) {
             File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\text.xml.bin");
-            saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
+            byte[] bytes = AESBinFormat.decodeFile(ballFile);
+            // If the file starts with EF BB BF, strip these three bytes (not sure why it does this)
+            if (bytes[0] == -17 && bytes[1] == -69 && bytes[2] == -65) {
+                byte[] newBytes = new byte[bytes.length - 3];
+                System.arraycopy(bytes, 3, newBytes, 0, bytes.length - 3);
+                bytes = newBytes;
+            }
+            String stringBytes = bytesToString(bytes);
+            saxParser.parse(new InputSource(new StringReader(stringBytes)), defaultHandler);
         } else if (version == 1.5 && hasNewWOG) {
             File ballFile2 = new File(FileManager.getNewWOGdir() + "\\properties\\text.xml");
             saxParser.parse(ballFile2, defaultHandler);
