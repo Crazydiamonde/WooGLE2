@@ -12,7 +12,6 @@ import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 import javafx.scene.image.Image;
-import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -48,7 +47,8 @@ public class FileManager {
 
     private static Image failedImage;
 
-    public static final String editorLocation = System.getenv("USERPROFILE") + "\\WOGAnniversaryEditor\\";
+    // Editor location should be the current folder
+    public static final String editorLocation = System.getProperty("user.dir") + "\\";
 
     public static Image getFailedImage() {
         return failedImage;
