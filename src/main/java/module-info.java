@@ -3,7 +3,7 @@ module com.example.WOGAnniversaryEditor {
   requires java.desktop;
   requires annotations;
   requires javafx.swing;
-  requires bcprov.ext.jdk15to18;
+  requires org.bouncycastle.provider;
 
   exports com.WorldOfGoo.Scene;
   exports com.WorldOfGoo.Level;
