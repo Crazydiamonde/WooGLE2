@@ -1,16 +1,13 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import com.WorldOfGoo.Scene.Compositegeom;
 import com.WorldOfGoo.Scene.Particles;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 

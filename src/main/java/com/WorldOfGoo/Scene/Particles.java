@@ -1,9 +1,10 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.Engine.Main;
+import java.util.ArrayList;
+
 import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
+import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -13,6 +14,7 @@ import com.WorldOfGoo.Level.Fire;
 import com.WorldOfGoo.Particle.Ambientparticleeffect;
 import com.WorldOfGoo.Particle.Particleeffect;
 import com.WorldOfGoo.Particle._Particle;
+
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
@@ -21,9 +23,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
-import javafx.scene.control.Label;
-
-import java.util.ArrayList;
 
 public class Particles extends EditorObject {
 

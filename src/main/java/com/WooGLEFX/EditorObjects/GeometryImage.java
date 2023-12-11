@@ -1,7 +1,6 @@
 package com.WooGLEFX.EditorObjects;
 
 import com.WooGLEFX.Engine.Collision.RectangleCollision;
-import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -18,7 +17,6 @@ import java.io.FileNotFoundException;
 public class GeometryImage {
 
     private final EditorObject parent;
-    private String imageName;
     private Image image;
 
     public Image getImage() {

@@ -1,33 +1,60 @@
 package com.WooGLEFX.File;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Addin.AddinLevelOCD;
-import com.WorldOfGoo.Level.*;
+import com.WorldOfGoo.Level.BallInstance;
+import com.WorldOfGoo.Level.Camera;
+import com.WorldOfGoo.Level.Endoncollision;
+import com.WorldOfGoo.Level.Endonmessage;
+import com.WorldOfGoo.Level.Endonnogeom;
+import com.WorldOfGoo.Level.Fire;
+import com.WorldOfGoo.Level.Level;
+import com.WorldOfGoo.Level.Levelexit;
+import com.WorldOfGoo.Level.Loopsound;
+import com.WorldOfGoo.Level.Music;
+import com.WorldOfGoo.Level.Pipe;
+import com.WorldOfGoo.Level.Poi;
+import com.WorldOfGoo.Level.Signpost;
+import com.WorldOfGoo.Level.Strand;
+import com.WorldOfGoo.Level.Targetheight;
+import com.WorldOfGoo.Level.Vertex;
 import com.WorldOfGoo.Resrc.ResourceManifest;
 import com.WorldOfGoo.Resrc.Resources;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import com.WorldOfGoo.Resrc.Sound;
-import com.WorldOfGoo.Scene.*;
+import com.WorldOfGoo.Scene.Button;
+import com.WorldOfGoo.Scene.Buttongroup;
+import com.WorldOfGoo.Scene.Circle;
+import com.WorldOfGoo.Scene.Compositegeom;
+import com.WorldOfGoo.Scene.Hinge;
+import com.WorldOfGoo.Scene.Label;
+import com.WorldOfGoo.Scene.Line;
+import com.WorldOfGoo.Scene.Linearforcefield;
+import com.WorldOfGoo.Scene.Motor;
+import com.WorldOfGoo.Scene.Particles;
+import com.WorldOfGoo.Scene.Radialforcefield;
+import com.WorldOfGoo.Scene.Rectangle;
+import com.WorldOfGoo.Scene.Scene;
+import com.WorldOfGoo.Scene.SceneLayer;
 import com.WorldOfGoo.Text.TextStrings;
-import javafx.embed.swing.SwingFXUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import javafx.embed.swing.SwingFXUtils;
 
 public class LevelExporter {
 
