@@ -15,7 +15,6 @@ import com.WorldOfGoo.Particle.Ambientparticleeffect;
 import com.WorldOfGoo.Particle.Particleeffect;
 import com.WorldOfGoo.Particle._Particle;
 
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
@@ -27,9 +26,6 @@ import javafx.scene.transform.Affine;
 public class Particles extends EditorObject {
 
     private ArrayList<ArrayList<ParticleGraphicsInstance>> drawing = new ArrayList<>();
-
-    private Particleeffect particleeffect;
-    private Ambientparticleeffect ambientparticleeffect;
 
     public Particles(EditorObject _parent) {
         super(_parent);
@@ -50,10 +46,10 @@ public class Particles extends EditorObject {
 
     private ArrayList<Integer> counts = new ArrayList<>();
 
-    private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
-        double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
-        return new Point2D(x, m1 * (x - x1) + y1);
-    }
+    // private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
+    //     double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
+    //     return new Point2D(x, m1 * (x - x1) + y1);
+    // }
 
     private double lerp(double a, double b, double m) {
         return a * m + b * (1 - m);

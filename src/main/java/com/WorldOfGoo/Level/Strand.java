@@ -48,7 +48,6 @@ public class Strand extends EditorObject {
         this.strand = strand;
     }
 
-    private int strandomSeed;
     //TODO make strands selectable
     public Strand(EditorObject _parent) {
         super(_parent);
@@ -112,10 +111,10 @@ public class Strand extends EditorObject {
         }
     }
 
-    private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
-        double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
-        return new Point2D(x, m1 * (x - x1) + y1);
-    }
+    // private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
+    //     double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
+    //     return new Point2D(x, m1 * (x - x1) + y1);
+    // }
 
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {

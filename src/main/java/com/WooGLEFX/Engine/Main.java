@@ -3,12 +3,12 @@ package com.WooGLEFX.Engine;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
+// import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
+// import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -552,9 +552,9 @@ public class Main extends Application {
                 ProcessBuilder processBuilder = new ProcessBuilder(FileManager.getOldWOGdir() + "\\WorldOfGoo.exe", level.getLevelName());
                 processBuilder.directory(new File(FileManager.getOldWOGdir()));
                 processBuilder.redirectErrorStream(true);
-                Process process = processBuilder.start();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
+                /*Process process = */processBuilder.start();
+                // BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                // String line;
                 //while ((line = reader.readLine()) != null) {
                 //    System.out.println(line);
                 //}
