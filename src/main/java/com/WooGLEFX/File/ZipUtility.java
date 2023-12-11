@@ -66,6 +66,7 @@ public class ZipUtility {
                 zos.write(bytesIn, 0, read);
                 bytesRead += read;
             }
+            bis.close();
             zos.closeEntry();
         }
     }

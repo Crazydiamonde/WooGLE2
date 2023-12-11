@@ -4,6 +4,7 @@ module com.example.WOGAnniversaryEditor {
   requires annotations;
   requires javafx.swing;
   requires org.bouncycastle.provider;
+  requires transitive java.xml;
 
   exports com.WorldOfGoo.Scene;
   exports com.WorldOfGoo.Level;
