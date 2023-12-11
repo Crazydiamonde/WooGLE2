@@ -1,22 +1,27 @@
 package com.WooGLEFX.Engine;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
 import com.WorldOfGoo.Level.Strand;
 import com.WorldOfGoo.Level.Vertex;
-import com.WorldOfGoo.Scene.*;
+import com.WorldOfGoo.Scene.Compositegeom;
+import com.WorldOfGoo.Scene.Hinge;
+import com.WorldOfGoo.Scene.Linearforcefield;
+import com.WorldOfGoo.Scene.Scene;
+import com.WorldOfGoo.Scene.Slider;
+
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 public class Renderer {
 

@@ -1,14 +1,14 @@
 package com.WooGLEFX.File;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
+
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
 import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Addin.AddinLevel;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import com.WorldOfGoo.Resrc.SetDefaults;
 import com.WorldOfGoo.Resrc.Sound;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
 
 public class ThingHandler extends DefaultHandler {
     public static EditorObject parent = null;

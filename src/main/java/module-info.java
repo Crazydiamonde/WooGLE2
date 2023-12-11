@@ -1,5 +1,5 @@
 module com.example.WOGAnniversaryEditor {
-  requires javafx.controls;
+  requires transitive javafx.controls;
   requires java.desktop;
   requires annotations;
   requires javafx.swing;

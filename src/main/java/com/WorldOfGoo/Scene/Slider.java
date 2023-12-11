@@ -39,10 +39,10 @@ public class Slider extends EditorObject {
 
             Position axis = Position.parse(getAttribute("axis"));
             double magnitude = Math.sqrt(axis.getX() * axis.getX() + axis.getY() * axis.getY());
-            double theta = Math.asin(axis.getY() / magnitude);
-            if (axis.getX() < 0) {
-                theta *= -1;
-            }
+            // double theta = Math.asin(axis.getY() / magnitude);
+            // if (axis.getX() < 0) {
+            //     theta *= -1;
+            // }
 
             double dx = axis.getX() / magnitude;
             double dy = axis.getY() / magnitude;

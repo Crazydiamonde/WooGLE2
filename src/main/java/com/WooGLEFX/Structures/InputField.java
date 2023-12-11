@@ -1,18 +1,17 @@
 package com.WooGLEFX.Structures;
 
-import com.WooGLEFX.File.FileManager;
+import java.io.File;
+
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 import com.WorldOfGoo.Level.BallInstance;
 import com.WorldOfGoo.Particle.Ambientparticleeffect;
 import com.WorldOfGoo.Particle.Particleeffect;
-import com.WorldOfGoo.Particle._Particle;
 import com.WorldOfGoo.Scene.Circle;
 import com.WorldOfGoo.Scene.Compositegeom;
 import com.WorldOfGoo.Scene.Rectangle;
-
-import java.io.File;
 
 public class InputField {
 
