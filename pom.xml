@@ -147,9 +147,9 @@
             <id>default-cli</id>
             <configuration>
               <mainClass>com.WooGLEFX.Engine.Main</mainClass>
-              <launcher>app</launcher>
-              <jlinkZipName>app</jlinkZipName>
-              <jlinkImageName>app</jlinkImageName>
+              <launcher>WOGAnniversaryEditor</launcher>
+              <jlinkZipName>WOGAnniversaryEditor</jlinkZipName>
+              <jlinkImageName>WOGAnniversaryEditor</jlinkImageName>
               <noManPages>true</noManPages>
               <stripDebug>true</stripDebug>
               <noHeaderFiles>true</noHeaderFiles>
