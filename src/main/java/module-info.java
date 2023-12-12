@@ -1,7 +1,7 @@
 module com.example.WOGAnniversaryEditor {
   requires transitive javafx.controls;
   requires java.desktop;
-  requires annotations;
+  // requires annotations;
   requires javafx.swing;
   requires org.bouncycastle.provider;
   requires transitive java.xml;
