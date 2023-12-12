@@ -20,27 +20,27 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>19</version>
+      <version>17</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>19</version>
+      <version>17</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-web</artifactId>
-      <version>19</version>
+      <version>17</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-media</artifactId>
-      <version>19</version>
+      <version>17</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
-      <version>19</version>
+      <version>17</version>
     </dependency>
     <dependency>
       <groupId>org.controlsfx</groupId>
@@ -51,23 +51,11 @@
       <groupId>com.dlsc.formsfx</groupId>
       <artifactId>formsfx-core</artifactId>
       <version>11.5.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.openjfx</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>net.synedra</groupId>
       <artifactId>validatorfx</artifactId>
       <version>0.4.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.openjfx</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.kordamp.ikonli</groupId>
@@ -83,23 +71,11 @@
       <groupId>eu.hansolo</groupId>
       <artifactId>tilesfx</artifactId>
       <version>17.1.15</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.openjfx</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.github.almasb</groupId>
       <artifactId>fxgl</artifactId>
       <version>17.2</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.openjfx</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -116,7 +92,7 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-swing</artifactId>
-      <version>19</version>
+      <version>17</version>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
@@ -139,17 +115,32 @@
         <configuration>
           <source>17</source>
           <target>17</target>
+          <release>17</release>
+          <compilerArgs>
+            <arg>--module-path</arg>
+            <arg>${project.build.directory}/modules</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
-        <configuration>
-          <argLine>
-            --add-exports org.bouncycastle.provider=ALL-UNNAMED
-          </argLine>
-        </configuration>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <executions>
+          <execution>
+            <!-- Default configuration for running with: mvn clean javafx:run -->
+            <id>default-cli</id>
+            <configuration>
+              <mainClass>com.example.demo1/com.WooGLEFX.Engine.Main</mainClass>
+              <launcher>app</launcher>
+              <jlinkZipName>app</jlinkZipName>
+              <jlinkImageName>app</jlinkImageName>
+              <noManPages>true</noManPages>
+              <stripDebug>true</stripDebug>
+              <noHeaderFiles>true</noHeaderFiles>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -174,49 +165,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-maven-plugin</artifactId>
-        <version>0.0.8</version>
-        <configuration>
-          <mainClass>com.WooGLEFX.Engine.Main</mainClass>
-        </configuration>
-        <executions>
-          <execution>
-            <id>create-runtime-image</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jlink</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jlink-plugin</artifactId>
-        <version>3.0.0-alpha-1</version>
-        <extensions>true</extensions>
-        <configuration>
-          <modulePaths>
-            <modulePath>${java.home}/jmods</modulePath>
-          </modulePaths>
-          <modules>
-            <module>java.base</module>
-            <module>java.logging</module>
-            <module>java.xml</module>
-            <module>java.sql</module>
-            <module>java.desktop</module>
-            <module>javafx.controls</module>
-            <module>javafx.fxml</module>
-            <module>com.example.WOGAnniversaryEditor</module>
-          </modules>
-          <jlinkExecutable>${java.home}/bin/jlink</jlinkExecutable>
-          <launcher>WOGAnniversaryEditor=com.example.WOGAnniversaryEditor/com.WooGLEFX.Engine.Main</launcher>
-          <jlinkArgs>
-            <jlinkArg>--ignore-signing-information</jlinkArg>
-          </jlinkArgs>
-        </configuration>
       </plugin>
     </plugins>
   </build>
