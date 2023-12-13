@@ -1281,10 +1281,18 @@ public class Main extends Application {
 
     public static void selectionMode() {
         mode = SELECTION;
+        // Highlight selection button blue
+        FXCreator.buttonSelectMoveAndResize.setStyle("-fx-background-color: #9999ff;");
+        // Un-highlight strand button
+        FXCreator.buttonStrandMode.setStyle("");
     }
 
     public static void strandMode() {
         mode = STRAND;
+        // Highlight strand button
+        FXCreator.buttonStrandMode.setStyle("-fx-background-color: #9999ff;");
+        // Un-highlight selection button
+        FXCreator.buttonSelectMoveAndResize.setStyle("");
     }
 
     public static void showHideCameras() {

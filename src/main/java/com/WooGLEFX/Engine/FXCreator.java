@@ -406,6 +406,7 @@ public class FXCreator {
         buttonSetMusic.setOnAction(e -> Main.importMusic());
         buttonSetLoopsound.setOnAction(e -> Main.importLoopsound());
         buttonSelectMoveAndResize.setOnAction(e -> Main.selectionMode());
+        buttonSelectMoveAndResize.setStyle("-fx-background-color: #9999ff;");   // Highlighted by default
         buttonStrandMode.setOnAction(e -> Main.strandMode());
         buttonShowHideCamera.setOnAction(e -> Main.showHideCameras());
         buttonShowHideForcefields.setOnAction(e -> Main.showHideForcefields());
