@@ -2212,8 +2212,8 @@ public class Main extends Application {
                 case "com.WorldOfGoo.Scene" -> Main.hierarchySwitcherButtons.getSelectionModel().select(0);
                 case "com.WorldOfGoo.Level" -> Main.hierarchySwitcherButtons.getSelectionModel().select(1);
                 case "com.WorldOfGoo.Resrc" -> Main.hierarchySwitcherButtons.getSelectionModel().select(2);
-                case "com.WorldOfGoo.Addin" -> Main.hierarchySwitcherButtons.getSelectionModel().select(3);
-                case "com.WorldOfGoo.Text" -> Main.hierarchySwitcherButtons.getSelectionModel().select(4);
+                case "com.WorldOfGoo.Text" -> Main.hierarchySwitcherButtons.getSelectionModel().select(3);
+                case "com.WorldOfGoo.Addin" -> Main.hierarchySwitcherButtons.getSelectionModel().select(4);
             }
         }
     }
