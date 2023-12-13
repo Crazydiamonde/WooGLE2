@@ -1271,8 +1271,7 @@ public class Main extends Application {
     }
 
     public static final int SELECTION = 0;
-    public static final int ZOOM = 1;
-    public static final int STRAND = 2;
+    public static final int STRAND = 1;
 
     private static int mode = SELECTION;
 
@@ -1282,10 +1281,6 @@ public class Main extends Application {
 
     public static void selectionMode() {
         mode = SELECTION;
-    }
-
-    public static void zoomMode() {
-        mode = ZOOM;
     }
 
     public static void strandMode() {
@@ -1857,12 +1852,13 @@ public class Main extends Application {
                             }
                         }
                     }
-                } else if (mode == ZOOM) {
-                    if (event.getX() < editorViewWidth && event.getY() > getMouseYOffset()) {
-                        scene.setCursor(Cursor.CLOSED_HAND);
-                        mouseStartX = event.getScreenX();
-                        mouseStartY = event.getScreenY();
-                    }
+                }
+            } else if (event.getButton() == MouseButton.SECONDARY) {
+                // Mouse pan with right-click
+                if (event.getX() < editorViewWidth && event.getY() > getMouseYOffset()) {
+                    scene.setCursor(Cursor.CLOSED_HAND);
+                    mouseStartX = event.getScreenX();
+                    mouseStartY = event.getScreenY();
                 }
             }
         }
@@ -1896,7 +1892,7 @@ public class Main extends Application {
 
             propertiesView.refresh();
         }
-        if (level != null && mode == ZOOM) {
+        if (level != null && event.getButton() == MouseButton.SECONDARY) {
             // Pan the canvas according to the mouse's movement.
             level.setOffsetY(level.getOffsetY() + event.getScreenY() - mouseStartY);
             level.setOffsetX(level.getOffsetX() + event.getScreenX() - mouseStartX);
@@ -1987,6 +1983,8 @@ public class Main extends Application {
                 }
                 strand1Gooball = null;
             }
+        } else if (event.getButton() == MouseButton.SECONDARY) {
+            scene.setCursor(Cursor.DEFAULT);
         }
     }
 

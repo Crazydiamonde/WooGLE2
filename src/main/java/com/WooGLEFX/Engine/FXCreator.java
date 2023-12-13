@@ -315,7 +315,6 @@ public class FXCreator {
     public static Button buttonSetMusic = new Button();
     public static Button buttonSetLoopsound = new Button();
     public static Button buttonSelectMoveAndResize = new Button();
-    public static Button buttonZoomAndPanView = new Button();
     public static Button buttonStrandMode = new Button();
     public static Button buttonShowHideCamera = new Button();
     public static Button buttonShowHideForcefields = new Button();
@@ -372,7 +371,6 @@ public class FXCreator {
         buttonSetMusic.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
         buttonSetLoopsound.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
         buttonSelectMoveAndResize.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\selection_mode.png")));
-        buttonZoomAndPanView.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\zoom_mode.png")));
         buttonStrandMode.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\strand_mode.png")));
         buttonShowHideCamera.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png")));
         buttonShowHideForcefields.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png")));
@@ -408,7 +406,6 @@ public class FXCreator {
         buttonSetMusic.setOnAction(e -> Main.importMusic());
         buttonSetLoopsound.setOnAction(e -> Main.importLoopsound());
         buttonSelectMoveAndResize.setOnAction(e -> Main.selectionMode());
-        buttonZoomAndPanView.setOnAction(e -> Main.zoomMode());
         buttonStrandMode.setOnAction(e -> Main.strandMode());
         buttonShowHideCamera.setOnAction(e -> Main.showHideCameras());
         buttonShowHideForcefields.setOnAction(e -> Main.showHideForcefields());
@@ -444,7 +441,6 @@ public class FXCreator {
         buttonSetMusic.setTooltip(new Tooltip("Set Music"));
         buttonSetLoopsound.setTooltip(new Tooltip("Set Loop Sound"));
         buttonSelectMoveAndResize.setTooltip(new Tooltip("Select, Move and Resize"));
-        buttonZoomAndPanView.setTooltip(new Tooltip("Zoom and Pan View"));
         buttonStrandMode.setTooltip(new Tooltip("Place Strands"));
         buttonShowHideCamera.setTooltip(new Tooltip("Show/Hide Camera"));
         buttonShowHideForcefields.setTooltip(new Tooltip("Show/Hide Force Fields"));
@@ -466,7 +462,7 @@ public class FXCreator {
         functionsToolbar.getItems().addAll(buttonUpdateLevelResources, buttonImportImages, buttonAddTextResource, new Separator());
         functionsToolbar.getItems().addAll(buttonCleanResources, new Separator());
         functionsToolbar.getItems().addAll(buttonSetMusic, buttonSetLoopsound, new Separator());
-        functionsToolbar.getItems().addAll(buttonSelectMoveAndResize, buttonZoomAndPanView, buttonStrandMode, new Separator());
+        functionsToolbar.getItems().addAll(buttonSelectMoveAndResize, buttonStrandMode, new Separator());
         functionsToolbar.getItems().addAll(buttonShowHideCamera, buttonShowHideForcefields, buttonShowHideGeometry, buttonShowHideGraphics, buttonShowHideGoos, buttonShowHideParticles, buttonShowHideLabels, buttonShowHideAnim, buttonShowHideSceneBGColor, new Separator());
 
         for (Node node : functionsToolbar.getItems()) {
