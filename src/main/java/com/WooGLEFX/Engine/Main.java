@@ -127,7 +127,8 @@ public class Main extends Application {
     private static TabPane levelSelectPane;
 
     public static Point2D getScreenCenter() {
-        return new Point2D((thingPane.getWidth() / 2 - level.getOffsetX()) / level.getZoom(), (thingPane.getHeight() / 2 - level.getOffsetY()) / level.getZoom());
+        return new Point2D((thingPane.getWidth() / 2 - level.getOffsetX()) / level.getZoom(),
+                (thingPane.getHeight() / 2 - level.getOffsetY()) / level.getZoom());
     }
 
     public static double getMouseYOffset() {
@@ -153,7 +154,7 @@ public class Main extends Application {
             try {
                 _Ball ball = FileManager.openBall(ballName, ballVersion);
 
-                for (EditorObject resrc : FileManager.commonBallResrcData){
+                for (EditorObject resrc : FileManager.commonBallResrcData) {
                     GlobalResourceManager.addResource(resrc, ballVersion);
                 }
 
@@ -170,7 +171,8 @@ public class Main extends Application {
 
     public static boolean changeWorldOfGooDirectory(double version) {
         FileChooser findWorldOfGoo = new FileChooser();
-        findWorldOfGoo.getExtensionFilters().add(new FileChooser.ExtensionFilter("World of Goo executable", "WorldOfGoo.exe"));
+        findWorldOfGoo.getExtensionFilters()
+                .add(new FileChooser.ExtensionFilter("World of Goo executable", "WorldOfGoo.exe"));
         File worldOfGoo = findWorldOfGoo.showOpenDialog(new Stage());
         if (worldOfGoo == null) {
             return false;
@@ -253,7 +255,8 @@ public class Main extends Application {
         level.getResourcesObject().setRealName("ResourceManifest");
         level.getResourcesObject().setTreeItem(new TreeItem<>(level.getResourcesObject()));
 
-        EditorObject resourcesThing = EditorObject.create("Resources", new EditorAttribute[0], level.getResourcesObject());
+        EditorObject resourcesThing = EditorObject.create("Resources", new EditorAttribute[0],
+                level.getResourcesObject());
         resourcesThing.setTreeItem(new TreeItem<>(resourcesThing));
         resourcesThing.setAttribute("id", "scene_" + level.getLevelName());
         level.getResourcesObject().getTreeItem().getChildren().add(resourcesThing.getTreeItem());
@@ -270,11 +273,11 @@ public class Main extends Application {
             object.update();
         }
 
-        //Put everything in the hierarchy
+        // Put everything in the hierarchy
         level.getSceneObject().getTreeItem().setExpanded(true);
         hierarchy.setRoot(level.getSceneObject().getTreeItem());
 
-        //Add items from the Scene to it
+        // Add items from the Scene to it
         propertiesView.setRoot(level.getSceneObject().getPropertiesTreeItem());
 
         Tab levelSelectButton = FXCreator.levelSelectButton(level);
@@ -298,7 +301,7 @@ public class Main extends Application {
     }
 
     public static void enableAllButtons(boolean disable) {
-        for (int i : new int[]{1, 3}) {
+        for (int i : new int[] { 1, 3 }) {
             if (vBox.getChildren().get(i) instanceof ToolBar toolBar) {
                 for (Node node : toolBar.getItems()) {
                     node.setDisable(disable);
@@ -376,7 +379,8 @@ public class Main extends Application {
             if (object instanceof BallInstance) {
                 boolean alreadyIn = false;
                 for (_Ball ball : importedBalls) {
-                    if (ball.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type")) && ball.getVersion() == level.getVersion()) {
+                    if (ball.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type"))
+                            && ball.getVersion() == level.getVersion()) {
                         alreadyIn = true;
                         break;
                     }
@@ -396,7 +400,8 @@ public class Main extends Application {
                             importedBalls.add(ball2);
                         }
                     } catch (ParserConfigurationException | SAXException | IOException e) {
-                        if (!failedResources.contains("Ball: " + object.getAttribute("type") + " (version " + version + ")")) {
+                        if (!failedResources
+                                .contains("Ball: " + object.getAttribute("type") + " (version " + version + ")")) {
                             failedResources.add("Ball: " + object.getAttribute("type") + " (version " + version + ")");
                         }
                     }
@@ -425,11 +430,11 @@ public class Main extends Application {
             object.update();
         }
 
-        //Put everything in the hierarchy
+        // Put everything in the hierarchy
         level.getSceneObject().getTreeItem().setExpanded(true);
         hierarchy.setRoot(level.getSceneObject().getTreeItem());
 
-        //Add items from the Scene to it
+        // Add items from the Scene to it
         propertiesView.setRoot(level.getSceneObject().getPropertiesTreeItem());
 
         Tab levelSelectButton = FXCreator.levelSelectButton(level);
@@ -508,11 +513,11 @@ public class Main extends Application {
             object.update();
         }
 
-        //Put everything in the hierarchy
+        // Put everything in the hierarchy
         level.getSceneObject().getTreeItem().setExpanded(true);
         hierarchy.setRoot(level.getSceneObject().getTreeItem());
 
-        //Add items from the Scene to it
+        // Add items from the Scene to it
         propertiesView.setRoot(level.getSceneObject().getPropertiesTreeItem());
 
         Tab levelSelectButton = FXCreator.levelSelectButton(level);
@@ -534,9 +539,11 @@ public class Main extends Application {
     public static void saveLevel(double version) {
         try {
             if (version == 1.3) {
-                LevelExporter.saveAsXML(level, FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName(), version, false, true);
+                LevelExporter.saveAsXML(level, FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName(),
+                        version, false, true);
             } else {
-                LevelExporter.saveAsXML(level, FileManager.getNewWOGdir() + "\\res\\levels\\" + level.getLevelName(), version, false, true);
+                LevelExporter.saveAsXML(level, FileManager.getNewWOGdir() + "\\res\\levels\\" + level.getLevelName(),
+                        version, false, true);
             }
         } catch (IOException e) {
             Alarms.errorMessage(e);
@@ -549,22 +556,25 @@ public class Main extends Application {
     public static void playLevel() {
         if (level.getVersion() == 1.3) {
             try {
-                ProcessBuilder processBuilder = new ProcessBuilder(FileManager.getOldWOGdir() + "\\WorldOfGoo.exe", level.getLevelName());
+                ProcessBuilder processBuilder = new ProcessBuilder(FileManager.getOldWOGdir() + "\\WorldOfGoo.exe",
+                        level.getLevelName());
                 processBuilder.directory(new File(FileManager.getOldWOGdir()));
                 processBuilder.redirectErrorStream(true);
-                /*Process process = */processBuilder.start();
-                // BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                /* Process process = */processBuilder.start();
+                // BufferedReader reader = new BufferedReader(new
+                // InputStreamReader(process.getInputStream()));
                 // String line;
-                //while ((line = reader.readLine()) != null) {
-                //    System.out.println(line);
-                //}
+                // while ((line = reader.readLine()) != null) {
+                // System.out.println(line);
+                // }
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
         }
 
-        //TODO figure something out to play in 1.5
-        Alarms.errorMessage(new RuntimeException("Sorry, I have no idea how to make Steam/GOG/EPIC play specific World of Goo levels. It works for the 1.3 version though."));
+        // TODO figure something out to play in 1.5
+        Alarms.errorMessage(new RuntimeException(
+                "Sorry, I have no idea how to make Steam/GOG/EPIC play specific World of Goo levels. It works for the 1.3 version though."));
 
     }
 
@@ -585,8 +595,10 @@ public class Main extends Application {
 
         /* Change the names of the scene, level, resrc, addin, text files */
         for (File levelPart : new File(start + "\\res\\levels\\" + text).listFiles()) {
-            if (levelPart.getName().length() >= level.getLevelName().length() && levelPart.getName().startsWith(level.getLevelName())) {
-                levelPart.renameTo( new File(start + "\\res\\levels\\" + text + "\\" + text + levelPart.getName().substring(level.getLevelName().length())));
+            if (levelPart.getName().length() >= level.getLevelName().length()
+                    && levelPart.getName().startsWith(level.getLevelName())) {
+                levelPart.renameTo(new File(start + "\\res\\levels\\" + text + "\\" + text
+                        + levelPart.getName().substring(level.getLevelName().length())));
             }
         }
 
@@ -596,7 +608,8 @@ public class Main extends Application {
                 resource.setAttribute("id", "scene_" + text);
             } else if (resource instanceof ResrcImage || resource instanceof Sound) {
                 /* Change ID */
-                resource.setAttribute("id", resource.getAttribute("id").replaceAll(level.getLevelName().toUpperCase(), text.toUpperCase()));
+                resource.setAttribute("id",
+                        resource.getAttribute("id").replaceAll(level.getLevelName().toUpperCase(), text.toUpperCase()));
                 resource.setAttribute("path", resource.getAttribute("path").replaceAll(level.getLevelName(), text));
             }
         }
@@ -635,16 +648,22 @@ public class Main extends Application {
 
     public static void exportLevel(boolean includeAddinInfo) {
         FileChooser fileChooser = new FileChooser();
-        if (!Files.exists(Path.of((level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir()) + "\\res\\levels\\" + level.getLevelName() + "\\goomod"))) {
+        if (!Files.exists(Path.of((level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir())
+                + "\\res\\levels\\" + level.getLevelName() + "\\goomod"))) {
             try {
-                Files.createDirectories(Path.of((level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir()) + "\\res\\levels\\" + level.getLevelName() + "\\goomod"));
+                Files.createDirectories(
+                        Path.of((level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir())
+                                + "\\res\\levels\\" + level.getLevelName() + "\\goomod"));
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
         }
-        fileChooser.setInitialDirectory(new File((level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir()) + "\\res\\levels\\" + level.getLevelName() + "\\goomod"));
+        fileChooser.setInitialDirectory(
+                new File((level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir())
+                        + "\\res\\levels\\" + level.getLevelName() + "\\goomod"));
         fileChooser.setInitialFileName(level.getLevelName());
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("World of Goo mod (*.goomod)", "*.goomod"));
+        fileChooser.getExtensionFilters()
+                .add(new FileChooser.ExtensionFilter("World of Goo mod (*.goomod)", "*.goomod"));
         File export = fileChooser.showSaveDialog(stage);
 
         ArrayList<_Ball> balls = new ArrayList<>();
@@ -666,7 +685,8 @@ public class Main extends Application {
             redoActions.add(changes);
             for (UserAction change : changes) {
                 if (change instanceof AttributeChangeAction) {
-                    change.getObject().setAttribute(((AttributeChangeAction) change).getAttributeName(), ((AttributeChangeAction) change).getOldValue());
+                    change.getObject().setAttribute(((AttributeChangeAction) change).getAttributeName(),
+                            ((AttributeChangeAction) change).getOldValue());
                     propertiesView.refresh();
                 } else if (change instanceof ObjectCreationAction) {
                     deleteItem(change.getObject(), false);
@@ -692,9 +712,10 @@ public class Main extends Application {
             registerChange(changes);
             for (UserAction change : changes) {
                 if (change instanceof AttributeChangeAction) {
-                    change.getObject().setAttribute(((AttributeChangeAction) change).getAttributeName(), ((AttributeChangeAction) change).getNewValue());
+                    change.getObject().setAttribute(((AttributeChangeAction) change).getAttributeName(),
+                            ((AttributeChangeAction) change).getNewValue());
                 } else if (change instanceof ObjectCreationAction) {
-                    //TODO bug here with the index being out of bounds
+                    // TODO bug here with the index being out of bounds
                     create(change.getObject(), ((ObjectCreationAction) change).getPosition());
                 } else if (change instanceof ObjectDestructionAction) {
                     deleteItem(change.getObject(), false);
@@ -702,7 +723,7 @@ public class Main extends Application {
                     if (change.getObject() instanceof ResrcImage) {
                         importImage(new File(((ImportResourceAction) change).getPath()));
                     } else if (change.getObject() instanceof Sound) {
-                        //TODO make this work with loopsounds instead of just music
+                        // TODO make this work with loopsounds instead of just music
                         importMusic(new File(((ImportResourceAction) change).getPath()), false);
                     }
                 }
@@ -772,10 +793,10 @@ public class Main extends Application {
             for (EditorObject strand : level.getLevel()) {
                 if (strand instanceof Strand) {
                     if (object.getAttribute("id").equals(strand.getAttribute("gb1"))) {
-                        ((Strand) strand).setGoo1((BallInstance)object);
+                        ((Strand) strand).setGoo1((BallInstance) object);
                     }
                     if (object.getAttribute("id").equals(strand.getAttribute("gb2"))) {
-                        ((Strand) strand).setGoo2((BallInstance)object);
+                        ((Strand) strand).setGoo2((BallInstance) object);
                     }
                 }
             }
@@ -816,10 +837,11 @@ public class Main extends Application {
                     if (object instanceof BallInstance) {
                         fixGooball(object);
                     }
-                    //object.getParent().getChildren().add(0, object);
+                    // object.getParent().getChildren().add(0, object);
                     create(object, 0);
                     setSelected(object);
-                    registerChange(new ObjectCreationAction(object, hierarchy.getRow(object.getTreeItem()) - hierarchy.getRow(object.getParent().getTreeItem()) - 1));
+                    registerChange(new ObjectCreationAction(object, hierarchy.getRow(object.getTreeItem())
+                            - hierarchy.getRow(object.getParent().getTreeItem()) - 1));
                     redoActions.clear();
                     hierarchy.refresh();
                 }
@@ -887,11 +909,12 @@ public class Main extends Application {
                 setSelected(parent.getChildren().get(row - 1));
             }
             changeTableView(level.getSelected());
-            //hierarchy.getFocusModel().focus(row);
+            // hierarchy.getFocusModel().focus(row);
             hierarchy.getSelectionModel().select(hierarchy.getRow(level.getSelected().getTreeItem()));
             hierarchy.refresh();
         }
     }
+
     public static void registerChange(UserAction... actions) {
         userActions.add(actions);
         if (level.getEditingStatus() == WorldLevel.NO_UNSAVED_CHANGES) {
@@ -907,7 +930,7 @@ public class Main extends Application {
         if (levelChildren != null) {
             for (File resourceFile : levelChildren) {
                 if (resourceFile.getName().split("\\.")[0].equals(path)) {
-                    //noinspection ResultOfMethodCallIgnored
+                    // noinspection ResultOfMethodCallIgnored
                     resourceFile.delete();
                 }
             }
@@ -920,7 +943,10 @@ public class Main extends Application {
         /* Loop through all the images in the level's resources */
         for (EditorObject editorObject : level.getResources()) {
             if (editorObject instanceof ResrcImage) {
-                /* Ask the global resource manager to update the images to whatever's in the level file */
+                /*
+                 * Ask the global resource manager to update the images to whatever's in the
+                 * level file
+                 */
                 try {
                     GlobalResourceManager.updateResource(editorObject.getAttribute("REALid"), level.getVersion());
                 } catch (FileNotFoundException e) {
@@ -969,15 +995,19 @@ public class Main extends Application {
             String imgPath = resrcFile.getPath();
 
             if (!resrcFile.getPath().contains("\\res\\")) {
-                ImageIO.write(image, "png", new File(path + "\\res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0] + ".png"));
-                imgPath = path + "\\res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0] + ".png";
+                ImageIO.write(image, "png", new File(path + "\\res\\levels\\" + level.getLevelName() + "\\"
+                        + resrcFile.getName().split("\\.")[0] + ".png"));
+                imgPath = path + "\\res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]
+                        + ".png";
             }
 
-            String imageResourceName = "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_" + resrcFile.getName().split("\\.")[0].toUpperCase();
+            String imageResourceName = "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_"
+                    + resrcFile.getName().split("\\.")[0].toUpperCase();
             EditorObject imageResourceObject = EditorObject.create("Image", new EditorAttribute[0], null);
 
             imageResourceObject.setAttribute("id", imageResourceName);
-            imageResourceObject.setAttribute("path", "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
+            imageResourceObject.setAttribute("path",
+                    "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
 
             int whereToPlaceResource = 0;
             int count = 0;
@@ -990,7 +1020,8 @@ public class Main extends Application {
 
             level.getResources().add(imageResourceObject);
             imageResourceObject.setParent(level.getResourcesObject().getChildren().get(0), whereToPlaceResource);
-            level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource, imageResourceObject.getTreeItem());
+            level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource,
+                    imageResourceObject.getTreeItem());
 
             registerChange(new ImportResourceAction(imageResourceObject, imgPath));
 
@@ -1005,7 +1036,8 @@ public class Main extends Application {
         fixString(newTextObject);
         level.getText().add(newTextObject);
         setSelected(newTextObject);
-        registerChange(new ObjectCreationAction(newTextObject, level.getTextObject().getChildren().indexOf(newTextObject)));
+        registerChange(
+                new ObjectCreationAction(newTextObject, level.getTextObject().getChildren().indexOf(newTextObject)));
     }
 
     public static void cleanLevelResources() {
@@ -1050,7 +1082,7 @@ public class Main extends Application {
     }
 
     public static void confirmedCleanLevelResources(ArrayList<EditorObject> toClean) {
-        //TODO possibly add an undo event for this
+        // TODO possibly add an undo event for this
         for (EditorObject object : toClean) {
             deleteItem(object, false);
         }
@@ -1069,36 +1101,48 @@ public class Main extends Application {
 
     public static void importMusic(File resrcFile, boolean fromUser) {
 
-        /* If resrcFile is not already present in res\music, copy resrcFile into res\music.  */
+        /*
+         * If resrcFile is not already present in res\music, copy resrcFile into
+         * res\music.
+         */
 
         boolean alreadyInstalled = false;
         /* check for file in 1.3 version */
-        if (level.getVersion() == 1.3 && new File(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
+        if (level.getVersion() == 1.3
+                && new File(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
             alreadyInstalled = true;
         }
         /* check for file in 1.5 version */
-        if (level.getVersion() == 1.5 && new File(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
+        if (level.getVersion() == 1.5
+                && new File(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
             alreadyInstalled = true;
         }
         /* copy file */
         if (!alreadyInstalled) {
             try {
                 if (level.getVersion() == 1.3) {
-                    Files.copy(resrcFile.toPath(), Paths.get(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()));
+                    Files.copy(resrcFile.toPath(),
+                            Paths.get(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()));
                 } else if (level.getVersion() == 1.5) {
-                    Files.copy(resrcFile.toPath(), Paths.get(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()));
+                    Files.copy(resrcFile.toPath(),
+                            Paths.get(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()));
                 }
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
         }
 
-        /* Add a new sound resource with a default ID and path leading to resrcFile in res\music. */
-        String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_" + resrcFile.getName().split("\\.")[0].toUpperCase();
+        /*
+         * Add a new sound resource with a default ID and path leading to resrcFile in
+         * res\music.
+         */
+        String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_"
+                + resrcFile.getName().split("\\.")[0].toUpperCase();
         EditorObject soundResourceObject = EditorObject.create("Sound", new EditorAttribute[0], null);
 
         soundResourceObject.setAttribute("id", soundResourceName);
-        soundResourceObject.setAttribute("path", "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
+        soundResourceObject.setAttribute("path",
+                "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
 
         int whereToPlaceResource = 0;
         int count = 0;
@@ -1111,14 +1155,16 @@ public class Main extends Application {
 
         level.getResources().add(soundResourceObject);
         soundResourceObject.setParent(level.getResourcesObject().getChildren().get(0), whereToPlaceResource);
-        level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource, soundResourceObject.getTreeItem());
+        level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource,
+                soundResourceObject.getTreeItem());
 
         /* If a music object already exists, change its sound attribute. */
         for (EditorObject music : level.getLevel()) {
             if (music instanceof Music) {
                 String oldID = music.getAttribute("id");
                 music.setAttribute("id", soundResourceName);
-                registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()), new AttributeChangeAction(music, "id", oldID, soundResourceName));
+                registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
+                        new AttributeChangeAction(music, "id", oldID, soundResourceName));
                 return;
             }
         }
@@ -1127,7 +1173,9 @@ public class Main extends Application {
         EditorObject musicObject = EditorObject.create("music", new EditorAttribute[0], level.getLevelObject());
         musicObject.setAttribute("id", soundResourceName);
         level.getLevel().add(musicObject);
-        registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()), new ObjectCreationAction(soundResourceObject, whereToPlaceResource), new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
+        registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
+                new ObjectCreationAction(soundResourceObject, whereToPlaceResource),
+                new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
 
     }
 
@@ -1144,36 +1192,48 @@ public class Main extends Application {
 
     public static void importLoopsound(File resrcFile, boolean fromUser) {
 
-        /* If resrcFile is not already present in res\music, copy resrcFile into res\music.  */
+        /*
+         * If resrcFile is not already present in res\music, copy resrcFile into
+         * res\music.
+         */
 
         boolean alreadyInstalled = false;
         /* check for file in 1.3 version */
-        if (level.getVersion() == 1.3 && new File(FileManager.getOldWOGdir() + "\\res\\sounds\\" + resrcFile.getName()).exists()) {
+        if (level.getVersion() == 1.3
+                && new File(FileManager.getOldWOGdir() + "\\res\\sounds\\" + resrcFile.getName()).exists()) {
             alreadyInstalled = true;
         }
         /* check for file in 1.5 version */
-        if (level.getVersion() == 1.5 && new File(FileManager.getNewWOGdir() + "\\res\\sounds\\" + resrcFile.getName()).exists()) {
+        if (level.getVersion() == 1.5
+                && new File(FileManager.getNewWOGdir() + "\\res\\sounds\\" + resrcFile.getName()).exists()) {
             alreadyInstalled = true;
         }
         /* copy file */
         if (!alreadyInstalled) {
             try {
                 if (level.getVersion() == 1.3) {
-                    Files.copy(resrcFile.toPath(), Paths.get(FileManager.getOldWOGdir() + "\\res\\sounds\\" + resrcFile.getName()));
+                    Files.copy(resrcFile.toPath(),
+                            Paths.get(FileManager.getOldWOGdir() + "\\res\\sounds\\" + resrcFile.getName()));
                 } else if (level.getVersion() == 1.5) {
-                    Files.copy(resrcFile.toPath(), Paths.get(FileManager.getNewWOGdir() + "\\res\\sounds\\" + resrcFile.getName()));
+                    Files.copy(resrcFile.toPath(),
+                            Paths.get(FileManager.getNewWOGdir() + "\\res\\sounds\\" + resrcFile.getName()));
                 }
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
         }
 
-        /* Add a new sound resource with a default ID and path leading to resrcFile in res\music. */
-        String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_" + resrcFile.getName().split("\\.")[0].toUpperCase();
+        /*
+         * Add a new sound resource with a default ID and path leading to resrcFile in
+         * res\music.
+         */
+        String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_"
+                + resrcFile.getName().split("\\.")[0].toUpperCase();
         EditorObject soundResourceObject = EditorObject.create("Sound", new EditorAttribute[0], null);
 
         soundResourceObject.setAttribute("id", soundResourceName);
-        soundResourceObject.setAttribute("path", "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
+        soundResourceObject.setAttribute("path",
+                "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
 
         int whereToPlaceResource = 0;
         int count = 0;
@@ -1186,14 +1246,16 @@ public class Main extends Application {
 
         level.getResources().add(soundResourceObject);
         soundResourceObject.setParent(level.getResourcesObject().getChildren().get(0), whereToPlaceResource);
-        level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource, soundResourceObject.getTreeItem());
+        level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource,
+                soundResourceObject.getTreeItem());
 
         /* If a music object already exists, change its sound attribute. */
         for (EditorObject music : level.getLevel()) {
             if (music instanceof Loopsound) {
                 String oldID = music.getAttribute("id");
                 music.setAttribute("id", soundResourceName);
-                registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()), new AttributeChangeAction(music, "id", oldID, soundResourceName));
+                registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
+                        new AttributeChangeAction(music, "id", oldID, soundResourceName));
                 return;
             }
         }
@@ -1202,8 +1264,9 @@ public class Main extends Application {
         EditorObject musicObject = EditorObject.create("loopsound", new EditorAttribute[0], level.getLevelObject());
         musicObject.setAttribute("id", soundResourceName);
         level.getLevel().add(musicObject);
-        registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()), new ObjectCreationAction(soundResourceObject, whereToPlaceResource), new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
-
+        registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
+                new ObjectCreationAction(soundResourceObject, whereToPlaceResource),
+                new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
 
     }
 
@@ -1269,8 +1332,8 @@ public class Main extends Application {
     }
 
     public static void addAnything(EditorObject obj, EditorObject parent) {
-        //obj.setTreeItem(new TreeItem<>(obj));
-        //parent.getTreeItem().getChildren().add(obj.getTreeItem());
+        // obj.setTreeItem(new TreeItem<>(obj));
+        // parent.getTreeItem().getChildren().add(obj.getTreeItem());
         hierarchy.scrollTo(hierarchy.getRow(obj.getTreeItem()));
         hierarchy.getSelectionModel().select(hierarchy.getRow(obj.getTreeItem()));
         obj.setLevel(level);
@@ -1278,24 +1341,28 @@ public class Main extends Application {
         setSelected(obj);
         changeTableView(level.getSelected());
 
-        registerChange(new ObjectCreationAction(obj, hierarchy.getRow(obj.getTreeItem()) - hierarchy.getRow(obj.getParent().getTreeItem())));
+        registerChange(new ObjectCreationAction(obj,
+                hierarchy.getRow(obj.getTreeItem()) - hierarchy.getRow(obj.getParent().getTreeItem())));
         redoActions.clear();
     }
 
-    /**Changes the id attribute of a BallInstance to give it a unique ID.
+    /**
+     * Changes the id attribute of a BallInstance to give it a unique ID.
      * IDs are given in the form of "goo[number]".
-     * @param obj The BallInstance to modify. */
+     *
+     * @param obj The BallInstance to modify.
+     */
     public static void fixGooball(EditorObject obj) {
 
-        //Create an array to store which id numbers are already taken by BallInstances.
+        // Create an array to store which id numbers are already taken by BallInstances.
         boolean[] taken = new boolean[level.getLevel().size()];
 
-        //Loop over all BallInstances in the level.
+        // Loop over all BallInstances in the level.
         for (EditorObject ball : level.getLevel()) {
             if (ball instanceof BallInstance) {
 
-                //Check if the ball's ID is "goo[number]".
-                //If it is, flag that number as already taken.
+                // Check if the ball's ID is "goo[number]".
+                // If it is, flag that number as already taken.
                 String id = ball.getAttribute("id");
                 if (id.length() > 3 && id.startsWith("goo")) {
                     try {
@@ -1306,7 +1373,8 @@ public class Main extends Application {
             }
         }
 
-        //Find the smallest available number to use as an ID and set the ball's ID attribute accordingly.
+        // Find the smallest available number to use as an ID and set the ball's ID
+        // attribute accordingly.
         int count = 0;
         while (taken[count]) {
             count++;
@@ -1314,22 +1382,26 @@ public class Main extends Application {
         obj.setAttribute("id", "goo" + count);
     }
 
-    /**Changes the id attribute of a text string to give it a unique ID.
+    /**
+     * Changes the id attribute of a text string to give it a unique ID.
      * IDs are given in the form of "TEXT_[level name]_STR[number]".
-     * @param obj The string to modify. */
+     *
+     * @param obj The string to modify.
+     */
     public static void fixString(EditorObject obj) {
 
-        //Create an array to store which id numbers are already taken by strings.
+        // Create an array to store which id numbers are already taken by strings.
         boolean[] taken = new boolean[level.getText().size()];
 
-        //Loop over all text strings in the level.
+        // Loop over all text strings in the level.
         for (EditorObject string : level.getText()) {
             if (string instanceof TextString) {
 
-                //Check if the string's ID is "TEXT_[level name]_STR[number]".
-                //If it is, flag that number as already taken.
+                // Check if the string's ID is "TEXT_[level name]_STR[number]".
+                // If it is, flag that number as already taken.
                 String id = string.getAttribute("id");
-                if (id.length() > 9 + level.getLevelName().length() && id.startsWith("TEXT_" + level.getLevelName().toUpperCase() + "_STR")) {
+                if (id.length() > 9 + level.getLevelName().length()
+                        && id.startsWith("TEXT_" + level.getLevelName().toUpperCase() + "_STR")) {
                     try {
                         taken[Integer.parseInt(id.substring(9 + level.getLevelName().length()))] = true;
                     } catch (Exception ignored) {
@@ -1338,7 +1410,8 @@ public class Main extends Application {
             }
         }
 
-        //Find the smallest available number to use as an ID and set the string's ID attribute accordingly.
+        // Find the smallest available number to use as an ID and set the string's ID
+        // attribute accordingly.
         int count = 0;
         while (taken[count]) {
             count++;
@@ -1356,7 +1429,6 @@ public class Main extends Application {
         level.getLevel().add(obj);
         addAnything(obj, parent);
     }
-
 
     public static void addLine(EditorObject parent) {
         Line obj = (Line) EditorObject.create("line", new EditorAttribute[0], parent);
@@ -1414,27 +1486,36 @@ public class Main extends Application {
     }
 
     public static void autoPipe() {
-        //TODO add undo events for the whole pipe
+        // TODO add undo events for the whole pipe
 
         /* Identify the level exit. If there is none, don't auto pipe. */
         for (EditorObject editorObject : level.getLevel().toArray(new EditorObject[0])) {
             if (editorObject instanceof Levelexit levelexit) {
 
                 /* Calculate the point closest to the scene from the level exit. */
-                double distanceToLeft = Math.abs(levelexit.getPosition("pos").getX() - level.getSceneObject().getDouble("minx"));
-                double distanceToRight = Math.abs(levelexit.getPosition("pos").getX() - level.getSceneObject().getDouble("maxx"));
-                double distanceToTop = Math.abs(levelexit.getPosition("pos").getY() - level.getSceneObject().getDouble("miny"));
-                double distanceToBottom = Math.abs(levelexit.getPosition("pos").getY() - level.getSceneObject().getDouble("maxy"));
+                double distanceToLeft = Math
+                        .abs(levelexit.getPosition("pos").getX() - level.getSceneObject().getDouble("minx"));
+                double distanceToRight = Math
+                        .abs(levelexit.getPosition("pos").getX() - level.getSceneObject().getDouble("maxx"));
+                double distanceToTop = Math
+                        .abs(levelexit.getPosition("pos").getY() - level.getSceneObject().getDouble("miny"));
+                double distanceToBottom = Math
+                        .abs(levelexit.getPosition("pos").getY() - level.getSceneObject().getDouble("maxy"));
 
                 Point2D closestPoint;
-                if (distanceToLeft <= distanceToRight && distanceToLeft <= distanceToTop && distanceToLeft <= distanceToBottom) {
-                    closestPoint = new Point2D(level.getSceneObject().getDouble("minx"), levelexit.getPosition("pos").getY());
+                if (distanceToLeft <= distanceToRight && distanceToLeft <= distanceToTop
+                        && distanceToLeft <= distanceToBottom) {
+                    closestPoint = new Point2D(level.getSceneObject().getDouble("minx"),
+                            levelexit.getPosition("pos").getY());
                 } else if (distanceToRight <= distanceToTop && distanceToRight <= distanceToBottom) {
-                    closestPoint = new Point2D(level.getSceneObject().getDouble("maxx"), levelexit.getPosition("pos").getY());
+                    closestPoint = new Point2D(level.getSceneObject().getDouble("maxx"),
+                            levelexit.getPosition("pos").getY());
                 } else if (distanceToTop <= distanceToBottom) {
-                    closestPoint = new Point2D(levelexit.getPosition("pos").getX(), level.getSceneObject().getDouble("miny"));
+                    closestPoint = new Point2D(levelexit.getPosition("pos").getX(),
+                            level.getSceneObject().getDouble("miny"));
                 } else {
-                    closestPoint = new Point2D(levelexit.getPosition("pos").getX(), level.getSceneObject().getDouble("maxy"));
+                    closestPoint = new Point2D(levelexit.getPosition("pos").getX(),
+                            level.getSceneObject().getDouble("maxy"));
                 }
 
                 /* Delete the old pipe. */
@@ -1444,7 +1525,9 @@ public class Main extends Application {
                     }
                 }
 
-                /* Create a pipe with a vertex at the level exit and at the scene intersection. */
+                /*
+                 * Create a pipe with a vertex at the level exit and at the scene intersection.
+                 */
                 EditorObject pipe = EditorObject.create("pipe", new EditorAttribute[0], level.getLevelObject());
                 EditorObject vertex1 = EditorObject.create("Vertex", new EditorAttribute[0], pipe);
                 vertex1.setAttribute("x", levelexit.getPosition("pos").getX());
@@ -1480,7 +1563,8 @@ public class Main extends Application {
     }
 
     public static void addLinearForcefield(EditorObject parent) {
-        Linearforcefield obj = (Linearforcefield) EditorObject.create("linearforcefield", new EditorAttribute[0], parent);
+        Linearforcefield obj = (Linearforcefield) EditorObject.create("linearforcefield", new EditorAttribute[0],
+                parent);
         obj.setAttribute("center", getScreenCenter().getX() + "," + getScreenCenter().getY());
         obj.setRealName("linearforcefield");
         level.getScene().add(obj);
@@ -1488,7 +1572,8 @@ public class Main extends Application {
     }
 
     public static void addRadialForcefield(EditorObject parent) {
-        Radialforcefield obj = (Radialforcefield) EditorObject.create("radialforcefield", new EditorAttribute[0], parent);
+        Radialforcefield obj = (Radialforcefield) EditorObject.create("radialforcefield", new EditorAttribute[0],
+                parent);
         obj.setAttribute("center", getScreenCenter().getX() + "," + getScreenCenter().getY());
         obj.setRealName("radialforcefield");
         level.getScene().add(obj);
@@ -1549,7 +1634,7 @@ public class Main extends Application {
         obj.setRealName("music");
         level.getLevel().add(obj);
         addAnything(obj, parent);
-        //possibly rework music logic?
+        // possibly rework music logic?
     }
 
     public static void addLoopsound(EditorObject parent) {
@@ -1638,9 +1723,11 @@ public class Main extends Application {
     public static void saveBallInVersion(String ball, double oldVersion, double newVersion) {
         try {
             if (newVersion == 1.3) {
-                LevelExporter.exportBallAsXML(FileManager.openBall(ball, oldVersion), FileManager.getOldWOGdir() + "\\res\\balls\\" + ball, 1.3, false);
+                LevelExporter.exportBallAsXML(FileManager.openBall(ball, oldVersion),
+                        FileManager.getOldWOGdir() + "\\res\\balls\\" + ball, 1.3, false);
             } else if (newVersion == 1.5) {
-                LevelExporter.exportBallAsXML(FileManager.openBall(ball, oldVersion), FileManager.getNewWOGdir() + "\\res\\balls\\" + ball, 1.5, false);
+                LevelExporter.exportBallAsXML(FileManager.openBall(ball, oldVersion),
+                        FileManager.getNewWOGdir() + "\\res\\balls\\" + ball, 1.5, false);
             }
         } catch (Exception e) {
             Alarms.errorMessage(e);
@@ -1698,7 +1785,8 @@ public class Main extends Application {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
 
                 if (level.getSelected() != null) {
-                    if (propertiesView.getEditingCell() == null || propertiesView.getFocusModel().focusedIndexProperty().get() == -1) {
+                    if (propertiesView.getEditingCell() == null
+                            || propertiesView.getFocusModel().focusedIndexProperty().get() == -1) {
                         propertiesView.edit(-1, null);
                     }
                     oldAttributes = level.getSelected().cloneAttributes();
@@ -1708,7 +1796,9 @@ public class Main extends Application {
                 if (mode == SELECTION) {
                     if (event.getX() < editorViewWidth && event.getY() > getMouseYOffset()) {
                         if (level.getSelected() != null) {
-                            dragSettings = level.getSelected().mouseIntersectingCorners((event.getX() - level.getOffsetX()) / level.getZoom(), (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                            dragSettings = level.getSelected().mouseIntersectingCorners(
+                                    (event.getX() - level.getOffsetX()) / level.getZoom(),
+                                    (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
                         }
                         if (dragSettings.getType() == DragSettings.NONE) {
                             EditorObject prevSelected = level.getSelected();
@@ -1716,14 +1806,21 @@ public class Main extends Application {
                             ArrayList<EditorObject> byDepth = Renderer.orderObjectsBySelectionDepth(level);
                             for (int i = byDepth.size() - 1; i >= 0; i--) {
                                 EditorObject object = byDepth.get(i);
-                                if (object.mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(), (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom()).getType() != DragSettings.NONE) {
+                                if (object.mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(),
+                                        (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom())
+                                        .getType() != DragSettings.NONE) {
                                     changeTableView(object);
                                     setSelected(object);
                                     object.getParent().getTreeItem().setExpanded(true);
                                     hierarchy.getSelectionModel().select(object.getTreeItem());
                                     break;
-                                    //} else if ((object instanceof Circle || object instanceof Rectangle || object instanceof Compositegeom || object instanceof Signpost) && object.getAttribute("image").length() > 0) {
-                                } else if (object.mouseImageIntersection((event.getX() - level.getOffsetX()) / level.getZoom(), (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom()).getType() != DragSettings.NONE) {
+                                    // } else if ((object instanceof Circle || object instanceof Rectangle || object
+                                    // instanceof Compositegeom || object instanceof Signpost) &&
+                                    // object.getAttribute("image").length() > 0) {
+                                } else if (object.mouseImageIntersection(
+                                        (event.getX() - level.getOffsetX()) / level.getZoom(),
+                                        (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom())
+                                        .getType() != DragSettings.NONE) {
                                     changeTableView(object);
                                     setSelected(object);
                                     object.getParent().getTreeItem().setExpanded(true);
@@ -1732,8 +1829,12 @@ public class Main extends Application {
                                 }
                             }
                             if (level.getSelected() != null && level.getSelected() == prevSelected) {
-                                DragSettings thisSettings = level.getSelected().mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(), (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
-                                DragSettings thisImageSettings = level.getSelected().mouseImageIntersection((event.getX() - level.getOffsetX()) / level.getZoom(), (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                                DragSettings thisSettings = level.getSelected().mouseIntersection(
+                                        (event.getX() - level.getOffsetX()) / level.getZoom(),
+                                        (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                                DragSettings thisImageSettings = level.getSelected().mouseImageIntersection(
+                                        (event.getX() - level.getOffsetX()) / level.getZoom(),
+                                        (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
                                 if (thisSettings.getType() != DragSettings.NONE) {
                                     scene.setCursor(Cursor.MOVE);
                                     dragSettings = thisSettings;
@@ -1746,12 +1847,21 @@ public class Main extends Application {
                     }
                 } else if (mode == STRAND) {
                     for (EditorObject ball : level.getLevel().toArray(new EditorObject[0])) {
-                        if (ball instanceof BallInstance && ball.mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(), (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom()).getType() != DragSettings.NONE) {
+                        if (ball instanceof BallInstance && ball
+                                .mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(),
+                                        (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom())
+                                .getType() != DragSettings.NONE) {
                             if (strand1Gooball == null) {
                                 strand1Gooball = ball;
                                 break;
                             }
                         }
+                    }
+                } else if (mode == ZOOM) {
+                    if (event.getX() < editorViewWidth && event.getY() > getMouseYOffset()) {
+                        scene.setCursor(Cursor.CLOSED_HAND);
+                        mouseStartX = event.getScreenX();
+                        mouseStartY = event.getScreenY();
                     }
                 }
             }
@@ -1766,19 +1876,41 @@ public class Main extends Application {
         mouseY = event.getY() - getMouseYOffset();
         if (level != null && level.getSelected() != null && dragSettings != null) {
 
-            //Calculate game-relative mouse coordinates.
+            // Calculate game-relative mouse coordinates.
             double gameRelativeMouseX = (mouseX - level.getOffsetX()) / level.getZoom();
             double gameRelativeMouseY = (mouseY - level.getOffsetY()) / level.getZoom();
 
-            //Update the selected object according to what kind of operation is being performed.
+            // Update the selected object according to what kind of operation is being
+            // performed.
             switch (dragSettings.getType()) {
-                case DragSettings.MOVE -> level.getSelected().dragFromMouse(gameRelativeMouseX, gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY());
-                case DragSettings.RESIZE -> level.getSelected().resizeFromMouse(gameRelativeMouseX, gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY(), dragSettings.getAnchorX(), dragSettings.getAnchorY());
-                case DragSettings.ROTATE -> level.getSelected().rotateFromMouse(gameRelativeMouseX, gameRelativeMouseY, dragSettings.getRotateAngleOffset());
-                case DragSettings.SETANCHOR -> level.getSelected().setAnchor(gameRelativeMouseX, gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY());
+                case DragSettings.MOVE -> level.getSelected().dragFromMouse(gameRelativeMouseX, gameRelativeMouseY,
+                        dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY());
+                case DragSettings.RESIZE -> level.getSelected().resizeFromMouse(gameRelativeMouseX, gameRelativeMouseY,
+                        dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY(), dragSettings.getAnchorX(),
+                        dragSettings.getAnchorY());
+                case DragSettings.ROTATE -> level.getSelected().rotateFromMouse(gameRelativeMouseX, gameRelativeMouseY,
+                        dragSettings.getRotateAngleOffset());
+                case DragSettings.SETANCHOR -> level.getSelected().setAnchor(gameRelativeMouseX, gameRelativeMouseY,
+                        dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY());
             }
 
             propertiesView.refresh();
+        }
+        if (level != null && mode == ZOOM) {
+            // Pan the canvas according to the mouse's movement.
+            level.setOffsetY(level.getOffsetY() + event.getScreenY() - mouseStartY);
+            level.setOffsetX(level.getOffsetX() + event.getScreenX() - mouseStartX);
+            mouseStartX = event.getScreenX();
+            mouseStartY = event.getScreenY();
+
+            // Apply the transformation to the canvas.
+            t = new Affine();
+            t.appendTranslation(level.getOffsetX(), level.getOffsetY());
+            t.appendScale(level.getZoom(), level.getZoom());
+            imageCanvas.getGraphicsContext2D().setTransform(t);
+
+            // Redraw the canvas.
+            Renderer.drawEverything(level, canvas, imageCanvas);
         }
     }
 
@@ -1790,7 +1922,9 @@ public class Main extends Application {
             mouseX = event.getX();
             mouseY = event.getY() - getMouseYOffset();
             if (level.getSelected() != null) {
-                DragSettings hit = level.getSelected().mouseIntersectingCorners((event.getX() - level.getOffsetX()) / level.getZoom(), (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                DragSettings hit = level.getSelected().mouseIntersectingCorners(
+                        (event.getX() - level.getOffsetX()) / level.getZoom(),
+                        (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
                 switch (hit.getType()) {
                     case DragSettings.NONE -> scene.setCursor(Cursor.DEFAULT);
                     case DragSettings.RESIZE -> scene.setCursor(Cursor.NE_RESIZE);
@@ -1810,10 +1944,11 @@ public class Main extends Application {
      * Called whenever the mouse is released.
      */
     public static void eventMouseReleased(MouseEvent event) {
-        //If the mouse was released inside the editor window:
-        if (event.getButton() == MouseButton.PRIMARY && event.getX() < splitPane.getDividerPositions()[0] * splitPane.getWidth() && level != null) {
-            //Record the changes made to the selected object.
-            //Clear all possible redos if changes have been made.
+        // If the mouse was released inside the editor window:
+        if (event.getButton() == MouseButton.PRIMARY
+                && event.getX() < splitPane.getDividerPositions()[0] * splitPane.getWidth() && level != null) {
+            // Record the changes made to the selected object.
+            // Clear all possible redos if changes have been made.
             if (level.getSelected() != null && level.getSelected() == oldSelected && oldAttributes != null) {
                 UserAction[] changes = level.getSelected().getUserActions(oldAttributes);
                 if (changes.length > 0) {
@@ -1822,18 +1957,22 @@ public class Main extends Application {
                 }
             }
 
-            //Reset the cursor's appearance.
+            // Reset the cursor's appearance.
             scene.setCursor(Cursor.DEFAULT);
 
-            //Clear all drag settings now that the mouse has been released.
+            // Clear all drag settings now that the mouse has been released.
             dragSettings = new DragSettings(DragSettings.NONE);
-            //If we have started placing a strand, attempt to complete the strand.
+            // If we have started placing a strand, attempt to complete the strand.
             if (mode == STRAND && strand1Gooball != null) {
                 for (EditorObject ball : level.getLevel().toArray(new EditorObject[0])) {
                     if (ball != strand1Gooball) {
-                        if (ball instanceof BallInstance && ball.mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(), (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom()).getType() != DragSettings.NONE) {
+                        if (ball instanceof BallInstance && ball
+                                .mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(),
+                                        (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom())
+                                .getType() != DragSettings.NONE) {
 
-                            EditorObject strand = EditorObject.create("Strand", new EditorAttribute[0], level.getLevelObject());
+                            EditorObject strand = EditorObject.create("Strand", new EditorAttribute[0],
+                                    level.getLevelObject());
 
                             strand.setAttribute("gb1", strand1Gooball.getAttribute("id"));
                             strand.setAttribute("gb2", ball.getAttribute("id"));
@@ -1855,10 +1994,10 @@ public class Main extends Application {
      * Called whenever the mouse wheel is scrolled.
      */
     public static void mouse_wheel_moved(ScrollEvent e) {
-        //If the mouse was scrolled inside the editor window:
+        // If the mouse was scrolled inside the editor window:
         if (e.getX() < splitPane.getDividerPositions()[0] * splitPane.getWidth() && level != null) {
 
-            //Calculate the new translation and scale.
+            // Calculate the new translation and scale.
             double amt = Math.pow(1.25, (e.getDeltaY() / 40));
 
             double oldTranslateX = level.getOffsetX();
@@ -1870,7 +2009,8 @@ public class Main extends Application {
             double mouseX = e.getX();
             double mouseY = e.getY() - getMouseYOffset();
 
-            if (oldScaleX * amt > 0.001 && oldScaleX * amt < 1000 && oldScaleY * amt > 0.001 && oldScaleY * amt < 1000) {
+            if (oldScaleX * amt > 0.001 && oldScaleX * amt < 1000 && oldScaleY * amt > 0.001
+                    && oldScaleY * amt < 1000) {
 
                 double newScaleX = oldScaleX * amt;
                 double newScaleY = oldScaleY * amt;
@@ -1878,7 +2018,7 @@ public class Main extends Application {
                 double newTranslateX = (int) ((oldTranslateX - mouseX) * amt + mouseX);
                 double newTranslateY = (int) ((oldTranslateY - mouseY) * amt + mouseY);
 
-                //Transform the canvas according to the updated translation and scale.
+                // Transform the canvas according to the updated translation and scale.
                 t = new Affine();
                 t.appendTranslation(newTranslateX, newTranslateY);
                 t.appendScale(newScaleX, newScaleY);
@@ -1896,21 +2036,26 @@ public class Main extends Application {
                         case DragSettings.ROTATE -> scene.setCursor(Cursor.OPEN_HAND);
                     }
 
-                    //Calculate game-relative mouse coordinates.
+                    // Calculate game-relative mouse coordinates.
                     double gameRelativeMouseX = (mouseX - newTranslateX) / newScaleX;
                     double gameRelativeMouseY = (mouseY - newTranslateY) / newScaleX;
 
-                    //Update the selected object according to what kind of operation is being performed.
+                    // Update the selected object according to what kind of operation is being
+                    // performed.
                     switch (dragSettings.getType()) {
-                        case DragSettings.MOVE -> level.getSelected().dragFromMouse(gameRelativeMouseX, gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY());
-                        case DragSettings.RESIZE -> level.getSelected().resizeFromMouse(gameRelativeMouseX, gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY(), dragSettings.getAnchorX(), dragSettings.getAnchorY());
-                        case DragSettings.ROTATE -> level.getSelected().rotateFromMouse(gameRelativeMouseX, gameRelativeMouseY, dragSettings.getRotateAngleOffset());
+                        case DragSettings.MOVE -> level.getSelected().dragFromMouse(gameRelativeMouseX,
+                                gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY());
+                        case DragSettings.RESIZE -> level.getSelected().resizeFromMouse(gameRelativeMouseX,
+                                gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY(),
+                                dragSettings.getAnchorX(), dragSettings.getAnchorY());
+                        case DragSettings.ROTATE -> level.getSelected().rotateFromMouse(gameRelativeMouseX,
+                                gameRelativeMouseY, dragSettings.getRotateAngleOffset());
                     }
 
                     propertiesView.refresh();
                 }
 
-                //Redraw the canvas.
+                // Redraw the canvas.
                 Renderer.drawEverything(level, canvas, imageCanvas);
             }
         }
@@ -1983,6 +2128,9 @@ public class Main extends Application {
     private static boolean SHIFT;
     private static boolean CTRL;
 
+    private static double mouseStartX;
+    private static double mouseStartY;
+
     public static WorldLevel getLevel() {
         return level;
     }
@@ -1991,7 +2139,7 @@ public class Main extends Application {
         level = _level;
         enableAllButtons(false);
 
-        //Transform the canvas according to the updated translation and scale.
+        // Transform the canvas according to the updated translation and scale.
         t = new Affine();
         t.appendTranslation(level.getOffsetX(), level.getOffsetY());
         t.appendScale(level.getZoom(), level.getZoom());
@@ -2011,20 +2159,29 @@ public class Main extends Application {
             } else {
                 vBox.getChildren().add(2, FXCreator.getNewGooballsToolbar());
             }
-            stage.setTitle(level.getLevelName() + " (version " + level.getVersion() + ") — World of Goo Anniversary Editor");
-            FXCreator.buttonShowHideAnim.setGraphic(new ImageView(level.isShowAnimations() ? WorldLevel.showHideAnim : WorldLevel.showHideAnim0));
-            FXCreator.buttonShowHideCamera.setGraphic(new ImageView(level.isShowCameras() ? WorldLevel.showHideCam1 : WorldLevel.showHideCam0));
-            FXCreator.buttonShowHideForcefields.setGraphic(new ImageView(level.isShowForcefields() ? WorldLevel.showHideForcefields1 : WorldLevel.showHideForcefields0));
-            FXCreator.buttonShowHideGeometry.setGraphic(new ImageView(level.isShowGeometry() ? WorldLevel.showHideGeometry1 : WorldLevel.showHideGeometry0));
+            stage.setTitle(
+                    level.getLevelName() + " (version " + level.getVersion() + ") — World of Goo Anniversary Editor");
+            FXCreator.buttonShowHideAnim.setGraphic(
+                    new ImageView(level.isShowAnimations() ? WorldLevel.showHideAnim : WorldLevel.showHideAnim0));
+            FXCreator.buttonShowHideCamera.setGraphic(
+                    new ImageView(level.isShowCameras() ? WorldLevel.showHideCam1 : WorldLevel.showHideCam0));
+            FXCreator.buttonShowHideForcefields.setGraphic(new ImageView(
+                    level.isShowForcefields() ? WorldLevel.showHideForcefields1 : WorldLevel.showHideForcefields0));
+            FXCreator.buttonShowHideGeometry.setGraphic(new ImageView(
+                    level.isShowGeometry() ? WorldLevel.showHideGeometry1 : WorldLevel.showHideGeometry0));
             switch (level.getShowGoos()) {
                 case 0 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs0));
                 case 1 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs1));
                 case 2 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs2));
             }
-            FXCreator.buttonShowHideGraphics.setGraphic(new ImageView(level.isShowGraphics() ? WorldLevel.showHideImages1 : WorldLevel.showHideImages0));
-            FXCreator.buttonShowHideLabels.setGraphic(new ImageView(level.isShowLabels() ? WorldLevel.showHideLabels1 : WorldLevel.showHideLabels0));
-            FXCreator.buttonShowHideParticles.setGraphic(new ImageView(level.isShowParticles() ? WorldLevel.showHideParticles1 : WorldLevel.showHideParticles0));
-            FXCreator.buttonShowHideSceneBGColor.setGraphic(new ImageView(level.isShowSceneBGColor() ? WorldLevel.showHideSceneBGColor1 : WorldLevel.showHideSceneBGColor0));
+            FXCreator.buttonShowHideGraphics.setGraphic(
+                    new ImageView(level.isShowGraphics() ? WorldLevel.showHideImages1 : WorldLevel.showHideImages0));
+            FXCreator.buttonShowHideLabels.setGraphic(
+                    new ImageView(level.isShowLabels() ? WorldLevel.showHideLabels1 : WorldLevel.showHideLabels0));
+            FXCreator.buttonShowHideParticles.setGraphic(new ImageView(
+                    level.isShowParticles() ? WorldLevel.showHideParticles1 : WorldLevel.showHideParticles0));
+            FXCreator.buttonShowHideSceneBGColor.setGraphic(new ImageView(
+                    level.isShowSceneBGColor() ? WorldLevel.showHideSceneBGColor1 : WorldLevel.showHideSceneBGColor0));
             changeTableView(level.getSelected());
             goToSelectedInHierarchy();
         }
@@ -2071,17 +2228,26 @@ public class Main extends Application {
         return a + (b - a) * c;
     }
 
-    public static Point2D lineBoxIntersection(double x1, double y1, double theta, double x2, double y2, double sizeX, double sizeY, double rotation) {
+    public static Point2D lineBoxIntersection(double x1, double y1, double theta, double x2, double y2, double sizeX,
+            double sizeY, double rotation) {
 
-        Point2D topLeft = EditorObject.rotate(new Point2D(x2 - sizeX / 2, y2 - sizeY / 2), -rotation, new Point2D(x2, y2));
-        Point2D topRight = EditorObject.rotate(new Point2D(x2 + sizeX / 2, y2 - sizeY / 2), -rotation, new Point2D(x2, y2));
-        Point2D bottomLeft = EditorObject.rotate(new Point2D(x2 - sizeX / 2, y2 + sizeY / 2), -rotation, new Point2D(x2, y2));
-        Point2D bottomRight = EditorObject.rotate(new Point2D(x2 + sizeX / 2, y2 + sizeY / 2), -rotation, new Point2D(x2, y2));
+        Point2D topLeft = EditorObject.rotate(new Point2D(x2 - sizeX / 2, y2 - sizeY / 2), -rotation,
+                new Point2D(x2, y2));
+        Point2D topRight = EditorObject.rotate(new Point2D(x2 + sizeX / 2, y2 - sizeY / 2), -rotation,
+                new Point2D(x2, y2));
+        Point2D bottomLeft = EditorObject.rotate(new Point2D(x2 - sizeX / 2, y2 + sizeY / 2), -rotation,
+                new Point2D(x2, y2));
+        Point2D bottomRight = EditorObject.rotate(new Point2D(x2 + sizeX / 2, y2 + sizeY / 2), -rotation,
+                new Point2D(x2, y2));
 
-        Point2D top = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), topRight.getX(), topRight.getY());
-        Point2D bottom = lineLineSegmentIntersection(x1, y1, -theta, bottomLeft.getX(), bottomLeft.getY(), bottomRight.getX(), bottomRight.getY());
-        Point2D left = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
-        Point2D right = lineLineSegmentIntersection(x1, y1, -theta, topRight.getX(), topRight.getY(), bottomRight.getX(), bottomRight.getY());
+        Point2D top = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), topRight.getX(),
+                topRight.getY());
+        Point2D bottom = lineLineSegmentIntersection(x1, y1, -theta, bottomLeft.getX(), bottomLeft.getY(),
+                bottomRight.getX(), bottomRight.getY());
+        Point2D left = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), bottomLeft.getX(),
+                bottomLeft.getY());
+        Point2D right = lineLineSegmentIntersection(x1, y1, -theta, topRight.getX(), topRight.getY(),
+                bottomRight.getX(), bottomRight.getY());
 
         Point2D origin = new Point2D(x1, y1);
 
@@ -2108,8 +2274,10 @@ public class Main extends Application {
         return right;
     }
 
-    public static Point2D lineLineSegmentIntersection(double x1, double y1, double theta, double x2, double y2, double x3, double y3) {
-        //System.out.println(x1 + ", " + y1 + ", " + theta + ", " + x2 + ", " + y2 + ", " + x3 + ", " + y3);
+    public static Point2D lineLineSegmentIntersection(double x1, double y1, double theta, double x2, double y2,
+            double x3, double y3) {
+        // System.out.println(x1 + ", " + y1 + ", " + theta + ", " + x2 + ", " + y2 + ",
+        // " + x3 + ", " + y3);
         if (y3 == y2) {
             y3 += 0.00001;
         }
@@ -2121,11 +2289,12 @@ public class Main extends Application {
         double y = (x - x1) * Math.tan(theta) + y1;
 
         double bruh = 0.01;
-        //System.out.println(x + ", " + y);
-        //System.out.println(y + ", " + ((x - x2) * m + y2));
-        //385.94690307546693, 682.9469030754669
-        if (x > Math.min(x2, x3) - bruh && x < Math.max(x2, x3) + bruh && y > Math.min(y2, y3) - bruh && y < Math.max(y2, y3) + bruh) {
-            //System.out.println("e");
+        // System.out.println(x + ", " + y);
+        // System.out.println(y + ", " + ((x - x2) * m + y2));
+        // 385.94690307546693, 682.9469030754669
+        if (x > Math.min(x2, x3) - bruh && x < Math.max(x2, x3) + bruh && y > Math.min(y2, y3) - bruh
+                && y < Math.max(y2, y3) + bruh) {
+            // System.out.println("e");
             return new Point2D(x, y);
         } else {
             return null;
@@ -2143,7 +2312,8 @@ public class Main extends Application {
                     String anim = object.getAttribute("anim");
                     if (!anim.equals("")) {
                         for (WoGAnimation animation : animations) {
-                            if (animation.getName().equals(anim + ".anim.binuni") || animation.getName().equals(anim + ".anim.binltl")) {
+                            if (animation.getName().equals(anim + ".anim.binuni")
+                                    || animation.getName().equals(anim + ".anim.binltl")) {
                                 object.updateWithAnimation(animation, timeElapsed);
                             }
                         }
@@ -2155,7 +2325,8 @@ public class Main extends Application {
 
     public static boolean hasAnimation(String potential) {
         for (WoGAnimation animation : animations) {
-            if (animation.getName().equals(potential + ".anim.binuni") || animation.getName().equals(potential + ".anim.binltl")) {
+            if (animation.getName().equals(potential + ".anim.binuni")
+                    || animation.getName().equals(potential + ".anim.binltl")) {
                 return true;
             }
         }
@@ -2170,7 +2341,8 @@ public class Main extends Application {
 
         if (level != null) {
             if (level.isShowSceneBGColor()) {
-                imageCanvas.getGraphicsContext2D().setFill(Paint.valueOf(level.getSceneObject().getColor("backgroundcolor").toHexRGBA()));
+                imageCanvas.getGraphicsContext2D()
+                        .setFill(Paint.valueOf(level.getSceneObject().getColor("backgroundcolor").toHexRGBA()));
                 imageCanvas.getGraphicsContext2D().fillRect(-5000000, -5000000, 10000000, 10000000);
             } else {
                 imageCanvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
@@ -2188,7 +2360,7 @@ public class Main extends Application {
         return particles;
     }
 
-    //TODO okay somehow a scenelayer got stuck to my cursor, fix that ok thanks
+    // TODO okay somehow a scenelayer got stuck to my cursor, fix that ok thanks
 
     public static EditorObject generateBlankAddinObject(String levelName) {
         EditorObject addin = EditorObject.create("Addin_addin", new EditorAttribute[0], null);
@@ -2220,15 +2392,14 @@ public class Main extends Application {
 
     private final static Stack<UserAction[]> userActions = new Stack<>();
 
-
     private static void importGameResources(double version) {
 
         System.out.println("lag 1 (decrypting global resource file)");
 
         ArrayList<String> allFailedResources = new ArrayList<>();
 
-        //Open resources.xml for 1.3
-        //This takes forever to finish
+        // Open resources.xml for 1.3
+        // This takes forever to finish
         if (version == 1.3 && FileManager.isHasOldWOG()) {
             try {
                 ArrayList<EditorObject> resources = FileManager.openResources(1.3);
@@ -2244,8 +2415,8 @@ public class Main extends Application {
             }
         }
 
-        //Open resources.xml for 1.5
-        //This happens instantly
+        // Open resources.xml for 1.5
+        // This happens instantly
         if (version == 1.5 && FileManager.isHasNewWOG()) {
             try {
                 ArrayList<EditorObject> resources = FileManager.openResources(1.5);
@@ -2274,7 +2445,8 @@ public class Main extends Application {
                             particle.update();
                         }
                     } catch (Exception e) {
-                        allFailedResources.add("Particle: " + particle.getParent().getAttribute("name") + " (version 1.3)");
+                        allFailedResources
+                                .add("Particle: " + particle.getParent().getAttribute("name") + " (version 1.3)");
                     }
                 }
             } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -2295,7 +2467,8 @@ public class Main extends Application {
                             particle.update();
                         }
                     } catch (Exception e) {
-                        allFailedResources.add("Particle: " + particle.getParent().getAttribute("name") + " (version 1.5)");
+                        allFailedResources
+                                .add("Particle: " + particle.getParent().getAttribute("name") + " (version 1.5)");
                     }
                 }
             } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -2303,7 +2476,7 @@ public class Main extends Application {
             }
         }
 
-        //Load all animations from the game files
+        // Load all animations from the game files
         try {
             if (version == 1.3 && FileManager.isHasOldWOG()) {
                 File bruh1 = new File(FileManager.getOldWOGdir() + "\\res\\anim");
@@ -2408,22 +2581,22 @@ public class Main extends Application {
 
         levelSelectPane = new TabPane();
 
-        //Initialize stage name/icon
+        // Initialize stage name/icon
         stage.setTitle("World of Goo Anniversary Editor");
 
         stage.setScene(new Scene(new Pane()));
         stage.show();
         try {
             stage.getIcons().add(FileManager.getIcon("ButtonIcons\\icon.png"));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //Make menu that currently does nothing
+        // Make menu that currently does nothing
         try {
             MenuBar bar = FXCreator.createMenu();
 
-            //Import all goo balls and all misc resources from the game files
+            // Import all goo balls and all misc resources from the game files
 
             importGameResources(1.3);
             importGameResources(1.5);
@@ -2453,7 +2626,7 @@ public class Main extends Application {
 
             System.out.println("lag 3 (making buttons)");
 
-            //Initialize both canvasses
+            // Initialize both canvasses
             canvas = new Canvas();
             canvas.setWidth(1400);
             canvas.setHeight(1100);
@@ -2462,15 +2635,16 @@ public class Main extends Application {
             imageCanvas.setWidth(1400);
             imageCanvas.setHeight(1100);
 
-            //Ask FXCreator for both TreeTableViews
+            // Ask FXCreator for both TreeTableViews
             hierarchy = FXCreator.makeHierarchy();
             propertiesView = FXCreator.makePropertiesView();
 
-            //Configure PropertiesView
+            // Configure PropertiesView
             propertiesView.prefWidthProperty().bind(hierarchy.widthProperty());
-            propertiesView.setRoot(new TreeItem<>(new EditorAttribute(null,"", "", "", new InputField("", InputField.ANY), false)));
+            propertiesView.setRoot(
+                    new TreeItem<>(new EditorAttribute(null, "", "", "", new InputField("", InputField.ANY), false)));
 
-            //Combine everything weirdly
+            // Combine everything weirdly
             splitPane = new SplitPane();
             thingPane = new Pane(imageCanvas);
             StackPane pane = new StackPane(thingPane, new Pane(canvas));
@@ -2490,7 +2664,8 @@ public class Main extends Application {
             separator.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    double height = mouseY + getMouseYOffset() - vBox.getChildren().get(4).getLayoutY() - ((TabPane) viewPane.getChildren().get(1)).getHeight() - 2;
+                    double height = mouseY + getMouseYOffset() - vBox.getChildren().get(4).getLayoutY()
+                            - ((TabPane) viewPane.getChildren().get(1)).getHeight() - 2;
                     hierarchy.setMinHeight(height);
                     hierarchy.setMaxHeight(height);
                     hierarchy.setPrefHeight(height);
@@ -2524,12 +2699,14 @@ public class Main extends Application {
                 public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
                     int numTabs = Main.getLevelSelectPane().getTabs().size();
                     double tabSize = 1 / (numTabs + 1.0);
-                    Main.getLevelSelectPane().setTabMaxWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
-                    Main.getLevelSelectPane().setTabMinWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
+                    Main.getLevelSelectPane()
+                            .setTabMaxWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
+                    Main.getLevelSelectPane()
+                            .setTabMinWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
                 }
             });
 
-            //Combine everything inside a VBox
+            // Combine everything inside a VBox
             vBox = new VBox(bar);
             try {
                 FXCreator.buttons(vBox);
@@ -2544,7 +2721,7 @@ public class Main extends Application {
 
             vBox.getChildren().add(splitPane);
 
-            //Event handlers
+            // Event handlers
             stage.addEventFilter(MouseEvent.MOUSE_PRESSED, Main::eventMousePressed);
             stage.addEventFilter(MouseEvent.MOUSE_RELEASED, Main::eventMouseReleased);
             stage.addEventFilter(MouseEvent.MOUSE_DRAGGED, Main::eventMouseDragged);
@@ -2554,7 +2731,7 @@ public class Main extends Application {
             stage.addEventFilter(KeyEvent.KEY_RELEASED, Main::keyReleased);
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            scene = new Scene(vBox,  screenSize.width * 0.75, screenSize.height * 0.75 - 30);
+            scene = new Scene(vBox, screenSize.width * 0.75, screenSize.height * 0.75 - 30);
             scene.getStylesheets().add("style.css");
             stage.setScene(scene);
 
@@ -2574,7 +2751,8 @@ public class Main extends Application {
             imageCanvas.heightProperty().bind(splitPane.heightProperty());
             splitPane.maxHeightProperty().bind(stage.heightProperty());
             splitPane.prefHeightProperty().bind(stage.heightProperty());
-            propertiesView.prefHeightProperty().bind(viewPane.heightProperty().subtract(propertiesView.layoutYProperty()).subtract(100));
+            propertiesView.prefHeightProperty()
+                    .bind(viewPane.heightProperty().subtract(propertiesView.layoutYProperty()).subtract(100));
 
             levelSelectPane.setTabDragPolicy(TabPane.TabDragPolicy.REORDER);
             levelSelectPane.setStyle("-fx-open-tab-animation: NONE");
@@ -2619,7 +2797,7 @@ public class Main extends Application {
                     resumeLevelClosing();
                 }
             });
-            //LevelExporter.exportBallAsXML(Main.getImportedBalls().get(0), "");
+            // LevelExporter.exportBallAsXML(Main.getImportedBalls().get(0), "");
         } catch (FileNotFoundException e) {
             Alarms.errorMessage(e);
         }
