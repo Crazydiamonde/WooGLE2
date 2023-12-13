@@ -1816,6 +1816,8 @@ public class Main extends Application {
                                     setSelected(object);
                                     object.getParent().getTreeItem().setExpanded(true);
                                     hierarchy.getSelectionModel().select(object.getTreeItem());
+                                    // Scroll to this position in the selection model
+                                    hierarchy.scrollTo(hierarchy.getRow(object.getTreeItem()));
                                     break;
                                     // } else if ((object instanceof Circle || object instanceof Rectangle || object
                                     // instanceof Compositegeom || object instanceof Signpost) &&
