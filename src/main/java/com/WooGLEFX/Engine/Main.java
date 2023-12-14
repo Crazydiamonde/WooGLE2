@@ -2652,7 +2652,7 @@ public class Main extends Application {
             thingPane = new Pane(imageCanvas);
             StackPane pane = new StackPane(thingPane, new Pane(canvas));
             Separator separator = new Separator();
-            viewPane = new VBox(hierarchy, hierarchySwitcherButtons, separator, propertiesView);
+            viewPane = new VBox(hierarchy, separator, hierarchySwitcherButtons, propertiesView);
             separator.hoverProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
@@ -2667,8 +2667,7 @@ public class Main extends Application {
             separator.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    double height = mouseY + getMouseYOffset() - vBox.getChildren().get(4).getLayoutY()
-                            - ((TabPane) viewPane.getChildren().get(1)).getHeight() - 2;
+                    double height = mouseY + getMouseYOffset() - vBox.getChildren().get(4).getLayoutY() - 2;
                     hierarchy.setMinHeight(height);
                     hierarchy.setMaxHeight(height);
                     hierarchy.setPrefHeight(height);
