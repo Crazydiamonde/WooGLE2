@@ -1305,6 +1305,10 @@ public class FXCreator {
                     Main.getLevelSelectPane().setMaxHeight(0);
                 }
                 tab.getTabPane().getTabs().remove(tab);
+                // If all tabs are closed, clear the side pane
+                if (tab.getTabPane() == null || tab.getTabPane().getTabs() == null || tab.getTabPane().getTabs().size() == 0) {
+                    Main.hierarchy.setRoot(null);
+                }
             }
         });
 
@@ -1317,8 +1321,8 @@ public class FXCreator {
                     case "Scene" -> Main.hierarchy.setRoot(level.getSceneObject().getTreeItem());
                     case "Level" -> Main.hierarchy.setRoot(level.getLevelObject().getTreeItem());
                     case "Resrc" -> Main.hierarchy.setRoot(level.getResourcesObject().getTreeItem());
-                    case "Addin" -> Main.hierarchy.setRoot(level.getAddinObject().getTreeItem());
                     case "Text" -> Main.hierarchy.setRoot(level.getTextObject().getTreeItem());
+                    case "Addin" -> Main.hierarchy.setRoot(level.getAddinObject().getTreeItem());
                 }
 
                 switch (level.getCurrentlySelectedSection()) {
