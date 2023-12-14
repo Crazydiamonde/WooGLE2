@@ -239,7 +239,7 @@ public class Main extends Application {
         ArrayList<EditorObject> resourcesList = new ArrayList<>();
         resourcesList.add(EditorObject.create("ResourceManifest", new EditorAttribute[0], null));
         ArrayList<EditorObject> addinList = new ArrayList<>();
-        addinList.add(EditorObject.create("Addin_addin", new EditorAttribute[0], null));
+        addinList.add(generateBlankAddinObject(name));
         ArrayList<EditorObject> textList = new ArrayList<>();
         textList.add(EditorObject.create("strings", new EditorAttribute[0], null));
 
