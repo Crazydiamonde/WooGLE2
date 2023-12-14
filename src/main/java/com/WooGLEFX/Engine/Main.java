@@ -2401,9 +2401,6 @@ public class Main extends Application {
     private final static Stack<UserAction[]> userActions = new Stack<>();
 
     private static void importGameResources(double version) {
-
-        System.out.println("lag 1 (decrypting global resource file)");
-
         ArrayList<String> allFailedResources = new ArrayList<>();
 
         // Open resources.xml for 1.3
@@ -2632,8 +2629,6 @@ public class Main extends Application {
 
             }
 
-            System.out.println("lag 3 (making buttons)");
-
             // Initialize both canvasses
             canvas = new Canvas();
             canvas.setWidth(1400);
@@ -2794,7 +2789,6 @@ public class Main extends Application {
 
             hierarchy.sort();
 
-            System.out.println("started");
             EditorWindow editorWindow = new EditorWindow();
             editorWindow.start();
 

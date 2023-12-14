@@ -727,7 +727,6 @@ public class FXCreator {
                     db.setContent(content);
                     Main.setMoving(row.getItem());
                     Main.setOldDropIndex(row.getIndex());
-                    //System.out.println("started");
                     event.consume();
                 }
             });
@@ -749,7 +748,6 @@ public class FXCreator {
                 if (event.getDragboard().hasString()) {
 
                     if (!row.isEmpty()) {
-                        //System.out.println("ended");
                         int dropIndex = row.getIndex();
                         hierarchy.getTreeItem(Main.getOldDropIndex()).setValue(hierarchy.getTreeItem(dropIndex).getValue());
                         hierarchy.getTreeItem(dropIndex).setValue(Main.getMoving());
