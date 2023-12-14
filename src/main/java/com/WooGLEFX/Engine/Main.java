@@ -2754,7 +2754,7 @@ public class Main extends Application {
             splitPane.maxHeightProperty().bind(stage.heightProperty());
             splitPane.prefHeightProperty().bind(stage.heightProperty());
             propertiesView.prefHeightProperty()
-                    .bind(viewPane.heightProperty().subtract(propertiesView.layoutYProperty()).subtract(100));
+                    .bind(viewPane.heightProperty().subtract(propertiesView.layoutYProperty()));
 
             levelSelectPane.setTabDragPolicy(TabPane.TabDragPolicy.REORDER);
             levelSelectPane.setStyle("-fx-open-tab-animation: NONE");
