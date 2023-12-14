@@ -21,6 +21,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -178,6 +179,7 @@ public class Alarms {
         stage.setWidth(329);
         stage.setHeight(161);
 
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
         stage.setAlwaysOnTop(true);
         stage.setResizable(false);
