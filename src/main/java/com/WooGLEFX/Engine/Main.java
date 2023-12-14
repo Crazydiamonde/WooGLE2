@@ -491,7 +491,8 @@ public class Main extends Application {
         supremeAddToList(resourcesList, level.getResourcesObject().deepClone(null));
         supremeAddToList(sceneList, level.getSceneObject().deepClone(null));
         supremeAddToList(levelList, level.getLevelObject().deepClone(null));
-        supremeAddToList(addinList, level.getAddinObject().deepClone(null));
+        // Generate new addin object. idk why cloning it doesn't work, but this is arguably better anyway
+        supremeAddToList(addinList, generateBlankAddinObject(name));
         supremeAddToList(textList, level.getTextObject().deepClone(null));
 
         level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
