@@ -1327,8 +1327,8 @@ public class FXCreator {
                     case "Scene" -> Main.hierarchySwitcherButtons.getSelectionModel().select(0);
                     case "Level" -> Main.hierarchySwitcherButtons.getSelectionModel().select(1);
                     case "Resrc" -> Main.hierarchySwitcherButtons.getSelectionModel().select(2);
-                    case "Addin" -> Main.hierarchySwitcherButtons.getSelectionModel().select(3);
-                    case "Text" -> Main.hierarchySwitcherButtons.getSelectionModel().select(4);
+                    case "Text" -> Main.hierarchySwitcherButtons.getSelectionModel().select(3);
+                    case "Addin" -> Main.hierarchySwitcherButtons.getSelectionModel().select(4);
                 }
 
             } else {
