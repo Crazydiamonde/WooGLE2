@@ -147,8 +147,18 @@ public class Alarms {
         Label newLevelNameText = new Label(titleText);
         TextField enterNameHere = new TextField();
         Label typeItCorrectly = new Label("(Letters, Numbers and \"_\" only)");
+        // Set filter on TextField to allow for only letters, numbers and "_"
+        enterNameHere.textProperty().addListener((observableValue, s, t1) -> {
+            if (!t1.matches("[a-zA-Z0-9_]*")) {
+                enterNameHere.setText(t1.replaceAll("[^a-zA-Z0-9_]", ""));
+            }
+        });
 
         Button okButton = new Button(confirmText);
+        // Set okButton to be disabled if the TextField is empty
+        okButton.disableProperty().bind(enterNameHere.textProperty().isEmpty());
+        // Set okButton to be pressed if the user presses enter
+        enterNameHere.setOnAction(actionEvent -> okButton.fire());
         Button cancelButton = new Button("Cancel");
 
         newLevelNameText.setStyle("-fx-font-size: 11");
