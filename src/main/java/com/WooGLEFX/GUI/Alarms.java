@@ -153,12 +153,12 @@ public class Alarms {
         newLevelNameText.setStyle("-fx-font-size: 11");
         typeItCorrectly.setStyle("-fx-font-size: 11");
 
-        enterNameHere.setMinHeight(20);
-        enterNameHere.setPrefSize(291, 20);
-        okButton.setMinHeight(21);
-        okButton.setPrefSize(73, 21);
-        cancelButton.setMinHeight(21);
-        cancelButton.setPrefSize(73, 21);
+        enterNameHere.setMinHeight(25);
+        enterNameHere.setPrefSize(291, 25);
+        okButton.setMinHeight(25);
+        okButton.setPrefSize(73, 25);
+        cancelButton.setMinHeight(25);
+        cancelButton.setPrefSize(73, 25);
 
         HBox buttonBox = new HBox(okButton, cancelButton);
         buttonBox.setSpacing(8);
@@ -176,10 +176,11 @@ public class Alarms {
         stage.setScene(scene);
 
         stage.setWidth(329);
-        stage.setHeight(151);
+        stage.setHeight(161);
 
         stage.show();
         stage.setAlwaysOnTop(true);
+        stage.setResizable(false);
 
         switch (purpose) {
             case "new" -> {
