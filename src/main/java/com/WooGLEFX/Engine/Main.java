@@ -503,14 +503,17 @@ public class Main extends Application {
         enableAllButtons(false);
 
         for (EditorObject object : level.getScene()) {
+            object.setLevel(level);
             object.update();
         }
 
         for (EditorObject object : level.getLevel()) {
+            object.setLevel(level);
             object.update();
         }
 
         for (EditorObject object : level.getResources()) {
+            object.setLevel(level);
             object.update();
         }
 
