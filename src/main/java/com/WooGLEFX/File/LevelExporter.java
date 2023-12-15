@@ -538,6 +538,9 @@ public class LevelExporter {
                 for (EditorObject resource : ball.getResources()) {
                     if (resource instanceof ResrcImage) {
                         String ballFolder = start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\res\\balls\\" + ballName + "\\";
+                        if (resource.getAttribute("REALpath").contains("/")) {
+                            ballFolder += resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"));
+                        }
                         Path ballFolderPath = Path.of(ballFolder);
                         if (!Files.exists(ballFolderPath)) {
                             Files.createDirectories(ballFolderPath);
