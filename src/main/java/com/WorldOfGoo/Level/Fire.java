@@ -27,8 +27,7 @@ public class Fire extends EditorObject {
         setMetaAttributes(MetaEditorAttribute.parse("x,y,radius,particles,depth,"));
     }
 
-    @Override
-    public void update() {
+    private Particles findParticleFx() {
         for (EditorObject particle : Main.getParticles()) {
             if (particle.getAttribute("name") != null && particle.getAttribute("name").equals(getAttribute("particles"))) {
                 particleEffect = new Particles(this);
@@ -37,10 +36,31 @@ public class Fire extends EditorObject {
                 particleEffect.setAttribute("depth", getAttribute("depth"));
                 particleEffect.setAttribute("effect", getAttribute("particles"));
                 particleEffect.update();
+                return particleEffect;
             }
         }
-        setChangeListener("x", (observableValue, s, t1) -> particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y")));
-        setChangeListener("y", (observableValue, s, t1) -> particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y")));
+        return null;
+    }
+
+    @Override
+    public void update() {
+        findParticleFx();
+        setChangeListener("particles", (observableValue, s, t1) -> {
+            Particles found = findParticleFx();
+            if (found == null) {
+                particleEffect = null;
+            }
+        });
+        setChangeListener("x", (observableValue, s, t1) -> {
+            if (particleEffect != null) {
+                particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
+            }
+        });
+        setChangeListener("y", (observableValue, s, t1) -> {
+            if (particleEffect != null) {
+                particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
+            }
+        });
     }
 
     @Override
