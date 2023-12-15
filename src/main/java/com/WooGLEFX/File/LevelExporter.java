@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -519,7 +520,11 @@ public class LevelExporter {
                     }
                 }
                 try {
-                    Files.copy(Path.of(start + "\\" + resource.getAttribute("REALpath") + ".ogg"), Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath") + ".ogg"));
+                    Files.copy(
+                        Path.of(start + "\\" + resource.getAttribute("REALpath") + ".ogg"),
+                        Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath") + ".ogg"),
+                        StandardCopyOption.REPLACE_EXISTING
+                    );
                 } catch (Exception e) {
                     Alarms.errorMessage(e);
                 }
@@ -531,8 +536,14 @@ public class LevelExporter {
                 exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ball.getObjects().get(0).getAttribute("name"), level.getVersion(), true);
                 for (EditorObject resource : ball.getResources()) {
                     if (resource instanceof ResrcImage) {
-                        if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))))) {
-                            Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))));
+                        String realpath = resource.getAttribute("REALpath");
+                        // Create subfolder if required
+                        if (realpath.contains("/")) {
+                            realpath = realpath.substring(0, realpath.lastIndexOf("/"));
+                        }
+                        Path subfolder = Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + realpath);
+                        if (!Files.exists(subfolder)) {
+                            Files.createDirectories(subfolder);
                         }
                         BufferedImage oldImage = SwingFXUtils.fromFXImage(GlobalResourceManager.getImage(resource.getAttribute("id"), level.getVersion()), null);
                         File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath") + ".png");
