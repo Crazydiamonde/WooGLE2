@@ -533,20 +533,17 @@ public class LevelExporter {
 
         for (_Ball ball : balls) {
             try {
-                exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ball.getObjects().get(0).getAttribute("name"), level.getVersion(), true);
+                String ballName = ball.objects.get(0).getAttribute("name");
+                exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ballName, level.getVersion(), true);
                 for (EditorObject resource : ball.getResources()) {
                     if (resource instanceof ResrcImage) {
-                        String realpath = resource.getAttribute("REALpath");
-                        // Create subfolder if required
-                        if (realpath.contains("/")) {
-                            realpath = realpath.substring(0, realpath.lastIndexOf("/"));
-                        }
-                        Path subfolder = Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + realpath);
-                        if (!Files.exists(subfolder)) {
-                            Files.createDirectories(subfolder);
+                        String ballFolder = start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\res\\balls\\" + ballName + "\\";
+                        Path ballFolderPath = Path.of(ballFolder);
+                        if (!Files.exists(ballFolderPath)) {
+                            Files.createDirectories(ballFolderPath);
                         }
                         BufferedImage oldImage = SwingFXUtils.fromFXImage(GlobalResourceManager.getImage(resource.getAttribute("id"), level.getVersion()), null);
-                        File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath") + ".png");
+                        File newImageFile = new File(ballFolder + resource.getAttribute("REALpath") + ".png");
                         ImageIO.write(oldImage, "png", newImageFile);
                     }
                 }
