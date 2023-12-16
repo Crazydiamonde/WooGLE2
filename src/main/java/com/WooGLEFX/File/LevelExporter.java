@@ -65,22 +65,29 @@ public class LevelExporter {
         export += "\t".repeat(spaces) + "<" + object.getRealName() + " ";
         StringBuilder exportBuilder = new StringBuilder(export);
         for (EditorAttribute attribute : object.getAttributes()) {
+            String attributeName = attribute.getName();
             if (object instanceof Sound || object instanceof ResrcImage) {
-                if (attribute.getName().equals("REALid") || attribute.getName().equals("REALpath")) {
+                if (attributeName.equals("id") || attributeName.equals("path")) {
                     continue;
+                }
+                if (attributeName.equals("REALid")) {
+                    attributeName = "id";
+                }
+                if (attributeName.equals("REALpath")) {
+                    attributeName = "path";
                 }
             }
             if (!attribute.getValue().equals("") || attribute.getRequiredInFile()) {
-                if (ding && (attribute.getName().equals("up") || attribute.getName().equals("over") || attribute.getName().equals("disabled"))) {
-                    exportBuilder.append(attribute.getName()).append("=\"\" ");
+                if (ding && (attributeName.equals("up") || attributeName.equals("over") || attributeName.equals("disabled"))) {
+                    exportBuilder.append(attributeName).append("=\"\" ");
                 } else {
                     if (object instanceof Sound || object instanceof ResrcImage) {
-                        exportBuilder.append(attribute.getName()).append("=\"").append(attribute.getValue()).append("\" ");
+                        exportBuilder.append(attributeName).append("=\"").append(attribute.getValue()).append("\" ");
                     } else {
                         if (attribute.getValue().equals("") && attribute.getRequiredInFile()) {
-                            exportBuilder.append(attribute.getName()).append("=\"").append(attribute.getDefaultValue()).append("\" ");
+                            exportBuilder.append(attributeName).append("=\"").append(attribute.getDefaultValue()).append("\" ");
                         } else {
-                            exportBuilder.append(attribute.getName()).append("=\"").append(attribute.getValue()).append("\" ");
+                            exportBuilder.append(attributeName).append("=\"").append(attribute.getValue()).append("\" ");
                         }
                     }
                 }
@@ -416,10 +423,10 @@ public class LevelExporter {
         //TODO add XML comments to files
 
         String ballXML = recursiveXMLexport("", ball.objects.get(0), 0, true);
-        System.out.println(ballXML);
+        // System.out.println(ballXML);
 
         String resrcXML = recursiveXMLexport("", ball.resources.get(0), 0, true);
-        System.out.println(resrcXML);
+        // System.out.println(resrcXML);
 
         String name = ball.objects.get(0).getAttribute("name");
 
