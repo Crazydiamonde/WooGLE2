@@ -524,6 +524,10 @@ public class LevelExporter {
         }
         for (EditorObject resource : level.getResources()) {
             if (resource instanceof ResrcImage) {
+                if (BaseGameResources.containsImage(resource.getAttribute("path"))) {
+                    // Skip if base game image
+                    continue;
+                }
                 if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))))) {
                     try {
                         Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))));
@@ -539,6 +543,10 @@ public class LevelExporter {
                     Alarms.errorMessage(e);
                 }
             } else if (resource instanceof Sound) {
+                if (BaseGameResources.containsSound(resource.getAttribute("path"))) {
+                    // Skip if base game sound
+                    continue;
+                }
                 if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))))) {
                     try {
                         Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))));
@@ -575,6 +583,10 @@ public class LevelExporter {
                 for (EditorObject resource : ball.getResources()) {
                     if (resource instanceof ResrcImage) {
                         String realpath = resource.getAttribute("path");
+                        if (BaseGameResources.containsImage(realpath)) {
+                            // Skip if base game image
+                            continue;
+                        }
                         // Create subfolder if required
                         if (realpath.contains("/")) {
                             realpath = realpath.substring(0, realpath.lastIndexOf("/"));
