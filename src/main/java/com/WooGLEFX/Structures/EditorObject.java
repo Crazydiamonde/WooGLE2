@@ -323,6 +323,7 @@ public class EditorObject {
             toAdd.setAttribute(attribute.getName(), attribute.getDefaultValue());
         }
         toAdd.setTreeItem(new TreeItem<>(toAdd));
+        // Automatically add to parent
         if (toAdd.getParent() != null) {
             toAdd.getParent().getTreeItem().getChildren().add(toAdd.getTreeItem());
         }
@@ -354,8 +355,7 @@ public class EditorObject {
         }
 
         for (EditorObject child : getChildren()) {
-            EditorObject childClone = child.deepClone(clone);
-            clone.getTreeItem().getChildren().add(childClone.getTreeItem());
+            child.deepClone(clone);
         }
         return clone;
     }

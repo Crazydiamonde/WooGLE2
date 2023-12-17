@@ -548,17 +548,6 @@ public class Main extends Application {
         level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
         levelSelectPane.getSelectionModel().select(levelSelectButton);
         onSetLevel();
-
-        // Update JavaFX resources
-        for (EditorObject object : level.getResources()) {
-            if (object instanceof ResrcImage) {
-                try {
-                    GlobalResourceManager.updateResource(object.getAttribute("id"), version);
-                } catch (FileNotFoundException e) {
-                    Alarms.errorMessage(e);
-                }
-            }
-        }
     }
 
     public static void saveLevel(double version) {
