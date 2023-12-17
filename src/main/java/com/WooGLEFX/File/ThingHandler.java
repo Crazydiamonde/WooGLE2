@@ -6,6 +6,7 @@ import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Addin.AddinLevel;
+import com.WorldOfGoo.Addin.AddinLevelOCD;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import com.WorldOfGoo.Resrc.SetDefaults;
 import com.WorldOfGoo.Resrc.Sound;
@@ -73,6 +74,17 @@ public class ThingHandler extends DefaultHandler {
             }
             if (!total.toString().equals("\n\t") && !total.toString().equals("\n") && !total.toString().equals("\n\t\t") && !total.toString().equals("\n\t\t\t") && !total.toString().equals("")) {
                 currentObject.getAttributes()[0].setValue(total.toString());
+            }
+        }
+        // Sort OCD into type and value
+        if (currentObject instanceof AddinLevelOCD) {
+            String total = new String(ch, start, length);
+            if (!total.equals("\n\t") && !total.equals("\n") && !total.equals("\n\t\t") && !total.equals("\n\t\t\t") && !total.equals("")) {
+                // Split the string by the first comma
+                String[] splitString = total.split(",", 2);
+                // Set the type and value attributes
+                currentObject.setAttribute("type", splitString[0]);
+                currentObject.setAttribute("value", splitString[1]);
             }
         }
     }
