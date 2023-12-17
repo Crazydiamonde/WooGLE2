@@ -495,24 +495,34 @@ public class Main extends Application {
         supremeAddToList(addinList, generateBlankAddinObject(name));
         supremeAddToList(textList, level.getTextObject().deepClone(null));
 
+        String oldLevelName = level.getLevelName();
         level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
-
-        level.getResourcesObject().getChildren().get(0).setAttribute("id", "scene_" + name);
 
         level.setLevelName(name);
         enableAllButtons(false);
 
+        for (EditorObject object : level.getResources()) {
+            if (object instanceof Resources) {
+                object.setAttribute("id", "scene_" + name);
+            } else if (object instanceof ResrcImage || object instanceof Sound) {
+                object.setAttribute("id", object.getAttribute("id").replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
+                object.setAttribute("REALid", object.getAttribute("REALid").replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
+                object.setNameAttribute(object.getAttribute2("id"));
+            }
+            GlobalResourceManager.addResource(object, version);
+            object.setLevel(level);
+            object.update();
+        }
+
         for (EditorObject object : level.getScene()) {
+            if (object instanceof SceneLayer) {
+                object.setAttribute("image", object.getAttribute("image").replaceAll(oldLevelName, name));
+            }
             object.setLevel(level);
             object.update();
         }
 
         for (EditorObject object : level.getLevel()) {
-            object.setLevel(level);
-            object.update();
-        }
-
-        for (EditorObject object : level.getResources()) {
             object.setLevel(level);
             object.update();
         }
@@ -538,6 +548,17 @@ public class Main extends Application {
         level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
         levelSelectPane.getSelectionModel().select(levelSelectButton);
         onSetLevel();
+
+        // Update JavaFX resources
+        for (EditorObject object : level.getResources()) {
+            if (object instanceof ResrcImage) {
+                try {
+                    GlobalResourceManager.updateResource(object.getAttribute("id"), version);
+                } catch (FileNotFoundException e) {
+                    Alarms.errorMessage(e);
+                }
+            }
+        }
     }
 
     public static void saveLevel(double version) {
