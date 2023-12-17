@@ -498,6 +498,25 @@ public class LevelExporter {
 
     public static void exportGoomod(File file, WorldLevel level, ArrayList<_Ball> balls, boolean includeAddinInfo) {
         String start = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        // First things first, delete the goomod folder if it exists
+        if (Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod"))) {
+            try {
+                Files.walk(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod"))
+                    .sorted(java.util.Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            } catch (Exception e) {
+                Alarms.errorMessage(e);
+            }
+        }
+        // Delete the goomod zip if it exists
+        if (Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip"))) {
+            try {
+                Files.delete(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip"));
+            } catch (Exception e) {
+                Alarms.errorMessage(e);
+            }
+        }
         try {
             saveAsXML(level, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\levels\\" + level.getLevelName(), level.getVersion(), true, includeAddinInfo);
         } catch (Exception e) {
