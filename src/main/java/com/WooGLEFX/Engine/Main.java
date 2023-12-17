@@ -523,6 +523,9 @@ public class Main extends Application {
         }
 
         for (EditorObject object : level.getLevel()) {
+            if (object instanceof Signpost) {
+                object.setAttribute("image", object.getAttribute("image").replaceAll(oldLevelName, name));
+            }
             object.setLevel(level);
             object.update();
         }
