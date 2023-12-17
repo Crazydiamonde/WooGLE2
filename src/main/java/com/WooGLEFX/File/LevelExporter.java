@@ -112,7 +112,7 @@ public class LevelExporter {
 
     public static String fullAddinXMLExport(String export, EditorObject object, int spaces) {
         if (object instanceof AddinLevelOCD) {
-            if (object.getAttribute("type").equals("")) {
+            if (object.getAttribute("type").equals("") && object.getAttribute("value").equals("")) {
                 export += "\t".repeat(spaces) + "<ocd />";
             } else {
                 export += "\t".repeat(spaces) + "<ocd>" + object.getAttribute("type") + "," + object.getAttribute("value") + "</ocd>";
