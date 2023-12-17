@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -538,9 +539,20 @@ public class LevelExporter {
             }
         }
 
+        // Keep track of exported balls
+        HashSet<String> exportedBalls = new HashSet<>();
         for (_Ball ball : balls) {
             try {
-                exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ball.getObjects().get(0).getAttribute("name"), level.getVersion(), true);
+                String ballName = ball.getObjects().get(0).getAttribute("name");
+                if (exportedBalls.contains(ballName)) {
+                    // Skip if already exported
+                    continue;
+                }
+                if (BaseGameResources.GOO_BALL_TYPES.contains(ballName)) {
+                    // Skip if base game ball
+                    continue;
+                }
+                exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ballName, level.getVersion(), true);
                 for (EditorObject resource : ball.getResources()) {
                     if (resource instanceof ResrcImage) {
                         String realpath = resource.getAttribute("path");
@@ -557,6 +569,7 @@ public class LevelExporter {
                         ImageIO.write(oldImage, "png", newImageFile);
                     }
                 }
+                exportedBalls.add(ballName);
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
