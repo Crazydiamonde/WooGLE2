@@ -223,8 +223,12 @@ public class Main extends Application {
                     FXCreator.saveLevelNewItem.setDisable(false);
                 }
             }
-            FXCreator.getOldGooballsToolbar().getItems().clear();
-            FXCreator.getNewGooballsToolbar().getItems().clear();
+            if(FXCreator.getOldGooballsToolbar() != null) {
+                FXCreator.getOldGooballsToolbar().getItems().clear();
+            }
+            if(FXCreator.getNewGooballsToolbar() != null) {
+                FXCreator.getNewGooballsToolbar().getItems().clear();
+            }
             FXCreator.addBallsTo();
             return true;
         }
