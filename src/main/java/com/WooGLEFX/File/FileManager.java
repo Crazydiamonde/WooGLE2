@@ -253,6 +253,13 @@ public class FileManager {
     }
 
     public static _Ball openBall(String ballName, double version) throws ParserConfigurationException, SAXException, IOException {
+
+        /* Make sure a ball from an invalid version isn't being opened (possible because of properties.xml) */
+        if (version == 1.3 && oldWOGdir.equals("") ||
+            version == 1.5 && newWOGdir.equals("")) {
+            return null;
+        }
+
         commonBallData = new ArrayList<>();
         commonBallResrcData = new ArrayList<>();
         SAXParserFactory factory = SAXParserFactory.newInstance();

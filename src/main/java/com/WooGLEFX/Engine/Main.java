@@ -136,6 +136,10 @@ public class Main extends Application {
     }
 
     public static void reloadWorldOfGoo(double version) {
+
+        FileManager.getPaletteBalls().clear();
+        FileManager.getPaletteVersions().clear();
+
         try {
             FileManager.readWOGdirs();
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -151,20 +155,25 @@ public class Main extends Application {
             String ballName = FileManager.getPaletteBalls().get(i);
             double ballVersion = FileManager.getPaletteVersions().get(i);
 
-            try {
-                _Ball ball = FileManager.openBall(ballName, ballVersion);
+            System.out.println(ballName + ", " + ballVersion);
 
-                for (EditorObject resrc : FileManager.commonBallResrcData) {
-                    GlobalResourceManager.addResource(resrc, ballVersion);
-                }
+            if (ballVersion == version) {
 
-                if (ball != null) {
-                    ball.makeImages(ballVersion);
-                    ball.setVersion(ballVersion);
-                    importedBalls.add(ball);
+                try {
+                    _Ball ball = FileManager.openBall(ballName, ballVersion);
+
+                    for (EditorObject resrc : FileManager.commonBallResrcData) {
+                        GlobalResourceManager.addResource(resrc, ballVersion);
+                    }
+
+                    if (ball != null) {
+                        ball.makeImages(ballVersion);
+                        ball.setVersion(ballVersion);
+                        importedBalls.add(ball);
+                    }
+                } catch (ParserConfigurationException | SAXException | IOException e) {
+                    Alarms.errorMessage(e);
                 }
-            } catch (ParserConfigurationException | SAXException | IOException e) {
-                Alarms.errorMessage(e);
             }
         }
     }
@@ -214,6 +223,9 @@ public class Main extends Application {
                     FXCreator.saveLevelNewItem.setDisable(false);
                 }
             }
+            FXCreator.getOldGooballsToolbar().getItems().clear();
+            FXCreator.getNewGooballsToolbar().getItems().clear();
+            FXCreator.addBallsTo();
             return true;
         }
     }
@@ -2589,6 +2601,16 @@ public class Main extends Application {
 
         try {
             FileManager.readWOGdirs();
+
+            /* Check that the world of goo directory from properties.txt actually points to a file */
+            /* This might require users to reset their WoG directory */
+            if (!FileManager.getOldWOGdir().equals("") && !Files.exists(Path.of(FileManager.getOldWOGdir()))) {
+                FileManager.setOldWOGdir("");
+            }
+            if (!FileManager.getNewWOGdir().equals("") && !Files.exists(Path.of(FileManager.getNewWOGdir()))) {
+                FileManager.setNewWOGdir("");
+            }
+
             if (FileManager.getOldWOGdir().equals("") && FileManager.getNewWOGdir().equals("")) {
                 Alarms.missingWOG();
             } else {
@@ -2624,8 +2646,14 @@ public class Main extends Application {
 
             // Import all goo balls and all misc resources from the game files
 
-            importGameResources(1.3);
-            importGameResources(1.5);
+            if (!FileManager.getOldWOGdir().equals("")) {
+                importGameResources(1.3);
+            }
+            if (!FileManager.getNewWOGdir().equals("")) {
+                importGameResources(1.5);
+            }
+
+            System.out.println(FileManager.isHasOldWOG());
 
             for (int i = 0; i < FileManager.getPaletteBalls().size(); i++) {
 

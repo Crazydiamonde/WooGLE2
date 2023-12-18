@@ -2,6 +2,9 @@ package com.WooGLEFX.File;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class SimpleHandler extends DefaultHandler {
 
     @Override
@@ -12,7 +15,7 @@ public class SimpleHandler extends DefaultHandler {
                 if (!attributes.getValue(attributes.getIndex("filepath")).equals("")) {
                     FileManager.setOldWOGdir(attributes.getValue(attributes.getIndex("filepath")));
                 }
-                if (!FileManager.getOldWOGdir().equals("")) {
+                if (!FileManager.getOldWOGdir().equals("") && Files.exists(Path.of(FileManager.getOldWOGdir()))) {
                     FileManager.setHasOldWOG(true);
                 }
             }
@@ -20,7 +23,7 @@ public class SimpleHandler extends DefaultHandler {
                 if (!attributes.getValue(attributes.getIndex("filepath")).equals("")) {
                     FileManager.setNewWOGdir(attributes.getValue(attributes.getIndex("filepath")));
                 }
-                if (!FileManager.getNewWOGdir().equals("")) {
+                if (!FileManager.getNewWOGdir().equals("") && Files.exists(Path.of(FileManager.getNewWOGdir()))) {
                     FileManager.setHasNewWOG(true);
                 }
             }
