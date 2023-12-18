@@ -1429,6 +1429,9 @@ public class FXCreator {
     public static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell) {
         ContextMenu contextMenu = new ContextMenu();
         EditorAttribute attribute = cell.getTableRow().getItem();
+        if (attribute == null) {
+            return contextMenu;
+        }
 
         switch (attribute.getInput().getType()) {
             case InputField.IMAGE, InputField.IMAGE_REQUIRED -> {
