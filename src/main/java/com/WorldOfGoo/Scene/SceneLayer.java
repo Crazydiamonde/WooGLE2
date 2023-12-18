@@ -115,7 +115,7 @@ public class SceneLayer extends EditorObject {
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            System.out.println("Image changed from " + oldValue + " to " + newValue);
+            // System.out.println("Image changed from " + oldValue + " to " + newValue);
             try {
                 image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));

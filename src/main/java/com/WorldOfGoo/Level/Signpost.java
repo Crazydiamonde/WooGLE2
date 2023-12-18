@@ -55,7 +55,7 @@ public class Signpost extends EditorObject {
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            System.out.println("Image changed from " + oldValue + " to " + newValue);
+            // System.out.println("Image changed from " + oldValue + " to " + newValue);
             try {
                 image = getImage("image");
                 Color color = getColor("colorize");

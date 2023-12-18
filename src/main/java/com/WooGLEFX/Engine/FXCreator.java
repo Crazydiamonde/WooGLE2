@@ -1387,6 +1387,8 @@ public class FXCreator {
                     Main.getLevelSelectPane().setMaxHeight(0);
                     // If all tabs are closed, clear the side pane
                     Main.hierarchy.setRoot(null);
+                    // Clear the properties pane too
+                    Main.changeTableView(null);
                 }
                 tab.getTabPane().getTabs().remove(tab);
             }
