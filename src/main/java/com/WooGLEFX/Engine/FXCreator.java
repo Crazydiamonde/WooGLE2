@@ -1385,13 +1385,10 @@ public class FXCreator {
                 if (tab.getTabPane().getTabs().size() == 1) {
                     Main.getLevelSelectPane().setMinHeight(0);
                     Main.getLevelSelectPane().setMaxHeight(0);
-                }
-                tab.getTabPane().getTabs().remove(tab);
-                // If all tabs are closed, clear the side pane
-                if (tab.getTabPane() == null || tab.getTabPane().getTabs() == null
-                        || tab.getTabPane().getTabs().size() == 0) {
+                    // If all tabs are closed, clear the side pane
                     Main.hierarchy.setRoot(null);
                 }
+                tab.getTabPane().getTabs().remove(tab);
             }
         });
 
