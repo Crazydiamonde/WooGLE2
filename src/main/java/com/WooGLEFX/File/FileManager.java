@@ -1,23 +1,29 @@
 package com.WooGLEFX.File;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
-import javafx.scene.image.Image;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javafx.scene.image.Image;
 
 
 public class FileManager {
@@ -90,6 +96,14 @@ public class FileManager {
         SAXParser saxParser = factory.newSAXParser();
         SimpleHandler defaultHandler = new SimpleHandler();
         File properties = new File(editorLocation + "properties.xml");
+        if (!properties.exists()) {
+            FileManager.setHasOldWOG(false);
+            FileManager.setOldWOGdir("");
+            FileManager.setHasNewWOG(false);
+            FileManager.setNewWOGdir("");
+            FileManager.setPaletteBalls(new ArrayList<>());
+            return;
+        }
         saxParser.parse(properties, defaultHandler);
     }
 
