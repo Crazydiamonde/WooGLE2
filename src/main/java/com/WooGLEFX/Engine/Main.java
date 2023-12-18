@@ -968,6 +968,7 @@ public class Main extends Application {
                     GlobalResourceManager.updateResource(editorObject.getAttribute("REALid"), level.getVersion());
                 } catch (FileNotFoundException e) {
                     failedToLoad.append(editorObject.getAttribute("REALid")).append("\n");
+                    e.printStackTrace();
                 }
             }
         }
@@ -1024,6 +1025,9 @@ public class Main extends Application {
 
             imageResourceObject.setAttribute("id", imageResourceName);
             imageResourceObject.setAttribute("path",
+                    "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
+            imageResourceObject.setAttribute("REALid", imageResourceName);
+            imageResourceObject.setAttribute("REALpath",
                     "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
 
             int whereToPlaceResource = 0;
