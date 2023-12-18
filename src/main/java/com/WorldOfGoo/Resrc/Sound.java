@@ -1,7 +1,6 @@
 package com.WorldOfGoo.Resrc;
 
 import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 

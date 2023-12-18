@@ -1,17 +1,20 @@
 package com.WooGLEFX.GUI;
 
+import java.io.File;
+
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.File;
 
 public class LevelSelector extends Application {
 
@@ -192,6 +195,7 @@ public class LevelSelector extends Application {
 
         stage.setScene(new Scene(all, 400, 375));
         stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
 
     }

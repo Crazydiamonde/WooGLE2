@@ -1,7 +1,6 @@
 package com.WooGLEFX.EditorObjects;
 
 import com.WooGLEFX.Engine.Main;
-import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WorldOfGoo.Ball.Part;

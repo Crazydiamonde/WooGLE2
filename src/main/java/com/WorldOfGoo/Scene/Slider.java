@@ -1,13 +1,13 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.Structures.*;
+import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
-import javafx.scene.canvas.Canvas;
+
 import javafx.scene.canvas.GraphicsContext;
 
 public class Slider extends EditorObject {
@@ -39,10 +39,10 @@ public class Slider extends EditorObject {
 
             Position axis = Position.parse(getAttribute("axis"));
             double magnitude = Math.sqrt(axis.getX() * axis.getX() + axis.getY() * axis.getY());
-            double theta = Math.asin(axis.getY() / magnitude);
-            if (axis.getX() < 0) {
-                theta *= -1;
-            }
+            // double theta = Math.asin(axis.getY() / magnitude);
+            // if (axis.getX() < 0) {
+            //     theta *= -1;
+            // }
 
             double dx = axis.getX() / magnitude;
             double dy = axis.getY() / magnitude;

@@ -1,20 +1,19 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.Engine.Collision.RectangleCollision;
-import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.GlobalResourceManager;
+import java.io.FileNotFoundException;
+
+import com.WooGLEFX.EditorObjects.GeometryImage;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.EditorObjects.GeometryImage;
+import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.GUI.Alarms;
-import com.WooGLEFX.Structures.*;
+import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import com.WooGLEFX.Structures.SimpleStructures.Position;
+
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-
-import java.io.FileNotFoundException;
 
 public class Rectangle extends EditorObject {
 

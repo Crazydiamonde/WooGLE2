@@ -1,23 +1,23 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.GlobalResourceManager;
+import java.util.HexFormat;
+
+import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.GUI.Alarms;
-import com.WooGLEFX.Structures.*;
+import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 import com.WorldOfGoo.Ball.BallStrand;
+
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
-
-import java.util.HexFormat;
 
 public class Strand extends EditorObject {
 
@@ -48,7 +48,6 @@ public class Strand extends EditorObject {
         this.strand = strand;
     }
 
-    private int strandomSeed;
     //TODO make strands selectable
     public Strand(EditorObject _parent) {
         super(_parent);
@@ -112,10 +111,10 @@ public class Strand extends EditorObject {
         }
     }
 
-    private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
-        double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
-        return new Point2D(x, m1 * (x - x1) + y1);
-    }
+    // private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
+    //     double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
+    //     return new Point2D(x, m1 * (x - x1) + y1);
+    // }
 
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {

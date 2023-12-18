@@ -1,26 +1,20 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.GUI.Alarms;
-import com.WooGLEFX.Structures.*;
+import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WorldOfGoo.Scene.Compositegeom;
 import com.WorldOfGoo.Scene.SceneLayer;
+
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.transform.Affine;
-
-import java.io.FileNotFoundException;
 
 public class Signpost extends EditorObject {
 
@@ -61,7 +55,7 @@ public class Signpost extends EditorObject {
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            System.out.println("Image changed from " + oldValue + " to " + newValue);
+            // System.out.println("Image changed from " + oldValue + " to " + newValue);
             try {
                 image = getImage("image");
                 Color color = getColor("colorize");

@@ -1,7 +1,5 @@
 package com.WooGLEFX.Engine.Collision;
 
-import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
-
 public class RectangleCollision {
 
     public static boolean solidRectangleCollision(double pointX, double pointY, double rectCenterX, double rectCenterY, double rectWidth, double rectHeight) {

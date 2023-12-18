@@ -1,45 +1,65 @@
 package com.WooGLEFX.Engine;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
+import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.GUI.PaletteReconfigurator;
+import com.WooGLEFX.Structures.EditorAttribute;
+import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.Structures.WorldLevel;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
-import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
-import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Ball.Part;
 import com.WorldOfGoo.Resrc.ResrcImage;
+
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
-import javafx.scene.layout.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class FXCreator {
 
@@ -199,15 +219,19 @@ public class FXCreator {
                             double screenX = myX + toWriteOn.getWidth() / 2.0 - img.getWidth() * scale / 2;
                             double screenY = -myY + toWriteOn.getHeight() / 2.0 - img.getHeight() * scale / 2;
 
-                            writeGraphics.drawImage(SwingFXUtils.fromFXImage(img, null), (int) screenX, (int) screenY, (int) (img.getWidth() * scale), (int) (img.getHeight() * scale), null);
+                            writeGraphics.drawImage(SwingFXUtils.fromFXImage(img, null), (int) screenX, (int) screenY,
+                                    (int) (img.getWidth() * scale), (int) (img.getHeight() * scale), null);
 
                             if (((Part) part).getPupilImage() != null) {
                                 Image pupilImage = ((Part) part).getPupilImage();
 
                                 double screenX2 = myX + toWriteOn.getWidth() / 2.0 - pupilImage.getWidth() * scale / 2;
-                                double screenY2 = -myY + toWriteOn.getHeight() / 2.0 - pupilImage.getHeight() * scale / 2;
+                                double screenY2 = -myY + toWriteOn.getHeight() / 2.0
+                                        - pupilImage.getHeight() * scale / 2;
 
-                                writeGraphics.drawImage(SwingFXUtils.fromFXImage(pupilImage, null), (int) screenX2, (int) screenY2, (int) (pupilImage.getWidth() * scale), (int) (pupilImage.getHeight() * scale), null);
+                                writeGraphics.drawImage(SwingFXUtils.fromFXImage(pupilImage, null), (int) screenX2,
+                                        (int) screenY2, (int) (pupilImage.getWidth() * scale),
+                                        (int) (pupilImage.getHeight() * scale), null);
                             }
                         }
                     }
@@ -217,20 +241,24 @@ public class FXCreator {
 
             double scaleFactor = (double) size / Math.max(toWriteOn.getWidth(), toWriteOn.getHeight());
 
-            java.awt.Image tmp = toWriteOn.getScaledInstance((int) (toWriteOn.getWidth() * scaleFactor), (int) (toWriteOn.getHeight() * scaleFactor), java.awt.Image.SCALE_SMOOTH);
-            BufferedImage dimg = new BufferedImage((int) (toWriteOn.getWidth() * scaleFactor), (int) (toWriteOn.getHeight() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
+            java.awt.Image tmp = toWriteOn.getScaledInstance((int) (toWriteOn.getWidth() * scaleFactor),
+                    (int) (toWriteOn.getHeight() * scaleFactor), java.awt.Image.SCALE_SMOOTH);
+            BufferedImage dimg = new BufferedImage((int) (toWriteOn.getWidth() * scaleFactor),
+                    (int) (toWriteOn.getHeight() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D g2d = dimg.createGraphics();
             g2d.drawImage(tmp, 0, 0, null);
             g2d.dispose();
 
             idk.setGraphic(new ImageView(SwingFXUtils.toFXImage(dimg, null)));
-            idk.setOnAction(e -> Main.addBall(Main.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
+            idk.setOnAction(
+                    e -> Main.addBall(Main.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
             return idk;
         } else {
             Button idk = new Button();
             idk.setPrefSize(size, size);
-            idk.setOnAction(e -> Main.addBall(Main.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
+            idk.setOnAction(
+                    e -> Main.addBall(Main.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
             return idk;
         }
     }
@@ -240,7 +268,8 @@ public class FXCreator {
         int i = 0;
         for (String paletteBall : FileManager.getPaletteBalls()) {
             for (_Ball ball : Main.getImportedBalls()) {
-                if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall) && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
+                if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall)
+                        && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
                     Button button = createTemplateForBall(size, ball);
                     if (ball.getVersion() == 1.3) {
                         oldGooballsToolbar.getItems().add(button);
@@ -295,7 +324,6 @@ public class FXCreator {
     public static Button buttonSetMusic = new Button();
     public static Button buttonSetLoopsound = new Button();
     public static Button buttonSelectMoveAndResize = new Button();
-    public static Button buttonZoomAndPanView = new Button();
     public static Button buttonStrandMode = new Button();
     public static Button buttonShowHideCamera = new Button();
     public static Button buttonShowHideForcefields = new Button();
@@ -306,8 +334,6 @@ public class FXCreator {
     public static Button buttonShowHideLabels = new Button();
     public static Button buttonShowHideAnim = new Button();
     public static Button buttonShowHideSceneBGColor = new Button();
-
-
 
     public static Button addLineButton = new Button();
     public static Button addRectangleButton = new Button();
@@ -324,7 +350,7 @@ public class FXCreator {
     public static Button addSignpostButton = new Button();
     public static Button addLabelButton = new Button();
 
-    public static void buttons (VBox vBox) throws IOException {
+    public static void buttons(VBox vBox) throws IOException {
 
         ToolBar functionsToolbar = new ToolBar();
 
@@ -345,24 +371,34 @@ public class FXCreator {
         buttonCopy.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
         buttonPaste.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
         buttonDelete.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
-        buttonUpdateLevelResources.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
+        buttonUpdateLevelResources
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
         buttonImportImages.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
-        buttonAddTextResource.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
-        buttonCleanResources.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
+        buttonAddTextResource
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
+        buttonCleanResources
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
         buttonSetMusic.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
-        buttonSetLoopsound.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
-        buttonSelectMoveAndResize.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\selection_mode.png")));
-        buttonZoomAndPanView.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\zoom_mode.png")));
+        buttonSetLoopsound
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
+        buttonSelectMoveAndResize
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\selection_mode.png")));
         buttonStrandMode.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\strand_mode.png")));
         buttonShowHideCamera.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png")));
-        buttonShowHideForcefields.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png")));
-        buttonShowHideGeometry.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png")));
-        buttonShowHideGraphics.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png")));
+        buttonShowHideForcefields
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png")));
+        buttonShowHideGeometry
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png")));
+        buttonShowHideGraphics
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png")));
         buttonShowHideGoos.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png")));
-        buttonShowHideParticles.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png")));
-        buttonShowHideLabels.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png")));
+        buttonShowHideParticles
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png")));
+        buttonShowHideLabels
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png")));
         buttonShowHideAnim.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png")));
-        buttonShowHideSceneBGColor.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png")));
+        buttonShowHideSceneBGColor
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png")));
 
         buttonNewOld.setOnAction(e -> Main.newLevel(1.3));
         buttonNewNew.setOnAction(e -> Main.newLevel(1.5));
@@ -388,7 +424,7 @@ public class FXCreator {
         buttonSetMusic.setOnAction(e -> Main.importMusic());
         buttonSetLoopsound.setOnAction(e -> Main.importLoopsound());
         buttonSelectMoveAndResize.setOnAction(e -> Main.selectionMode());
-        buttonZoomAndPanView.setOnAction(e -> Main.zoomMode());
+        buttonSelectMoveAndResize.setStyle("-fx-background-color: #9999ff;"); // Highlighted by default
         buttonStrandMode.setOnAction(e -> Main.strandMode());
         buttonShowHideCamera.setOnAction(e -> Main.showHideCameras());
         buttonShowHideForcefields.setOnAction(e -> Main.showHideForcefields());
@@ -424,7 +460,6 @@ public class FXCreator {
         buttonSetMusic.setTooltip(new Tooltip("Set Music"));
         buttonSetLoopsound.setTooltip(new Tooltip("Set Loop Sound"));
         buttonSelectMoveAndResize.setTooltip(new Tooltip("Select, Move and Resize"));
-        buttonZoomAndPanView.setTooltip(new Tooltip("Zoom and Pan View"));
         buttonStrandMode.setTooltip(new Tooltip("Place Strands"));
         buttonShowHideCamera.setTooltip(new Tooltip("Show/Hide Camera"));
         buttonShowHideForcefields.setTooltip(new Tooltip("Show/Hide Force Fields"));
@@ -443,11 +478,14 @@ public class FXCreator {
         functionsToolbar.getItems().addAll(buttonUndo, buttonRedo, new Separator());
         functionsToolbar.getItems().addAll(buttonCut, buttonCopy, buttonPaste, new Separator());
         functionsToolbar.getItems().addAll(buttonDelete, new Separator());
-        functionsToolbar.getItems().addAll(buttonUpdateLevelResources, buttonImportImages, buttonAddTextResource, new Separator());
+        functionsToolbar.getItems().addAll(buttonUpdateLevelResources, buttonImportImages, buttonAddTextResource,
+                new Separator());
         functionsToolbar.getItems().addAll(buttonCleanResources, new Separator());
         functionsToolbar.getItems().addAll(buttonSetMusic, buttonSetLoopsound, new Separator());
-        functionsToolbar.getItems().addAll(buttonSelectMoveAndResize, buttonZoomAndPanView, buttonStrandMode, new Separator());
-        functionsToolbar.getItems().addAll(buttonShowHideCamera, buttonShowHideForcefields, buttonShowHideGeometry, buttonShowHideGraphics, buttonShowHideGoos, buttonShowHideParticles, buttonShowHideLabels, buttonShowHideAnim, buttonShowHideSceneBGColor, new Separator());
+        functionsToolbar.getItems().addAll(buttonSelectMoveAndResize, buttonStrandMode, new Separator());
+        functionsToolbar.getItems().addAll(buttonShowHideCamera, buttonShowHideForcefields, buttonShowHideGeometry,
+                buttonShowHideGraphics, buttonShowHideGoos, buttonShowHideParticles, buttonShowHideLabels,
+                buttonShowHideAnim, buttonShowHideSceneBGColor, new Separator());
 
         for (Node node : functionsToolbar.getItems()) {
             node.setDisable(true);
@@ -519,13 +557,16 @@ public class FXCreator {
         addRectangleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\rectangle.png")));
         addCircleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\circle.png")));
         addSceneLayerButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\SceneLayer.png")));
-        addCompositegeomButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\compositegeom.png")));
+        addCompositegeomButton
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\compositegeom.png")));
         addHingeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\hinge.png")));
         autoPipeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\pipe.png")));
         addVertexButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\Vertex.png")));
         addFireButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\fire.png")));
-        addLinearforcefieldButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\linearforcefield.png")));
-        addRadialforcefieldButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\radialforcefield.png")));
+        addLinearforcefieldButton
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\linearforcefield.png")));
+        addRadialforcefieldButton
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\radialforcefield.png")));
         addParticlesButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\particles.png")));
         addSignpostButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\signpost.png")));
         addLabelButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\label.png")));
@@ -560,9 +601,11 @@ public class FXCreator {
         addSignpostButton.setTooltip(new Tooltip("Add Signpost"));
         addLabelButton.setTooltip(new Tooltip("Add Label"));
 
-        addObjectsToolbar.getItems().addAll(addLineButton, addRectangleButton, addCircleButton, addSceneLayerButton, addCompositegeomButton, addHingeButton, new Separator());
+        addObjectsToolbar.getItems().addAll(addLineButton, addRectangleButton, addCircleButton, addSceneLayerButton,
+                addCompositegeomButton, addHingeButton, new Separator());
         addObjectsToolbar.getItems().addAll(autoPipeButton, addVertexButton, new Separator());
-        addObjectsToolbar.getItems().addAll(addFireButton, addLinearforcefieldButton, addRadialforcefieldButton, addParticlesButton, new Separator());
+        addObjectsToolbar.getItems().addAll(addFireButton, addLinearforcefieldButton, addRadialforcefieldButton,
+                addParticlesButton, new Separator());
         addObjectsToolbar.getItems().addAll(addSignpostButton, addLabelButton, new Separator());
 
         for (Node node : addObjectsToolbar.getItems()) {
@@ -582,16 +625,20 @@ public class FXCreator {
     public static final Paint notSelectedHoverPaint = Paint.valueOf("B0D0FFFF");
     public static final Paint selectedPaint = Paint.valueOf("0000D0FF");
 
-    /** Generates the TreeTableView representing all objects in a "scene", "level", or "resources" of a level.
-     * @return The TreeTableView. */
+    /**
+     * Generates the TreeTableView representing all objects in a "scene", "level",
+     * or "resources" of a level.
+     *
+     * @return The TreeTableView.
+     */
     public static TreeTableView<EditorObject> makeHierarchy() {
 
-        //Create the TreeTableView.
+        // Create the TreeTableView.
         TreeTableView<EditorObject> hierarchy = new TreeTableView<>();
 
         hierarchy.setPlaceholder(new Label());
 
-        //Create the columns the hierarchy uses ("Element" and its "ID or Name")
+        // Create the columns the hierarchy uses ("Element" and its "ID or Name")
         TreeTableColumn<EditorObject, String> hierarchyElements = new TreeTableColumn<>();
         hierarchyElements.setGraphic(new Label("Elements"));
         hierarchyElements.setCellValueFactory(new TreeItemPropertyValueFactory<>("realName"));
@@ -603,45 +650,50 @@ public class FXCreator {
 
         hierarchyNames.setCellValueFactory(param -> {
             if (param.getValue().getValue().getObjName() != null) {
-                if (param.getValue().getValue().getObjName2() != null && !param.getValue().getValue().getObjName2().getValue().equals("")) {
-                    return param.getValue().getValue().getObjName().valueProperty().concat(",").concat(param.getValue().getValue().getObjName2().valueProperty());
+                if (param.getValue().getValue().getObjName2() != null
+                        && !param.getValue().getValue().getObjName2().getValue().equals("")) {
+                    return param.getValue().getValue().getObjName().valueProperty().concat(",")
+                            .concat(param.getValue().getValue().getObjName2().valueProperty());
                 } else {
                     return param.getValue().getValue().getObjName().valueProperty();
                 }
             } else {
-                return new EditorAttribute(param.getValue().getValue(), "AAAAA", "AAAAA", "AAAAA", new InputField("AAAAA", InputField.ANY), false).valueProperty();
+                return new EditorAttribute(param.getValue().getValue(), "AAAAA", "AAAAA", "AAAAA",
+                        new InputField("AAAAA", InputField.ANY), false).valueProperty();
             }
         });
 
         hierarchy.getColumns().add(hierarchyNames);
 
-        hierarchyElements.setCellFactory(column -> new TreeTableCell<>(){
+        hierarchyElements.setCellFactory(column -> new TreeTableCell<>() {
 
             @Override
-            protected void updateItem(String item, boolean empty){
+            protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty){
-                    //If this is an empty cell, set its text and graphic to empty.
-                    //This prevents the cell from retaining other cells' information.
+                if (empty) {
+                    // If this is an empty cell, set its text and graphic to empty.
+                    // This prevents the cell from retaining other cells' information.
                     setText(null);
                     setGraphic(null);
                 } else {
-                    //Update this cell's text.
+                    // Update this cell's text.
                     setText(item);
-                    //Override the default padding that ruins the text.
+                    // Override the default padding that ruins the text.
                     setPadding(new Insets(0, 0, 0, 0));
 
                     if (getTableRow().getItem() != null) {
                         ImageView imageView;
 
                         try {
-                            imageView = new ImageView(FileManager.getObjectIcon(getTableRow().getItem().getClass().getSimpleName()));
+                            imageView = new ImageView(
+                                    FileManager.getObjectIcon(getTableRow().getItem().getClass().getSimpleName()));
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }
 
-                        //If the cell's EditorObject is invalid, display its graphic with a warning symbol.
-                        //Otherwise, just display its graphic.
+                        // If the cell's EditorObject is invalid, display its graphic with a warning
+                        // symbol.
+                        // Otherwise, just display its graphic.
                         if (!getTableRow().getItem().isValid()) {
                             ImageView failedImg = new ImageView(FileManager.getFailedImage());
                             setGraphic(new StackPane(imageView, failedImg));
@@ -658,21 +710,22 @@ public class FXCreator {
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
-                    //If this is an empty cell, set its text and graphic to empty.
-                    //This prevents the cell from retaining other cells' information.
+                    // If this is an empty cell, set its text and graphic to empty.
+                    // This prevents the cell from retaining other cells' information.
                     setText(null);
                     setGraphic(null);
                 } else {
-                    //setTextFill(Paint.valueOf("FFFFFFFF"));
-                    //Update this cell's text.
+                    // setTextFill(Paint.valueOf("FFFFFFFF"));
+                    // Update this cell's text.
                     setText(item);
-                    //Override the default padding that ruins the text.
+                    // Override the default padding that ruins the text.
                     setPadding(new Insets(0, 0, 0, 0));
                 }
             }
         });
 
-        //If a cell is clicked from the hierarchy, update the selected object and properties view.
+        // If a cell is clicked from the hierarchy, update the selected object and
+        // properties view.
         hierarchy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Main.setSelected(newValue.getValue());
@@ -680,7 +733,7 @@ public class FXCreator {
             }
         });
 
-        //Make the rows small.
+        // Make the rows small.
         hierarchy.setFixedCellSize(18);
 
         hierarchy.setRowFactory(treeTableView -> {
@@ -710,19 +763,18 @@ public class FXCreator {
                     db.setContent(content);
                     Main.setMoving(row.getItem());
                     Main.setOldDropIndex(row.getIndex());
-                    //System.out.println("started");
                     event.consume();
                 }
             });
 
             row.setOnDragExited(event -> {
-                //row.setStyle("");
+                // row.setStyle("");
             });
 
             row.setOnDragOver(event -> {
                 if (event.getDragboard().hasString()) {
                     event.acceptTransferModes(TransferMode.MOVE);
-                    //row.setStyle("-fx-font-size: 12pt, -fx-background-color: #D0F0FFFF");
+                    // row.setStyle("-fx-font-size: 12pt, -fx-background-color: #D0F0FFFF");
                 }
                 event.consume();
             });
@@ -732,12 +784,12 @@ public class FXCreator {
                 if (event.getDragboard().hasString()) {
 
                     if (!row.isEmpty()) {
-                        //System.out.println("ended");
                         int dropIndex = row.getIndex();
-                        hierarchy.getTreeItem(Main.getOldDropIndex()).setValue(hierarchy.getTreeItem(dropIndex).getValue());
+                        hierarchy.getTreeItem(Main.getOldDropIndex())
+                                .setValue(hierarchy.getTreeItem(dropIndex).getValue());
                         hierarchy.getTreeItem(dropIndex).setValue(Main.getMoving());
                         hierarchy.getSelectionModel().select(dropIndex);
-                        //row.setItem((EditorObject) db.getContent(null));
+                        // row.setItem((EditorObject) db.getContent(null));
 
                         success = true;
                     }
@@ -746,7 +798,6 @@ public class FXCreator {
                 event.consume();
             });
 
-
             return row;
         });
 
@@ -754,22 +805,26 @@ public class FXCreator {
 
         hierarchyNames.prefWidthProperty().bind(hierarchy.widthProperty().subtract(hierarchyElements.widthProperty()));
 
-        //hierarchy.getStyleClass().add("column-header");
+        // hierarchy.getStyleClass().add("column-header");
 
         return hierarchy;
     }
 
-    /** Creates the lower right "Properties" view.
+    /**
+     * Creates the lower right "Properties" view.
      * This is where an object's attributes are shown and can be modified.
-     * @return The TreeTableView configured to show object properties. */
-    public static TreeTableView<EditorAttribute> makePropertiesView(){
+     *
+     * @return The TreeTableView configured to show object properties.
+     */
+    public static TreeTableView<EditorAttribute> makePropertiesView() {
 
-        //Create the properties view.
+        // Create the properties view.
         TreeTableView<EditorAttribute> propertiesView = new TreeTableView<>();
 
         propertiesView.setPlaceholder(new Label());
 
-        //Create the columns the properties view uses (Attribute name and attribute value).
+        // Create the columns the properties view uses (Attribute name and attribute
+        // value).
         TreeTableColumn<EditorAttribute, String> name = new TreeTableColumn<>();
         name.setGraphic(new Label("Name"));
         name.setCellValueFactory(param -> param.getValue().getValue().nameProperty());
@@ -780,32 +835,35 @@ public class FXCreator {
         value.setCellValueFactory(param -> param.getValue().getValue().valueProperty());
         propertiesView.getColumns().add(value);
 
-        //Limit the width of the "names" column.
+        // Limit the width of the "names" column.
         name.setPrefWidth(200);
 
-        //Hide the empty "root" attribute. This allows all of its children to be displayed at once at the top of the TreeTableView.
+        // Hide the empty "root" attribute. This allows all of its children to be
+        // displayed at once at the top of the TreeTableView.
         propertiesView.setShowRoot(false);
 
-        //For each row of the properties view:
+        // For each row of the properties view:
         propertiesView.setRowFactory(tableView -> {
             final TreeTableRow<EditorAttribute> row = new TreeTableRow<>();
 
-            //Manually change the row's font size to prevent clipping.
+            // Manually change the row's font size to prevent clipping.
             row.setStyle("-fx-font-size: 11");
 
             row.hoverProperty().addListener((observable) -> {
                 if (row.isHover() && row.getItem() != null) {
-                    //If the user is hovering over this row, select it.
+                    // If the user is hovering over this row, select it.
                     propertiesView.getSelectionModel().select(row.getIndex());
                 } else {
-                    //If the user is not hovering over this row, deselect all rows.
-                    //This works because hovering off a row is processed before hovering onto another row.
+                    // If the user is not hovering over this row, deselect all rows.
+                    // This works because hovering off a row is processed before hovering onto
+                    // another row.
                     propertiesView.getSelectionModel().clearSelection();
                 }
             });
 
             row.pressedProperty().addListener((observable, oldValue, newValue) -> {
-                //If we are editing a cell with null content or an uneditable cell, cancel the edit.
+                // If we are editing a cell with null content or an uneditable cell, cancel the
+                // edit.
                 if (row.getTreeItem() == null || row.getTreeItem().getValue().getInput().getType() == InputField.NULL) {
                     Platform.runLater(() -> propertiesView.edit(-1, null));
                 }
@@ -819,13 +877,13 @@ public class FXCreator {
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
-                    //If this is an empty cell, set its text and graphic to empty.
-                    //This prevents the cell from retaining other cells' information.
+                    // If this is an empty cell, set its text and graphic to empty.
+                    // This prevents the cell from retaining other cells' information.
                     setText(null);
                 } else {
-                    //Update this cell's text.
+                    // Update this cell's text.
                     setText(item);
-                    //Override the default padding that ruins the text.
+                    // Override the default padding that ruins the text.
                     setPadding(new Insets(0, 0, 0, 0));
                 }
             }
@@ -833,7 +891,8 @@ public class FXCreator {
 
         value.setCellFactory(new Callback<>() {
             @Override
-            public TreeTableCell<EditorAttribute, String> call(TreeTableColumn<EditorAttribute, String> editorAttributeStringTreeTableColumn) {
+            public TreeTableCell<EditorAttribute, String> call(
+                    TreeTableColumn<EditorAttribute, String> editorAttributeStringTreeTableColumn) {
                 StringConverter<String> stringConverter = new StringConverter<>() {
                     @Override
                     public String toString(String s) {
@@ -859,7 +918,7 @@ public class FXCreator {
                             }
                         }
 
-                        //Override the default padding that ruins the text.
+                        // Override the default padding that ruins the text.
                         setPadding(new Insets(0, 0, 0, 2));
                     }
 
@@ -891,22 +950,30 @@ public class FXCreator {
 
                     @Override
                     public void commitEdit(String s) {
-                        super.commitEdit(getTableRow().getItem().getInput().verify(getTableRow().getItem().getObject(), s) ? s : before);
+                        super.commitEdit(
+                                getTableRow().getItem().getInput().verify(getTableRow().getItem().getObject(), s) ? s
+                                        : before);
                     }
                 };
 
                 cell.setOnMousePressed(event -> {
 
                     cell.setContextMenu(FXCreator.possibleAttributeValues(cell));
-                    cell.getContextMenu().show(propertiesView, Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(), 100);
-                    propertiesView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue != null) {
-                            cell.getContextMenu().hide();
-                        }
-                    });
+                    cell.getContextMenu().show(propertiesView, Main.getStage().getX()
+                            + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(),
+                            100);
+                    propertiesView.getSelectionModel().selectedItemProperty()
+                            .addListener((observable, oldValue, newValue) -> {
+                                if (newValue != null) {
+                                    cell.getContextMenu().hide();
+                                }
+                            });
 
                     if (cell.getContextMenu() != null) {
-                        cell.getContextMenu().show(propertiesView, Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(), 100);
+                        cell.getContextMenu().show(propertiesView,
+                                Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition()
+                                        * Main.getSplitPane().getWidth(),
+                                100);
                     }
                     if (!cell.isSelected() && cell.getContextMenu() != null) {
                         cell.getContextMenu().hide();
@@ -917,50 +984,51 @@ public class FXCreator {
             }
         });
 
-        //value.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+        // value.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
 
         value.setOnEditCommit(e -> {
-            //When editing a cell:
+            // When editing a cell:
 
-            //Change the actual attribute to reflect the edit.
+            // Change the actual attribute to reflect the edit.
             EditorAttribute attribute = propertiesView.getTreeItem(e.getTreeTablePosition().getRow()).getValue();
             String oldValue = attribute.getValue();
             if (attribute.getInput().verify(attribute.getObject(), e.getNewValue())) {
                 attribute.setValue(e.getNewValue());
             }
 
-            //If the edit was actually valid:
+            // If the edit was actually valid:
             if (e.getNewValue().equals("") || attribute.getInput().verify(attribute.getObject(), e.getNewValue())) {
 
-                //Push an attribute change to the undo buffer.
-                Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), oldValue, attribute.getValue()));
+                // Push an attribute change to the undo buffer.
+                Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), oldValue,
+                        attribute.getValue()));
 
-                //If we have edited the name or ID of the object, change the object's "Name or ID" value.
+                // If we have edited the name or ID of the object, change the object's "Name or
+                // ID" value.
                 if (attribute.getName().equals("name") || attribute.getName().equals("id")) {
                     Main.getSelected().setNameAttribute(attribute);
                 }
 
             } else {
-                //Reset the attribute.
+                // Reset the attribute.
                 attribute.setValue(oldValue);
-                //If the user entered an invalid value, refresh to clear the edit.
+                // If the user entered an invalid value, refresh to clear the edit.
                 propertiesView.refresh();
             }
 
             Main.hierarchy.refresh();
 
-
         });
 
-        //Adjust the row height to fit more attributes on screen at once.
-        //This currently breaks the text.
+        // Adjust the row height to fit more attributes on screen at once.
+        // This currently breaks the text.
         propertiesView.setFixedCellSize(18);
 
-        //Set the "value" column and the entire TreeTableView to be editable.
+        // Set the "value" column and the entire TreeTableView to be editable.
         value.setEditable(true);
         propertiesView.setEditable(true);
 
-        //Set the "value" column to extend to the very edge of the TreeTableView.
+        // Set the "value" column to extend to the very edge of the TreeTableView.
         value.prefWidthProperty().bind(propertiesView.widthProperty().subtract(name.widthProperty()));
 
         return propertiesView;
@@ -976,7 +1044,6 @@ public class FXCreator {
     public static MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
     public static MenuItem quitItem = new MenuItem("Quit");
 
-
     public static Menu levelMenu = new Menu("Level");
 
     public static MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
@@ -991,7 +1058,6 @@ public class FXCreator {
     public static MenuItem renameLevelItem = new MenuItem("Rename Level");
     public static MenuItem deleteLevelItem = new MenuItem("Delete Level");
 
-
     public static Menu editMenu = new Menu("Edit");
 
     public static MenuItem undoItem = new MenuItem("Undo");
@@ -1000,7 +1066,6 @@ public class FXCreator {
     public static MenuItem copyItem = new MenuItem("Copy");
     public static MenuItem pasteItem = new MenuItem("Paste");
     public static MenuItem deleteItem = new MenuItem("Delete");
-
 
     public static Menu resourcesMenu = new Menu("Resources");
 
@@ -1014,12 +1079,18 @@ public class FXCreator {
     public static MenuBar createMenu() throws FileNotFoundException {
         MenuBar bar = new MenuBar();
 
-        reloadWorldOfGooOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
-        reloadWorldOfGooNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
-        changeWorldOfGooDirectoryOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
-        changeWorldOfGooDirectoryNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
-        saveOldBallToNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_new_version.png")));
-        saveNewBallToOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_old_version.png")));
+        reloadWorldOfGooOldItem
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
+        reloadWorldOfGooNewItem
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
+        changeWorldOfGooDirectoryOldItem.setGraphic(
+                new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
+        changeWorldOfGooDirectoryNewItem.setGraphic(
+                new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
+        saveOldBallToNewItem
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_new_version.png")));
+        saveNewBallToOldItem
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_old_version.png")));
         quitItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\quit.png")));
 
         reloadWorldOfGooOldItem.setOnAction(e -> Main.reloadWorldOfGoo(1.3));
@@ -1030,7 +1101,8 @@ public class FXCreator {
         saveNewBallToOldItem.setOnAction(e -> Main.saveBallInVersion(1.5, 1.3));
         quitItem.setOnAction(e -> Main.quit());
 
-        fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem, changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, quitItem);
+        fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem,
+                changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, quitItem);
 
         newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
         newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
@@ -1056,7 +1128,9 @@ public class FXCreator {
         renameLevelItem.setOnAction(e -> Main.renameLevel());
         deleteLevelItem.setOnAction(e -> Main.deleteLevel());
 
-        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem, newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem, saveAndPlayLevelItem, renameLevelItem, deleteLevelItem);
+        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem,
+                newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem, saveAndPlayLevelItem,
+                renameLevelItem, deleteLevelItem);
 
         undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
         redoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
@@ -1074,10 +1148,13 @@ public class FXCreator {
 
         editMenu.getItems().addAll(undoItem, redoItem, cutItem, copyItem, pasteItem, deleteItem);
 
-        updateLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
+        updateLevelResourcesItem
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
         importImageItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
-        newTextResourceItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
-        cleanLevelResourcesItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
+        newTextResourceItem
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
+        cleanLevelResourcesItem
+                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
         setMusicItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
         setLoopsoundItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
 
@@ -1088,47 +1165,50 @@ public class FXCreator {
         setMusicItem.setOnAction(e -> Main.importMusic());
         setLoopsoundItem.setOnAction(e -> Main.importLoopsound());
 
-        resourcesMenu.getItems().addAll(updateLevelResourcesItem, importImageItem, newTextResourceItem, cleanLevelResourcesItem, setMusicItem, setLoopsoundItem);
+        resourcesMenu.getItems().addAll(updateLevelResourcesItem, importImageItem, newTextResourceItem,
+                cleanLevelResourcesItem, setMusicItem, setLoopsoundItem);
 
         bar.getMenus().addAll(fileMenu, levelMenu, editMenu, resourcesMenu);
         return bar;
     }
 
-
-    /** Generates a right-click menu for an editor object.
+    /**
+     * Generates a right-click menu for an editor object.
+     *
      * @param object The editor object to generate the menu for.
-     * @return The ContextMenu for right-clicking on that object. */
+     * @return The ContextMenu for right-clicking on that object.
+     */
     public static ContextMenu contextMenuForEditorObject(EditorObject object) throws FileNotFoundException {
 
-        //Create the content menu.
+        // Create the content menu.
         ContextMenu menu = new ContextMenu();
 
-        //Create the Cut, Copy, Paste in Place, and Delete buttons. These should be present for every object.
+        // Create the Cut, Copy, Paste in Place, and Delete buttons. These should be
+        // present for every object.
         MenuItem cutItem = new MenuItem("Cut");
         MenuItem copyItem = new MenuItem("Copy");
         MenuItem pasteInPlaceItem = new MenuItem("Paste in Place");
         MenuItem deleteItem = new MenuItem("Delete");
 
-        //Attempt to set graphics for the Cut, Copy, Paste, and Delete buttons.
+        // Attempt to set graphics for the Cut, Copy, Paste, and Delete buttons.
 
         cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
         copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
         pasteInPlaceItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
         deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
 
-
         menu.getItems().addAll(cutItem, copyItem, pasteInPlaceItem, deleteItem);
 
-        //For every object that can be created as a child of this object:
+        // For every object that can be created as a child of this object:
         for (String childToAdd : object.getPossibleChildren()) {
 
-            //Create a menu item representing creating this child.
+            // Create a menu item representing creating this child.
             MenuItem addItemItem = new MenuItem("Add " + childToAdd);
 
-            //Attempt to set graphics for this menu item.
+            // Attempt to set graphics for this menu item.
             addItemItem.setGraphic(new ImageView(FileManager.getObjectIcon(childToAdd)));
 
-            //Set the item's action to creating the child, with the object as its parent.
+            // Set the item's action to creating the child, with the object as its parent.
             addItemItem.setOnAction(event -> {
                 switch (childToAdd) {
                     case "BallInstance" -> Main.addBall(object, "");
@@ -1168,22 +1248,26 @@ public class FXCreator {
         return menu;
     }
 
-
-    /** Generates the Scene, Level, and Resrc buttons that switch between those object structures.
-     * @return The HBox object containing the buttons. */
+    /**
+     * Generates the Scene, Level, and Resrc buttons that switch between those
+     * object structures.
+     *
+     * @return The HBox object containing the buttons.
+     */
     public static TabPane hierarchySwitcherButtons() {
 
-        //Create and customize the parent container.
+        // Create and customize the parent container.
         TabPane thing = new TabPane();
 
-        //Create the three buttons.
+        // Create the three buttons.
         Tab sceneSelectButton = new Tab("Scene");
         Tab levelSelectButton = new Tab("Level");
         Tab resrcSelectButton = new Tab("Resrc");
         Tab textSelectButton = new Tab("Text");
         Tab addinSelectButton = new Tab("Addin");
 
-        thing.getTabs().addAll(sceneSelectButton, levelSelectButton, resrcSelectButton, textSelectButton, addinSelectButton);
+        thing.getTabs().addAll(sceneSelectButton, levelSelectButton, resrcSelectButton, textSelectButton,
+                addinSelectButton);
         thing.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         thing.setMinHeight(30);
         thing.setMaxHeight(30);
@@ -1191,132 +1275,151 @@ public class FXCreator {
         thing.setPadding(new Insets(-6, -6, -6, -6));
 
         thing.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
-            if (t1 == sceneSelectButton) {
-                Main.hierarchy.setRoot(Main.getLevel().getScene().get(0).getTreeItem());
-                Main.hierarchy.refresh();
-                Main.hierarchy.getRoot().setExpanded(true);
-                Main.getLevel().setCurrentlySelectedSection("Scene");
-                Main.getHierarchy().setShowRoot(true);
-            } else if (t1 == levelSelectButton) {
-                Main.hierarchy.setRoot(Main.getLevel().getLevel().get(0).getTreeItem());
-                Main.hierarchy.refresh();
-                Main.hierarchy.getRoot().setExpanded(true);
-                Main.getLevel().setCurrentlySelectedSection("Level");
-                Main.getHierarchy().setShowRoot(true);
-            } else if (t1 == resrcSelectButton) {
-                Main.hierarchy.setRoot(Main.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
-                Main.hierarchy.refresh();
-                Main.hierarchy.getRoot().setExpanded(true);
-                Main.getLevel().setCurrentlySelectedSection("Resrc");
-                Main.getHierarchy().setShowRoot(false);
-            } else if (t1 == textSelectButton) {
-                Main.hierarchy.setRoot(Main.getLevel().getTextObject().getTreeItem());
-                Main.hierarchy.refresh();
-                Main.hierarchy.getRoot().setExpanded(true);
-                Main.getLevel().setCurrentlySelectedSection("Text");
-                Main.getHierarchy().setShowRoot(false);
-            } else if (t1 == addinSelectButton) {
-                Main.hierarchy.setRoot(Main.getLevel().getAddinObject().getTreeItem());
-                Main.hierarchy.refresh();
-                Main.hierarchy.getRoot().setExpanded(true);
-                Main.getLevel().setCurrentlySelectedSection("Addin");
-                Main.getHierarchy().setShowRoot(true);
+            if (Main.getLevel() != null) {
+                if (t1 == sceneSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getScene().get(0).getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getLevel().setCurrentlySelectedSection("Scene");
+                    Main.getHierarchy().setShowRoot(true);
+                } else if (t1 == levelSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getLevel().get(0).getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getLevel().setCurrentlySelectedSection("Level");
+                    Main.getHierarchy().setShowRoot(true);
+                } else if (t1 == resrcSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getLevel().setCurrentlySelectedSection("Resrc");
+                    Main.getHierarchy().setShowRoot(false);
+                } else if (t1 == textSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getTextObject().getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getLevel().setCurrentlySelectedSection("Text");
+                    Main.getHierarchy().setShowRoot(false);
+                } else if (t1 == addinSelectButton) {
+                    Main.hierarchy.setRoot(Main.getLevel().getAddinObject().getTreeItem());
+                    Main.hierarchy.refresh();
+                    Main.hierarchy.getRoot().setExpanded(true);
+                    Main.getLevel().setCurrentlySelectedSection("Addin");
+                    Main.getHierarchy().setShowRoot(true);
+                }
             }
         });
 
         return thing;
     }
 
-    /** Generates a list of attributes for an object, according to that object's meta attributes.
+    /**
+     * Generates a list of attributes for an object, according to that object's meta
+     * attributes.
+     *
      * @param object The editor object to generate the interface for.
-     * @return The root tree item representing the attributes for the object. */
+     * @return The root tree item representing the attributes for the object.
+     */
     public static TreeItem<EditorAttribute> makePropertiesViewTreeItem(EditorObject object) {
 
-        //Create the root tree item.
-        TreeItem<EditorAttribute> treeItem = new TreeItem<>(new EditorAttribute(object, "", "", "", new InputField("", InputField.NULL), false));
+        // Create the root tree item.
+        TreeItem<EditorAttribute> treeItem = new TreeItem<>(
+                new EditorAttribute(object, "", "", "", new InputField("", InputField.NULL), false));
 
-        //Loop over the object's meta attributes.
+        // Loop over the object's meta attributes.
         for (MetaEditorAttribute metaEditorAttribute : object.getMetaAttributes()) {
 
-            //Find the object's EditorAttribute associated with this meta attribute (sharing the same name).
+            // Find the object's EditorAttribute associated with this meta attribute
+            // (sharing the same name).
             EditorAttribute attribute;
             if (object.getAttribute(metaEditorAttribute.getName()) != null) {
                 attribute = object.getAttribute2(metaEditorAttribute.getName());
             } else {
-                //If no such attribute exists, this attribute is instead the name of a category of attributes.
-                //In this case, create a dummy attribute with no value.
-                attribute = new EditorAttribute(object, metaEditorAttribute.getName(), "", "", new InputField("", InputField.NULL), false);
+                // If no such attribute exists, this attribute is instead the name of a category
+                // of attributes.
+                // In this case, create a dummy attribute with no value.
+                attribute = new EditorAttribute(object, metaEditorAttribute.getName(), "", "",
+                        new InputField("", InputField.NULL), false);
             }
             TreeItem<EditorAttribute> thisAttribute = new TreeItem<>(attribute);
 
-            //If this attribute is set to be open by default, set its tree item to open.
+            // If this attribute is set to be open by default, set its tree item to open.
             if (metaEditorAttribute.getOpenByDefault()) {
                 thisAttribute.setExpanded(true);
             }
 
-            //If this attribute represents a category of attributes, it will have children.
-            //Add the children's TreeItems as children of the category's TreeItem.
+            // If this attribute represents a category of attributes, it will have children.
+            // Add the children's TreeItems as children of the category's TreeItem.
             for (MetaEditorAttribute childAttribute : metaEditorAttribute.getChildren()) {
                 thisAttribute.getChildren().add(new TreeItem<>(object.getAttribute2(childAttribute.getName())));
             }
 
-            //Add the attribute's TreeItem as a child of the root's TreeItem.
+            // Add the attribute's TreeItem as a child of the root's TreeItem.
             treeItem.getChildren().add(thisAttribute);
         }
 
         return treeItem;
     }
 
-
-    /** Generates a JavaFX Tab representing one level.
+    /**
+     * Generates a JavaFX Tab representing one level.
+     *
      * @param level The level to generate a tab from.
-     * @return The tab representing the level. */
+     * @return The tab representing the level.
+     */
     public static LevelTab levelSelectButton(WorldLevel level) {
 
-        //Instantiate the tab.
+        // Instantiate the tab.
         LevelTab tab = new LevelTab(level.getLevelName(), level);
 
-        //Override the default close operation of the tab.
+        // Override the default close operation of the tab.
         tab.setOnCloseRequest(event -> {
             event.consume();
-            //If the level has unsaved changes:
+            // If the level has unsaved changes:
             if (level.getEditingStatus() == WorldLevel.UNSAVED_CHANGES) {
-                //Show a dialogue asking the user if they want to close the level without saving changes first.
+                // Show a dialogue asking the user if they want to close the level without
+                // saving changes first.
                 Alarms.closeTabMessage(tab, level);
             } else {
-                //Close the tab.
+                // Close the tab.
                 if (tab.getTabPane().getTabs().size() == 1) {
                     Main.getLevelSelectPane().setMinHeight(0);
                     Main.getLevelSelectPane().setMaxHeight(0);
+                    // If all tabs are closed, clear the side pane
+                    Main.hierarchy.setRoot(null);
+                    // Clear the properties pane too
+                    Main.changeTableView(null);
                 }
                 tab.getTabPane().getTabs().remove(tab);
             }
         });
 
         tab.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
-            //If the user has just selected this tab:
+            // If the user has just selected this tab:
             if (t1) {
-                //Set this tab's level to be the currently selected level.
+                // Set this tab's level to be the currently selected level.
                 Main.setLevel(level);
                 switch (level.getCurrentlySelectedSection()) {
                     case "Scene" -> Main.hierarchy.setRoot(level.getSceneObject().getTreeItem());
                     case "Level" -> Main.hierarchy.setRoot(level.getLevelObject().getTreeItem());
                     case "Resrc" -> Main.hierarchy.setRoot(level.getResourcesObject().getTreeItem());
-                    case "Addin" -> Main.hierarchy.setRoot(level.getAddinObject().getTreeItem());
                     case "Text" -> Main.hierarchy.setRoot(level.getTextObject().getTreeItem());
+                    case "Addin" -> Main.hierarchy.setRoot(level.getAddinObject().getTreeItem());
                 }
 
                 switch (level.getCurrentlySelectedSection()) {
                     case "Scene" -> Main.hierarchySwitcherButtons.getSelectionModel().select(0);
                     case "Level" -> Main.hierarchySwitcherButtons.getSelectionModel().select(1);
                     case "Resrc" -> Main.hierarchySwitcherButtons.getSelectionModel().select(2);
-                    case "Addin" -> Main.hierarchySwitcherButtons.getSelectionModel().select(3);
-                    case "Text" -> Main.hierarchySwitcherButtons.getSelectionModel().select(4);
+                    case "Text" -> Main.hierarchySwitcherButtons.getSelectionModel().select(3);
+                    case "Addin" -> Main.hierarchySwitcherButtons.getSelectionModel().select(4);
                 }
 
             } else {
-                //Destroy and replace the level tab to prevent an unknown freezing issue.
-                if (level.getLevelTab() != null && level.getLevelTab().getTabPane() != null && level.getLevelTab().getTabPane().getTabs().contains(level.getLevelTab()) && level.getLevelTab().getTabPane().getTabs().size() != 0) {
+                // Destroy and replace the level tab to prevent an unknown freezing issue.
+                if (level.getLevelTab() != null && level.getLevelTab().getTabPane() != null
+                        && level.getLevelTab().getTabPane().getTabs().contains(level.getLevelTab())
+                        && level.getLevelTab().getTabPane().getTabs().size() != 0) {
                     level.setEditingStatus(level.getEditingStatus(), false);
                 }
             }
@@ -1328,6 +1431,9 @@ public class FXCreator {
     public static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell) {
         ContextMenu contextMenu = new ContextMenu();
         EditorAttribute attribute = cell.getTableRow().getItem();
+        if (attribute == null) {
+            return contextMenu;
+        }
 
         switch (attribute.getInput().getType()) {
             case InputField.IMAGE, InputField.IMAGE_REQUIRED -> {
@@ -1345,7 +1451,8 @@ public class FXCreator {
                         setImageItem.setGraphic(label);
 
                         setImageItem.setOnAction(event -> {
-                            Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), attribute.getValue(), resource.getAttribute("id")));
+                            Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                                    attribute.getValue(), resource.getAttribute("id")));
                             attribute.setValue(resource.getAttribute("REALid"));
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.getValue());
@@ -1357,14 +1464,16 @@ public class FXCreator {
                 }
             }
             case InputField.BALL -> {
-                String path = Main.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
+                String path = Main.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir()
+                        : FileManager.getOldWOGdir();
                 File[] ballFiles = new File(path + "\\res\\balls").listFiles();
                 if (ballFiles != null) {
                     for (File ballFile : ballFiles) {
                         MenuItem setImageItem = new MenuItem(ballFile.getName());
 
                         setImageItem.setOnAction(event -> {
-                            Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), attribute.getValue(), ballFile.getName()));
+                            Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                                    attribute.getValue(), ballFile.getName()));
                             attribute.setValue(ballFile.getName());
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.getValue());

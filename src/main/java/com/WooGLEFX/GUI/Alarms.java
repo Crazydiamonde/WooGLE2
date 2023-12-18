@@ -1,24 +1,29 @@
 package com.WooGLEFX.GUI;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
+
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Alarms {
 
@@ -28,6 +33,8 @@ public class Alarms {
         alert.setHeaderText("Error");
         alert.setContentText(error.getClass().getSimpleName() + ": " + error.getMessage());
         alert.show();
+        // Show the exception in the console
+        error.printStackTrace();
     }
 
     public static void loadingResourcesError(String error) {
@@ -64,6 +71,8 @@ public class Alarms {
                 if (tab.getTabPane().getTabs().size() == 1) {
                     Main.getLevelSelectPane().setMinHeight(0);
                     Main.getLevelSelectPane().setMaxHeight(0);
+                    Main.hierarchy.setRoot(null);
+                    Main.changeTableView(null);
                 }
                 Platform.runLater(() -> tab.getTabPane().getTabs().remove(tab));
             } else if (buttonType.equals(ButtonType.CANCEL)) {
@@ -83,6 +92,8 @@ public class Alarms {
                 if (tab.getTabPane().getTabs().size() == 1) {
                     Main.getLevelSelectPane().setMinHeight(0);
                     Main.getLevelSelectPane().setMaxHeight(0);
+                    Main.hierarchy.setRoot(null);
+                    Main.changeTableView(null);
                 }
                 Platform.runLater(() -> {
                     tab.getTabPane().getTabs().remove(tab);
@@ -140,19 +151,29 @@ public class Alarms {
         Label newLevelNameText = new Label(titleText);
         TextField enterNameHere = new TextField();
         Label typeItCorrectly = new Label("(Letters, Numbers and \"_\" only)");
+        // Set filter on TextField to allow for only letters, numbers and "_"
+        enterNameHere.textProperty().addListener((observableValue, s, t1) -> {
+            if (!t1.matches("[a-zA-Z0-9_]*")) {
+                enterNameHere.setText(t1.replaceAll("[^a-zA-Z0-9_]", ""));
+            }
+        });
 
         Button okButton = new Button(confirmText);
+        // Set okButton to be disabled if the TextField is empty
+        okButton.disableProperty().bind(enterNameHere.textProperty().isEmpty());
+        // Set okButton to be pressed if the user presses enter
+        enterNameHere.setOnAction(actionEvent -> okButton.fire());
         Button cancelButton = new Button("Cancel");
 
         newLevelNameText.setStyle("-fx-font-size: 11");
         typeItCorrectly.setStyle("-fx-font-size: 11");
 
-        enterNameHere.setMinHeight(20);
-        enterNameHere.setPrefSize(291, 20);
-        okButton.setMinHeight(21);
-        okButton.setPrefSize(73, 21);
-        cancelButton.setMinHeight(21);
-        cancelButton.setPrefSize(73, 21);
+        enterNameHere.setMinHeight(25);
+        enterNameHere.setPrefSize(291, 25);
+        okButton.setMinHeight(25);
+        okButton.setPrefSize(73, 25);
+        cancelButton.setMinHeight(25);
+        cancelButton.setPrefSize(73, 25);
 
         HBox buttonBox = new HBox(okButton, cancelButton);
         buttonBox.setSpacing(8);
@@ -170,10 +191,12 @@ public class Alarms {
         stage.setScene(scene);
 
         stage.setWidth(329);
-        stage.setHeight(151);
+        stage.setHeight(161);
 
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
         stage.setAlwaysOnTop(true);
+        stage.setResizable(false);
 
         switch (purpose) {
             case "new" -> {

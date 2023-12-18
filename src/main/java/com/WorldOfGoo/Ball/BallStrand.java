@@ -2,7 +2,6 @@ package com.WorldOfGoo.Ball;
 
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
-import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class BallStrand extends EditorObject {
     public BallStrand(EditorObject _parent) {

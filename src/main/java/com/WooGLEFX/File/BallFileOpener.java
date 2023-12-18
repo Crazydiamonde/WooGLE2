@@ -1,15 +1,14 @@
 package com.WooGLEFX.File;
-import com.WooGLEFX.Structures.EditorAttribute;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
-import com.WorldOfGoo.Addin.AddinLevel;
-import com.WorldOfGoo.Resrc.ResrcImage;
-import com.WorldOfGoo.Resrc.SetDefaults;
-import com.WorldOfGoo.Resrc.Sound;
+import java.util.ArrayList;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
+import com.WooGLEFX.Structures.EditorAttribute;
+import com.WooGLEFX.Structures.EditorObject;
+import com.WorldOfGoo.Resrc.ResrcImage;
+import com.WorldOfGoo.Resrc.SetDefaults;
+import com.WorldOfGoo.Resrc.Sound;
 
 public class BallFileOpener extends DefaultHandler {
     public static EditorObject parent = null;
