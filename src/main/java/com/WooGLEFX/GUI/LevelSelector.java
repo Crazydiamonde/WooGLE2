@@ -3,6 +3,7 @@ package com.WooGLEFX.GUI;
 import java.io.File;
 
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
 
 import javafx.application.Application;
@@ -26,69 +27,6 @@ public class LevelSelector extends Application {
 
     public static String selected = "";
     public static Label selectedLabel = null;
-
-    public static final String[] originalLevels = new String[] {
-            "AB3",
-            "BeautyAndTheTentacle",
-            "BeautySchool",
-            "BlusteryDay",
-            "BulletinBoardSystem",
-            "BurningMan",
-            "Chain",
-            "Deliverance",
-            "Drool",
-            "EconomicDivide",
-            "FistyReachesOut",
-            "FlyAwayLittleOnes",
-            "FlyingMachine",
-            "GeneticSortingMachine",
-            "GoingUp",
-            "GracefulFailure",
-            "GrapeVineVirus",
-            "GraphicProcessingUnit",
-            "HangLow",
-            "HelloWorld",
-            "HTInnovationCommittee",
-            "ImmigrationNaturalizationUnit",
-            "ImpaleSticky",
-            "IncinerationDestination",
-            "InfestyTheWorm",
-            "island1",
-            "island2",
-            "island3",
-            "island4",
-            "island5",
-            "IslandUi",
-            "IvyTower",
-            "LeapHole",
-            "MapWorldView",
-            "MightyBlimp",
-            "MistysLongBonyRoad",
-            "MOM",
-            "ObservatoryObservationStation",
-            "OdeToBridgeBuilder",
-            "ProductLauncher",
-            "RedCarpet",
-            "RegurgitationPumpingStation",
-            "RoadBlocks",
-            "Route99",
-            "SecondHandSmoke",
-            "SuperFuseChallengeTime",
-            "TestLevel",
-            "TheServer",
-            "ThirdWheel",
-            "TowerOfGoo",
-            "Tumbler",
-            "UpperShaft",
-            "VolcanicPercolatorDaySpa",
-            "WaterLock",
-            "WeatherVane",
-            "Whistler",
-            "wogc",
-            "wogc3d",
-            "wogcd",
-            "YouHaveToExplodeTheHead"
-    };
 
     public static File levelDir = null;
 
@@ -131,7 +69,7 @@ public class LevelSelector extends Application {
                         boolean ok = false;
                         switch (t1) {
                             case "Original Levels Only" -> {
-                                for (String levelName : originalLevels) {
+                                for (String levelName : BaseGameResources.LEVELS) {
                                     if (levelName.equals(levelFile.getName())) {
                                         ok = true;
                                     }
@@ -139,7 +77,7 @@ public class LevelSelector extends Application {
                             }
                             case "Customizable Levels Only" -> {
                                 ok = true;
-                                for (String levelName : originalLevels) {
+                                for (String levelName : BaseGameResources.LEVELS) {
                                     if (levelName.equals(levelFile.getName())) {
                                         ok = false;
                                     }
