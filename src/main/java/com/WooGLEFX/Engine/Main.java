@@ -1040,11 +1040,15 @@ public class Main extends Application {
             EditorObject imageResourceObject = EditorObject.create("Image", new EditorAttribute[0], null);
 
             imageResourceObject.setAttribute("id", imageResourceName);
-            imageResourceObject.setAttribute("path",
-                    "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
+            imageResourceObject.setAttribute(
+                "path",
+                ("res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]).replace("\\", "/")
+            );
             imageResourceObject.setAttribute("REALid", imageResourceName);
-            imageResourceObject.setAttribute("REALpath",
-                    "res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]);
+            imageResourceObject.setAttribute(
+                "REALpath",
+                ("res\\levels\\" + level.getLevelName() + "\\" + resrcFile.getName().split("\\.")[0]).replace("\\", "/")
+            );
 
             int whereToPlaceResource = 0;
             int count = 0;
