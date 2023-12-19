@@ -3,12 +3,10 @@ package com.WooGLEFX.Engine;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-// import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-// import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -115,6 +113,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class Main extends Application {
+
+    private static String[] launchArguments;
 
     public static Affine t;
 
@@ -2661,7 +2661,7 @@ public class Main extends Application {
                 importGameResources(1.5);
             }
 
-            System.out.println(FileManager.isHasOldWOG());
+            // System.out.println(FileManager.isHasOldWOG());
 
             for (int i = 0; i < FileManager.getPaletteBalls().size(); i++) {
 
@@ -2856,6 +2856,15 @@ public class Main extends Application {
                 }
             });
             // LevelExporter.exportBallAsXML(Main.getImportedBalls().get(0), "");
+
+            if (launchArguments.length > 0) {
+                System.out.println("Opening level " + launchArguments[0]);
+                if (FileManager.isHasNewWOG()) {
+                    openLevel(launchArguments[0], 1.5);
+                } else {
+                    openLevel(launchArguments[0], 1.3);
+                }
+            }
         } catch (FileNotFoundException e) {
             Alarms.errorMessage(e);
         }
@@ -2880,6 +2889,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        launchArguments = args;
         launch();
     }
 }
