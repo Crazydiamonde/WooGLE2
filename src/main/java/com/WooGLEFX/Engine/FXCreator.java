@@ -272,6 +272,7 @@ public class FXCreator {
                 if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall)
                         && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
                     Button button = createTemplateForBall(size, ball);
+                    button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name")));
                     if (ball.getVersion() == 1.3) {
                         oldGooballsToolbar.getItems().add(button);
                     } else {
