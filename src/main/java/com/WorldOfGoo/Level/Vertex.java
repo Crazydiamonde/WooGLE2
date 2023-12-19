@@ -9,6 +9,7 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 
 public class Vertex extends EditorObject {
@@ -91,7 +92,7 @@ public class Vertex extends EditorObject {
         }
     }
 
-    public void drawTo(GraphicsContext graphicsContext, Vertex vertex){
+    public void drawTo(GraphicsContext graphicsContext, Vertex vertex, Paint color){
         if (Main.getLevel().isShowGeometry()) {
             double screenX1 = Double.parseDouble(getAttribute("x")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
             double screenY1 = -Double.parseDouble(getAttribute("y")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
@@ -99,7 +100,7 @@ public class Vertex extends EditorObject {
             double screenX2 = Double.parseDouble(vertex.getAttribute("x")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
             double screenY2 = -Double.parseDouble(vertex.getAttribute("y")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
 
-            graphicsContext.setStroke(Renderer.pipe);
+            graphicsContext.setStroke(color);
             graphicsContext.setLineWidth(Main.getLevel().getZoom() * 10);
             graphicsContext.strokeLine(screenX1, screenY1, screenX2, screenY2);
         }
