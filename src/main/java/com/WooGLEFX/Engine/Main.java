@@ -1081,6 +1081,7 @@ public class Main extends Application {
                     imageResourceObject.getTreeItem());
 
             registerChange(new ImportResourceAction(imageResourceObject, imgPath));
+            redoActions.clear();
 
             GlobalResourceManager.addResource(imageResourceObject, level.getVersion());
         } catch (IOException e) {
@@ -1095,6 +1096,7 @@ public class Main extends Application {
         setSelected(newTextObject);
         registerChange(
                 new ObjectCreationAction(newTextObject, level.getTextObject().getChildren().indexOf(newTextObject)));
+        redoActions.clear();
     }
 
     public static void cleanLevelResources() {
@@ -1222,6 +1224,7 @@ public class Main extends Application {
                 music.setAttribute("id", soundResourceName);
                 registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                         new AttributeChangeAction(music, "id", oldID, soundResourceName));
+                redoActions.clear();
                 return;
             }
         }
@@ -1233,6 +1236,7 @@ public class Main extends Application {
         registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                 new ObjectCreationAction(soundResourceObject, whereToPlaceResource),
                 new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
+        redoActions.clear();
 
     }
 
@@ -1313,6 +1317,7 @@ public class Main extends Application {
                 music.setAttribute("id", soundResourceName);
                 registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                         new AttributeChangeAction(music, "id", oldID, soundResourceName));
+                redoActions.clear();
                 return;
             }
         }
@@ -1324,6 +1329,7 @@ public class Main extends Application {
         registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                 new ObjectCreationAction(soundResourceObject, whereToPlaceResource),
                 new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
+        redoActions.clear();
 
     }
 
