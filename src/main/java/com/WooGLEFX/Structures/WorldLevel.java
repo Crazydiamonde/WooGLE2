@@ -304,10 +304,6 @@ public class WorldLevel {
         levelTab.setGraphic(graphicContainer);
         //End ChatGPT
         TabPane god = levelTab.getTabPane();
-
-        int index = god.getTabs().indexOf(levelTab);
-        god.getTabs().remove(levelTab);
-        god.getTabs().add(index, levelTab);
         if (shouldSelect) {
             god.getSelectionModel().select(levelTab);
             Main.getHierarchy().setRoot(root);
