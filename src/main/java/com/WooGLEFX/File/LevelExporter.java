@@ -405,9 +405,12 @@ public class LevelExporter {
                 File[] images = new File(FileManager.getNewWOGdir() + "\\res\\levels\\" + levelName).listFiles();
                 if (images != null) {
                     for (File imageFile : images) {
-                        if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
-                            if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
-                                Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
+                        /* Make sure that we're not saving a "goomod" folder or something */
+                        if (imageFile.getName().contains(".png") || imageFile.getName().contains(".ogg")) {
+                            if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
+                                if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
+                                    Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
+                                }
                             }
                         }
                     }
@@ -422,9 +425,12 @@ public class LevelExporter {
                 File[] images = new File(FileManager.getOldWOGdir() + "\\res\\levels\\" + levelName).listFiles();
                 if (images != null) {
                     for (File imageFile : images) {
-                        if (imageFile.getPath().lastIndexOf(".") != -1 && (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg"))) {
-                            if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
-                                Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
+                        /* Make sure that we're not saving a "goomod" folder or something */
+                        if (imageFile.getName().contains(".png") || imageFile.getName().contains(".ogg")) {
+                            if (imageFile.getPath().lastIndexOf(".") != -1 && (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg"))) {
+                                if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
+                                    Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
+                                }
                             }
                         }
                     }

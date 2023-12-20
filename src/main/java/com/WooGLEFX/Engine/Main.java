@@ -570,6 +570,13 @@ public class Main extends Application {
     }
 
     public static void saveLevel(double version) {
+        saveSpecificLevel(level, version);
+        if (level.getEditingStatus() != WorldLevel.NO_UNSAVED_CHANGES) {
+            level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+        }
+    }
+
+    public static void saveSpecificLevel(WorldLevel level, double version) {
         try {
             if (version == 1.3) {
                 LevelExporter.saveAsXML(level, FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName(),
@@ -581,9 +588,18 @@ public class Main extends Application {
         } catch (IOException e) {
             Alarms.errorMessage(e);
         }
-        if (level.getEditingStatus() != WorldLevel.NO_UNSAVED_CHANGES) {
-            level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+    }
+
+    public static void saveAll() {
+        int selectedIndex = levelSelectPane.getSelectionModel().getSelectedIndex();
+        for (Tab tab : levelSelectPane.getTabs().toArray(new Tab[0])) {
+            LevelTab levelTab = (LevelTab) tab;
+            if (levelTab.getLevel().getEditingStatus() == WorldLevel.UNSAVED_CHANGES) {
+                saveSpecificLevel(levelTab.getLevel(), levelTab.getLevel().getVersion());
+                levelTab.getLevel().setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, false);
+            }
         }
+        levelSelectPane.getSelectionModel().select(selectedIndex);
     }
 
     public static void playLevel() {
@@ -1843,8 +1859,25 @@ public class Main extends Application {
                             dragSettings = level.getSelected().mouseIntersectingCorners(
                                     (event.getX() - level.getOffsetX()) / level.getZoom(),
                                     (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+
+                            /* Dragging of already selected object that might be behind something else */
+                            DragSettings thisSettings = level.getSelected().mouseIntersection(
+                                    (event.getX() - level.getOffsetX()) / level.getZoom(),
+                                    (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                            DragSettings thisImageSettings = level.getSelected().mouseImageIntersection(
+                                    (event.getX() - level.getOffsetX()) / level.getZoom(),
+                                    (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                            if (thisSettings.getType() != DragSettings.NONE) {
+                                scene.setCursor(Cursor.MOVE);
+                                dragSettings = thisSettings;
+                            } else if (thisImageSettings.getType() != DragSettings.NONE) {
+                                scene.setCursor(Cursor.MOVE);
+                                dragSettings = thisImageSettings;
+                            }
+
                         }
                         if (dragSettings.getType() == DragSettings.NONE) {
+
                             EditorObject prevSelected = level.getSelected();
                             setSelected(null);
                             ArrayList<EditorObject> byDepth = Renderer.orderObjectsBySelectionDepth(level);

@@ -308,6 +308,7 @@ public class FXCreator {
     public static Button buttonCloneNew = new Button();
     public static Button buttonSaveOld = new Button();
     public static Button buttonSaveNew = new Button();
+    public static Button buttonSaveAll = new Button();
     public static Button buttonSaveAndPlay = new Button();
     public static Button buttonExport = new Button();
     public static Button buttonDummyExport = new Button();
@@ -362,6 +363,7 @@ public class FXCreator {
         buttonCloneNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
         buttonSaveOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
         buttonSaveNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
+        buttonSaveAll.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_all.png")));
         buttonSaveAndPlay.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
         buttonExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_goomod.png")));
         buttonDummyExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_dummy_goomod.png")));
@@ -408,6 +410,7 @@ public class FXCreator {
         buttonCloneNew.setOnAction(e -> Main.cloneLevel(1.5));
         buttonSaveOld.setOnAction(e -> Main.saveLevel(1.3));
         buttonSaveNew.setOnAction(e -> Main.saveLevel(1.5));
+        buttonSaveAll.setOnAction(e -> Main.saveAll());
         buttonSaveAndPlay.setOnAction(e -> Main.playLevel());
         buttonExport.setOnAction(e -> Main.exportLevel(true));
         buttonDummyExport.setOnAction(e -> Main.exportLevel(false));
@@ -473,7 +476,8 @@ public class FXCreator {
 
         functionsToolbar.getItems().addAll(buttonNewOld, buttonOpenOld, buttonCloneOld, new Separator());
         functionsToolbar.getItems().addAll(buttonNewNew, buttonOpenNew, buttonCloneNew, new Separator());
-        functionsToolbar.getItems().addAll(buttonSaveOld, buttonSaveNew, buttonSaveAndPlay, new Separator());
+        functionsToolbar.getItems().addAll(buttonSaveOld, buttonSaveNew, buttonSaveAll, buttonSaveAndPlay,
+                new Separator());
         functionsToolbar.getItems().addAll(buttonDummyExport, buttonExport, new Separator());
         functionsToolbar.getItems().addAll(buttonUndo, buttonRedo, new Separator());
         functionsToolbar.getItems().addAll(buttonCut, buttonCopy, buttonPaste, new Separator());
@@ -1054,6 +1058,7 @@ public class FXCreator {
     public static MenuItem cloneLevelNewItem = new MenuItem("Clone Level (1.5)...");
     public static MenuItem saveLevelOldItem = new MenuItem("Save Level (1.3)");
     public static MenuItem saveLevelNewItem = new MenuItem("Save Level (1.5)");
+    public static MenuItem saveAllLevelsItem = new MenuItem("Save All Levels");
     public static MenuItem saveAndPlayLevelItem = new MenuItem("Save and Play Level");
     public static MenuItem renameLevelItem = new MenuItem("Rename Level");
     public static MenuItem deleteLevelItem = new MenuItem("Delete Level");
@@ -1112,6 +1117,7 @@ public class FXCreator {
         cloneLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
         saveLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
         saveLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
+        saveAllLevelsItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_all.png")));
         saveAndPlayLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
         renameLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\rename.png")));
         deleteLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\delete.png")));
@@ -1124,13 +1130,14 @@ public class FXCreator {
         cloneLevelNewItem.setOnAction(e -> Main.cloneLevel(1.5));
         saveLevelOldItem.setOnAction(e -> Main.saveLevel(1.3));
         saveLevelNewItem.setOnAction(e -> Main.saveLevel(1.5));
+        saveAllLevelsItem.setOnAction(e -> Main.saveAll());
         saveAndPlayLevelItem.setOnAction(e -> Main.playLevel());
         renameLevelItem.setOnAction(e -> Main.renameLevel());
         deleteLevelItem.setOnAction(e -> Main.deleteLevel());
 
         levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem,
-                newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem, saveAndPlayLevelItem,
-                renameLevelItem, deleteLevelItem);
+                saveAllLevelsItem, newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem,
+                saveAndPlayLevelItem, renameLevelItem, deleteLevelItem);
 
         undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
         redoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
