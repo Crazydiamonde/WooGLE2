@@ -39,6 +39,7 @@ import com.WorldOfGoo.Level.Vertex;
 import com.WorldOfGoo.Resrc.ResourceManifest;
 import com.WorldOfGoo.Resrc.Resources;
 import com.WorldOfGoo.Resrc.ResrcImage;
+import com.WorldOfGoo.Resrc.SetDefaults;
 import com.WorldOfGoo.Resrc.Sound;
 import com.WorldOfGoo.Scene.Button;
 import com.WorldOfGoo.Scene.Buttongroup;
@@ -63,6 +64,10 @@ public class LevelExporter {
     public static boolean ding = false;
 
     public static String recursiveXMLexport(String export, EditorObject object, int spaces, boolean children) {
+        return recursiveXMLexport(export, object, spaces, children, "", "");
+    }
+
+    public static String recursiveXMLexport(String export, EditorObject object, int spaces, boolean children, String defaultsPath, String defaultsPrefix) {
         export += "\t".repeat(spaces) + "<" + object.getRealName() + " ";
         StringBuilder exportBuilder = new StringBuilder(export);
         for (EditorAttribute attribute : object.getAttributes()) {
@@ -83,7 +88,21 @@ public class LevelExporter {
                     exportBuilder.append(attributeName).append("=\"\" ");
                 } else {
                     if (object instanceof Sound || object instanceof ResrcImage) {
-                        exportBuilder.append(attributeName).append("=\"").append(attribute.getValue()).append("\" ");
+                        // Remove prefixes from id and path on save
+                        String attributeValue = attribute.getValue();
+                        if (attributeName.equals("id")) {
+                            // Remove defaultsPrefix from id
+                            if (attributeValue.startsWith(defaultsPrefix)) {
+                                attributeValue = attributeValue.substring(defaultsPrefix.length());
+                            }
+                        }
+                        if (attributeName.equals("path")) {
+                            // Remove defaultsPath from path
+                            if (attributeValue.startsWith(defaultsPath)) {
+                                attributeValue = attributeValue.substring(defaultsPath.length());
+                            }
+                        }
+                        exportBuilder.append(attributeName).append("=\"").append(attributeValue).append("\" ");
                     } else {
                         if (attribute.getValue().equals("") && attribute.getRequiredInFile()) {
                             exportBuilder.append(attributeName).append("=\"").append(attribute.getDefaultValue()).append("\" ");
@@ -101,7 +120,13 @@ public class LevelExporter {
             export += " >\n";
             if (children) {
                 for (EditorObject child : object.getChildren()) {
-                    export = recursiveXMLexport(export, child, spaces + 1, true) + "\n";
+                    String curDefaultsPath = "";
+                    String curDefaultsPrefix = "";
+                    if(child instanceof SetDefaults) {
+                        curDefaultsPath = child.getAttribute("path");
+                        curDefaultsPrefix = child.getAttribute("idprefix");
+                    }
+                    export = recursiveXMLexport(export, child, spaces + 1, true, curDefaultsPath, curDefaultsPrefix) + "\n";
                 }
                 export += "\t".repeat(spaces) + "</" + object.getRealName() + ">";
             }

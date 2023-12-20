@@ -437,6 +437,9 @@ public class SceneLayer extends EditorObject {
                 Point2D dragSourceRotated = EditorObject.rotate(new Point2D(dragSourceX, dragSourceY), -Math.toRadians(rotation), new Point2D(x, -y));
                 rotateSettings.setInitialSourceX(dragSourceRotated.getX());
                 rotateSettings.setInitialSourceY(dragSourceRotated.getY());
+                if (scaleX < 0) {
+                    rotateAngleOffset += 180;
+                }
                 rotateSettings.setRotateAngleOffset(rotateAngleOffset);
                 return rotateSettings;
             }

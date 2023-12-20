@@ -40,7 +40,6 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
@@ -271,6 +270,7 @@ public class FXCreator {
                 if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall)
                         && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
                     Button button = createTemplateForBall(size, ball);
+                    button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name")));
                     if (ball.getVersion() == 1.3) {
                         oldGooballsToolbar.getItems().add(button);
                     } else {
@@ -436,40 +436,40 @@ public class FXCreator {
         buttonShowHideAnim.setOnAction(e -> Main.showHideAnim());
         buttonShowHideSceneBGColor.setOnAction(e -> Main.showHideSceneBGColor());
 
-        buttonNewOld.setTooltip(new Tooltip("New Level (1.3)"));
-        buttonNewNew.setTooltip(new Tooltip("New Level (1.5)"));
-        buttonOpenOld.setTooltip(new Tooltip("Open Level (1.3)"));
-        buttonOpenNew.setTooltip(new Tooltip("Open Level (1.5)"));
-        buttonCloneOld.setTooltip(new Tooltip("Clone Level (1.3)"));
-        buttonCloneNew.setTooltip(new Tooltip("Clone Level (1.5)"));
-        buttonSaveOld.setTooltip(new Tooltip("Save Level (1.3)"));
-        buttonSaveNew.setTooltip(new Tooltip("Save Level (1.5)"));
-        buttonSaveAndPlay.setTooltip(new Tooltip("Save and Play Level on Level Version"));
-        buttonExport.setTooltip(new Tooltip("Export Level"));
-        buttonDummyExport.setTooltip(new Tooltip("Export Level Without Addin Info"));
-        buttonUndo.setTooltip(new Tooltip("Undo"));
-        buttonRedo.setTooltip(new Tooltip("Redo"));
-        buttonCut.setTooltip(new Tooltip("Cut"));
-        buttonCopy.setTooltip(new Tooltip("Copy"));
-        buttonPaste.setTooltip(new Tooltip("Paste"));
-        buttonDelete.setTooltip(new Tooltip("Delete"));
-        buttonUpdateLevelResources.setTooltip(new Tooltip("Update Level Resources"));
-        buttonImportImages.setTooltip(new Tooltip("Import Images"));
-        buttonAddTextResource.setTooltip(new Tooltip("Add Text Resource"));
-        buttonCleanResources.setTooltip(new Tooltip("Clean Level Resources"));
-        buttonSetMusic.setTooltip(new Tooltip("Set Music"));
-        buttonSetLoopsound.setTooltip(new Tooltip("Set Loop Sound"));
-        buttonSelectMoveAndResize.setTooltip(new Tooltip("Select, Move and Resize"));
-        buttonStrandMode.setTooltip(new Tooltip("Place Strands"));
-        buttonShowHideCamera.setTooltip(new Tooltip("Show/Hide Camera"));
-        buttonShowHideForcefields.setTooltip(new Tooltip("Show/Hide Force Fields"));
-        buttonShowHideGeometry.setTooltip(new Tooltip("Show/Hide Geometry"));
-        buttonShowHideGraphics.setTooltip(new Tooltip("Show/Hide Graphics"));
-        buttonShowHideGoos.setTooltip(new Tooltip("Show/Hide Goo Balls"));
-        buttonShowHideParticles.setTooltip(new Tooltip("Show/Hide Particles"));
-        buttonShowHideLabels.setTooltip(new Tooltip("Show/Hide Labels"));
-        buttonShowHideAnim.setTooltip(new Tooltip("Show/Hide Animations"));
-        buttonShowHideSceneBGColor.setTooltip(new Tooltip("Show/Hide Scene Background Color"));
+        buttonNewOld.setTooltip(new DelayedTooltip("New Level (1.3)"));
+        buttonNewNew.setTooltip(new DelayedTooltip("New Level (1.5)"));
+        buttonOpenOld.setTooltip(new DelayedTooltip("Open Level (1.3)"));
+        buttonOpenNew.setTooltip(new DelayedTooltip("Open Level (1.5)"));
+        buttonCloneOld.setTooltip(new DelayedTooltip("Clone Level (1.3)"));
+        buttonCloneNew.setTooltip(new DelayedTooltip("Clone Level (1.5)"));
+        buttonSaveOld.setTooltip(new DelayedTooltip("Save Level (1.3)"));
+        buttonSaveNew.setTooltip(new DelayedTooltip("Save Level (1.5)"));
+        buttonSaveAndPlay.setTooltip(new DelayedTooltip("Save and Play Level on Level Version"));
+        buttonExport.setTooltip(new DelayedTooltip("Export Level"));
+        buttonDummyExport.setTooltip(new DelayedTooltip("Export Level Without Addin Info"));
+        buttonUndo.setTooltip(new DelayedTooltip("Undo"));
+        buttonRedo.setTooltip(new DelayedTooltip("Redo"));
+        buttonCut.setTooltip(new DelayedTooltip("Cut"));
+        buttonCopy.setTooltip(new DelayedTooltip("Copy"));
+        buttonPaste.setTooltip(new DelayedTooltip("Paste"));
+        buttonDelete.setTooltip(new DelayedTooltip("Delete"));
+        buttonUpdateLevelResources.setTooltip(new DelayedTooltip("Update Level Resources"));
+        buttonImportImages.setTooltip(new DelayedTooltip("Import Images"));
+        buttonAddTextResource.setTooltip(new DelayedTooltip("Add Text Resource"));
+        buttonCleanResources.setTooltip(new DelayedTooltip("Clean Level Resources"));
+        buttonSetMusic.setTooltip(new DelayedTooltip("Set Music"));
+        buttonSetLoopsound.setTooltip(new DelayedTooltip("Set Loop Sound"));
+        buttonSelectMoveAndResize.setTooltip(new DelayedTooltip("Select, Move and Resize"));
+        buttonStrandMode.setTooltip(new DelayedTooltip("Place Strands"));
+        buttonShowHideCamera.setTooltip(new DelayedTooltip("Show/Hide Camera"));
+        buttonShowHideForcefields.setTooltip(new DelayedTooltip("Show/Hide Force Fields"));
+        buttonShowHideGeometry.setTooltip(new DelayedTooltip("Show/Hide Geometry"));
+        buttonShowHideGraphics.setTooltip(new DelayedTooltip("Show/Hide Graphics"));
+        buttonShowHideGoos.setTooltip(new DelayedTooltip("Show/Hide Goo Balls"));
+        buttonShowHideParticles.setTooltip(new DelayedTooltip("Show/Hide Particles"));
+        buttonShowHideLabels.setTooltip(new DelayedTooltip("Show/Hide Labels"));
+        buttonShowHideAnim.setTooltip(new DelayedTooltip("Show/Hide Animations"));
+        buttonShowHideSceneBGColor.setTooltip(new DelayedTooltip("Show/Hide Scene Background Color"));
 
         functionsToolbar.getItems().addAll(buttonNewOld, buttonOpenOld, buttonCloneOld, new Separator());
         functionsToolbar.getItems().addAll(buttonNewNew, buttonOpenNew, buttonCloneNew, new Separator());
@@ -586,20 +586,20 @@ public class FXCreator {
         addSignpostButton.setOnAction(e -> Main.addSign(Main.getLevel().getSceneObject()));
         addLabelButton.setOnAction(e -> Main.addLabel(Main.getLevel().getSceneObject()));
 
-        addLineButton.setTooltip(new Tooltip("Add Line"));
-        addRectangleButton.setTooltip(new Tooltip("Add Rectangle"));
-        addCircleButton.setTooltip(new Tooltip("Add Circle"));
-        addSceneLayerButton.setTooltip(new Tooltip("Add Scene Layer"));
-        addCompositegeomButton.setTooltip(new Tooltip("Add Composite Geometry"));
-        addHingeButton.setTooltip(new Tooltip("Add Hinge"));
-        autoPipeButton.setTooltip(new Tooltip("Auto Pipe"));
-        addVertexButton.setTooltip(new Tooltip("Add Vertex"));
-        addFireButton.setTooltip(new Tooltip("Add Fire"));
-        addLinearforcefieldButton.setTooltip(new Tooltip("Add Linear Force Field"));
-        addRadialforcefieldButton.setTooltip(new Tooltip("Add Radial Force Field"));
-        addParticlesButton.setTooltip(new Tooltip("Add Particles"));
-        addSignpostButton.setTooltip(new Tooltip("Add Signpost"));
-        addLabelButton.setTooltip(new Tooltip("Add Label"));
+        addLineButton.setTooltip(new DelayedTooltip("Add Line"));
+        addRectangleButton.setTooltip(new DelayedTooltip("Add Rectangle"));
+        addCircleButton.setTooltip(new DelayedTooltip("Add Circle"));
+        addSceneLayerButton.setTooltip(new DelayedTooltip("Add Scene Layer"));
+        addCompositegeomButton.setTooltip(new DelayedTooltip("Add Composite Geometry"));
+        addHingeButton.setTooltip(new DelayedTooltip("Add Hinge"));
+        autoPipeButton.setTooltip(new DelayedTooltip("Auto Pipe"));
+        addVertexButton.setTooltip(new DelayedTooltip("Add Vertex"));
+        addFireButton.setTooltip(new DelayedTooltip("Add Fire"));
+        addLinearforcefieldButton.setTooltip(new DelayedTooltip("Add Linear Force Field"));
+        addRadialforcefieldButton.setTooltip(new DelayedTooltip("Add Radial Force Field"));
+        addParticlesButton.setTooltip(new DelayedTooltip("Add Particles"));
+        addSignpostButton.setTooltip(new DelayedTooltip("Add Signpost"));
+        addLabelButton.setTooltip(new DelayedTooltip("Add Label"));
 
         addObjectsToolbar.getItems().addAll(addLineButton, addRectangleButton, addCircleButton, addSceneLayerButton,
                 addCompositegeomButton, addHingeButton, new Separator());

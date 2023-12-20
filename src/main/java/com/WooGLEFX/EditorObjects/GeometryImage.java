@@ -295,6 +295,9 @@ public class GeometryImage {
                 Point2D dragSourceRotated = EditorObject.rotate(new Point2D(dragSourceX, dragSourceY), -Math.toRadians(rotation), new Point2D(x, -y));
                 rotateSettings.setInitialSourceX(dragSourceRotated.getX());
                 rotateSettings.setInitialSourceY(dragSourceRotated.getY());
+                if (scalex < 0) {
+                    rotateAngleOffset += 180;
+                }
                 rotateSettings.setRotateAngleOffset(rotateAngleOffset);
                 rotateSettings.setDraggingImage(true);
                 return rotateSettings;

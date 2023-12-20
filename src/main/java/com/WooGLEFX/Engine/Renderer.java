@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
+import com.WorldOfGoo.Level.Pipe;
 import com.WorldOfGoo.Level.Strand;
 import com.WorldOfGoo.Level.Vertex;
 import com.WorldOfGoo.Scene.Compositegeom;
@@ -33,7 +34,9 @@ public class Renderer {
     public static final Paint selectionOutline2 = Paint.valueOf("FFFFFFFF");
     public static final Paint mechanics = Paint.valueOf("FFFF00FF");
     public static final Paint pipeVertex = Paint.valueOf("FF5599FF");
-    public static final Paint pipe = Paint.valueOf("404040FF");
+    public static final Paint PIPE = Paint.valueOf("404040FF");
+    public static final Paint PIPE_BEAUTY = Paint.valueOf("FFA6B7FF");
+    public static final Paint PIPE_ISH = Paint.valueOf("5FFF5FFF");
     public static final Paint compositeGeom = Paint.valueOf("00FF00FF");
     public static final Paint poiNormal = Paint.valueOf("41C0C080");
     public static final Paint poiWidescreen = Paint.valueOf("21FE8080");
@@ -240,10 +243,25 @@ public class Renderer {
         //Loop through and display every object in an arbitrary order
         graphicsContext.save();
         EditorObject previousVertex = null;
+        Paint previousPipeColor = null;
         for (EditorObject object : level.getLevel()) {
+            if (object instanceof Pipe) {
+                String pipeColor = object.getAttribute("type");
+                switch (pipeColor) {
+                    case "BEAUTY":
+                        previousPipeColor = PIPE_BEAUTY;
+                        break;
+                    case "ISH":
+                        previousPipeColor = PIPE_ISH;
+                        break;
+                    default:
+                        previousPipeColor = PIPE;
+                        break;
+                }
+            }
             if (object instanceof Vertex && Main.getLevel().isShowGeometry()) {
                 if (previousVertex != null) {
-                    ((Vertex) object).drawTo(graphicsContext, (Vertex) previousVertex);
+                    ((Vertex) object).drawTo(graphicsContext, (Vertex) previousVertex, previousPipeColor);
                 }
                 previousVertex = object;
             }

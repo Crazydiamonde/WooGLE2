@@ -41,10 +41,10 @@ public class ThingHandler extends DefaultHandler {
         } else if (mode == 1) {
             FileManager.resources.add(obj);
             if (impossible != null && (obj instanceof ResrcImage || obj instanceof Sound)) {
-                obj.setAttribute("REALid", impossible.getAttribute("idprefix") + obj.getAttribute("id"));
-                obj.setAttribute("REALpath", impossible.getAttribute("path") + obj.getAttribute("path"));
-                obj.setAttribute("id", obj.getAttribute("id"));
-                obj.setAttribute("path", obj.getAttribute("path"));
+                obj.setAttribute("REALid", obj.getAttribute("id"));
+                obj.setAttribute("REALpath", obj.getAttribute("path"));
+                obj.setAttribute("id", impossible.getAttribute("idprefix") + obj.getAttribute("id"));
+                obj.setAttribute("path", impossible.getAttribute("path") + obj.getAttribute("path"));
             }
             if (obj instanceof SetDefaults) {
                 impossible = (SetDefaults) obj;
