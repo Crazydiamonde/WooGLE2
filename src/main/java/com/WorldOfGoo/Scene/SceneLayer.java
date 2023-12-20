@@ -383,6 +383,7 @@ public class SceneLayer extends EditorObject {
             boolean rotate = false;
 
             if (mX2 > screenX3 - distance && mX2 < screenX3 + distance && mY2 > screenY3 - distance && mY2 < screenY3 + distance) {
+                // Upper left corner
                 resize = true;
                 dragSourceX = x - image.getWidth() * scaleX / 2;
                 dragSourceY = -y - image.getHeight() * scaleY / 2;
@@ -390,25 +391,32 @@ public class SceneLayer extends EditorObject {
                 dragAnchorY = -y + image.getHeight() * scaleY / 2;
             }
             if (mX2 > screenX4 - distance && mX2 < screenX4 + distance && mY2 > screenY4 - distance && mY2 < screenY4 + distance) {
+                // Lower right corner
                 resize = true;
                 dragSourceX = x + image.getWidth() * scaleX / 2;
                 dragSourceY = -y + image.getHeight() * scaleY / 2;
                 dragAnchorX = x - image.getWidth() * scaleX / 2;
                 dragAnchorY = -y - image.getHeight() * scaleY / 2;
+                if (scaleX < 0) {
+                    dragSourceX *= -1;
+                }
             }
             if (mX2 > screenX5 - distance && mX2 < screenX5 + distance && mY2 > screenY5 - distance && mY2 < screenY5 + distance) {
+                // Left side
                 rotate = true;
                 dragSourceX = x - image.getWidth() * scalex / 2;
                 dragSourceY = -y;
                 rotateAngleOffset = 0;
             }
             if (mX2 > screenX6 - distance && mX2 < screenX6 + distance && mY2 > screenY6 - distance && mY2 < screenY6 + distance) {
+                // Right side
                 rotate = true;
                 dragSourceX = x + image.getWidth() * scaleX / 2;
                 dragSourceY = -y;
                 rotateAngleOffset = 180;
             }
             if (mX2 > screenX7 - distance && mX2 < screenX7 + distance && mY2 > screenY7 - distance && mY2 < screenY7 + distance) {
+                // Lower left corner
                 resize = true;
                 dragSourceX = x - image.getWidth() * scaleX / 2;
                 dragSourceY = -y + image.getHeight() * scaleY / 2;
@@ -416,11 +424,15 @@ public class SceneLayer extends EditorObject {
                 dragAnchorY = -y - image.getHeight() * scaleY / 2;
             }
             if (mX2 > screenX8 - distance && mX2 < screenX8 + distance && mY2 > screenY8 - distance && mY2 < screenY8 + distance) {
+                // Upper right corner
                 resize = true;
                 dragSourceX = x + image.getWidth() * scaleX / 2;
                 dragSourceY = -y - image.getHeight() * scaleY / 2;
                 dragAnchorX = x - image.getWidth() * scaleX / 2;
                 dragAnchorY = -y + image.getHeight() * scaleY / 2;
+                // if (scaleX < 0) {
+                //     dragSourceX *= -1;
+                // }
             }
 
             if (resize) {
@@ -507,10 +519,22 @@ public class SceneLayer extends EditorObject {
         double newWidth;
         double newHeight;
 
-        if (rotatedAnchor.getX() > rotatedSource.getX()){
-            newWidth = rotatedAnchor.getX() - rotatedReal.getX();
+        double scaleX = getDouble("scalex");
+        // if (scaleX < 0) {
+        //     rotation += 180;
+        // }
+        if (rotatedAnchor.getX() > rotatedSource.getX()) {
+            if (scaleX < 0 && mouseX < rotatedReal.getX()) {
+                newWidth = rotatedReal.getX() - rotatedAnchor.getX();
+            } else {
+                newWidth = rotatedAnchor.getX() - rotatedReal.getX();
+            }
         } else {
-            newWidth = rotatedReal.getX() - rotatedAnchor.getX();
+            if (scaleX < 0 && mouseX < rotatedReal.getX()) {
+                newWidth = rotatedAnchor.getX() - rotatedReal.getX();
+            } else {
+                newWidth = rotatedReal.getX() - rotatedAnchor.getX();
+            }
         }
 
         if (rotatedAnchor.getY() > rotatedSource.getY()){
