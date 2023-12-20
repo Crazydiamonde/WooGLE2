@@ -447,6 +447,7 @@ public class FXCreator {
         buttonCloneNew.setTooltip(new DelayedTooltip("Clone Level (1.5)"));
         buttonSaveOld.setTooltip(new DelayedTooltip("Save Level (1.3)"));
         buttonSaveNew.setTooltip(new DelayedTooltip("Save Level (1.5)"));
+        buttonSaveAll.setTooltip(new DelayedTooltip("Save All Levels"));
         buttonSaveAndPlay.setTooltip(new DelayedTooltip("Save and Play Level on Level Version"));
         buttonExport.setTooltip(new DelayedTooltip("Export Level"));
         buttonDummyExport.setTooltip(new DelayedTooltip("Export Level Without Addin Info"));
