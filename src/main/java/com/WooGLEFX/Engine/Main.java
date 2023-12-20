@@ -1859,8 +1859,25 @@ public class Main extends Application {
                             dragSettings = level.getSelected().mouseIntersectingCorners(
                                     (event.getX() - level.getOffsetX()) / level.getZoom(),
                                     (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+
+                            /* Dragging of already selected object that might be behind something else */
+                            DragSettings thisSettings = level.getSelected().mouseIntersection(
+                                    (event.getX() - level.getOffsetX()) / level.getZoom(),
+                                    (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                            DragSettings thisImageSettings = level.getSelected().mouseImageIntersection(
+                                    (event.getX() - level.getOffsetX()) / level.getZoom(),
+                                    (event.getY() - getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                            if (thisSettings.getType() != DragSettings.NONE) {
+                                scene.setCursor(Cursor.MOVE);
+                                dragSettings = thisSettings;
+                            } else if (thisImageSettings.getType() != DragSettings.NONE) {
+                                scene.setCursor(Cursor.MOVE);
+                                dragSettings = thisImageSettings;
+                            }
+
                         }
                         if (dragSettings.getType() == DragSettings.NONE) {
+
                             EditorObject prevSelected = level.getSelected();
                             setSelected(null);
                             ArrayList<EditorObject> byDepth = Renderer.orderObjectsBySelectionDepth(level);
