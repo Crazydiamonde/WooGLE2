@@ -200,9 +200,8 @@ public class Main extends Application {
                 FXCreator.newLevelOldItem.setDisable(false);
                 FXCreator.openLevelOldItem.setDisable(false);
                 if (level != null) {
-                    FXCreator.buttonCloneOld.setDisable(false);
                     FXCreator.buttonSave.setDisable(false);
-                    FXCreator.cloneLevelOldItem.setDisable(false);
+                    FXCreator.cloneLevelItem.setDisable(false);
                     FXCreator.saveLevelItem.setDisable(false);
                 }
             } else {
@@ -339,34 +338,34 @@ public class Main extends Application {
             FXCreator.buttonNewOld.setDisable(true);
             FXCreator.buttonOpenOld.setDisable(true);
             FXCreator.buttonSave.setDisable(true);
-            FXCreator.buttonCloneOld.setDisable(true);
+            FXCreator.buttonClone.setDisable(true);
             if (level != null) {
                 FXCreator.newLevelOldItem.setDisable(true);
                 FXCreator.openLevelOldItem.setDisable(true);
                 FXCreator.saveLevelItem.setDisable(true);
-                FXCreator.cloneLevelOldItem.setDisable(true);
+                FXCreator.cloneLevelItem.setDisable(true);
             } else {
                 FXCreator.newLevelOldItem.setDisable(false);
                 FXCreator.openLevelOldItem.setDisable(false);
                 FXCreator.saveLevelItem.setDisable(false);
-                FXCreator.cloneLevelOldItem.setDisable(false);
+                FXCreator.cloneLevelItem.setDisable(false);
             }
         }
         if (!FileManager.isHasNewWOG()) {
             FXCreator.buttonNewNew.setDisable(true);
             FXCreator.buttonOpenNew.setDisable(true);
             FXCreator.buttonSave.setDisable(true);
-            FXCreator.buttonCloneNew.setDisable(true);
+            FXCreator.buttonClone.setDisable(true);
             if (level != null) {
                 FXCreator.newLevelNewItem.setDisable(true);
                 FXCreator.openLevelNewItem.setDisable(true);
                 FXCreator.saveLevelItem.setDisable(true);
-                FXCreator.cloneLevelNewItem.setDisable(true);
+                FXCreator.cloneLevelItem.setDisable(true);
             } else {
                 FXCreator.newLevelNewItem.setDisable(false);
                 FXCreator.openLevelNewItem.setDisable(false);
                 FXCreator.saveLevelItem.setDisable(false);
-                FXCreator.cloneLevelNewItem.setDisable(false);
+                FXCreator.cloneLevelItem.setDisable(false);
             }
         }
         if ((FileManager.isHasOldWOG() || FileManager.isHasNewWOG()) && level != null) {
@@ -492,7 +491,8 @@ public class Main extends Application {
         }
     }
 
-    public static void cloneLevel(double version) {
+    public static void cloneLevel() {
+        double version = level.getVersion();
         Alarms.askForLevelName("clone", version);
     }
 
