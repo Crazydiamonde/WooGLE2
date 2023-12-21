@@ -1247,6 +1247,7 @@ public class FXCreator {
                     case "levelexit" -> Main.addLevelexit(object);
                     case "pipe" -> Main.addPipe(object);
                     case "signpost" -> Main.addSign(object);
+                    case "textstring" -> Main.addString(object);
                 }
             });
 
@@ -1301,13 +1302,13 @@ public class FXCreator {
                     Main.hierarchy.refresh();
                     Main.hierarchy.getRoot().setExpanded(true);
                     Main.getLevel().setCurrentlySelectedSection("Resrc");
-                    Main.getHierarchy().setShowRoot(false);
+                    Main.getHierarchy().setShowRoot(true);
                 } else if (t1 == textSelectButton) {
                     Main.hierarchy.setRoot(Main.getLevel().getTextObject().getTreeItem());
                     Main.hierarchy.refresh();
                     Main.hierarchy.getRoot().setExpanded(true);
                     Main.getLevel().setCurrentlySelectedSection("Text");
-                    Main.getHierarchy().setShowRoot(false);
+                    Main.getHierarchy().setShowRoot(true);
                 } else if (t1 == addinSelectButton) {
                     Main.hierarchy.setRoot(Main.getLevel().getAddinObject().getTreeItem());
                     Main.hierarchy.refresh();

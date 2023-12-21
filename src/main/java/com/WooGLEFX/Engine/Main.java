@@ -275,6 +275,7 @@ public class Main extends Application {
                 level.getResourcesObject());
         resourcesThing.setTreeItem(new TreeItem<>(resourcesThing));
         resourcesThing.setAttribute("id", "scene_" + level.getLevelName());
+        resourcesThing.getTreeItem().setExpanded(true);
         level.getResourcesObject().getTreeItem().getChildren().add(resourcesThing.getTreeItem());
 
         for (EditorObject object : level.getScene()) {
@@ -1663,6 +1664,16 @@ public class Main extends Application {
         addAnything(obj, parent);
     }
 
+    public static void addString(EditorObject parent) {
+        TextString obj = (TextString) EditorObject.create("string", new EditorAttribute[0], parent);
+        obj.setAttribute("id", "TEXT_" + level.getLevelName().toUpperCase() + "_STR0");
+        obj.setAttribute("text", "");
+        fixString(obj);
+        obj.setRealName("string");
+        level.getText().add(obj);
+        addAnything(obj, parent);
+    }
+
     public static void addLabel(EditorObject parent) {
         Label obj = (Label) EditorObject.create("label", new EditorAttribute[0], parent);
         obj.setAttribute("x", getScreenCenter().getX());
@@ -2279,10 +2290,10 @@ public class Main extends Application {
         if (level.getSelected() != null && level.getSelected().getParent() != null) {
             if (level.getSelected().getAbsoluteParent() instanceof ResourceManifest) {
                 hierarchy.setRoot(level.getSelected().getAbsoluteParent().getChildren().get(0).getTreeItem());
-                hierarchy.setShowRoot(false);
+                hierarchy.setShowRoot(true);
             } else if (level.getSelected().getAbsoluteParent() instanceof TextStrings) {
                 hierarchy.setRoot(level.getSelected().getAbsoluteParent().getTreeItem());
-                hierarchy.setShowRoot(false);
+                hierarchy.setShowRoot(true);
             } else {
                 hierarchy.setRoot(level.getSelected().getAbsoluteParent().getTreeItem());
                 hierarchy.setShowRoot(true);
