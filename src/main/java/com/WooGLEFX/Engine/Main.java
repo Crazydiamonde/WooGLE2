@@ -201,9 +201,9 @@ public class Main extends Application {
                 FXCreator.openLevelOldItem.setDisable(false);
                 if (level != null) {
                     FXCreator.buttonCloneOld.setDisable(false);
-                    FXCreator.buttonSaveOld.setDisable(false);
+                    FXCreator.buttonSave.setDisable(false);
                     FXCreator.cloneLevelOldItem.setDisable(false);
-                    FXCreator.saveLevelOldItem.setDisable(false);
+                    FXCreator.saveLevelItem.setDisable(false);
                 }
             } else {
                 FileManager.setNewWOGdir(worldOfGoo.getParent() + "\\game");
@@ -219,9 +219,9 @@ public class Main extends Application {
                 FXCreator.openLevelNewItem.setDisable(false);
                 if (level != null) {
                     FXCreator.buttonCloneNew.setDisable(false);
-                    FXCreator.buttonSaveNew.setDisable(false);
+                    FXCreator.buttonSave.setDisable(false);
                     FXCreator.cloneLevelNewItem.setDisable(false);
-                    FXCreator.saveLevelNewItem.setDisable(false);
+                    FXCreator.saveLevelItem.setDisable(false);
                 }
             }
             if(FXCreator.getOldGooballsToolbar() != null) {
@@ -306,7 +306,7 @@ public class Main extends Application {
         levelSelectPane.setTabMaxWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
         levelSelectPane.setTabMinWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
 
-        saveLevel(version);
+        saveLevel();
 
         level.setLevelTab(levelSelectButton);
         level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
@@ -338,34 +338,34 @@ public class Main extends Application {
         if (!FileManager.isHasOldWOG()) {
             FXCreator.buttonNewOld.setDisable(true);
             FXCreator.buttonOpenOld.setDisable(true);
-            FXCreator.buttonSaveOld.setDisable(true);
+            FXCreator.buttonSave.setDisable(true);
             FXCreator.buttonCloneOld.setDisable(true);
             if (level != null) {
                 FXCreator.newLevelOldItem.setDisable(true);
                 FXCreator.openLevelOldItem.setDisable(true);
-                FXCreator.saveLevelOldItem.setDisable(true);
+                FXCreator.saveLevelItem.setDisable(true);
                 FXCreator.cloneLevelOldItem.setDisable(true);
             } else {
                 FXCreator.newLevelOldItem.setDisable(false);
                 FXCreator.openLevelOldItem.setDisable(false);
-                FXCreator.saveLevelOldItem.setDisable(false);
+                FXCreator.saveLevelItem.setDisable(false);
                 FXCreator.cloneLevelOldItem.setDisable(false);
             }
         }
         if (!FileManager.isHasNewWOG()) {
             FXCreator.buttonNewNew.setDisable(true);
             FXCreator.buttonOpenNew.setDisable(true);
-            FXCreator.buttonSaveNew.setDisable(true);
+            FXCreator.buttonSave.setDisable(true);
             FXCreator.buttonCloneNew.setDisable(true);
             if (level != null) {
                 FXCreator.newLevelNewItem.setDisable(true);
                 FXCreator.openLevelNewItem.setDisable(true);
-                FXCreator.saveLevelNewItem.setDisable(true);
+                FXCreator.saveLevelItem.setDisable(true);
                 FXCreator.cloneLevelNewItem.setDisable(true);
             } else {
                 FXCreator.newLevelNewItem.setDisable(false);
                 FXCreator.openLevelNewItem.setDisable(false);
-                FXCreator.saveLevelNewItem.setDisable(false);
+                FXCreator.saveLevelItem.setDisable(false);
                 FXCreator.cloneLevelNewItem.setDisable(false);
             }
         }
@@ -563,7 +563,7 @@ public class Main extends Application {
         levelSelectPane.setTabMaxWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
         levelSelectPane.setTabMinWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
 
-        saveLevel(version);
+        saveLevel();
 
         level.setLevelTab(levelSelectButton);
         level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
@@ -571,7 +571,8 @@ public class Main extends Application {
         onSetLevel();
     }
 
-    public static void saveLevel(double version) {
+    public static void saveLevel() {
+        double version = level.getVersion();
         saveSpecificLevel(level, version);
         if (level.getEditingStatus() != WorldLevel.NO_UNSAVED_CHANGES) {
             level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
@@ -668,7 +669,7 @@ public class Main extends Application {
         level.setLevelName(text);
         level.setEditingStatus(level.getEditingStatus(), true);
 
-        saveLevel(level.getVersion());
+        saveLevel();
 
     }
 
@@ -2205,7 +2206,7 @@ public class Main extends Application {
         }
         if (CTRL) {
             if (event.getCode() == KeyCode.S) {
-                saveLevel(level.getVersion());
+                saveLevel();
             }
             if (event.getCode() == KeyCode.Z) {
                 undo();
