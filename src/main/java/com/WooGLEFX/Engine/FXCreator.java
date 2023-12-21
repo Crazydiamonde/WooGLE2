@@ -1220,6 +1220,7 @@ public class FXCreator {
                     case "resrcimage" -> Main.addResrcImage(object);
                     case "sound" -> Main.addSound(object);
                     case "setdefaults" -> Main.addSetDefaults(object);
+                    case "Vertex" -> Main.addPipeVertex(object);
                     default -> throw new RuntimeException("Unknown child type: " + childToAdd);
                 }
             });
