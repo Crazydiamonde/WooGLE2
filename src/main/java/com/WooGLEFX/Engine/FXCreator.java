@@ -746,7 +746,6 @@ public class FXCreator {
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }
-                        System.out.println(row.getContextMenu().getItems().size());
                     }
                 }
             });
@@ -1176,22 +1175,6 @@ public class FXCreator {
 
         // Create the content menu.
         ContextMenu menu = new ContextMenu();
-
-        // Create the Cut, Copy, Paste in Place, and Delete buttons. These should be
-        // present for every object.
-        MenuItem cutItem = new MenuItem("Cut");
-        MenuItem copyItem = new MenuItem("Copy");
-        MenuItem pasteInPlaceItem = new MenuItem("Paste in Place");
-        MenuItem deleteItem = new MenuItem("Delete");
-
-        // Attempt to set graphics for the Cut, Copy, Paste, and Delete buttons.
-
-        cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
-        copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
-        pasteInPlaceItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
-        deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
-
-        menu.getItems().addAll(cutItem, copyItem, pasteInPlaceItem, deleteItem);
 
         // For every object that can be created as a child of this object:
         for (String childToAdd : object.getPossibleChildren()) {
