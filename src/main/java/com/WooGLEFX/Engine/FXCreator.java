@@ -1248,6 +1248,10 @@ public class FXCreator {
                     case "pipe" -> Main.addPipe(object);
                     case "signpost" -> Main.addSign(object);
                     case "textstring" -> Main.addString(object);
+                    case "resrcimage" -> Main.addResrcImage(object);
+                    case "sound" -> Main.addSound(object);
+                    case "setdefaults" -> Main.addSetDefaults(object);
+                    default -> throw new RuntimeException("Unknown child type: " + childToAdd);
                 }
             });
 

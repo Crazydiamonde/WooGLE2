@@ -59,6 +59,7 @@ import com.WorldOfGoo.Particle._Particle;
 import com.WorldOfGoo.Resrc.ResourceManifest;
 import com.WorldOfGoo.Resrc.Resources;
 import com.WorldOfGoo.Resrc.ResrcImage;
+import com.WorldOfGoo.Resrc.SetDefaults;
 import com.WorldOfGoo.Resrc.Sound;
 import com.WorldOfGoo.Scene.Button;
 import com.WorldOfGoo.Scene.Buttongroup;
@@ -1671,6 +1672,37 @@ public class Main extends Application {
         fixString(obj);
         obj.setRealName("string");
         level.getText().add(obj);
+        addAnything(obj, parent);
+    }
+
+    public static void addResrcImage(EditorObject parent) {
+        ResrcImage obj = (ResrcImage) EditorObject.create("Image", new EditorAttribute[0], parent);
+        obj.setAttribute("id", "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_IMG0");
+        obj.setAttribute("path", "");
+        obj.setAttribute("REALid", "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_IMG0");
+        obj.setAttribute("REALpath", "");
+        obj.setRealName("Image");
+        level.getResources().add(obj);
+        addAnything(obj, parent);
+    }
+
+    public static void addSound(EditorObject parent) {
+        Sound obj = (Sound) EditorObject.create("Sound", new EditorAttribute[0], parent);
+        obj.setAttribute("id", "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_SND0");
+        obj.setAttribute("path", "");
+        obj.setAttribute("REALid", "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_SND0");
+        obj.setAttribute("REALpath", "");
+        obj.setRealName("Sound");
+        level.getResources().add(obj);
+        addAnything(obj, parent);
+    }
+
+    public static void addSetDefaults(EditorObject parent) {
+        SetDefaults obj = (SetDefaults) EditorObject.create("SetDefaults", new EditorAttribute[0], parent);
+        obj.setAttribute("path", "./");
+        obj.setAttribute("idprefix", "");
+        obj.setRealName("SetDefaults");
+        level.getLevel().add(obj);
         addAnything(obj, parent);
     }
 

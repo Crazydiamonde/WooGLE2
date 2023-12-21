@@ -12,4 +12,9 @@ public class Resources extends EditorObject {
         setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,"));
     }
+
+    @Override
+    public String[] getPossibleChildren() {
+        return new String[]{"resrcimage","sound","setdefaults"};
+    }
 }
