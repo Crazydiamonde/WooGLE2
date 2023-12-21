@@ -29,9 +29,9 @@ jobs:
       run: mvn clean javafx:jlink
 
     - name: Copy Assets
-      run: cp ButtonIcons D:\a\WooGLE\WooGLE\target\WOGAnniversaryEditor\bin && cp ObjectIcons D:\a\WooGLE\WooGLE\target\WOGAnniversaryEditor\bin
+      run: cp -Recurse ButtonIcons D:\a\WooGLE\WooGLE\target\WOGAnniversaryEditor\bin\ && cp -Recurse ObjectIcons D:\a\WooGLE\WooGLE\target\WOGAnniversaryEditor\bin\
 
     - uses: actions/upload-artifact@v4
       with:
         name: WooGLE2
-        path: D:\a\WooGLE\WooGLE\target\WOGAnniversaryEditor\bin/
+        path: D:\a\WooGLE\WooGLE\target\WOGAnniversaryEditor\bin\
