@@ -13,6 +13,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 
 public class Vertex extends EditorObject {
+    private Vertex previous = null;
+
     public Vertex(EditorObject _parent) {
         super(_parent);
         setRealName("Vertex");
@@ -26,6 +28,14 @@ public class Vertex extends EditorObject {
             setAttribute("x", bruh);
         });
         setMetaAttributes(MetaEditorAttribute.parse("x,y,"));
+    }
+
+    public Vertex getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(Vertex previous) {
+        this.previous = previous;
     }
 
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
@@ -90,6 +100,28 @@ public class Vertex extends EditorObject {
         } else {
             return new DragSettings(DragSettings.NONE);
         }
+    }
+
+    @Override
+    public void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY){
+        double locX = mouseX - dragSourceX;
+        double locY = dragSourceY - mouseY;
+        // Fetch previous Vertex in the tree view
+        if (previous != null) {
+            // Get the previous Vertex's coordinates
+            double previousX = Double.parseDouble(previous.getAttribute("x"));
+            double previousY = Double.parseDouble(previous.getAttribute("y"));
+
+            // Make this vertex snap to 90-degree angles of the previous vertex
+            if (Math.abs(previousX - locX) < 20) {
+                locX = previousX;
+            } else if (Math.abs(previousY - locY) < 20) {
+                locY = previousY;
+            }
+        }
+
+        setAttribute("x", locX);
+        setAttribute("y", locY);
     }
 
     public void drawTo(GraphicsContext graphicsContext, Vertex vertex, Paint color){

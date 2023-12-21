@@ -91,6 +91,7 @@ public class EditorObject {
     /** The name that World of Goo assigns to this object.
      * This is the same for every object of the same type. */
     private String realName;
+    private static Vertex lastVertex = null;
     public String getRealName() {
         return realName;
     }
@@ -323,6 +324,10 @@ public class EditorObject {
             toAdd.setAttribute(attribute.getName(), attribute.getDefaultValue());
         }
         toAdd.setTreeItem(new TreeItem<>(toAdd));
+        if(toAdd instanceof Vertex){
+            ((Vertex) toAdd).setPrevious(lastVertex);
+            lastVertex = (Vertex) toAdd;
+        }
         // Automatically add to parent
         if (toAdd.getParent() != null) {
             toAdd.getParent().getTreeItem().getChildren().add(toAdd.getTreeItem());

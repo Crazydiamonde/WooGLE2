@@ -1607,6 +1607,7 @@ public class Main extends Application {
                 EditorObject vertex2 = EditorObject.create("Vertex", new EditorAttribute[0], pipe);
                 vertex2.setAttribute("x", closestPoint.getX());
                 vertex2.setAttribute("y", closestPoint.getY());
+                ((Vertex) vertex2).setPrevious((Vertex) vertex1);
 
                 level.getLevel().add(pipe);
                 level.getLevel().add(vertex1);
@@ -1617,7 +1618,15 @@ public class Main extends Application {
     }
 
     public static void addPipeVertex(EditorObject parent) {
+        // get the previous vertex before this one
+        Vertex previous = null;
+        for (EditorObject child : parent.getChildren()) {
+            if (child instanceof Vertex) {
+                previous = (Vertex) child;
+            }
+        }
         Vertex obj = (Vertex) EditorObject.create("Vertex", new EditorAttribute[0], parent);
+        obj.setPrevious(previous);
         obj.setAttribute("x", getScreenCenter().getX());
         obj.setAttribute("y", -getScreenCenter().getY());
         obj.setRealName("Vertex");
