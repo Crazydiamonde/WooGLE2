@@ -217,9 +217,9 @@ public class Main extends Application {
                 FXCreator.newLevelNewItem.setDisable(false);
                 FXCreator.openLevelNewItem.setDisable(false);
                 if (level != null) {
-                    FXCreator.buttonCloneNew.setDisable(false);
+                    FXCreator.buttonClone.setDisable(false);
                     FXCreator.buttonSave.setDisable(false);
-                    FXCreator.cloneLevelNewItem.setDisable(false);
+                    FXCreator.cloneLevelItem.setDisable(false);
                     FXCreator.saveLevelItem.setDisable(false);
                 }
             }
