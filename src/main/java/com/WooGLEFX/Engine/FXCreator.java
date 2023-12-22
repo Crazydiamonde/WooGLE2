@@ -22,7 +22,7 @@ import com.WooGLEFX.Structures.WorldLevel;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
-import com.WooGLEFX.Structures.UserActions.UserAction;
+import com.WooGLEFX.Structures.UserActions.HierarchyDragAction;
 import com.WorldOfGoo.Ball.Part;
 import com.WorldOfGoo.Resrc.ResrcImage;
 
@@ -783,7 +783,7 @@ public class FXCreator {
                     if (!row.isEmpty()) {
                         int dropIndex = row.getIndex();
                         int curIndex = Main.getOldDropIndex();
-                        if (dropIndex > Main.getOldDropIndex()) {
+                        if (dropIndex > curIndex) {
                             // Dragged the item downwards; shift all of the items up
                             while (curIndex < dropIndex) {
                                 hierarchy.getTreeItem(curIndex).setValue(hierarchy.getTreeItem(curIndex + 1).getValue());
@@ -801,7 +801,8 @@ public class FXCreator {
 
                         success = true;
 
-                        // TODO: Create new undo action
+                        Main.registerChange(new HierarchyDragAction(Main.getMoving(), Main.getOldDropIndex(), dropIndex));
+                        Main.clearRedoActions();
                     }
                 }
                 event.setDropCompleted(success);
@@ -1012,6 +1013,7 @@ public class FXCreator {
                 // Push an attribute change to the undo buffer.
                 Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), oldValue,
                         attribute.getValue()));
+                Main.clearRedoActions();
 
                 // If we have edited the name or ID of the object, change the object's "Name or
                 // ID" value.
@@ -1450,6 +1452,7 @@ public class FXCreator {
                         setImageItem.setOnAction(event -> {
                             Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
                                     attribute.getValue(), resource.getAttribute("id")));
+                            Main.clearRedoActions();
                             attribute.setValue(resource.getAttribute("REALid"));
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.getValue());
@@ -1471,6 +1474,7 @@ public class FXCreator {
                         setImageItem.setOnAction(event -> {
                             Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
                                     attribute.getValue(), ballFile.getName()));
+                            Main.clearRedoActions();
                             attribute.setValue(ballFile.getName());
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.getValue());

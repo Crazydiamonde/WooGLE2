@@ -35,6 +35,7 @@ import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.SimpleStructures.WoGAnimation;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
+import com.WooGLEFX.Structures.UserActions.HierarchyDragAction;
 import com.WooGLEFX.Structures.UserActions.ImportResourceAction;
 import com.WooGLEFX.Structures.UserActions.ObjectCreationAction;
 import com.WooGLEFX.Structures.UserActions.ObjectDestructionAction;
@@ -747,6 +748,26 @@ public class Main extends Application {
                 } else if (change instanceof ImportResourceAction) {
                     deleteResource(change.getObject().getAttribute("path"));
                     deleteItem(change.getObject(), false);
+                } else if (change instanceof HierarchyDragAction) {
+                    HierarchyDragAction dragAction = (HierarchyDragAction) change;
+                    int toIndex = dragAction.getToPosition();
+                    int fromIndex = dragAction.getFromPosition();
+                    // Shift all the items opposite of the direction the original item was dragged
+                    if (toIndex > fromIndex) {
+                        // Dragged the item downwards; shift all of the items down
+                        while (toIndex > fromIndex) {
+                            hierarchy.getTreeItem(toIndex).setValue(hierarchy.getTreeItem(toIndex - 1).getValue());
+                            toIndex--;
+                        }
+                    } else {
+                        // Dragged the item upwards; shift all of the items up
+                        while (fromIndex > toIndex) {
+                            hierarchy.getTreeItem(toIndex).setValue(hierarchy.getTreeItem(toIndex + 1).getValue());
+                            toIndex++;
+                        }
+                    }
+                    hierarchy.getTreeItem(dragAction.getFromPosition()).setValue(dragAction.getObject());
+                    hierarchy.getSelectionModel().select(dragAction.getFromPosition());
                 }
                 hierarchy.refresh();
             }
@@ -757,6 +778,10 @@ public class Main extends Application {
     }
 
     private static final Stack<UserAction[]> redoActions = new Stack<>();
+
+    public static void clearRedoActions() {
+        redoActions.clear();
+    }
 
     public static void redo() {
         if (redoActions.size() != 0) {
@@ -778,6 +803,25 @@ public class Main extends Application {
                         // TODO make this work with loopsounds instead of just music
                         importMusic(new File(((ImportResourceAction) change).getPath()), false);
                     }
+                } else if (change instanceof HierarchyDragAction) {
+                    HierarchyDragAction dragAction = (HierarchyDragAction) change;
+                    int toIndex = dragAction.getToPosition();
+                    int fromIndex = dragAction.getFromPosition();
+                    if (toIndex > fromIndex) {
+                        // Dragged the item downwards; shift all of the items up
+                        while (fromIndex < toIndex) {
+                            hierarchy.getTreeItem(fromIndex).setValue(hierarchy.getTreeItem(fromIndex + 1).getValue());
+                            fromIndex++;
+                        }
+                    } else {
+                        // Dragged the item upwards; shift all of the items down
+                        while (fromIndex > toIndex) {
+                            hierarchy.getTreeItem(fromIndex).setValue(hierarchy.getTreeItem(fromIndex - 1).getValue());
+                            fromIndex--;
+                        }
+                    }
+                    hierarchy.getTreeItem(dragAction.getToPosition()).setValue(dragAction.getObject());
+                    hierarchy.getSelectionModel().select(dragAction.getToPosition());
                 }
                 hierarchy.refresh();
             }
