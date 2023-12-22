@@ -397,6 +397,13 @@ public class Main extends Application {
         if (levelName == null || levelName.equals("")) {
             return;
         }
+        // Don't open a level if it's already open
+        for (Tab tab : levelSelectPane.getTabs()) {
+            if (tab.getText().equals(levelName)) {
+                levelSelectPane.getSelectionModel().select(tab);
+                return;
+            }
+        }
         failedResources.clear();
 
         try {
