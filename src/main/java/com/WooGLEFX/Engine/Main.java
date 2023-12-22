@@ -373,11 +373,30 @@ public class Main extends Application {
             FXCreator.buttonSaveAndPlay.setDisable(false);
             FXCreator.saveAndPlayLevelItem.setDisable(false);
         }
+        if (userActions.size() == 0) {
+            FXCreator.undoItem.setDisable(true);
+            FXCreator.buttonUndo.setDisable(true);
+        } else {
+            FXCreator.undoItem.setDisable(disable);
+            FXCreator.buttonUndo.setDisable(disable);
+        }
+        if (redoActions.size() == 0) {
+            FXCreator.redoItem.setDisable(true);
+            FXCreator.buttonRedo.setDisable(true);
+        } else {
+            FXCreator.redoItem.setDisable(disable);
+            FXCreator.buttonRedo.setDisable(disable);
+        }
     }
 
     public static final ArrayList<String> failedResources = new ArrayList<>();
 
     public static void openLevel(String levelName, double version) {
+
+        // Don't open a level if none selected
+        if (levelName == null || levelName.equals("")) {
+            return;
+        }
         failedResources.clear();
 
         try {
@@ -736,6 +755,8 @@ public class Main extends Application {
         if (userActions.size() != 0) {
             UserAction[] changes = userActions.pop();
             redoActions.add(changes);
+            FXCreator.redoItem.setDisable(false);
+            FXCreator.buttonRedo.setDisable(false);
             for (UserAction change : changes) {
                 if (change instanceof AttributeChangeAction) {
                     change.getObject().setAttribute(((AttributeChangeAction) change).getAttributeName(),
@@ -772,8 +793,11 @@ public class Main extends Application {
                 hierarchy.refresh();
             }
         }
+        // TODO Undo stack should track if there are any unsaved changes, this isn't always true
         if (userActions.size() == 0) {
             level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+            FXCreator.undoItem.setDisable(true);
+            FXCreator.buttonUndo.setDisable(true);
         }
     }
 
@@ -781,6 +805,8 @@ public class Main extends Application {
 
     public static void clearRedoActions() {
         redoActions.clear();
+        FXCreator.redoItem.setDisable(true);
+        FXCreator.buttonRedo.setDisable(true);
     }
 
     public static void redo() {
@@ -825,6 +851,10 @@ public class Main extends Application {
                 }
                 hierarchy.refresh();
             }
+        }
+        if (redoActions.size() == 0) {
+            FXCreator.redoItem.setDisable(true);
+            FXCreator.buttonRedo.setDisable(true);
         }
     }
 
@@ -1016,6 +1046,8 @@ public class Main extends Application {
         if (level.getEditingStatus() == WorldLevel.NO_UNSAVED_CHANGES) {
             level.setEditingStatus(WorldLevel.UNSAVED_CHANGES, true);
         }
+        FXCreator.undoItem.setDisable(false);
+        FXCreator.buttonUndo.setDisable(false);
     }
 
     public static void deleteResource(String file) {
