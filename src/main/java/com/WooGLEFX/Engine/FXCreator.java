@@ -22,6 +22,7 @@ import com.WooGLEFX.Structures.WorldLevel;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
+import com.WooGLEFX.Structures.UserActions.UserAction;
 import com.WorldOfGoo.Ball.Part;
 import com.WorldOfGoo.Resrc.ResrcImage;
 
@@ -781,13 +782,26 @@ public class FXCreator {
 
                     if (!row.isEmpty()) {
                         int dropIndex = row.getIndex();
-                        hierarchy.getTreeItem(Main.getOldDropIndex())
-                                .setValue(hierarchy.getTreeItem(dropIndex).getValue());
+                        int curIndex = Main.getOldDropIndex();
+                        if (dropIndex > Main.getOldDropIndex()) {
+                            // Dragged the item downwards; shift all of the items up
+                            while (curIndex < dropIndex) {
+                                hierarchy.getTreeItem(curIndex).setValue(hierarchy.getTreeItem(curIndex + 1).getValue());
+                                curIndex++;
+                            }
+                        } else {
+                            // Dragged the item upwards; shift all of the items down
+                            while (curIndex > dropIndex) {
+                                hierarchy.getTreeItem(curIndex).setValue(hierarchy.getTreeItem(curIndex - 1).getValue());
+                                curIndex--;
+                            }
+                        }
                         hierarchy.getTreeItem(dropIndex).setValue(Main.getMoving());
                         hierarchy.getSelectionModel().select(dropIndex);
-                        // row.setItem((EditorObject) db.getContent(null));
 
                         success = true;
+
+                        // TODO: Create new undo action
                     }
                 }
                 event.setDropCompleted(success);
