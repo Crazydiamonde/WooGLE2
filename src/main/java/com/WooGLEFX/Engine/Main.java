@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
@@ -122,11 +121,44 @@ public class Main extends Application {
 
     private static EditorObject strand1Gooball;
 
+    private static Canvas canvas;
+    private static Canvas imageCanvas;
+    private static WorldLevel level = null;
+
+    private static final ArrayList<_Ball> importedBalls = new ArrayList<>();
+
+    private static final ArrayList<WoGAnimation> animations = new ArrayList<>();;
+
+    private static SplitPane splitPane;
+
+    private static TreeTableView<EditorAttribute> propertiesView;
+
+    private static Stage stage;
+
+    private static Scene scene;
+
+    private static EditorObject moving;
+    private static int oldDropIndex;
+
+    private static Pane thingPane;
+
+    private static boolean SHIFT;
+    private static boolean CTRL;
+
+    private static double mouseStartX;
+    private static double mouseStartY;
+
+    public static final ArrayList<String> failedResources = new ArrayList<>();
+
+    private static VBox vBox;
+
+    public static TreeTableView<EditorObject> hierarchy;
+
+    private static TabPane levelSelectPane;
+
     public static EditorObject getStrand1Gooball() {
         return strand1Gooball;
     }
-
-    private static TabPane levelSelectPane;
 
     public static Point2D getScreenCenter() {
         return new Point2D((thingPane.getWidth() / 2 - level.getOffsetX()) / level.getZoom(),
@@ -373,23 +405,21 @@ public class Main extends Application {
             FXCreator.buttonSaveAndPlay.setDisable(false);
             FXCreator.saveAndPlayLevelItem.setDisable(false);
         }
-        if (userActions.size() == 0) {
-            FXCreator.undoItem.setDisable(true);
-            FXCreator.buttonUndo.setDisable(true);
-        } else {
+        if (level != null && level.undoActions.size() > 0) {
             FXCreator.undoItem.setDisable(disable);
             FXCreator.buttonUndo.setDisable(disable);
-        }
-        if (redoActions.size() == 0) {
-            FXCreator.redoItem.setDisable(true);
-            FXCreator.buttonRedo.setDisable(true);
         } else {
+            FXCreator.undoItem.setDisable(true);
+            FXCreator.buttonUndo.setDisable(true);
+        }
+        if (level != null && level.redoActions.size() > 0) {
             FXCreator.redoItem.setDisable(disable);
             FXCreator.buttonRedo.setDisable(disable);
+        } else {
+            FXCreator.redoItem.setDisable(true);
+            FXCreator.buttonRedo.setDisable(true);
         }
     }
-
-    public static final ArrayList<String> failedResources = new ArrayList<>();
 
     public static void openLevel(String levelName, double version) {
 
@@ -759,9 +789,9 @@ public class Main extends Application {
     }
 
     public static void undo() {
-        if (userActions.size() != 0) {
-            UserAction[] changes = userActions.pop();
-            redoActions.add(changes);
+        if (level.undoActions.size() != 0) {
+            UserAction[] changes = level.undoActions.pop();
+            level.redoActions.add(changes);
             FXCreator.redoItem.setDisable(false);
             FXCreator.buttonRedo.setDisable(false);
             for (UserAction change : changes) {
@@ -801,24 +831,22 @@ public class Main extends Application {
             }
         }
         // TODO Undo stack should track if there are any unsaved changes, this isn't always true
-        if (userActions.size() == 0) {
+        if (level.undoActions.size() == 0) {
             level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
             FXCreator.undoItem.setDisable(true);
             FXCreator.buttonUndo.setDisable(true);
         }
     }
 
-    private static final Stack<UserAction[]> redoActions = new Stack<>();
-
     public static void clearRedoActions() {
-        redoActions.clear();
+        level.redoActions.clear();
         FXCreator.redoItem.setDisable(true);
         FXCreator.buttonRedo.setDisable(true);
     }
 
     public static void redo() {
-        if (redoActions.size() != 0) {
-            UserAction[] changes = redoActions.pop();
+        if (level.redoActions.size() != 0) {
+            UserAction[] changes = level.redoActions.pop();
             registerChange(changes);
             for (UserAction change : changes) {
                 if (change instanceof AttributeChangeAction) {
@@ -859,7 +887,7 @@ public class Main extends Application {
                 hierarchy.refresh();
             }
         }
-        if (redoActions.size() == 0) {
+        if (level.redoActions.size() == 0) {
             FXCreator.redoItem.setDisable(true);
             FXCreator.buttonRedo.setDisable(true);
         }
@@ -975,7 +1003,7 @@ public class Main extends Application {
                     setSelected(object);
                     registerChange(new ObjectCreationAction(object, hierarchy.getRow(object.getTreeItem())
                             - hierarchy.getRow(object.getParent().getTreeItem()) - 1));
-                    redoActions.clear();
+                    level.redoActions.clear();
                     hierarchy.refresh();
                 }
             }
@@ -1034,7 +1062,7 @@ public class Main extends Application {
             EditorObject parent = level.getSelected().getParent();
             int row = parent.getChildren().indexOf(level.getSelected());
             registerChange(new ObjectDestructionAction(level.getSelected(), row));
-            redoActions.clear();
+            level.redoActions.clear();
             deleteItem(level.getSelected(), false);
             if (row == 0) {
                 setSelected(parent);
@@ -1049,7 +1077,7 @@ public class Main extends Application {
     }
 
     public static void registerChange(UserAction... actions) {
-        userActions.add(actions);
+        level.undoActions.add(actions);
         if (level.getEditingStatus() == WorldLevel.NO_UNSAVED_CHANGES) {
             level.setEditingStatus(WorldLevel.UNSAVED_CHANGES, true);
         }
@@ -1168,7 +1196,7 @@ public class Main extends Application {
                     imageResourceObject.getTreeItem());
 
             registerChange(new ImportResourceAction(imageResourceObject, imgPath));
-            redoActions.clear();
+            level.redoActions.clear();
 
             GlobalResourceManager.addResource(imageResourceObject, level.getVersion());
         } catch (IOException e) {
@@ -1183,7 +1211,7 @@ public class Main extends Application {
         setSelected(newTextObject);
         registerChange(
                 new ObjectCreationAction(newTextObject, level.getTextObject().getChildren().indexOf(newTextObject)));
-        redoActions.clear();
+        level.redoActions.clear();
     }
 
     public static void cleanLevelResources() {
@@ -1312,7 +1340,7 @@ public class Main extends Application {
                 music.setAttribute("id", soundResourceName);
                 registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                         new AttributeChangeAction(music, "id", oldID, soundResourceName));
-                redoActions.clear();
+                level.redoActions.clear();
                 return;
             }
         }
@@ -1324,7 +1352,7 @@ public class Main extends Application {
         registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                 new ObjectCreationAction(soundResourceObject, whereToPlaceResource),
                 new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
-        redoActions.clear();
+        level.redoActions.clear();
 
     }
 
@@ -1406,7 +1434,7 @@ public class Main extends Application {
                 music.setAttribute("id", soundResourceName);
                 registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                         new AttributeChangeAction(music, "id", oldID, soundResourceName));
-                redoActions.clear();
+                level.redoActions.clear();
                 return;
             }
         }
@@ -1418,7 +1446,7 @@ public class Main extends Application {
         registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                 new ObjectCreationAction(soundResourceObject, whereToPlaceResource),
                 new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
-        redoActions.clear();
+        level.redoActions.clear();
 
     }
 
@@ -1498,7 +1526,7 @@ public class Main extends Application {
 
         registerChange(new ObjectCreationAction(obj,
                 hierarchy.getRow(obj.getTreeItem()) - hierarchy.getRow(obj.getParent().getTreeItem())));
-        redoActions.clear();
+        level.redoActions.clear();
     }
 
     /**
@@ -2178,7 +2206,7 @@ public class Main extends Application {
                 UserAction[] changes = level.getSelected().getUserActions(oldAttributes);
                 if (changes.length > 0) {
                     registerChange(changes);
-                    redoActions.clear();
+                    level.redoActions.clear();
                 }
             }
 
@@ -2330,33 +2358,6 @@ public class Main extends Application {
     public static Stage getStage() {
         return stage;
     }
-
-    private static Canvas canvas;
-    private static Canvas imageCanvas;
-    private static WorldLevel level = null;
-
-    private static final ArrayList<_Ball> importedBalls = new ArrayList<>();
-
-    private static final ArrayList<WoGAnimation> animations = new ArrayList<>();;
-
-    private static SplitPane splitPane;
-
-    private static TreeTableView<EditorAttribute> propertiesView;
-
-    private static Stage stage;
-
-    private static Scene scene;
-
-    private static EditorObject moving;
-    private static int oldDropIndex;
-
-    private static Pane thingPane;
-
-    private static boolean SHIFT;
-    private static boolean CTRL;
-
-    private static double mouseStartX;
-    private static double mouseStartY;
 
     public static WorldLevel getLevel() {
         return level;
@@ -2612,12 +2613,6 @@ public class Main extends Application {
     public static EditorObject generateBlankTextObject() {
         return EditorObject.create("strings", new EditorAttribute[0], null);
     }
-
-    private static VBox vBox;
-
-    public static TreeTableView<EditorObject> hierarchy;
-
-    private final static Stack<UserAction[]> userActions = new Stack<>();
 
     private static void importGameResources(double version) {
         ArrayList<String> allFailedResources = new ArrayList<>();
