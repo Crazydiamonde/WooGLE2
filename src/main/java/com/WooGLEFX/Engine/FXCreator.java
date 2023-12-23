@@ -814,8 +814,8 @@ public class FXCreator {
             row.setOnDragDropped(event -> {
                 boolean success = false;
                 if (event.getDragboard().hasString()) {
-
-                    if (!row.isEmpty()) {
+                    // Don't allow drag-and-drop onto root element
+                    if (!row.isEmpty() && row.getTreeItem().getParent() != null) {
                         int dropIndex = row.getIndex();
                         int curIndex = Main.getOldDropIndex();
                         if (dropIndex > curIndex) {
