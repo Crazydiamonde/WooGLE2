@@ -63,6 +63,100 @@ import javafx.util.StringConverter;
 
 public class FXCreator {
 
+    private static ToolBar oldGooballsToolbar;
+    private static ToolBar newGooballsToolbar;
+    private static ToolBar nullGooballsToolbar;
+
+    public static Button buttonNewOld = new Button();
+    public static Button buttonNewNew = new Button();
+    public static Button buttonOpenOld = new Button();
+    public static Button buttonOpenNew = new Button();
+    public static Button buttonClone = new Button();
+    public static Button buttonSave = new Button();
+    public static Button buttonSaveAll = new Button();
+    public static Button buttonSaveAndPlay = new Button();
+    public static Button buttonExport = new Button();
+    public static Button buttonDummyExport = new Button();
+    public static Button buttonUndo = new Button();
+    public static Button buttonRedo = new Button();
+    public static Button buttonCut = new Button();
+    public static Button buttonCopy = new Button();
+    public static Button buttonPaste = new Button();
+    public static Button buttonDelete = new Button();
+    public static Button buttonUpdateLevelResources = new Button();
+    public static Button buttonImportImages = new Button();
+    public static Button buttonAddTextResource = new Button();
+    public static Button buttonCleanResources = new Button();
+    public static Button buttonSetMusic = new Button();
+    public static Button buttonSetLoopsound = new Button();
+    public static Button buttonSelectMoveAndResize = new Button();
+    public static Button buttonStrandMode = new Button();
+    public static Button buttonShowHideCamera = new Button();
+    public static Button buttonShowHideForcefields = new Button();
+    public static Button buttonShowHideGeometry = new Button();
+    public static Button buttonShowHideGraphics = new Button();
+    public static Button buttonShowHideGoos = new Button();
+    public static Button buttonShowHideParticles = new Button();
+    public static Button buttonShowHideLabels = new Button();
+    public static Button buttonShowHideAnim = new Button();
+    public static Button buttonShowHideSceneBGColor = new Button();
+
+    public static Button addLineButton = new Button();
+    public static Button addRectangleButton = new Button();
+    public static Button addCircleButton = new Button();
+    public static Button addSceneLayerButton = new Button();
+    public static Button addCompositegeomButton = new Button();
+    public static Button addHingeButton = new Button();
+    public static Button autoPipeButton = new Button();
+    public static Button addVertexButton = new Button();
+    public static Button addFireButton = new Button();
+    public static Button addLinearforcefieldButton = new Button();
+    public static Button addRadialforcefieldButton = new Button();
+    public static Button addParticlesButton = new Button();
+    public static Button addSignpostButton = new Button();
+    public static Button addLabelButton = new Button();
+
+    public static Menu fileMenu = new Menu("File");
+
+    public static MenuItem reloadWorldOfGooOldItem = new MenuItem("Reload World of Goo (1.3)");
+    public static MenuItem reloadWorldOfGooNewItem = new MenuItem("Reload World of Goo (1.5)");
+    public static MenuItem changeWorldOfGooDirectoryOldItem = new MenuItem("Change World of Goo Directory (1.3)...");
+    public static MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
+    public static MenuItem saveOldBallToNewItem = new MenuItem("Copy Ball from 1.3 to 1.5");
+    public static MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
+    public static MenuItem quitItem = new MenuItem("Quit");
+
+    public static Menu levelMenu = new Menu("Level");
+
+    public static MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
+    public static MenuItem newLevelNewItem = new MenuItem("New Level (1.5)...");
+    public static MenuItem openLevelOldItem = new MenuItem("Open Level (1.3)...");
+    public static MenuItem openLevelNewItem = new MenuItem("Open Level (1.5)...");
+    public static MenuItem cloneLevelItem = new MenuItem("Clone Level...");
+    public static MenuItem saveLevelItem = new MenuItem("Save Level");
+    public static MenuItem saveAllLevelsItem = new MenuItem("Save All Levels");
+    public static MenuItem saveAndPlayLevelItem = new MenuItem("Save and Play Level");
+    public static MenuItem renameLevelItem = new MenuItem("Rename Level");
+    public static MenuItem deleteLevelItem = new MenuItem("Delete Level");
+
+    public static Menu editMenu = new Menu("Edit");
+
+    public static MenuItem undoItem = new MenuItem("Undo");
+    public static MenuItem redoItem = new MenuItem("Redo");
+    public static MenuItem cutItem = new MenuItem("Cut");
+    public static MenuItem copyItem = new MenuItem("Copy");
+    public static MenuItem pasteItem = new MenuItem("Paste");
+    public static MenuItem deleteItem = new MenuItem("Delete");
+
+    public static Menu resourcesMenu = new Menu("Resources");
+
+    public static MenuItem updateLevelResourcesItem = new MenuItem("Update Level Resources...");
+    public static MenuItem importImageItem = new MenuItem("Import Images...");
+    public static MenuItem newTextResourceItem = new MenuItem("New Text Resource");
+    public static MenuItem cleanLevelResourcesItem = new MenuItem("Clean Resources");
+    public static MenuItem setMusicItem = new MenuItem("Set Music...");
+    public static MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
+
     public static Button createTemplateForBall(int size, _Ball ball) {
 
         double minX = 0;
@@ -283,72 +377,17 @@ public class FXCreator {
         }
     }
 
-    private static ToolBar oldGooballsToolbar;
-
     public static ToolBar getOldGooballsToolbar() {
         return oldGooballsToolbar;
     }
-
-    private static ToolBar newGooballsToolbar;
 
     public static ToolBar getNewGooballsToolbar() {
         return newGooballsToolbar;
     }
 
-    private static ToolBar nullGooballsToolbar;
-
     public static ToolBar getNullGooballsToolbar() {
         return nullGooballsToolbar;
     }
-
-    public static Button buttonNewOld = new Button();
-    public static Button buttonNewNew = new Button();
-    public static Button buttonOpenOld = new Button();
-    public static Button buttonOpenNew = new Button();
-    public static Button buttonClone = new Button();
-    public static Button buttonSave = new Button();
-    public static Button buttonSaveAll = new Button();
-    public static Button buttonSaveAndPlay = new Button();
-    public static Button buttonExport = new Button();
-    public static Button buttonDummyExport = new Button();
-    public static Button buttonUndo = new Button();
-    public static Button buttonRedo = new Button();
-    public static Button buttonCut = new Button();
-    public static Button buttonCopy = new Button();
-    public static Button buttonPaste = new Button();
-    public static Button buttonDelete = new Button();
-    public static Button buttonUpdateLevelResources = new Button();
-    public static Button buttonImportImages = new Button();
-    public static Button buttonAddTextResource = new Button();
-    public static Button buttonCleanResources = new Button();
-    public static Button buttonSetMusic = new Button();
-    public static Button buttonSetLoopsound = new Button();
-    public static Button buttonSelectMoveAndResize = new Button();
-    public static Button buttonStrandMode = new Button();
-    public static Button buttonShowHideCamera = new Button();
-    public static Button buttonShowHideForcefields = new Button();
-    public static Button buttonShowHideGeometry = new Button();
-    public static Button buttonShowHideGraphics = new Button();
-    public static Button buttonShowHideGoos = new Button();
-    public static Button buttonShowHideParticles = new Button();
-    public static Button buttonShowHideLabels = new Button();
-    public static Button buttonShowHideAnim = new Button();
-    public static Button buttonShowHideSceneBGColor = new Button();
-
-    public static Button addLineButton = new Button();
-    public static Button addRectangleButton = new Button();
-    public static Button addCircleButton = new Button();
-    public static Button addSceneLayerButton = new Button();
-    public static Button addCompositegeomButton = new Button();
-    public static Button addHingeButton = new Button();
-    public static Button autoPipeButton = new Button();
-    public static Button addVertexButton = new Button();
-    public static Button addFireButton = new Button();
-    public static Button addLinearforcefieldButton = new Button();
-    public static Button addRadialforcefieldButton = new Button();
-    public static Button addParticlesButton = new Button();
-    public static Button addSignpostButton = new Button();
-    public static Button addLabelButton = new Button();
 
     public static void buttons(VBox vBox) throws IOException {
 
@@ -618,10 +657,6 @@ public class FXCreator {
         newGooballsToolbar.setId("thing");
         addObjectsToolbar.setId("thing");
     }
-
-    public static final Paint notSelectedPaint = Paint.valueOf("FFFFFFFF");
-    public static final Paint notSelectedHoverPaint = Paint.valueOf("B0D0FFFF");
-    public static final Paint selectedPaint = Paint.valueOf("0000D0FF");
 
     /**
      * Generates the TreeTableView representing all objects in a "scene", "level",
@@ -1045,47 +1080,6 @@ public class FXCreator {
 
         return propertiesView;
     }
-
-    public static Menu fileMenu = new Menu("File");
-
-    public static MenuItem reloadWorldOfGooOldItem = new MenuItem("Reload World of Goo (1.3)");
-    public static MenuItem reloadWorldOfGooNewItem = new MenuItem("Reload World of Goo (1.5)");
-    public static MenuItem changeWorldOfGooDirectoryOldItem = new MenuItem("Change World of Goo Directory (1.3)...");
-    public static MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
-    public static MenuItem saveOldBallToNewItem = new MenuItem("Copy Ball from 1.3 to 1.5");
-    public static MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
-    public static MenuItem quitItem = new MenuItem("Quit");
-
-    public static Menu levelMenu = new Menu("Level");
-
-    public static MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
-    public static MenuItem newLevelNewItem = new MenuItem("New Level (1.5)...");
-    public static MenuItem openLevelOldItem = new MenuItem("Open Level (1.3)...");
-    public static MenuItem openLevelNewItem = new MenuItem("Open Level (1.5)...");
-    public static MenuItem cloneLevelItem = new MenuItem("Clone Level...");
-    public static MenuItem saveLevelItem = new MenuItem("Save Level");
-    public static MenuItem saveAllLevelsItem = new MenuItem("Save All Levels");
-    public static MenuItem saveAndPlayLevelItem = new MenuItem("Save and Play Level");
-    public static MenuItem renameLevelItem = new MenuItem("Rename Level");
-    public static MenuItem deleteLevelItem = new MenuItem("Delete Level");
-
-    public static Menu editMenu = new Menu("Edit");
-
-    public static MenuItem undoItem = new MenuItem("Undo");
-    public static MenuItem redoItem = new MenuItem("Redo");
-    public static MenuItem cutItem = new MenuItem("Cut");
-    public static MenuItem copyItem = new MenuItem("Copy");
-    public static MenuItem pasteItem = new MenuItem("Paste");
-    public static MenuItem deleteItem = new MenuItem("Delete");
-
-    public static Menu resourcesMenu = new Menu("Resources");
-
-    public static MenuItem updateLevelResourcesItem = new MenuItem("Update Level Resources...");
-    public static MenuItem importImageItem = new MenuItem("Import Images...");
-    public static MenuItem newTextResourceItem = new MenuItem("New Text Resource");
-    public static MenuItem cleanLevelResourcesItem = new MenuItem("Clean Resources");
-    public static MenuItem setMusicItem = new MenuItem("Set Music...");
-    public static MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
 
     public static MenuBar createMenu() throws FileNotFoundException {
         MenuBar bar = new MenuBar();

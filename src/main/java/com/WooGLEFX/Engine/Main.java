@@ -422,7 +422,6 @@ public class Main extends Application {
     }
 
     public static void openLevel(String levelName, double version) {
-
         // Don't open a level if none selected
         if (levelName == null || levelName.equals("")) {
             return;
