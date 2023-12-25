@@ -42,6 +42,16 @@ public class Alarms {
         logger.error("", error);
     }
 
+    public static void errorMessage(String error) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setResizable(true);
+        alert.setHeaderText("Error");
+        alert.setContentText(error);
+        alert.show();
+        // Show the message in the console
+        logger.error(error);
+    }
+
     public static void loadingResourcesError(String error) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setResizable(true);

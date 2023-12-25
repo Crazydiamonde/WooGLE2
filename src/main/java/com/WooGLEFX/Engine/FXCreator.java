@@ -614,7 +614,7 @@ public class FXCreator {
         addCompositegeomButton.setOnAction(e -> Main.addCompositegeom(Main.getLevel().getSceneObject()));
         addHingeButton.setOnAction(e -> Main.addHinge(Main.getLevel().getSceneObject()));
         autoPipeButton.setOnAction(e -> Main.autoPipe());
-        addVertexButton.setOnAction(e -> Main.addPipeVertex(Main.getLevel().getSceneObject()));
+        addVertexButton.setOnAction(e -> Main.addPipeVertex(Main.getLevel().getLevelObject()));
         addFireButton.setOnAction(e -> Main.addFire(Main.getLevel().getLevelObject()));
         addLinearforcefieldButton.setOnAction(e -> Main.addLinearForcefield(Main.getLevel().getSceneObject()));
         addRadialforcefieldButton.setOnAction(e -> Main.addRadialForcefield(Main.getLevel().getSceneObject()));

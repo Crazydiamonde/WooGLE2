@@ -1740,13 +1740,27 @@ public class Main extends Application {
 
     public static void addPipeVertex(EditorObject parent) {
         // get the previous vertex before this one
+        EditorObject pipe = null;
+        if (parent instanceof Pipe) {
+            pipe = parent;
+        } else {
+            for (EditorObject child : parent.getChildren()) {
+                if (child instanceof Pipe) {
+                    pipe = child;
+                    break;
+                }
+            }
+            if (pipe == null) {
+                Alarms.errorMessage("You must create a pipe to add the vertex to.");
+            }
+        }
         Vertex previous = null;
-        for (EditorObject child : parent.getChildren()) {
+        for (EditorObject child : pipe.getChildren()) {
             if (child instanceof Vertex) {
                 previous = (Vertex) child;
             }
         }
-        Vertex obj = (Vertex) EditorObject.create("Vertex", new EditorAttribute[0], parent);
+        Vertex obj = (Vertex) EditorObject.create("Vertex", new EditorAttribute[0], pipe);
         obj.setPrevious(previous);
         obj.setAttribute("x", getScreenCenter().getX());
         obj.setAttribute("y", -getScreenCenter().getY());
