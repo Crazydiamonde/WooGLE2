@@ -1392,6 +1392,8 @@ public class Main extends Application {
             alreadyInstalled = true;
         }
         /* copy file */
+        String normalizedFilename = resrcFile.getName().split("\\.")[0].replace(' ', '_');
+        String soundPath = "res/levels/" + level.getLevelName() + "/" + normalizedFilename;
         if (!alreadyInstalled) {
             try {
                 if (level.getVersion() == 1.3) {
@@ -1404,20 +1406,22 @@ public class Main extends Application {
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
+        } else {
+            soundPath = "res/sounds/" + normalizedFilename;
         }
 
         /*
          * Add a new sound resource with a default ID and path leading to resrcFile in
          * res\music.
          */
-        String normalizedFilename = resrcFile.getName().split("\\.")[0].replace(' ', '_');
         String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_"
                 + normalizedFilename.toUpperCase();
         EditorObject soundResourceObject = EditorObject.create("Sound", new EditorAttribute[0], null);
 
         soundResourceObject.setAttribute("id", soundResourceName);
-        soundResourceObject.setAttribute("path",
-                "res\\levels\\" + level.getLevelName() + "\\" + normalizedFilename);
+        soundResourceObject.setAttribute("path", soundPath);
+        soundResourceObject.setAttribute("REALid", soundResourceName);
+        soundResourceObject.setAttribute("REALpath", soundPath);
 
         int whereToPlaceResource = 0;
         int count = 0;
