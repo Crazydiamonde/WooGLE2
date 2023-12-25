@@ -1141,10 +1141,12 @@ public class Main extends Application {
 
         FileChooser fileChooser = new FileChooser();
 
-        File resrcFile = fileChooser.showOpenDialog(new Stage());
+        List<File> resrcFiles = fileChooser.showOpenMultipleDialog(new Stage());
 
-        if (resrcFile != null) {
-            importImage(resrcFile);
+        if (resrcFiles != null && resrcFiles.size() > 0) {
+            for (File resrcFile : resrcFiles) {
+                importImage(resrcFile);
+            }
         }
 
     }
