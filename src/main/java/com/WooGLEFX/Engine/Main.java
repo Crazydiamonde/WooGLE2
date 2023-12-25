@@ -1138,9 +1138,9 @@ public class Main extends Application {
     }
 
     public static void importImage() {
-
         FileChooser fileChooser = new FileChooser();
-
+        String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        fileChooser.setInitialDirectory(new File(wogDir + "\\res\\images\\"));
         List<File> resrcFiles = fileChooser.showOpenMultipleDialog(new Stage());
 
         if (resrcFiles != null && resrcFiles.size() > 0) {
@@ -1269,6 +1269,8 @@ public class Main extends Application {
 
     public static void importMusic() {
         FileChooser fileChooser = new FileChooser();
+        String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        fileChooser.setInitialDirectory(new File(wogDir + "\\res\\music"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
         File resrcFile = fileChooser.showOpenDialog(new Stage());
@@ -1366,6 +1368,8 @@ public class Main extends Application {
 
     public static void importLoopsound() {
         FileChooser fileChooser = new FileChooser();
+        String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        fileChooser.setInitialDirectory(new File(wogDir + "\\res\\sounds"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
         File resrcFile = fileChooser.showOpenDialog(new Stage());
