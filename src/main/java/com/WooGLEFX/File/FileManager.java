@@ -392,7 +392,7 @@ public class FileManager {
                     logger.debug("opening " + ballFile.getName());
                     openBall(ballFile.getName(), 1.5);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("", e);
                 }
             }
         }

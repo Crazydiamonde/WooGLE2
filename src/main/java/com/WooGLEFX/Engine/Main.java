@@ -1117,7 +1117,7 @@ public class Main extends Application {
                     GlobalResourceManager.updateResource(editorObject.getAttribute("REALid"), level.getVersion());
                 } catch (FileNotFoundException e) {
                     failedToLoad.append(editorObject.getAttribute("REALid")).append("\n");
-                    e.printStackTrace();
+                    logger.error("", e);
                 }
             }
         }
@@ -2821,7 +2821,7 @@ public class Main extends Application {
         try {
             stage.getIcons().add(FileManager.getIcon("ButtonIcons\\icon.png"));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
 
         // Make menu that currently does nothing

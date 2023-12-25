@@ -559,14 +559,18 @@ public class LevelExporter {
             Alarms.errorMessage(e);
         }
         for (EditorObject resource : level.getResources()) {
+            String resourceNameStripped = resource.getAttribute("REALpath");
+            if (resourceNameStripped != null && resourceNameStripped.contains("/")) {
+                resourceNameStripped = resourceNameStripped.substring(0, resourceNameStripped.lastIndexOf("/"));
+            }
             if (resource instanceof ResrcImage) {
                 if (BaseGameResources.containsImage(resource.getAttribute("path"))) {
                     // Skip if base game image
                     continue;
                 }
-                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))))) {
+                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped))) {
                     try {
-                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))));
+                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped));
                     } catch (Exception e) {
                         Alarms.errorMessage(e);
                     }
@@ -583,9 +587,9 @@ public class LevelExporter {
                     // Skip if base game sound
                     continue;
                 }
-                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))))) {
+                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped))) {
                     try {
-                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))));
+                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped));
                     } catch (Exception e) {
                         Alarms.errorMessage(e);
                     }

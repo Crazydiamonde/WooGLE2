@@ -39,7 +39,7 @@ public class Alarms {
         alert.setContentText(error.getClass().getSimpleName() + ": " + error.getMessage());
         alert.show();
         // Show the exception in the console
-        error.printStackTrace();
+        logger.error("", error);
     }
 
     public static void loadingResourcesError(String error) {
