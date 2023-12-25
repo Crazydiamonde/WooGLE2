@@ -2,6 +2,9 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.GlobalResourceManager;
@@ -18,6 +21,8 @@ import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
 
 public class Button extends EditorObject {
+
+    private static final Logger logger = LoggerFactory.getLogger(Button.class);
 
     private Image image;
 
@@ -76,7 +81,7 @@ public class Button extends EditorObject {
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            // System.out.println("Image changed from " + oldValue + " to " + newValue);
+            logger.trace("Image changed from " + oldValue + " to " + newValue);
             try {
                 image = GlobalResourceManager.getImage(getAttribute("up"), Main.getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));

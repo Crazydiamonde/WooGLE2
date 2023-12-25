@@ -3,6 +3,9 @@ package com.WooGLEFX.Structures;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.WooGLEFX.Engine.FXCreator;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.GlobalResourceManager;
@@ -87,6 +90,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 
 public class EditorObject {
+
+    private static final Logger logger = LoggerFactory.getLogger(EditorObject.class);
 
     /** The name that World of Goo assigns to this object.
      * This is the same for every object of the same type. */
@@ -312,7 +317,7 @@ public class EditorObject {
             case "strings" -> toAdd = new TextStrings(_parent);
             case "targetheight" -> toAdd = new Targetheight(_parent == null ? Main.getLevel().getLevelObject() : null);
             case "Vertex" -> toAdd = new Vertex(_parent == null ? Main.getLevel().getLevelObject() : null);
-            default -> System.out.println(_name);
+            default -> logger.error("Could not find object " + _name + " to create");
         }
         if (_parent != null && toAdd != null) {
             toAdd.setParent(_parent);
@@ -388,7 +393,7 @@ public class EditorObject {
                     return false;
                 }
             } else if (!attribute.getInput().verify(this, attribute.getValue())) {
-                //System.out.println("failed to verify " + attribute.getValue());
+                logger.warn("failed to verify " + attribute.getValue());
                 return false;
             }
         }

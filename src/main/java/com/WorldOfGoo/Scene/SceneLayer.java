@@ -2,6 +2,9 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.GlobalResourceManager;
@@ -23,6 +26,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.transform.Affine;
 
 public class SceneLayer extends EditorObject {
+
+    private static final Logger logger = LoggerFactory.getLogger(SceneLayer.class);
 
     private double animx = 0;
     private double animy = 0;
@@ -115,7 +120,7 @@ public class SceneLayer extends EditorObject {
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            // System.out.println("Image changed from " + oldValue + " to " + newValue);
+            logger.trace("Image changed from " + oldValue + " to " + newValue);
             try {
                 image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));

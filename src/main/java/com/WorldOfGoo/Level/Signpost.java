@@ -1,5 +1,8 @@
 package com.WorldOfGoo.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Structures.EditorObject;
@@ -17,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
 
 public class Signpost extends EditorObject {
+
+    private static final Logger logger = LoggerFactory.getLogger(Signpost.class);
 
     private Image image;
 
@@ -55,7 +60,7 @@ public class Signpost extends EditorObject {
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            // System.out.println("Image changed from " + oldValue + " to " + newValue);
+            logger.trace("Image changed from " + oldValue + " to " + newValue);
             try {
                 image = getImage("image");
                 Color color = getColor("colorize");

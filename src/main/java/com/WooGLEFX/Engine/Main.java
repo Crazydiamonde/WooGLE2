@@ -16,6 +16,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.WooGLEFX.EditorObjects._Ball;
@@ -115,6 +117,8 @@ import javafx.stage.WindowEvent;
 
 public class Main extends Application {
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     private static String[] launchArguments;
 
     public static Affine t;
@@ -189,7 +193,7 @@ public class Main extends Application {
             String ballName = FileManager.getPaletteBalls().get(i);
             double ballVersion = FileManager.getPaletteVersions().get(i);
 
-            System.out.println(ballName + ", " + ballVersion);
+            logger.debug(ballName + ", " + ballVersion);
 
             if (ballVersion == version) {
 
@@ -276,7 +280,7 @@ public class Main extends Application {
     }
 
     public static void newLevel(String name, double version) {
-        System.out.println("New level");
+        logger.debug("New level");
 
         levelSelectPane.setMinHeight(30);
         levelSelectPane.setMaxHeight(30);
@@ -673,7 +677,7 @@ public class Main extends Application {
                 // InputStreamReader(process.getInputStream()));
                 // String line;
                 // while ((line = reader.readLine()) != null) {
-                // System.out.println(line);
+                // logger.debug(line);
                 // }
             } catch (Exception e) {
                 Alarms.errorMessage(e);
@@ -694,7 +698,7 @@ public class Main extends Application {
 
     public static void renameLevel(String text) {
 
-        System.out.println("Renaming " + level.getLevelName() + " to " + text);
+        logger.info("Renaming " + level.getLevelName() + " to " + text);
 
         String start = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
 
@@ -2503,7 +2507,7 @@ public class Main extends Application {
 
     public static Point2D lineLineSegmentIntersection(double x1, double y1, double theta, double x2, double y2,
             double x3, double y3) {
-        // System.out.println(x1 + ", " + y1 + ", " + theta + ", " + x2 + ", " + y2 + ",
+        // logger.info(x1 + ", " + y1 + ", " + theta + ", " + x2 + ", " + y2 + ",
         // " + x3 + ", " + y3);
         if (y3 == y2) {
             y3 += 0.00001;
@@ -2516,12 +2520,12 @@ public class Main extends Application {
         double y = (x - x1) * Math.tan(theta) + y1;
 
         double bruh = 0.01;
-        // System.out.println(x + ", " + y);
-        // System.out.println(y + ", " + ((x - x2) * m + y2));
+        // logger.info(x + ", " + y);
+        // logger.info(y + ", " + ((x - x2) * m + y2));
         // 385.94690307546693, 682.9469030754669
         if (x > Math.min(x2, x3) - bruh && x < Math.max(x2, x3) + bruh && y > Math.min(y2, y3) - bruh
                 && y < Math.max(y2, y3) + bruh) {
-            // System.out.println("e");
+            // logger.info("e");
             return new Point2D(x, y);
         } else {
             return null;
@@ -2775,7 +2779,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage2) {
 
-        System.out.println(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        logger.debug(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 
         stage = stage2;
 
@@ -2804,8 +2808,8 @@ public class Main extends Application {
     public static final TabPane hierarchySwitcherButtons = FXCreator.hierarchySwitcherButtons();
 
     public static void startWithWorldOfGooVersion() {
-        System.out.println("1.3 = " + FileManager.getOldWOGdir());
-        System.out.println("1.5 = " + FileManager.getNewWOGdir());
+        logger.info("1.3 = " + FileManager.getOldWOGdir());
+        logger.info("1.5 = " + FileManager.getNewWOGdir());
 
         levelSelectPane = new TabPane();
 
@@ -2833,7 +2837,7 @@ public class Main extends Application {
                 importGameResources(1.5);
             }
 
-            // System.out.println(FileManager.isHasOldWOG());
+            // logger.info(FileManager.isHasOldWOG());
 
             for (int i = 0; i < FileManager.getPaletteBalls().size(); i++) {
 
@@ -3030,7 +3034,7 @@ public class Main extends Application {
             // LevelExporter.exportBallAsXML(Main.getImportedBalls().get(0), "");
 
             if (launchArguments.length > 0) {
-                System.out.println("Opening level " + launchArguments[0]);
+                logger.info("Opening level " + launchArguments[0]);
                 if (FileManager.isHasNewWOG()) {
                     openLevel(launchArguments[0], 1.5);
                 } else {

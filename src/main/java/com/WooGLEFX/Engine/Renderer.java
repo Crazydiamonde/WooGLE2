@@ -278,7 +278,6 @@ public class Renderer {
             graphicsContext.restore();
             imageGraphicsContext.restore();
         }
-        //System.out.println(count + " <--");
 
         if (Main.getMode() == Main.STRAND) {
             graphicsContext.save();

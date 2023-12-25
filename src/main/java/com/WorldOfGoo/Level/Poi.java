@@ -147,8 +147,6 @@ public class Poi extends EditorObject {
             double x = pos.getX();
             double y = pos.getY();
 
-            //System.out.println(hit);
-
             double dragSourceX = 0;
             double dragSourceY = 0;
             double dragAnchorX = 0;

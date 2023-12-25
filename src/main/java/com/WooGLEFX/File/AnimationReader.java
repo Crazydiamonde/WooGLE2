@@ -1,14 +1,19 @@
 package com.WooGLEFX.File;
 
-import com.WooGLEFX.Structures.SimpleStructures.Keyframe;
-import com.WooGLEFX.Structures.SimpleStructures.WoGAnimation;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.WooGLEFX.Structures.SimpleStructures.Keyframe;
+import com.WooGLEFX.Structures.SimpleStructures.WoGAnimation;
+
 public class AnimationReader {
+
+    private static final Logger logger = LoggerFactory.getLogger(AnimationReader.class);
 
     private static final boolean debug = false;
 
@@ -34,7 +39,7 @@ public class AnimationReader {
     public static WoGAnimation readBinuni(byte[] binuni, String name) {
 
         if (debug) {
-            System.out.println("Opening binuni animation " + name);
+            logger.debug("Opening binuni animation " + name);
         }
 
         byte[] HEADER = subsection(binuni, 0, 8);
@@ -106,45 +111,45 @@ public class AnimationReader {
         }
 
         if (debug) {
-            System.out.println("Header: " + header);
+            logger.debug("Header: " + header);
 
-            System.out.println("Has color: " + hasColor);
-            System.out.println("Has alpha: " + hasAlpha);
-            System.out.println("Has sound: " + hasSound);
-            System.out.println("Has transform: " + hasTransform);
-            System.out.println("Transform count: " + numTransform);
-            System.out.println("Frame count: " + numFrames);
+            logger.debug("Has color: " + hasColor);
+            logger.debug("Has alpha: " + hasAlpha);
+            logger.debug("Has sound: " + hasSound);
+            logger.debug("Has transform: " + hasTransform);
+            logger.debug("Transform count: " + numTransform);
+            logger.debug("Frame count: " + numFrames);
 
-            System.out.println("Transform types:");
+            logger.debug("Transform types:");
             for (int type : transformTypes) {
                 switch(type){
-                    case 0 -> System.out.println(" (Scale)");
-                    case 1 -> System.out.println(" (Rotate)");
-                    case 2 -> System.out.println(" (Translate)");
+                    case 0 -> logger.debug(" (Scale)");
+                    case 1 -> logger.debug(" (Rotate)");
+                    case 2 -> logger.debug(" (Translate)");
                 }
             }
         }
 
         if (debug) {
-            System.out.println("Frame times: " + Arrays.toString(frameTimes));
-            System.out.println("X form frames:");
+            logger.debug("Frame times: " + Arrays.toString(frameTimes));
+            logger.debug("X form frames:");
             for (int[] xFrame : xFormFrames) {
-                System.out.println(Arrays.toString(xFrame));
+                logger.debug(Arrays.toString(xFrame));
                 for (int i1 = 0; i1 < xFrame.length; i1++) {
                     if (i1 < xFrame.length - 1) {
-                        System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
+                        logger.debug(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
                     } else {
-                        System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
+                        logger.debug(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
                     }
                 }
             }
-            System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
-            System.out.println("Color frames: " + Arrays.toString(colorFrames));
-            System.out.println("Sound frames: " + Arrays.toString(soundFrames));
+            logger.debug("Alpha frames: " + Arrays.toString(alphaFrames));
+            logger.debug("Color frames: " + Arrays.toString(colorFrames));
+            logger.debug("Sound frames: " + Arrays.toString(soundFrames));
         }
 
 
-        //System.out.println("X FORM FRAMES");
+        //logger.debug("X FORM FRAMES");
         ArrayList<ArrayList<Keyframe>> keyframes1 = new ArrayList<>();
         for (int i = 0; i < 3; i++){
             keyframes1.add(new ArrayList<>());
@@ -161,7 +166,7 @@ public class AnimationReader {
             }
         }
 
-        //System.out.println("ALPHA FRAMES");
+        //logger.debug("ALPHA FRAMES");
         ArrayList<Keyframe> keyframes2 = new ArrayList<>();
         for (int alphaFrame : alphaFrames) {
             if (alphaFrame != 0) {
@@ -170,7 +175,7 @@ public class AnimationReader {
             }
         }
 
-        //System.out.println("COLOR FRAMES");
+        //logger.debug("COLOR FRAMES");
         ArrayList<Keyframe> keyframes3 = new ArrayList<>();
         for (int colorFrame : colorFrames) {
             if (colorFrame != 0) {
@@ -179,7 +184,7 @@ public class AnimationReader {
             }
         }
 
-        //System.out.println("SOUND FRAMES");
+        //logger.debug("SOUND FRAMES");
         ArrayList<Keyframe> keyframes4 = new ArrayList<>();
         for (int soundFrame : soundFrames) {
             if (soundFrame != 0) {
@@ -193,7 +198,7 @@ public class AnimationReader {
         if (debug) {
             for (int i2 = 0; i2 < (binuni.length - intFromBytes(STRING_TABLE_OFFSET)) / 4 - 2; i2++) {
                 int i = i2 + 1;
-                //System.out.println(Arrays.toString(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))));
+                //logger.debug(Arrays.toString(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))));
                 System.out.print("Index " + i2 + " (" + (i * 4 + intFromBytes(STRING_TABLE_OFFSET)) + ") (");
                 switch (i2 % 8) {
                     case 0 -> System.out.print("x");
@@ -206,9 +211,9 @@ public class AnimationReader {
                     case 7 -> System.out.print("interpolation type");
                 }
                 if (Math.abs(ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt()) > 999) {
-                    System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getFloat());
+                    logger.debug("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getFloat());
                 } else {
-                    System.out.println("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt());
+                    logger.debug("): " + ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN).getInt());
                 }
             }
         }
@@ -222,7 +227,7 @@ public class AnimationReader {
     public static WoGAnimation readBinltl(byte[] binuni, String name) {
 
         if (debug) {
-            System.out.println("Opening binltl animation " + name);
+            logger.debug("Opening binltl animation " + name);
         }
 
         byte[] HAS_COLOR = subsection(binuni, 0, 4);
@@ -290,42 +295,42 @@ public class AnimationReader {
 
         if (debug) {
 
-            System.out.println("Has color: " + hasColor);
-            System.out.println("Has alpha: " + hasAlpha);
-            System.out.println("Has sound: " + hasSound);
-            System.out.println("Has transform: " + hasTransform);
-            System.out.println("Transform count: " + numTransform);
-            System.out.println("Frame count: " + numFrames);
+            logger.debug("Has color: " + hasColor);
+            logger.debug("Has alpha: " + hasAlpha);
+            logger.debug("Has sound: " + hasSound);
+            logger.debug("Has transform: " + hasTransform);
+            logger.debug("Transform count: " + numTransform);
+            logger.debug("Frame count: " + numFrames);
 
-            System.out.println("Transform types:");
+            logger.debug("Transform types:");
             for (int type : transformTypes) {
                 switch (type) {
-                    case 0 -> System.out.println("0 (Scale)");
-                    case 1 -> System.out.println("1 (Rotate)");
-                    case 2 -> System.out.println("2 (Translate)");
+                    case 0 -> logger.debug("0 (Scale)");
+                    case 1 -> logger.debug("1 (Rotate)");
+                    case 2 -> logger.debug("2 (Translate)");
                 }
             }
 
-            System.out.println(Arrays.toString(X_FORM_FRAMES));
-            System.out.println("Frame times: " + Arrays.toString(frameTimes));
-            System.out.println("X form frames:");
+            logger.debug(Arrays.toString(X_FORM_FRAMES));
+            logger.debug("Frame times: " + Arrays.toString(frameTimes));
+            logger.debug("X form frames:");
             for (int[] xFrame : xFormFrames) {
-                System.out.println(Arrays.toString(xFrame));
+                logger.debug(Arrays.toString(xFrame));
                 for (int i1 = 0; i1 < xFrame.length - 1; i1++) {
                     if (xFrame[i1 + 1] != 0) {
-                        System.out.println(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
+                        logger.debug(Arrays.toString(subsection(binuni, xFrame[i1], xFrame[i1 + 1])));
                     }
                 }
             }
 
-            System.out.println("Alpha frames: " + Arrays.toString(alphaFrames));
-            System.out.println("Color frames: " + Arrays.toString(colorFrames));
-            System.out.println("Sound frames: " + Arrays.toString(soundFrames));
+            logger.debug("Alpha frames: " + Arrays.toString(alphaFrames));
+            logger.debug("Color frames: " + Arrays.toString(colorFrames));
+            logger.debug("Sound frames: " + Arrays.toString(soundFrames));
 
         }
 
 
-        //System.out.println("X FORM FRAMES");
+        //logger.debug("X FORM FRAMES");
         ArrayList<ArrayList<Keyframe>> keyframes1 = new ArrayList<>();
         for (int i = 0; i < 3; i++){
             keyframes1.add(new ArrayList<>());
@@ -342,7 +347,7 @@ public class AnimationReader {
             }
         }
 
-        //System.out.println("ALPHA FRAMES");
+        //logger.debug("ALPHA FRAMES");
         ArrayList<Keyframe> keyframes2 = new ArrayList<>();
         for (int alphaFrame : alphaFrames) {
             if (alphaFrame != 0) {
@@ -351,7 +356,7 @@ public class AnimationReader {
             }
         }
 
-        //System.out.println("COLOR FRAMES");
+        //logger.debug("COLOR FRAMES");
         ArrayList<Keyframe> keyframes3 = new ArrayList<>();
         for (int colorFrame : colorFrames) {
             if (colorFrame != 0) {
@@ -360,7 +365,7 @@ public class AnimationReader {
             }
         }
 
-        //System.out.println("SOUND FRAMES");
+        //logger.debug("SOUND FRAMES");
         ArrayList<Keyframe> keyframes4 = new ArrayList<>();
         for (int soundFrame : soundFrames) {
             if (soundFrame != 0) {
@@ -374,7 +379,7 @@ public class AnimationReader {
         if (debug) {
             for (int i2 = 0; i2 < (binuni.length - intFromBytes(STRING_TABLE_OFFSET)) / 4 - 2; i2++) {
                 int i = i2 + 1;
-                //System.out.println(Arrays.toString(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))));
+                //logger.debug(Arrays.toString(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))));
                 System.out.print("Index " + i2 + " (" + (i * 4 + intFromBytes(STRING_TABLE_OFFSET)) + ") (");
                 switch (i2 % 8) {
                     case 0 -> System.out.print("x");
@@ -388,8 +393,8 @@ public class AnimationReader {
                 }
                 ByteBuffer byteBuffer = ByteBuffer.wrap(subsection(binuni, i * 4 + intFromBytes(STRING_TABLE_OFFSET), (i + 1) * 4 + intFromBytes(STRING_TABLE_OFFSET))).order(ByteOrder.LITTLE_ENDIAN);
                 switch (i2 % 8) {
-                    case 0, 1, 2 -> System.out.println("): " + byteBuffer.getFloat());
-                    case 3, 4, 5, 6, 7 -> System.out.println("): " + byteBuffer.getInt());
+                    case 0, 1, 2 -> logger.debug("): " + byteBuffer.getFloat());
+                    case 3, 4, 5, 6, 7 -> logger.debug("): " + byteBuffer.getInt());
                 }
             }
         }

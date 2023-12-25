@@ -14,6 +14,9 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorAttribute;
@@ -60,6 +63,8 @@ import com.WorldOfGoo.Text.TextStrings;
 import javafx.embed.swing.SwingFXUtils;
 
 public class LevelExporter {
+
+    private static final Logger logger = LoggerFactory.getLogger(LevelExporter.class);
 
     public static boolean ding = false;
 
@@ -455,10 +460,10 @@ public class LevelExporter {
         //TODO add XML comments to files
 
         String ballXML = recursiveXMLexport("", ball.objects.get(0), 0, true);
-        // System.out.println(ballXML);
+        logger.trace(ballXML);
 
         String resrcXML = recursiveXMLexport("", ball.resources.get(0), 0, true);
-        // System.out.println(resrcXML);
+        logger.trace(resrcXML);
 
         String name = ball.objects.get(0).getAttribute("name");
 
