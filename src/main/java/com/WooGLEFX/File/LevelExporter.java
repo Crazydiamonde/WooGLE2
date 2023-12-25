@@ -648,7 +648,12 @@ public class LevelExporter {
 
         try {
             new ZipUtility().zip(new ArrayList<>(List.of(new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod").listFiles())), start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
-            new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip").renameTo(file);
+            File srcGoomod = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
+            Files.move(
+                srcGoomod.toPath(),
+                file.toPath(),
+                StandardCopyOption.REPLACE_EXISTING
+            );
         } catch (Exception e) {
             Alarms.errorMessage(e);
         }
