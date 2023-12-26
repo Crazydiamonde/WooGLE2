@@ -6,12 +6,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.GUI.PaletteReconfigurator;
@@ -1460,6 +1463,27 @@ public class FXCreator {
 
                         contextMenu.getItems().add(setImageItem);
                     }
+                }
+            }
+            case InputField.PARTICLES -> {
+                // TODO Custom ones too
+                List<String> sortedParticleTypes = new ArrayList<>();
+                sortedParticleTypes.addAll(BaseGameResources.PARTICLE_FX);
+                sortedParticleTypes.sort(String::compareToIgnoreCase);
+                for (String particleType : sortedParticleTypes) {
+                    MenuItem setImageItem = new MenuItem(particleType);
+
+                    setImageItem.setOnAction(event -> {
+                        Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                                attribute.getValue(), particleType));
+                        Main.clearRedoActions();
+                        attribute.setValue(particleType);
+                        if (contextMenu.isFocused()) {
+                            cell.commitEdit(attribute.getValue());
+                        }
+                    });
+
+                    contextMenu.getItems().add(setImageItem);
                 }
             }
         }

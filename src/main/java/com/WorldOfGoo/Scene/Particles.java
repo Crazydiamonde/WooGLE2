@@ -30,7 +30,7 @@ public class Particles extends EditorObject {
     public Particles(EditorObject _parent) {
         super(_parent);
         setRealName("particles");
-        addAttribute("effect", "", InputField.ANY, true);
+        addAttribute("effect", "", InputField.PARTICLES, true);
         addAttribute("depth", "-20", InputField.NUMBER, true);
         addAttribute("pos", "0,0", InputField.POSITION, false);
         addAttribute("pretick", "0", InputField.NUMBER, false);

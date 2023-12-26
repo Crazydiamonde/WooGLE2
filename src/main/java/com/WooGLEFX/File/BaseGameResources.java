@@ -1,6 +1,7 @@
 package com.WooGLEFX.File;
 
 import java.util.Set;
+import java.util.HashSet;
 
 public class BaseGameResources {
     // List all the Goo Ball types that are in the base game

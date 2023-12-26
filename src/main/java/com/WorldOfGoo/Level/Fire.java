@@ -19,7 +19,7 @@ public class Fire extends EditorObject {
         super(_parent);
         setRealName("fire");
         addAttribute("depth", "0", InputField.NUMBER, true);
-        addAttribute("particles", "", InputField.ANY, true);
+        addAttribute("particles", "", InputField.PARTICLES, true);
         addAttribute("x", "0", InputField.NUMBER, true);
         addAttribute("y", "0", InputField.NUMBER, true);
         addAttribute("radius", "50", InputField.NUMBER, true);
