@@ -11,7 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
@@ -113,7 +115,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -161,6 +162,9 @@ public class Main extends Application {
     public static TreeTableView<EditorObject> hierarchy;
 
     private static TabPane levelSelectPane;
+
+    private static final List<EditorObject> particles = new ArrayList<>();
+    public static final List<String> sortedParticleNames = new ArrayList<>();
 
     public static EditorObject getStrand1Gooball() {
         return strand1Gooball;
@@ -2667,13 +2671,9 @@ public class Main extends Application {
         }
     }
 
-    private static final ArrayList<EditorObject> particles = new ArrayList<>();
-
-    public static ArrayList<EditorObject> getParticles() {
+    public static List<EditorObject> getParticles() {
         return particles;
     }
-
-    // TODO okay somehow a scenelayer got stuck to my cursor, fix that ok thanks
 
     public static EditorObject generateBlankAddinObject(String levelName) {
         EditorObject addin = EditorObject.create("Addin_addin", new EditorAttribute[0], null);
@@ -2779,6 +2779,15 @@ public class Main extends Application {
                 Alarms.errorMessage(e);
             }
         }
+
+        // Load particle names, remove duplicates, and sort them alphabetically
+        Set<String> particleNames = new HashSet<>();
+        particles.stream()
+            .filter(particle -> particle.getAttribute("name") != null)
+            .forEach(particle -> particleNames.add(particle.getAttribute("name")));
+        sortedParticleNames.clear();
+        sortedParticleNames.addAll(particleNames);
+        sortedParticleNames.sort(String::compareToIgnoreCase);
 
         // Load all animations from the game files
         try {

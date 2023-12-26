@@ -1466,11 +1466,7 @@ public class FXCreator {
                 }
             }
             case InputField.PARTICLES -> {
-                // TODO Custom ones too
-                List<String> sortedParticleTypes = new ArrayList<>();
-                sortedParticleTypes.addAll(BaseGameResources.PARTICLE_FX);
-                sortedParticleTypes.sort(String::compareToIgnoreCase);
-                for (String particleType : sortedParticleTypes) {
+                for (String particleType : Main.sortedParticleNames) {
                     MenuItem setImageItem = new MenuItem(particleType);
 
                     setImageItem.setOnAction(event -> {
