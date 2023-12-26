@@ -88,6 +88,7 @@ public class PaletteReconfigurator extends Application {
             nodeList.addAll(newVBox.getChildren());
 
             for (Node ballHBox : nodeList) {
+                if (!(ballHBox instanceof HBox)) continue;
                 Label label = (Label)((HBox)ballHBox).getChildren().get(1);
                 CheckBox checkBox = (CheckBox)((HBox)ballHBox).getChildren().get(0);
                 if (checkBox.isSelected()) {

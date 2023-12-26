@@ -53,6 +53,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -123,6 +124,7 @@ public class FXCreator {
     public static MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
     public static MenuItem saveOldBallToNewItem = new MenuItem("Copy Ball from 1.3 to 1.5");
     public static MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
+    public static MenuItem configurePaletteItem = new MenuItem("Configure Goo Ball Palette...");
     public static MenuItem quitItem = new MenuItem("Quit");
 
     public static Menu levelMenu = new Menu("Level");
@@ -539,53 +541,9 @@ public class FXCreator {
 
         addBallsTo();
 
-        oldGooballsToolbar.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem menuItem = new MenuItem("Configure Palette...");
-                menuItem.setOnAction(actionEvent -> {
-                    try {
-                        new PaletteReconfigurator().start(new Stage());
-                    } catch (ParserConfigurationException | SAXException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                contextMenu.getItems().add(menuItem);
-                oldGooballsToolbar.setContextMenu(contextMenu);
-            }
-        });
-
-        newGooballsToolbar.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem menuItem = new MenuItem("Configure Palette...");
-                menuItem.setOnAction(actionEvent -> {
-                    try {
-                        new PaletteReconfigurator().start(new Stage());
-                    } catch (ParserConfigurationException | SAXException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                contextMenu.getItems().add(menuItem);
-                newGooballsToolbar.setContextMenu(contextMenu);
-            }
-        });
-
-        nullGooballsToolbar.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem menuItem = new MenuItem("Configure Palette...");
-                menuItem.setOnAction(actionEvent -> {
-                    try {
-                        new PaletteReconfigurator().start(new Stage());
-                    } catch (ParserConfigurationException | SAXException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                contextMenu.getItems().add(menuItem);
-                nullGooballsToolbar.setContextMenu(contextMenu);
-            }
-        });
+        oldGooballsToolbar.setOnMouseClicked(e -> showPaletteConfigurator(e, oldGooballsToolbar));
+        newGooballsToolbar.setOnMouseClicked(e -> showPaletteConfigurator(e, newGooballsToolbar));
+        nullGooballsToolbar.setOnMouseClicked(e -> showPaletteConfigurator(e, nullGooballsToolbar));
 
         ToolBar addObjectsToolbar = new ToolBar();
 
@@ -655,6 +613,24 @@ public class FXCreator {
         oldGooballsToolbar.setId("thing");
         newGooballsToolbar.setId("thing");
         addObjectsToolbar.setId("thing");
+    }
+
+    private static void showPaletteConfigurator(MouseEvent mouseEvent, ToolBar toolbar) {
+        if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem menuItem = new MenuItem("Configure Palette...");
+            menuItem.setOnAction(actionEvent -> {
+                try {
+                    new PaletteReconfigurator().start(new Stage());
+                } catch (ParserConfigurationException | SAXException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            contextMenu.getItems().add(menuItem);
+            if (toolbar != null) {
+                toolbar.setContextMenu(contextMenu);
+            }
+        }
     }
 
     /**
@@ -1104,10 +1080,17 @@ public class FXCreator {
         changeWorldOfGooDirectoryNewItem.setOnAction(e -> Main.changeWorldOfGooDirectory(1.5));
         saveOldBallToNewItem.setOnAction(e -> Main.saveBallInVersion(1.3, 1.5));
         saveNewBallToOldItem.setOnAction(e -> Main.saveBallInVersion(1.5, 1.3));
+        configurePaletteItem.setOnAction(e -> {
+            try {
+                new PaletteReconfigurator().start(new Stage());
+            } catch (ParserConfigurationException | SAXException | IOException e1) {
+                throw new RuntimeException(e1);
+            }
+        });
         quitItem.setOnAction(e -> Main.quit());
 
         fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem,
-                changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, quitItem);
+                changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, configurePaletteItem, quitItem);
 
         newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
         newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
