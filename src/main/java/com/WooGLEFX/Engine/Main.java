@@ -3146,6 +3146,9 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            Alarms.errorMessage(throwable);
+        });
         launchArguments = args;
         launch();
     }

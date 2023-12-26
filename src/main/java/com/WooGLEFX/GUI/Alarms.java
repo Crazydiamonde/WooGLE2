@@ -32,7 +32,7 @@ public class Alarms {
 
     private static final Logger logger = LoggerFactory.getLogger(Alarms.class);
 
-    public static void errorMessage(Exception error) {
+    public static void errorMessage(Throwable error) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setResizable(true);
         alert.setHeaderText("Error");
