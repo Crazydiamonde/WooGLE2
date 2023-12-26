@@ -1202,7 +1202,7 @@ public class Main extends Application {
             if (rescTestPath.endsWith(".png")) {
                 rescTestPath = rescTestPath.substring(0, rescTestPath.length() - 4);
             }
-            if (rescTestPath.endsWith("@2x")) {
+            if (level.getVersion() == 1.5 && rescTestPath.endsWith("@2x")) {
                 // Strip @2x suffix, since this is handled transparently by the game already
                 rescTestPath = rescTestPath.substring(0, rescTestPath.length() - 3);
             }
@@ -1213,7 +1213,7 @@ public class Main extends Application {
                         + ".png";
             } else {
                 imgPath = resourcePath = rescTestPath;
-                if (normalizedFilename.endsWith("@2x")) {
+                if (level.getVersion() == 1.5 && normalizedFilename.endsWith("@2x")) {
                     // Strip @2x suffix from here too
                     normalizedFilename = normalizedFilename.substring(0, normalizedFilename.length() - 3);
                 }
