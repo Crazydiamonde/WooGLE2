@@ -22,6 +22,7 @@ import org.xml.sax.SAXException;
 
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.File.AnimationReader;
+import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.File.LevelExporter;
@@ -1183,12 +1184,39 @@ public class Main extends Application {
             }
 
             String imgPath = resrcFile.getPath();
+            if (level.getVersion() == 1.3) {
+                if (resrcFile.getPath().contains(FileManager.getOldWOGdir())) {
+                    imgPath = resrcFile.getPath().replace(FileManager.getOldWOGdir(), "");
+                }
+            } else if (level.getVersion() == 1.5) {
+                if (resrcFile.getPath().contains(FileManager.getNewWOGdir())) {
+                    imgPath = resrcFile.getPath().replace(FileManager.getNewWOGdir(), "");
+                }
+            }
 
-            if (!resrcFile.getPath().contains("\\res\\")) {
+            String rescTestPath = imgPath.replace("\\", "/");
+            String resourcePath = ("res\\levels\\" + level.getLevelName() + "\\" + normalizedFilename).replace("\\", "/");
+            if (rescTestPath.startsWith("/")) {
+                rescTestPath = rescTestPath.substring(1);
+            }
+            if (rescTestPath.endsWith(".png")) {
+                rescTestPath = rescTestPath.substring(0, rescTestPath.length() - 4);
+            }
+            if (rescTestPath.endsWith("@2x")) {
+                // Strip @2x suffix, since this is handled transparently by the game already
+                rescTestPath = rescTestPath.substring(0, rescTestPath.length() - 3);
+            }
+            if (!BaseGameResources.containsImage(rescTestPath)) {
                 ImageIO.write(image, "png", new File(path + "\\res\\levels\\" + level.getLevelName() + "\\"
                         + normalizedFilename + ".png"));
                 imgPath = path + "\\res\\levels\\" + level.getLevelName() + "\\" + normalizedFilename
                         + ".png";
+            } else {
+                imgPath = resourcePath = rescTestPath;
+                if (normalizedFilename.endsWith("@2x")) {
+                    // Strip @2x suffix from here too
+                    normalizedFilename = normalizedFilename.substring(0, normalizedFilename.length() - 3);
+                }
             }
 
             String imageResourceName = "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_"
@@ -1198,12 +1226,12 @@ public class Main extends Application {
             imageResourceObject.setAttribute("id", imageResourceName);
             imageResourceObject.setAttribute(
                 "path",
-                ("res\\levels\\" + level.getLevelName() + "\\" + normalizedFilename).replace("\\", "/")
+                resourcePath
             );
             imageResourceObject.setAttribute("REALid", imageResourceName);
             imageResourceObject.setAttribute(
                 "REALpath",
-                ("res\\levels\\" + level.getLevelName() + "\\" + normalizedFilename).replace("\\", "/")
+                resourcePath
             );
 
             int whereToPlaceResource = 0;
