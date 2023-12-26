@@ -1158,8 +1158,28 @@ public class Main extends Application {
             String path = "";
             if (level.getVersion() == 1.3) {
                 path = FileManager.getOldWOGdir();
+                // If file with this name already exists, rename it
+                if (new File(FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName() + "\\"
+                        + normalizedFilename + ".png").exists()) {
+                    int i = 1;
+                    while (new File(FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName() + "\\"
+                            + normalizedFilename + "_" + i + ".png").exists()) {
+                        i++;
+                    }
+                    normalizedFilename += "_" + i;
+                }
             } else if (level.getVersion() == 1.5) {
                 path = FileManager.getNewWOGdir();
+                // If file with this name already exists, rename it
+                if (new File(FileManager.getNewWOGdir() + "\\res\\levels\\" + level.getLevelName() + "\\"
+                        + normalizedFilename + ".png").exists()) {
+                    int i = 1;
+                    while (new File(FileManager.getNewWOGdir() + "\\res\\levels\\" + level.getLevelName() + "\\"
+                            + normalizedFilename + "_" + i + ".png").exists()) {
+                        i++;
+                    }
+                    normalizedFilename += "_" + i;
+                }
             }
 
             String imgPath = resrcFile.getPath();
