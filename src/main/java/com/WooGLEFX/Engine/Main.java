@@ -113,6 +113,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -1142,7 +1143,7 @@ public class Main extends Application {
         FileChooser fileChooser = new FileChooser();
         String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\images\\"));
-        List<File> resrcFiles = fileChooser.showOpenMultipleDialog(new Stage());
+        List<File> resrcFiles = fileChooser.showOpenMultipleDialog(stage);
 
         if (resrcFiles != null && resrcFiles.size() > 0) {
             for (File resrcFile : resrcFiles) {
@@ -1326,7 +1327,7 @@ public class Main extends Application {
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\music"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
-        File resrcFile = fileChooser.showOpenDialog(new Stage());
+        File resrcFile = fileChooser.showOpenDialog(stage);
 
         if (resrcFile != null) {
             importMusic(resrcFile, true);
@@ -1425,7 +1426,7 @@ public class Main extends Application {
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\sounds"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
-        File resrcFile = fileChooser.showOpenDialog(new Stage());
+        File resrcFile = fileChooser.showOpenDialog(stage);
 
         if (resrcFile != null) {
             importLoopsound(resrcFile, true);
