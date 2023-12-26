@@ -456,7 +456,7 @@ public class FXCreator {
         buttonPaste.setOnAction(e -> Main.paste());
         buttonDelete.setOnAction(e -> Main.delete());
         buttonUpdateLevelResources.setOnAction(e -> Main.updateLevelResources());
-        buttonImportImages.setOnAction(e -> Main.importImage());
+        buttonImportImages.setOnAction(e -> Main.importImages());
         buttonAddTextResource.setOnAction(e -> Main.newTextResource());
         buttonCleanResources.setOnAction(e -> Main.cleanLevelResources());
         buttonSetMusic.setOnAction(e -> Main.importMusic());
@@ -1145,7 +1145,7 @@ public class FXCreator {
         setLoopsoundItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
 
         updateLevelResourcesItem.setOnAction(e -> Main.updateLevelResources());
-        importImageItem.setOnAction(e -> Main.importImage());
+        importImageItem.setOnAction(e -> Main.importImages());
         newTextResourceItem.setOnAction(e -> Main.newTextResource());
         cleanLevelResourcesItem.setOnAction(e -> Main.cleanLevelResources());
         setMusicItem.setOnAction(e -> Main.importMusic());

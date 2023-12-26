@@ -1137,7 +1137,7 @@ public class Main extends Application {
 
     }
 
-    public static void importImage() {
+    public static void importImages() {
         FileChooser fileChooser = new FileChooser();
         String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\images\\"));
@@ -1204,6 +1204,11 @@ public class Main extends Application {
             level.redoActions.clear();
 
             GlobalResourceManager.addResource(imageResourceObject, level.getVersion());
+
+            // Add a new Scenelayer with this image
+            SceneLayer layer = addSceneLayer(level.getSceneObject());
+            layer.setAttribute("image", imageResourceName);
+
         } catch (IOException e) {
             Alarms.errorMessage(e);
         }
@@ -1657,13 +1662,14 @@ public class Main extends Application {
         addAnything(obj, parent);
     }
 
-    public static void addSceneLayer(EditorObject parent) {
+    public static SceneLayer addSceneLayer(EditorObject parent) {
         SceneLayer obj = (SceneLayer) EditorObject.create("SceneLayer", new EditorAttribute[0], parent);
         obj.setAttribute("x", getScreenCenter().getX());
         obj.setAttribute("y", -getScreenCenter().getY());
         obj.setRealName("SceneLayer");
         level.getScene().add(obj);
         addAnything(obj, parent);
+        return obj;
     }
 
     public static void addCompositegeom(EditorObject parent) {
