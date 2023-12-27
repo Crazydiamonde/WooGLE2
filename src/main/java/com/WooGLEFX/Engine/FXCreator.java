@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
+import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.GUI.PaletteReconfigurator;
 import com.WooGLEFX.Structures.EditorAttribute;
@@ -1426,6 +1427,17 @@ public class FXCreator {
                         label.setPrefHeight(17);
                         label.setStyle("-fx-font-size: 11");
                         label.setPadding(new Insets(0, 0, 0, 0));
+
+                        // Add thumbnail of the image to the menu item
+                        try {
+                            ImageView graphic = new ImageView(GlobalResourceManager.getImage(resource.getAttribute("id"), Main.getLevel().getVersion()));
+                            graphic.setFitHeight(17);
+                            // Set width depending on height
+                            graphic.setFitWidth(graphic.getImage().getWidth() * 17 / graphic.getImage().getHeight());
+                            label.setGraphic(graphic);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
 
                         setImageItem.setGraphic(label);
 
