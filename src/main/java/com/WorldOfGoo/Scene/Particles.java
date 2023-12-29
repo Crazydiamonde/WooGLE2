@@ -193,7 +193,7 @@ public class Particles extends EditorObject {
             }
         }
 
-        if (!(getParent() instanceof Fire)) {
+        if (!(getParent() instanceof Fire) && getLevel() != null) {
             Font font = Font.font("Arial", FontWeight.BOLD, 30 * getLevel().getZoom());
 
             Position pos = getPosition("pos");

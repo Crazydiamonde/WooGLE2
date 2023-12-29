@@ -40,6 +40,8 @@ public class Color {
     }
 
     public static Color parse(String input){
+        // Remove all spaces from the string
+        input = input.replaceAll("\\s+","");
         try {
             int count = 0;
             for (int i = 0; i < input.length(); i++) {
@@ -64,7 +66,7 @@ public class Color {
                 throw new NumberFormatException();
             }
         } catch (Exception e){
-            throw new NumberFormatException();
+            throw e;
         }
     }
 
