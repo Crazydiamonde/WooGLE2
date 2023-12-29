@@ -63,7 +63,7 @@ public class Color {
                         Integer.parseInt(after2.substring(0, after2.indexOf(","))),
                         Integer.parseInt(after2.substring(after2.indexOf(",") + 1)));
             } else {
-                throw new NumberFormatException();
+                throw new NumberFormatException("Invalid color format: " + input);
             }
         } catch (Exception e){
             throw e;
