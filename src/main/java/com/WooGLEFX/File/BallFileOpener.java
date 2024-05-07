@@ -21,7 +21,7 @@ public class BallFileOpener extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
-        //System.out.println("Started: " + qName);
+        //logger.debug("Started: " + qName);
         if (bruhmode) {
             if (!FileManager.objectNames.contains(qName)) {
                 FileManager.objectNames.add(qName);
@@ -83,7 +83,7 @@ public class BallFileOpener extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) {
-        //System.out.println("Ended: " + qName);
+        //logger.debug("Ended: " + qName);
         if (!bruhmode) {
             parent = parent.getParent();
         }
@@ -91,6 +91,6 @@ public class BallFileOpener extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) {
-        //System.out.println(Arrays.toString(ch) + start + length);
+        //logger.debug(Arrays.toString(ch) + start + length);
     }
 }

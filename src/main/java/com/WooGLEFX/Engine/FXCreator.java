@@ -6,13 +6,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
+import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.GUI.PaletteReconfigurator;
 import com.WooGLEFX.Structures.EditorAttribute;
@@ -22,6 +26,7 @@ import com.WooGLEFX.Structures.WorldLevel;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
+import com.WooGLEFX.Structures.UserActions.HierarchyDragAction;
 import com.WorldOfGoo.Ball.Part;
 import com.WorldOfGoo.Resrc.ResrcImage;
 
@@ -52,15 +57,110 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 public class FXCreator {
+
+    private static ToolBar oldGooballsToolbar;
+    private static ToolBar newGooballsToolbar;
+    private static ToolBar nullGooballsToolbar;
+
+    public static Button buttonNewOld = new Button();
+    public static Button buttonNewNew = new Button();
+    public static Button buttonOpenOld = new Button();
+    public static Button buttonOpenNew = new Button();
+    public static Button buttonClone = new Button();
+    public static Button buttonSave = new Button();
+    public static Button buttonSaveAll = new Button();
+    public static Button buttonSaveAndPlay = new Button();
+    public static Button buttonExport = new Button();
+    public static Button buttonDummyExport = new Button();
+    public static Button buttonUndo = new Button();
+    public static Button buttonRedo = new Button();
+    public static Button buttonCut = new Button();
+    public static Button buttonCopy = new Button();
+    public static Button buttonPaste = new Button();
+    public static Button buttonDelete = new Button();
+    public static Button buttonUpdateLevelResources = new Button();
+    public static Button buttonImportImages = new Button();
+    public static Button buttonAddTextResource = new Button();
+    public static Button buttonCleanResources = new Button();
+    public static Button buttonSetMusic = new Button();
+    public static Button buttonSetLoopsound = new Button();
+    public static Button buttonSelectMoveAndResize = new Button();
+    public static Button buttonStrandMode = new Button();
+    public static Button buttonShowHideCamera = new Button();
+    public static Button buttonShowHideForcefields = new Button();
+    public static Button buttonShowHideGeometry = new Button();
+    public static Button buttonShowHideGraphics = new Button();
+    public static Button buttonShowHideGoos = new Button();
+    public static Button buttonShowHideParticles = new Button();
+    public static Button buttonShowHideLabels = new Button();
+    public static Button buttonShowHideAnim = new Button();
+    public static Button buttonShowHideSceneBGColor = new Button();
+
+    public static Button addLineButton = new Button();
+    public static Button addRectangleButton = new Button();
+    public static Button addCircleButton = new Button();
+    public static Button addSceneLayerButton = new Button();
+    public static Button addCompositegeomButton = new Button();
+    public static Button addHingeButton = new Button();
+    public static Button autoPipeButton = new Button();
+    public static Button addVertexButton = new Button();
+    public static Button addFireButton = new Button();
+    public static Button addLinearforcefieldButton = new Button();
+    public static Button addRadialforcefieldButton = new Button();
+    public static Button addParticlesButton = new Button();
+    public static Button addSignpostButton = new Button();
+    public static Button addLabelButton = new Button();
+
+    public static Menu fileMenu = new Menu("File");
+
+    public static MenuItem reloadWorldOfGooOldItem = new MenuItem("Reload World of Goo (1.3)");
+    public static MenuItem reloadWorldOfGooNewItem = new MenuItem("Reload World of Goo (1.5)");
+    public static MenuItem changeWorldOfGooDirectoryOldItem = new MenuItem("Change World of Goo Directory (1.3)...");
+    public static MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
+    public static MenuItem saveOldBallToNewItem = new MenuItem("Copy Ball from 1.3 to 1.5");
+    public static MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
+    public static MenuItem configurePaletteItem = new MenuItem("Configure Goo Ball Palette...");
+    public static MenuItem quitItem = new MenuItem("Quit");
+
+    public static Menu levelMenu = new Menu("Level");
+
+    public static MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
+    public static MenuItem newLevelNewItem = new MenuItem("New Level (1.5)...");
+    public static MenuItem openLevelOldItem = new MenuItem("Open Level (1.3)...");
+    public static MenuItem openLevelNewItem = new MenuItem("Open Level (1.5)...");
+    public static MenuItem cloneLevelItem = new MenuItem("Clone Level...");
+    public static MenuItem saveLevelItem = new MenuItem("Save Level");
+    public static MenuItem saveAllLevelsItem = new MenuItem("Save All Levels");
+    public static MenuItem saveAndPlayLevelItem = new MenuItem("Save and Play Level");
+    public static MenuItem renameLevelItem = new MenuItem("Rename Level");
+    public static MenuItem deleteLevelItem = new MenuItem("Delete Level");
+
+    public static Menu editMenu = new Menu("Edit");
+
+    public static MenuItem undoItem = new MenuItem("Undo");
+    public static MenuItem redoItem = new MenuItem("Redo");
+    public static MenuItem cutItem = new MenuItem("Cut");
+    public static MenuItem copyItem = new MenuItem("Copy");
+    public static MenuItem pasteItem = new MenuItem("Paste");
+    public static MenuItem deleteItem = new MenuItem("Delete");
+
+    public static Menu resourcesMenu = new Menu("Resources");
+
+    public static MenuItem updateLevelResourcesItem = new MenuItem("Update Level Resources...");
+    public static MenuItem importImageItem = new MenuItem("Import Images...");
+    public static MenuItem newTextResourceItem = new MenuItem("New Text Resource");
+    public static MenuItem cleanLevelResourcesItem = new MenuItem("Clean Resources");
+    public static MenuItem setMusicItem = new MenuItem("Set Music...");
+    public static MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
 
     public static Button createTemplateForBall(int size, _Ball ball) {
 
@@ -282,74 +382,17 @@ public class FXCreator {
         }
     }
 
-    private static ToolBar oldGooballsToolbar;
-
     public static ToolBar getOldGooballsToolbar() {
         return oldGooballsToolbar;
     }
-
-    private static ToolBar newGooballsToolbar;
 
     public static ToolBar getNewGooballsToolbar() {
         return newGooballsToolbar;
     }
 
-    private static ToolBar nullGooballsToolbar;
-
     public static ToolBar getNullGooballsToolbar() {
         return nullGooballsToolbar;
     }
-
-    public static Button buttonNewOld = new Button();
-    public static Button buttonNewNew = new Button();
-    public static Button buttonOpenOld = new Button();
-    public static Button buttonOpenNew = new Button();
-    public static Button buttonCloneOld = new Button();
-    public static Button buttonCloneNew = new Button();
-    public static Button buttonSaveOld = new Button();
-    public static Button buttonSaveNew = new Button();
-    public static Button buttonSaveAll = new Button();
-    public static Button buttonSaveAndPlay = new Button();
-    public static Button buttonExport = new Button();
-    public static Button buttonDummyExport = new Button();
-    public static Button buttonUndo = new Button();
-    public static Button buttonRedo = new Button();
-    public static Button buttonCut = new Button();
-    public static Button buttonCopy = new Button();
-    public static Button buttonPaste = new Button();
-    public static Button buttonDelete = new Button();
-    public static Button buttonUpdateLevelResources = new Button();
-    public static Button buttonImportImages = new Button();
-    public static Button buttonAddTextResource = new Button();
-    public static Button buttonCleanResources = new Button();
-    public static Button buttonSetMusic = new Button();
-    public static Button buttonSetLoopsound = new Button();
-    public static Button buttonSelectMoveAndResize = new Button();
-    public static Button buttonStrandMode = new Button();
-    public static Button buttonShowHideCamera = new Button();
-    public static Button buttonShowHideForcefields = new Button();
-    public static Button buttonShowHideGeometry = new Button();
-    public static Button buttonShowHideGraphics = new Button();
-    public static Button buttonShowHideGoos = new Button();
-    public static Button buttonShowHideParticles = new Button();
-    public static Button buttonShowHideLabels = new Button();
-    public static Button buttonShowHideAnim = new Button();
-    public static Button buttonShowHideSceneBGColor = new Button();
-
-    public static Button addLineButton = new Button();
-    public static Button addRectangleButton = new Button();
-    public static Button addCircleButton = new Button();
-    public static Button addSceneLayerButton = new Button();
-    public static Button addCompositegeomButton = new Button();
-    public static Button addHingeButton = new Button();
-    public static Button autoPipeButton = new Button();
-    public static Button addVertexButton = new Button();
-    public static Button addFireButton = new Button();
-    public static Button addLinearforcefieldButton = new Button();
-    public static Button addRadialforcefieldButton = new Button();
-    public static Button addParticlesButton = new Button();
-    public static Button addSignpostButton = new Button();
-    public static Button addLabelButton = new Button();
 
     public static void buttons(VBox vBox) throws IOException {
 
@@ -359,10 +402,8 @@ public class FXCreator {
         buttonNewNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
         buttonOpenOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
         buttonOpenNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
-        buttonCloneOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_old.png")));
-        buttonCloneNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
-        buttonSaveOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
-        buttonSaveNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
+        buttonClone.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl.png")));
+        buttonSave.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save.png")));
         buttonSaveAll.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_all.png")));
         buttonSaveAndPlay.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
         buttonExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_goomod.png")));
@@ -406,10 +447,8 @@ public class FXCreator {
         buttonNewNew.setOnAction(e -> Main.newLevel(1.5));
         buttonOpenOld.setOnAction(e -> Main.openLevel(1.3));
         buttonOpenNew.setOnAction(e -> Main.openLevel(1.5));
-        buttonCloneOld.setOnAction(e -> Main.cloneLevel(1.3));
-        buttonCloneNew.setOnAction(e -> Main.cloneLevel(1.5));
-        buttonSaveOld.setOnAction(e -> Main.saveLevel(1.3));
-        buttonSaveNew.setOnAction(e -> Main.saveLevel(1.5));
+        buttonClone.setOnAction(e -> Main.cloneLevel());
+        buttonSave.setOnAction(e -> Main.saveLevel());
         buttonSaveAll.setOnAction(e -> Main.saveAll());
         buttonSaveAndPlay.setOnAction(e -> Main.playLevel());
         buttonExport.setOnAction(e -> Main.exportLevel(true));
@@ -421,7 +460,7 @@ public class FXCreator {
         buttonPaste.setOnAction(e -> Main.paste());
         buttonDelete.setOnAction(e -> Main.delete());
         buttonUpdateLevelResources.setOnAction(e -> Main.updateLevelResources());
-        buttonImportImages.setOnAction(e -> Main.importImage());
+        buttonImportImages.setOnAction(e -> Main.importImages());
         buttonAddTextResource.setOnAction(e -> Main.newTextResource());
         buttonCleanResources.setOnAction(e -> Main.cleanLevelResources());
         buttonSetMusic.setOnAction(e -> Main.importMusic());
@@ -443,10 +482,9 @@ public class FXCreator {
         buttonNewNew.setTooltip(new DelayedTooltip("New Level (1.5)"));
         buttonOpenOld.setTooltip(new DelayedTooltip("Open Level (1.3)"));
         buttonOpenNew.setTooltip(new DelayedTooltip("Open Level (1.5)"));
-        buttonCloneOld.setTooltip(new DelayedTooltip("Clone Level (1.3)"));
-        buttonCloneNew.setTooltip(new DelayedTooltip("Clone Level (1.5)"));
-        buttonSaveOld.setTooltip(new DelayedTooltip("Save Level (1.3)"));
-        buttonSaveNew.setTooltip(new DelayedTooltip("Save Level (1.5)"));
+        buttonClone.setTooltip(new DelayedTooltip("Clone Level"));
+        buttonSave.setTooltip(new DelayedTooltip("Save Level"));
+        buttonSaveAll.setTooltip(new DelayedTooltip("Save All Levels"));
         buttonSaveAndPlay.setTooltip(new DelayedTooltip("Save and Play Level on Level Version"));
         buttonExport.setTooltip(new DelayedTooltip("Export Level"));
         buttonDummyExport.setTooltip(new DelayedTooltip("Export Level Without Addin Info"));
@@ -474,9 +512,9 @@ public class FXCreator {
         buttonShowHideAnim.setTooltip(new DelayedTooltip("Show/Hide Animations"));
         buttonShowHideSceneBGColor.setTooltip(new DelayedTooltip("Show/Hide Scene Background Color"));
 
-        functionsToolbar.getItems().addAll(buttonNewOld, buttonOpenOld, buttonCloneOld, new Separator());
-        functionsToolbar.getItems().addAll(buttonNewNew, buttonOpenNew, buttonCloneNew, new Separator());
-        functionsToolbar.getItems().addAll(buttonSaveOld, buttonSaveNew, buttonSaveAll, buttonSaveAndPlay,
+        functionsToolbar.getItems().addAll(buttonNewOld, buttonOpenOld, new Separator());
+        functionsToolbar.getItems().addAll(buttonNewNew, buttonOpenNew, new Separator());
+        functionsToolbar.getItems().addAll(buttonClone, buttonSave, buttonSaveAll, buttonSaveAndPlay,
                 new Separator());
         functionsToolbar.getItems().addAll(buttonDummyExport, buttonExport, new Separator());
         functionsToolbar.getItems().addAll(buttonUndo, buttonRedo, new Separator());
@@ -507,53 +545,9 @@ public class FXCreator {
 
         addBallsTo();
 
-        oldGooballsToolbar.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem menuItem = new MenuItem("Configure Palette...");
-                menuItem.setOnAction(actionEvent -> {
-                    try {
-                        new PaletteReconfigurator().start(new Stage());
-                    } catch (ParserConfigurationException | SAXException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                contextMenu.getItems().add(menuItem);
-                oldGooballsToolbar.setContextMenu(contextMenu);
-            }
-        });
-
-        newGooballsToolbar.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem menuItem = new MenuItem("Configure Palette...");
-                menuItem.setOnAction(actionEvent -> {
-                    try {
-                        new PaletteReconfigurator().start(new Stage());
-                    } catch (ParserConfigurationException | SAXException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                contextMenu.getItems().add(menuItem);
-                newGooballsToolbar.setContextMenu(contextMenu);
-            }
-        });
-
-        nullGooballsToolbar.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem menuItem = new MenuItem("Configure Palette...");
-                menuItem.setOnAction(actionEvent -> {
-                    try {
-                        new PaletteReconfigurator().start(new Stage());
-                    } catch (ParserConfigurationException | SAXException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                contextMenu.getItems().add(menuItem);
-                nullGooballsToolbar.setContextMenu(contextMenu);
-            }
-        });
+        oldGooballsToolbar.setOnMouseClicked(e -> showPaletteConfigurator(e, oldGooballsToolbar));
+        newGooballsToolbar.setOnMouseClicked(e -> showPaletteConfigurator(e, newGooballsToolbar));
+        nullGooballsToolbar.setOnMouseClicked(e -> showPaletteConfigurator(e, nullGooballsToolbar));
 
         ToolBar addObjectsToolbar = new ToolBar();
 
@@ -582,7 +576,7 @@ public class FXCreator {
         addCompositegeomButton.setOnAction(e -> Main.addCompositegeom(Main.getLevel().getSceneObject()));
         addHingeButton.setOnAction(e -> Main.addHinge(Main.getLevel().getSceneObject()));
         autoPipeButton.setOnAction(e -> Main.autoPipe());
-        addVertexButton.setOnAction(e -> Main.addPipeVertex(Main.getLevel().getSceneObject()));
+        addVertexButton.setOnAction(e -> Main.addPipeVertex(Main.getLevel().getLevelObject()));
         addFireButton.setOnAction(e -> Main.addFire(Main.getLevel().getLevelObject()));
         addLinearforcefieldButton.setOnAction(e -> Main.addLinearForcefield(Main.getLevel().getSceneObject()));
         addRadialforcefieldButton.setOnAction(e -> Main.addRadialForcefield(Main.getLevel().getSceneObject()));
@@ -625,9 +619,23 @@ public class FXCreator {
         addObjectsToolbar.setId("thing");
     }
 
-    public static final Paint notSelectedPaint = Paint.valueOf("FFFFFFFF");
-    public static final Paint notSelectedHoverPaint = Paint.valueOf("B0D0FFFF");
-    public static final Paint selectedPaint = Paint.valueOf("0000D0FF");
+    private static void showPaletteConfigurator(MouseEvent mouseEvent, ToolBar toolbar) {
+        if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem menuItem = new MenuItem("Configure Palette...");
+            menuItem.setOnAction(actionEvent -> {
+                try {
+                    new PaletteReconfigurator().start(new Stage());
+                } catch (ParserConfigurationException | SAXException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            contextMenu.getItems().add(menuItem);
+            if (toolbar != null) {
+                toolbar.setContextMenu(contextMenu);
+            }
+        }
+    }
 
     /**
      * Generates the TreeTableView representing all objects in a "scene", "level",
@@ -753,7 +761,6 @@ public class FXCreator {
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }
-                        System.out.println(row.getContextMenu().getItems().size());
                     }
                 }
             });
@@ -786,16 +793,31 @@ public class FXCreator {
             row.setOnDragDropped(event -> {
                 boolean success = false;
                 if (event.getDragboard().hasString()) {
-
-                    if (!row.isEmpty()) {
+                    // Don't allow drag-and-drop onto element with children
+                    // TODO: This doesn't work and also you should be able to do so
+                    if (!row.isEmpty() && row.getTreeItem().getChildren().size() == 0) {
                         int dropIndex = row.getIndex();
-                        hierarchy.getTreeItem(Main.getOldDropIndex())
-                                .setValue(hierarchy.getTreeItem(dropIndex).getValue());
+                        int curIndex = Main.getOldDropIndex();
+                        if (dropIndex > curIndex) {
+                            // Dragged the item downwards; shift all of the items up
+                            while (curIndex < dropIndex) {
+                                hierarchy.getTreeItem(curIndex).setValue(hierarchy.getTreeItem(curIndex + 1).getValue());
+                                curIndex++;
+                            }
+                        } else {
+                            // Dragged the item upwards; shift all of the items down
+                            while (curIndex > dropIndex) {
+                                hierarchy.getTreeItem(curIndex).setValue(hierarchy.getTreeItem(curIndex - 1).getValue());
+                                curIndex--;
+                            }
+                        }
                         hierarchy.getTreeItem(dropIndex).setValue(Main.getMoving());
                         hierarchy.getSelectionModel().select(dropIndex);
-                        // row.setItem((EditorObject) db.getContent(null));
 
                         success = true;
+
+                        Main.registerChange(new HierarchyDragAction(Main.getMoving(), Main.getOldDropIndex(), dropIndex));
+                        Main.clearRedoActions();
                     }
                 }
                 event.setDropCompleted(success);
@@ -1006,6 +1028,7 @@ public class FXCreator {
                 // Push an attribute change to the undo buffer.
                 Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), oldValue,
                         attribute.getValue()));
+                Main.clearRedoActions();
 
                 // If we have edited the name or ID of the object, change the object's "Name or
                 // ID" value.
@@ -1038,49 +1061,6 @@ public class FXCreator {
         return propertiesView;
     }
 
-    public static Menu fileMenu = new Menu("File");
-
-    public static MenuItem reloadWorldOfGooOldItem = new MenuItem("Reload World of Goo (1.3)");
-    public static MenuItem reloadWorldOfGooNewItem = new MenuItem("Reload World of Goo (1.5)");
-    public static MenuItem changeWorldOfGooDirectoryOldItem = new MenuItem("Change World of Goo Directory (1.3)...");
-    public static MenuItem changeWorldOfGooDirectoryNewItem = new MenuItem("Change World of Goo Directory (1.5)...");
-    public static MenuItem saveOldBallToNewItem = new MenuItem("Copy Ball from 1.3 to 1.5");
-    public static MenuItem saveNewBallToOldItem = new MenuItem("Copy Ball from 1.5 to 1.3");
-    public static MenuItem quitItem = new MenuItem("Quit");
-
-    public static Menu levelMenu = new Menu("Level");
-
-    public static MenuItem newLevelOldItem = new MenuItem("New Level (1.3)...");
-    public static MenuItem newLevelNewItem = new MenuItem("New Level (1.5)...");
-    public static MenuItem openLevelOldItem = new MenuItem("Open Level (1.3)...");
-    public static MenuItem openLevelNewItem = new MenuItem("Open Level (1.5)...");
-    public static MenuItem cloneLevelOldItem = new MenuItem("Clone Level (1.3)...");
-    public static MenuItem cloneLevelNewItem = new MenuItem("Clone Level (1.5)...");
-    public static MenuItem saveLevelOldItem = new MenuItem("Save Level (1.3)");
-    public static MenuItem saveLevelNewItem = new MenuItem("Save Level (1.5)");
-    public static MenuItem saveAllLevelsItem = new MenuItem("Save All Levels");
-    public static MenuItem saveAndPlayLevelItem = new MenuItem("Save and Play Level");
-    public static MenuItem renameLevelItem = new MenuItem("Rename Level");
-    public static MenuItem deleteLevelItem = new MenuItem("Delete Level");
-
-    public static Menu editMenu = new Menu("Edit");
-
-    public static MenuItem undoItem = new MenuItem("Undo");
-    public static MenuItem redoItem = new MenuItem("Redo");
-    public static MenuItem cutItem = new MenuItem("Cut");
-    public static MenuItem copyItem = new MenuItem("Copy");
-    public static MenuItem pasteItem = new MenuItem("Paste");
-    public static MenuItem deleteItem = new MenuItem("Delete");
-
-    public static Menu resourcesMenu = new Menu("Resources");
-
-    public static MenuItem updateLevelResourcesItem = new MenuItem("Update Level Resources...");
-    public static MenuItem importImageItem = new MenuItem("Import Images...");
-    public static MenuItem newTextResourceItem = new MenuItem("New Text Resource");
-    public static MenuItem cleanLevelResourcesItem = new MenuItem("Clean Resources");
-    public static MenuItem setMusicItem = new MenuItem("Set Music...");
-    public static MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
-
     public static MenuBar createMenu() throws FileNotFoundException {
         MenuBar bar = new MenuBar();
 
@@ -1104,19 +1084,24 @@ public class FXCreator {
         changeWorldOfGooDirectoryNewItem.setOnAction(e -> Main.changeWorldOfGooDirectory(1.5));
         saveOldBallToNewItem.setOnAction(e -> Main.saveBallInVersion(1.3, 1.5));
         saveNewBallToOldItem.setOnAction(e -> Main.saveBallInVersion(1.5, 1.3));
+        configurePaletteItem.setOnAction(e -> {
+            try {
+                new PaletteReconfigurator().start(new Stage());
+            } catch (ParserConfigurationException | SAXException | IOException e1) {
+                throw new RuntimeException(e1);
+            }
+        });
         quitItem.setOnAction(e -> Main.quit());
 
         fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem,
-                changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, quitItem);
+                changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, configurePaletteItem, quitItem);
 
         newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
         newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
         openLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
         openLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
-        cloneLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_old.png")));
-        cloneLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl_new.png")));
-        saveLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_old.png")));
-        saveLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_new.png")));
+        cloneLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl.png")));
+        saveLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save.png")));
         saveAllLevelsItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_all.png")));
         saveAndPlayLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
         renameLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\rename.png")));
@@ -1126,17 +1111,15 @@ public class FXCreator {
         newLevelNewItem.setOnAction(e -> Main.newLevel(1.5));
         openLevelOldItem.setOnAction(e -> Main.openLevel(1.3));
         openLevelNewItem.setOnAction(e -> Main.openLevel(1.5));
-        cloneLevelOldItem.setOnAction(e -> Main.cloneLevel(1.3));
-        cloneLevelNewItem.setOnAction(e -> Main.cloneLevel(1.5));
-        saveLevelOldItem.setOnAction(e -> Main.saveLevel(1.3));
-        saveLevelNewItem.setOnAction(e -> Main.saveLevel(1.5));
+        cloneLevelItem.setOnAction(e -> Main.cloneLevel());
+        saveLevelItem.setOnAction(e -> Main.saveLevel());
         saveAllLevelsItem.setOnAction(e -> Main.saveAll());
         saveAndPlayLevelItem.setOnAction(e -> Main.playLevel());
         renameLevelItem.setOnAction(e -> Main.renameLevel());
         deleteLevelItem.setOnAction(e -> Main.deleteLevel());
 
-        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, cloneLevelOldItem, saveLevelOldItem,
-                saveAllLevelsItem, newLevelNewItem, openLevelNewItem, cloneLevelNewItem, saveLevelNewItem,
+        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, newLevelNewItem, openLevelNewItem,
+                cloneLevelItem, saveLevelItem, saveAllLevelsItem,
                 saveAndPlayLevelItem, renameLevelItem, deleteLevelItem);
 
         undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
@@ -1166,7 +1149,7 @@ public class FXCreator {
         setLoopsoundItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
 
         updateLevelResourcesItem.setOnAction(e -> Main.updateLevelResources());
-        importImageItem.setOnAction(e -> Main.importImage());
+        importImageItem.setOnAction(e -> Main.importImages());
         newTextResourceItem.setOnAction(e -> Main.newTextResource());
         cleanLevelResourcesItem.setOnAction(e -> Main.cleanLevelResources());
         setMusicItem.setOnAction(e -> Main.importMusic());
@@ -1189,22 +1172,6 @@ public class FXCreator {
 
         // Create the content menu.
         ContextMenu menu = new ContextMenu();
-
-        // Create the Cut, Copy, Paste in Place, and Delete buttons. These should be
-        // present for every object.
-        MenuItem cutItem = new MenuItem("Cut");
-        MenuItem copyItem = new MenuItem("Copy");
-        MenuItem pasteInPlaceItem = new MenuItem("Paste in Place");
-        MenuItem deleteItem = new MenuItem("Delete");
-
-        // Attempt to set graphics for the Cut, Copy, Paste, and Delete buttons.
-
-        cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
-        copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
-        pasteInPlaceItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
-        deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
-
-        menu.getItems().addAll(cutItem, copyItem, pasteInPlaceItem, deleteItem);
 
         // For every object that can be created as a child of this object:
         for (String childToAdd : object.getPossibleChildren()) {
@@ -1246,6 +1213,12 @@ public class FXCreator {
                     case "levelexit" -> Main.addLevelexit(object);
                     case "pipe" -> Main.addPipe(object);
                     case "signpost" -> Main.addSign(object);
+                    case "textstring" -> Main.addString(object);
+                    case "resrcimage" -> Main.addResrcImage(object);
+                    case "sound" -> Main.addSound(object);
+                    case "setdefaults" -> Main.addSetDefaults(object);
+                    case "Vertex" -> Main.addPipeVertex(object);
+                    default -> throw new RuntimeException("Unknown child type: " + childToAdd);
                 }
             });
 
@@ -1300,13 +1273,13 @@ public class FXCreator {
                     Main.hierarchy.refresh();
                     Main.hierarchy.getRoot().setExpanded(true);
                     Main.getLevel().setCurrentlySelectedSection("Resrc");
-                    Main.getHierarchy().setShowRoot(false);
+                    Main.getHierarchy().setShowRoot(true);
                 } else if (t1 == textSelectButton) {
                     Main.hierarchy.setRoot(Main.getLevel().getTextObject().getTreeItem());
                     Main.hierarchy.refresh();
                     Main.hierarchy.getRoot().setExpanded(true);
                     Main.getLevel().setCurrentlySelectedSection("Text");
-                    Main.getHierarchy().setShowRoot(false);
+                    Main.getHierarchy().setShowRoot(true);
                 } else if (t1 == addinSelectButton) {
                     Main.hierarchy.setRoot(Main.getLevel().getAddinObject().getTreeItem());
                     Main.hierarchy.refresh();
@@ -1455,11 +1428,23 @@ public class FXCreator {
                         label.setStyle("-fx-font-size: 11");
                         label.setPadding(new Insets(0, 0, 0, 0));
 
+                        // Add thumbnail of the image to the menu item
+                        try {
+                            ImageView graphic = new ImageView(GlobalResourceManager.getImage(resource.getAttribute("id"), Main.getLevel().getVersion()));
+                            graphic.setFitHeight(17);
+                            // Set width depending on height
+                            graphic.setFitWidth(graphic.getImage().getWidth() * 17 / graphic.getImage().getHeight());
+                            label.setGraphic(graphic);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+
                         setImageItem.setGraphic(label);
 
                         setImageItem.setOnAction(event -> {
                             Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
                                     attribute.getValue(), resource.getAttribute("id")));
+                            Main.clearRedoActions();
                             attribute.setValue(resource.getAttribute("REALid"));
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.getValue());
@@ -1481,6 +1466,7 @@ public class FXCreator {
                         setImageItem.setOnAction(event -> {
                             Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
                                     attribute.getValue(), ballFile.getName()));
+                            Main.clearRedoActions();
                             attribute.setValue(ballFile.getName());
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.getValue());
@@ -1489,6 +1475,23 @@ public class FXCreator {
 
                         contextMenu.getItems().add(setImageItem);
                     }
+                }
+            }
+            case InputField.PARTICLES -> {
+                for (String particleType : Main.sortedParticleNames) {
+                    MenuItem setImageItem = new MenuItem(particleType);
+
+                    setImageItem.setOnAction(event -> {
+                        Main.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                                attribute.getValue(), particleType));
+                        Main.clearRedoActions();
+                        attribute.setValue(particleType);
+                        if (contextMenu.isFocused()) {
+                            cell.commitEdit(attribute.getValue());
+                        }
+                    });
+
+                    contextMenu.getItems().add(setImageItem);
                 }
             }
         }

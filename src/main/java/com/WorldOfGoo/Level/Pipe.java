@@ -14,5 +14,10 @@ public class Pipe extends EditorObject {
         setNameAttribute(getAttribute2("type"));
         setMetaAttributes(MetaEditorAttribute.parse("type,id,depth,"));
     }
+
+    @Override
+    public String[] getPossibleChildren() {
+        return new String[]{"Vertex"};
+    }
 }
 

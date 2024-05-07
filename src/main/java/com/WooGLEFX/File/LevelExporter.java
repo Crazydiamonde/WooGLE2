@@ -14,6 +14,9 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorAttribute;
@@ -60,6 +63,8 @@ import com.WorldOfGoo.Text.TextStrings;
 import javafx.embed.swing.SwingFXUtils;
 
 public class LevelExporter {
+
+    private static final Logger logger = LoggerFactory.getLogger(LevelExporter.class);
 
     public static boolean ding = false;
 
@@ -455,10 +460,10 @@ public class LevelExporter {
         //TODO add XML comments to files
 
         String ballXML = recursiveXMLexport("", ball.objects.get(0), 0, true);
-        // System.out.println(ballXML);
+        logger.trace(ballXML);
 
         String resrcXML = recursiveXMLexport("", ball.resources.get(0), 0, true);
-        // System.out.println(resrcXML);
+        logger.trace(resrcXML);
 
         String name = ball.objects.get(0).getAttribute("name");
 
@@ -554,14 +559,18 @@ public class LevelExporter {
             Alarms.errorMessage(e);
         }
         for (EditorObject resource : level.getResources()) {
+            String resourceNameStripped = resource.getAttribute("REALpath");
+            if (resourceNameStripped != null && resourceNameStripped.contains("/")) {
+                resourceNameStripped = resourceNameStripped.substring(0, resourceNameStripped.lastIndexOf("/"));
+            }
             if (resource instanceof ResrcImage) {
                 if (BaseGameResources.containsImage(resource.getAttribute("path"))) {
                     // Skip if base game image
                     continue;
                 }
-                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))))) {
+                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped))) {
                     try {
-                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))));
+                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped));
                     } catch (Exception e) {
                         Alarms.errorMessage(e);
                     }
@@ -578,9 +587,9 @@ public class LevelExporter {
                     // Skip if base game sound
                     continue;
                 }
-                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))))) {
+                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped))) {
                     try {
-                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath").substring(0, resource.getAttribute("REALpath").lastIndexOf("/"))));
+                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped));
                     } catch (Exception e) {
                         Alarms.errorMessage(e);
                     }
@@ -639,7 +648,12 @@ public class LevelExporter {
 
         try {
             new ZipUtility().zip(new ArrayList<>(List.of(new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod").listFiles())), start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
-            new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip").renameTo(file);
+            File srcGoomod = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
+            Files.move(
+                srcGoomod.toPath(),
+                file.toPath(),
+                StandardCopyOption.REPLACE_EXISTING
+            );
         } catch (Exception e) {
             Alarms.errorMessage(e);
         }

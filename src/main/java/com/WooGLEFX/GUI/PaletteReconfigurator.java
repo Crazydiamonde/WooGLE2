@@ -51,6 +51,9 @@ public class PaletteReconfigurator extends Application {
         stage.setTitle("Configure Goo Ball Palette");
 
         if (FileManager.isHasOldWOG()) {
+            Label oldLabel = new Label("Version 1.3 Goo Balls");
+            oldLabel.setStyle("-fx-font-weight: bold");
+            oldVBox.getChildren().add(oldLabel);
             File[] balls = new File(FileManager.getOldWOGdir() + "\\res\\balls").listFiles();
             if (balls != null) {
                 for (File ballFile : balls) {
@@ -59,6 +62,9 @@ public class PaletteReconfigurator extends Application {
             }
         }
         if (FileManager.isHasNewWOG()) {
+            Label label = new Label("Version 1.5 Goo Balls");
+            label.setStyle("-fx-font-weight: bold");
+            newVBox.getChildren().add(label);
             File[] balls = new File(FileManager.getNewWOGdir() + "\\res\\balls").listFiles();
             if (balls != null) {
                 for (File ballFile : balls) {
@@ -82,6 +88,7 @@ public class PaletteReconfigurator extends Application {
             nodeList.addAll(newVBox.getChildren());
 
             for (Node ballHBox : nodeList) {
+                if (!(ballHBox instanceof HBox)) continue;
                 Label label = (Label)((HBox)ballHBox).getChildren().get(1);
                 CheckBox checkBox = (CheckBox)((HBox)ballHBox).getChildren().get(0);
                 if (checkBox.isSelected()) {

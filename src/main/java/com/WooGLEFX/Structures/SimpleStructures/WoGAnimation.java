@@ -43,7 +43,6 @@ public class WoGAnimation {
 
     public WoGAnimation(ArrayList<ArrayList<Keyframe>> transformFrames, ArrayList<Keyframe> alphaFrames, ArrayList<Keyframe> colorFrames, ArrayList<Keyframe> soundFrames, String name, float[] frameTimes){
         this.name = name;
-        //System.out.println(transformFrames);
         this.transformFrames = new Keyframe[transformFrames.size()][transformFrames.get(0).size()];
         int i = 0;
         for (ArrayList<Keyframe> frames : transformFrames){

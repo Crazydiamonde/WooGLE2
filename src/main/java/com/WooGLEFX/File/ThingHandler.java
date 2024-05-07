@@ -61,7 +61,6 @@ public class ThingHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) {
-        //System.out.println("Ended: " + qName);
         parent = parent.getParent();
     }
 

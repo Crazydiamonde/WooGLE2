@@ -10,4 +10,9 @@ public class TextStrings extends EditorObject {
         setRealName("strings");
         setNameAttribute(new EditorAttribute(this, "", "", "", new InputField("", InputField.NULL), false));
     }
+
+    @Override
+    public String[] getPossibleChildren() {
+        return new String[]{"textstring"};
+    }
 }

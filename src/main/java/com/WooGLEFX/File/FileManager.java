@@ -15,6 +15,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -27,6 +29,8 @@ import javafx.scene.image.Image;
 
 
 public class FileManager {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileManager.class);
 
     private static String oldWOGdir = "";
     private static boolean hasOldWOG = false;
@@ -87,7 +91,7 @@ public class FileManager {
     }
 
     public static void setOldWOGdir(String oldWOGdir) {
-        System.out.println("setting to " + oldWOGdir);
+        logger.debug("setting to " + oldWOGdir);
         FileManager.oldWOGdir = oldWOGdir;
     }
 
@@ -385,10 +389,10 @@ public class FileManager {
         for (File ballFile : new File("D:\\Steam\\steamapps\\common\\World of Goo\\game\\res\\balls").listFiles()) {
             if (!ballFile.getName().equals("generic")) {
                 try {
-                    System.out.println("opening " + ballFile.getName());
+                    logger.debug("opening " + ballFile.getName());
                     openBall(ballFile.getName(), 1.5);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("", e);
                 }
             }
         }
@@ -401,7 +405,7 @@ public class FileManager {
                     System.out.print(", ");
                 }
             }
-            System.out.println("}");
+            logger.debug("}");
             i++;
         }
     }

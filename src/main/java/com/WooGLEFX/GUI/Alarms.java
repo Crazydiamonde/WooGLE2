@@ -3,6 +3,9 @@ package com.WooGLEFX.GUI;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Structures.EditorObject;
@@ -27,14 +30,26 @@ import javafx.stage.StageStyle;
 
 public class Alarms {
 
-    public static void errorMessage(Exception error) {
+    private static final Logger logger = LoggerFactory.getLogger(Alarms.class);
+
+    public static void errorMessage(Throwable error) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setResizable(true);
         alert.setHeaderText("Error");
         alert.setContentText(error.getClass().getSimpleName() + ": " + error.getMessage());
         alert.show();
         // Show the exception in the console
-        error.printStackTrace();
+        logger.error("", error);
+    }
+
+    public static void errorMessage(String error) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setResizable(true);
+        alert.setHeaderText("Error");
+        alert.setContentText(error);
+        alert.show();
+        // Show the message in the console
+        logger.error(error);
     }
 
     public static void loadingResourcesError(String error) {
@@ -47,7 +62,7 @@ public class Alarms {
             alert.setHeight(1080);
         }
         alert.setY(0);
-        System.out.println(alert.getHeight());
+        logger.trace("Height: {}", alert.getHeight());
     }
 
     public static void loadingInitialResourcesError(String error) {

@@ -245,7 +245,7 @@ public class Renderer {
         EditorObject previousVertex = null;
         Paint previousPipeColor = null;
         for (EditorObject object : level.getLevel()) {
-            if (object instanceof Pipe) {
+            if (object instanceof Pipe && previousPipeColor == null) {
                 String pipeColor = object.getAttribute("type");
                 switch (pipeColor) {
                     case "BEAUTY":
@@ -278,7 +278,6 @@ public class Renderer {
             graphicsContext.restore();
             imageGraphicsContext.restore();
         }
-        //System.out.println(count + " <--");
 
         if (Main.getMode() == Main.STRAND) {
             graphicsContext.save();

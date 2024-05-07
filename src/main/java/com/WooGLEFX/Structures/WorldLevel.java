@@ -1,9 +1,14 @@
 package com.WooGLEFX.Structures;
 
-import com.WooGLEFX.File.FileManager;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Stack;
+
 import com.WooGLEFX.Engine.FXCreator;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Structures.UserActions.UserAction;
 import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Level.Level;
 import com.WorldOfGoo.Level.Signpost;
@@ -11,6 +16,7 @@ import com.WorldOfGoo.Resrc.ResourceManifest;
 import com.WorldOfGoo.Scene.Scene;
 import com.WorldOfGoo.Text.TextString;
 import com.WorldOfGoo.Text.TextStrings;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -21,16 +27,103 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
 public class WorldLevel {
+
+    public final Stack<UserAction[]> redoActions = new Stack<>();
+    public final Stack<UserAction[]> undoActions = new Stack<>();
 
     private final ArrayList<EditorObject> scene;
     private final ArrayList<EditorObject> level;
     private final ArrayList<EditorObject> resources;
     private final ArrayList<EditorObject> addin;
     private final ArrayList<EditorObject> text;
+
+    private EditorObject levelObject;
+    private EditorObject sceneObject;
+    private EditorObject resourcesObject;
+    private EditorObject addinObject;
+    private EditorObject textObject;
+
+    private boolean showCameras = false;
+    private boolean showForcefields = true;
+    private boolean showGeometry = true;
+    private boolean showGraphics = true;
+    private int showGoos = 2;
+    private boolean showParticles = true;
+    private boolean showLabels = true;
+    private boolean showAnimations = true;
+    private boolean showSceneBGColor = false;
+
+    public static Image showHideAnim0;
+    public static Image showHideAnim;
+    public static Image showHideCam0;
+    public static Image showHideCam1;
+    public static Image showHideForcefields0;
+    public static Image showHideForcefields1;
+    public static Image showHideGeometry0;
+    public static Image showHideGeometry1;
+    public static Image showHideGoobs0;
+    public static Image showHideGoobs1;
+    public static Image showHideGoobs2;
+    public static Image showHideImages0;
+    public static Image showHideImages1;
+    public static Image showHideLabels0;
+    public static Image showHideLabels1;
+    public static Image showHideParticles0;
+    public static Image showHideParticles1;
+    public static Image showHideSceneBGColor0;
+    public static Image showHideSceneBGColor1;
+
+    public static final int NO_UNSAVED_CHANGES = 0;
+    public static final int UNSAVED_CHANGES = 1;
+    public static final int UNSAVED_CHANGES_UNMODIFIABLE = 2;
+
+    private static final Image noChangesImageOld;
+    private static final Image changesImageOld;
+    private static final Image changesUnmodifiableImageOld;
+
+    private static final Image noChangesImageNew;
+    private static final Image changesImageNew;
+    private static final Image changesUnmodifiableImageNew;
+
+    private Image currentStatusImage;
+    private Tab levelTab;
+
+    private double offsetX = 0;
+    private double offsetY = 0;
+    private double zoom = 1;
+
+    static {
+        try {
+            showHideAnim0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim_disabled.png");
+            showHideAnim = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png");
+            showHideCam0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam_disabled.png");
+            showHideCam1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png");
+            showHideForcefields0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields_disabled.png");
+            showHideForcefields1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png");
+            showHideGeometry0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry_disabled.png");
+            showHideGeometry1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png");
+            showHideGoobs0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_disabled.png");
+            showHideGoobs1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_wireframe.png");
+            showHideGoobs2 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png");
+            showHideImages0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images_disabled.png");
+            showHideImages1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png");
+            showHideLabels0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels_disabled.png");
+            showHideLabels1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png");
+            showHideParticles0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles_disabled.png");
+            showHideParticles1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png");
+            showHideSceneBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
+            showHideSceneBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
+            noChangesImageOld = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_old.png");
+            changesImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_old.png");
+            changesUnmodifiableImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_old.png");
+            noChangesImageNew = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_new.png");
+            changesImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_new.png");
+            changesUnmodifiableImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_new.png");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public ArrayList<EditorObject> getScene() {
         return scene;
@@ -51,12 +144,6 @@ public class WorldLevel {
     public ArrayList<EditorObject> getText() {
         return text;
     }
-
-    private EditorObject levelObject;
-    private EditorObject sceneObject;
-    private EditorObject resourcesObject;
-    private EditorObject addinObject;
-    private EditorObject textObject;
 
     public EditorObject getLevelObject() {
         return levelObject;
@@ -93,17 +180,6 @@ public class WorldLevel {
     public double getVersion() {
         return version;
     }
-
-    private boolean showCameras = false;
-    private boolean showForcefields = true;
-    private boolean showGeometry = true;
-    private boolean showGraphics = true;
-    private int showGoos = 2;
-    private boolean showParticles = true;
-    private boolean showLabels = true;
-    private boolean showAnimations = true;
-    private boolean showSceneBGColor = false;
-
 
     public boolean isShowCameras() {
         return showCameras;
@@ -191,81 +267,6 @@ public class WorldLevel {
         FXCreator.buttonShowHideSceneBGColor.setGraphic(new ImageView(showSceneBGColor ? showHideSceneBGColor1 : showHideSceneBGColor0));
     }
 
-    public static Image showHideAnim0;
-    public static Image showHideAnim;
-    public static Image showHideCam0;
-    public static Image showHideCam1;
-    public static Image showHideForcefields0;
-    public static Image showHideForcefields1;
-    public static Image showHideGeometry0;
-    public static Image showHideGeometry1;
-    public static Image showHideGoobs0;
-    public static Image showHideGoobs1;
-    public static Image showHideGoobs2;
-    public static Image showHideImages0;
-    public static Image showHideImages1;
-    public static Image showHideLabels0;
-    public static Image showHideLabels1;
-    public static Image showHideParticles0;
-    public static Image showHideParticles1;
-    public static Image showHideSceneBGColor0;
-    public static Image showHideSceneBGColor1;
-
-    static {
-        try {
-            showHideAnim0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim_disabled.png");
-            showHideAnim = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png");
-            showHideCam0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam_disabled.png");
-            showHideCam1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png");
-            showHideForcefields0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields_disabled.png");
-            showHideForcefields1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png");
-            showHideGeometry0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry_disabled.png");
-            showHideGeometry1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png");
-            showHideGoobs0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_disabled.png");
-            showHideGoobs1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_wireframe.png");
-            showHideGoobs2 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png");
-            showHideImages0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images_disabled.png");
-            showHideImages1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png");
-            showHideLabels0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels_disabled.png");
-            showHideLabels1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png");
-            showHideParticles0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles_disabled.png");
-            showHideParticles1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png");
-            showHideSceneBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
-            showHideSceneBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static final int NO_UNSAVED_CHANGES = 0;
-    public static final int UNSAVED_CHANGES = 1;
-    public static final int UNSAVED_CHANGES_UNMODIFIABLE = 2;
-
-    private static final Image noChangesImageOld;
-    private static final Image changesImageOld;
-    private static final Image changesUnmodifiableImageOld;
-
-    private static final Image noChangesImageNew;
-    private static final Image changesImageNew;
-    private static final Image changesUnmodifiableImageNew;
-
-    static {
-        try {
-            noChangesImageOld = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_old.png");
-            changesImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_old.png");
-            changesUnmodifiableImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_old.png");
-            noChangesImageNew = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_new.png");
-            changesImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_new.png");
-            changesUnmodifiableImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_new.png");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Image currentStatusImage;
-
-    private Tab levelTab;
-
     public Tab getLevelTab() {
         return levelTab;
     }
@@ -304,10 +305,6 @@ public class WorldLevel {
         levelTab.setGraphic(graphicContainer);
         //End ChatGPT
         TabPane god = levelTab.getTabPane();
-
-        int index = god.getTabs().indexOf(levelTab);
-        god.getTabs().remove(levelTab);
-        god.getTabs().add(index, levelTab);
         if (shouldSelect) {
             god.getSelectionModel().select(levelTab);
             Main.getHierarchy().setRoot(root);
@@ -338,10 +335,6 @@ public class WorldLevel {
     public void setCurrentlySelectedSection(String currentlySelectedSection) {
         this.currentlySelectedSection = currentlySelectedSection;
     }
-
-    private double offsetX = 0;
-    private double offsetY = 0;
-    private double zoom = 1;
 
     public double getOffsetX() {
         return offsetX;

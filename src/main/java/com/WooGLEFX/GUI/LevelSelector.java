@@ -92,6 +92,9 @@ public class LevelSelector extends Application {
                                 if (selectedLabel == label) {
                                     Main.openLevel(selected, version);
                                     stage.close();
+                                    selectedLabel = null;
+                                    selected = "";
+                                    return;
                                 } else if (selectedLabel != null) {
                                     selectedLabel.setStyle("");
                                 }
@@ -117,8 +120,12 @@ public class LevelSelector extends Application {
         cancelButton.setLayoutY(332);
 
         openButton.setOnAction(actionEvent -> {
-            Main.openLevel(selected, version);
-            stage.close();
+            if (!selected.equals("")) {
+                Main.openLevel(selected, version);
+                stage.close();
+                selectedLabel = null;
+                selected = "";
+            }
         });
 
         cancelButton.setOnAction(actionEvent -> stage.close());

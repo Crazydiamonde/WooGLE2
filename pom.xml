@@ -121,6 +121,23 @@
       <artifactId>bcprov-jdk18on</artifactId>
       <version>1.77</version>
     </dependency>
+    <!-- SLF4J API -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+    <!-- Logback Core and Classic (implements SLF4J API) -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.4.14</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.14</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -132,6 +149,7 @@
         <configuration>
           <source>19</source>
           <target>19</target>
+          <debug>true</debug>
         </configuration>
       </plugin>
       <plugin>
@@ -151,7 +169,7 @@
               <jlinkZipName>WOGAnniversaryEditor</jlinkZipName>
               <jlinkImageName>WOGAnniversaryEditor</jlinkImageName>
               <noManPages>true</noManPages>
-              <stripDebug>true</stripDebug>
+              <stripDebug>false</stripDebug>
               <noHeaderFiles>true</noHeaderFiles>
             </configuration>
           </execution>
@@ -159,18 +177,15 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jmod-plugin</artifactId>
-        <version>3.0.0-alpha-1</version>
-        <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jlink-plugin</artifactId>
-        <version>3.0.0-alpha-1</version>
+        <version>3.1.0</version>
         <extensions>true</extensions>
         <configuration>
           <modulePaths>
             <modulePath>${project.build.directory}/modules</modulePath>
+            <modulePath>${settings.localRepository}/org/slf4j/slf4j-api/2.0.9</modulePath>
+            <modulePath>${settings.localRepository}/ch/qos/logback/logback-core/1.4.14</modulePath>
+            <modulePath>${settings.localRepository}/ch/qos/logback/logback-classic/1.4.14</modulePath>
           </modulePaths>
           <modules>
             <module>com.example.WOGAnniversaryEditor</module>
@@ -179,7 +194,11 @@
             <module>javafx.web</module>
             <module>javafx.media</module>
             <module>javafx.graphics</module>
+            <module>org.slf4j</module>
+            <module>ch.qos.logback.core</module>
+            <module>ch.qos.logback.classic</module>
           </modules>
+          <stripDebug>false</stripDebug>
         </configuration>
       </plugin>
     </plugins>

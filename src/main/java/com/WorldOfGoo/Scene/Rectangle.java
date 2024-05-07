@@ -275,8 +275,6 @@ public class Rectangle extends EditorObject {
             bottomRight = new Point2D((bottomRight.getX()), (-bottomRight.getY()));
             double distance = 4 / Main.getLevel().getZoom();
 
-            //System.out.println(hit);
-
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
 
             DragSettings rotateSettings = new DragSettings(DragSettings.ROTATE);
