@@ -187,17 +187,6 @@
             <modulePath>${settings.localRepository}/ch/qos/logback/logback-core/1.4.14</modulePath>
             <modulePath>${settings.localRepository}/ch/qos/logback/logback-classic/1.4.14</modulePath>
           </modulePaths>
-          <modules>
-            <module>com.example.WOGAnniversaryEditor</module>
-            <module>javafx.controls</module>
-            <module>javafx.fxml</module>
-            <module>javafx.web</module>
-            <module>javafx.media</module>
-            <module>javafx.graphics</module>
-            <module>org.slf4j</module>
-            <module>ch.qos.logback.core</module>
-            <module>ch.qos.logback.classic</module>
-          </modules>
           <stripDebug>false</stripDebug>
         </configuration>
       </plugin>

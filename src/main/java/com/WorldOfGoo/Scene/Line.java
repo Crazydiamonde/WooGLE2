@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
@@ -27,7 +28,7 @@ public class Line extends EditorObject {
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
             Position anchor = Position.parse(getAttribute("anchor"));
             Position normal = Position.parse(getAttribute("normal"));
             double x = anchor.getX();
@@ -70,38 +71,38 @@ public class Line extends EditorObject {
 
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
             Position anchor = Position.parse(getAttribute("anchor"));
             Position normal = Position.parse(getAttribute("normal"));
             Point2D dir = new Point2D(normal.getX(), -normal.getY()).normalize();
             Point2D realDir = new Point2D(-dir.getY(), dir.getX());
 
-            double screenX = anchor.getX() * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-            double screenY = -anchor.getY() * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
-            graphicsContext.setLineWidth(Main.getLevel().getZoom() * 4);
+            double screenX = anchor.getX() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+            double screenY = -anchor.getY() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
+            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 4);
 
-            double dst = Math.max(10000 * Main.getLevel().getZoom(), 10000);
-            double dst2 = 50 * Main.getLevel().getZoom();
+            double dst = Math.max(10000 * LevelManager.getLevel().getZoom(), 10000);
+            double dst2 = 50 * LevelManager.getLevel().getZoom();
 
             graphicsContext.setStroke(Renderer.solidBlue);
-            graphicsContext.strokeLine(screenX - realDir.getX() * Main.getLevel().getZoom() * 4 - dst * realDir.getX(),
-                    screenY - realDir.getY() * Main.getLevel().getZoom() * 4 - dst * realDir.getY(),
-                    screenX - realDir.getX() * Main.getLevel().getZoom() * 4 + dst * realDir.getX(),
-                    screenY - realDir.getY() * Main.getLevel().getZoom() * 4 + dst * realDir.getY());
+            graphicsContext.strokeLine(screenX - realDir.getX() * LevelManager.getLevel().getZoom() * 4 - dst * realDir.getX(),
+                    screenY - realDir.getY() * LevelManager.getLevel().getZoom() * 4 - dst * realDir.getY(),
+                    screenX - realDir.getX() * LevelManager.getLevel().getZoom() * 4 + dst * realDir.getX(),
+                    screenY - realDir.getY() * LevelManager.getLevel().getZoom() * 4 + dst * realDir.getY());
             graphicsContext.strokeLine(screenX, screenY, screenX + dst2 * dir.getX(), screenY + dst2 * dir.getY());
             if (this == Main.getSelected()) {
-                double screenX2 = screenX + (dst2 + 2 * Main.getLevel().getZoom()) * dir.getX();
-                double screenY2 = screenY + (dst2 + 2 * Main.getLevel().getZoom()) * dir.getY();
+                double screenX2 = screenX + (dst2 + 2 * LevelManager.getLevel().getZoom()) * dir.getX();
+                double screenY2 = screenY + (dst2 + 2 * LevelManager.getLevel().getZoom()) * dir.getY();
 
                 graphicsContext.setLineDashes(0);
 
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
 
-                graphicsContext.strokeLine(screenX2 - realDir.getX() * Main.getLevel().getZoom() * 4 - dst * realDir.getX(),
-                        screenY2 - realDir.getY() * Main.getLevel().getZoom() * 4 - dst * realDir.getY(),
-                        screenX2 - realDir.getX() * Main.getLevel().getZoom() * 4 + dst * realDir.getX(),
-                        screenY2 - realDir.getY() * Main.getLevel().getZoom() * 4 + dst * realDir.getY());
+                graphicsContext.strokeLine(screenX2 - realDir.getX() * LevelManager.getLevel().getZoom() * 4 - dst * realDir.getX(),
+                        screenY2 - realDir.getY() * LevelManager.getLevel().getZoom() * 4 - dst * realDir.getY(),
+                        screenX2 - realDir.getX() * LevelManager.getLevel().getZoom() * 4 + dst * realDir.getX(),
+                        screenY2 - realDir.getY() * LevelManager.getLevel().getZoom() * 4 + dst * realDir.getY());
 
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
@@ -114,9 +115,9 @@ public class Line extends EditorObject {
 
                 Point2D forceRight = new Point2D(x2 + normalMagnitude, y2);
 
-                forceRight = rotate(forceRight, -angle, new Point2D(x2, y2)).multiply(Main.getLevel().getZoom());
+                forceRight = rotate(forceRight, -angle, new Point2D(x2, y2)).multiply(LevelManager.getLevel().getZoom());
 
-                forceRight = new Point2D((forceRight.getX()) + Main.getLevel().getOffsetX(), (-forceRight.getY()) + Main.getLevel().getOffsetY());
+                forceRight = new Point2D((forceRight.getX()) + LevelManager.getLevel().getOffsetX(), (-forceRight.getY()) + LevelManager.getLevel().getOffsetY());
 
                 graphicsContext.setLineDashes(0);
 
@@ -142,7 +143,7 @@ public class Line extends EditorObject {
         right = new Point2D((right.getX()), (-right.getY()));
 
         Point2D rotated = rotate(new Point2D(mX2, mY2), -angle, new Point2D(x2, -y2));
-        if (rotated.getX() > right.getX() - 4 / Main.getLevel().getZoom() && rotated.getX() < right.getX() + 4 / Main.getLevel().getZoom() && rotated.getY() > right.getY() - 4 / Main.getLevel().getZoom() && rotated.getY() < right.getY() + 4 / Main.getLevel().getZoom()) {
+        if (rotated.getX() > right.getX() - 4 / LevelManager.getLevel().getZoom() && rotated.getX() < right.getX() + 4 / LevelManager.getLevel().getZoom() && rotated.getY() > right.getY() - 4 / LevelManager.getLevel().getZoom() && rotated.getY() < right.getY() + 4 / LevelManager.getLevel().getZoom()) {
             DragSettings anchorSettings = new DragSettings(DragSettings.SETANCHOR);
             anchorSettings.setInitialSourceX(x2);
             anchorSettings.setInitialSourceY(-y2);

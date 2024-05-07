@@ -4,6 +4,8 @@ import java.io.File;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
+import com.WooGLEFX.Functions.AnimationManager;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 import com.WorldOfGoo.Level.BallInstance;
@@ -125,7 +127,7 @@ public class InputField {
                     return false;
                 }
             case ANIMATION:
-                return Main.hasAnimation(potential);
+                return AnimationManager.hasAnimation(potential);
             case FLAG:
                 return potential.equals("true") || potential.equals("false");
             case BALL:
@@ -152,21 +154,21 @@ public class InputField {
             case OCD_TYPE:
                 return potential.equals("balls") || potential.equals("moves") || potential.equals("time");
             case GOOBALL_ID:
-                for (EditorObject editorObject : Main.getLevel().getLevel()) {
+                for (EditorObject editorObject : LevelManager.getLevel().getLevel()) {
                     if (editorObject instanceof BallInstance && editorObject.getAttribute("id").equals(potential)) {
                         return true;
                     }
                 }
                 return false;
             case UNIQUE_GOOBALL_ID:
-                for (EditorObject editorObject : Main.getLevel().getLevel()) {
+                for (EditorObject editorObject : LevelManager.getLevel().getLevel()) {
                     if (editorObject instanceof BallInstance && editorObject != object && editorObject.getAttribute("id").equals(potential)) {
                         return false;
                     }
                 }
                 return true;
             case GEOMETRY:
-                for (EditorObject editorObject : Main.getLevel().getScene()) {
+                for (EditorObject editorObject : LevelManager.getLevel().getScene()) {
                     if (editorObject instanceof Rectangle || editorObject instanceof Circle || editorObject instanceof Compositegeom) {
                         if (editorObject.getAttribute("id").equals(potential)) {
                             return true;

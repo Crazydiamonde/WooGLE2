@@ -3,6 +3,7 @@ package com.WooGLEFX.EditorObjects;
 import com.WooGLEFX.Engine.Collision.RectangleCollision;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
@@ -32,7 +33,7 @@ public class GeometryImage {
     }
 
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) throws FileNotFoundException {
-        if (Main.getLevel().isShowGraphics()) {
+        if (LevelManager.getLevel().isShowGraphics()) {
             image = parent.getImage("image");
 
             Position imagePos;
@@ -74,28 +75,28 @@ public class GeometryImage {
                 Point2D rotated6 = EditorObject.rotate(new Point2D(x - image.getWidth() * scaleX / 2, -y + image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
                 Point2D rotated7 = EditorObject.rotate(new Point2D(x + image.getWidth() * scaleX / 2, -y - image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
 
-                double screenX2 = x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY2 = -y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX2 = x * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY2 = -y * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.setStroke(Renderer.selectionOutline);
 
-                double screenX3 = (rotated2.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY3 = (rotated2.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX3 = (rotated2.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY3 = (rotated2.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX4 = (rotated3.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY4 = (rotated3.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX4 = (rotated3.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY4 = (rotated3.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX5 = (rotated4.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY5 = (rotated4.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX5 = (rotated4.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY5 = (rotated4.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX6 = (rotated5.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY6 = (rotated5.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX6 = (rotated5.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY6 = (rotated5.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX7 = (rotated6.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY7 = (rotated6.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX7 = (rotated6.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY7 = (rotated6.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX8 = (rotated7.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY8 = (rotated7.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX8 = (rotated7.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY8 = (rotated7.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setFill(Renderer.selectionOutline);
@@ -118,7 +119,7 @@ public class GeometryImage {
                 graphicsContext.setTransform(t2);
 
                 graphicsContext.setStroke(Renderer.selectionOutline);
-                graphicsContext.strokeRect(screenX2 - image.getWidth() * scaleX * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaleY * Main.getLevel().getZoom() / 2, image.getWidth() * scaleX * Main.getLevel().getZoom(), image.getHeight() * scaleY * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX2 - image.getWidth() * scaleX * LevelManager.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaleY * LevelManager.getLevel().getZoom() / 2, image.getWidth() * scaleX * LevelManager.getLevel().getZoom(), image.getHeight() * scaleY * LevelManager.getLevel().getZoom());
 
             }
         }
@@ -172,7 +173,7 @@ public class GeometryImage {
     }
 
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
-        if (Main.getLevel().isShowGraphics() && image != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image != null) {
 
             Position imagePos;
             if (parent.getAttribute("imagepos").equals("")) {
@@ -222,7 +223,7 @@ public class GeometryImage {
             double screenX8 = (rotated7.getX());
             double screenY8 = (rotated7.getY());
 
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
             resizeSettings.setInitialScaleX(scalex);

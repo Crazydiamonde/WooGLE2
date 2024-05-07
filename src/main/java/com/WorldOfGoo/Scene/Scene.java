@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -35,14 +36,14 @@ public class Scene extends EditorObject {
         double sceneBottom = -Double.parseDouble(getAttribute("miny"));
 
         graphicsContext.setStroke(Renderer.selectionOutline2);
-        graphicsContext.setLineWidth(0.9 * Main.getLevel().getZoom());
-        graphicsContext.setLineDashes(3 * Main.getLevel().getZoom());
+        graphicsContext.setLineWidth(0.9 * LevelManager.getLevel().getZoom());
+        graphicsContext.setLineDashes(3 * LevelManager.getLevel().getZoom());
         graphicsContext.setLineDashOffset(0);
-        graphicsContext.strokeRect(sceneLeft * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), sceneTop * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), (sceneRight - sceneLeft) * Main.getLevel().getZoom(), (sceneBottom - sceneTop) * Main.getLevel().getZoom());
+        graphicsContext.strokeRect(sceneLeft * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), sceneTop * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), (sceneRight - sceneLeft) * LevelManager.getLevel().getZoom(), (sceneBottom - sceneTop) * LevelManager.getLevel().getZoom());
         graphicsContext.setStroke(Renderer.selectionOutline);
-        graphicsContext.setLineWidth(Main.getLevel().getZoom());
-        graphicsContext.setLineDashOffset(3 * Main.getLevel().getZoom());
-        graphicsContext.strokeRect(sceneLeft * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), sceneTop * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), (sceneRight - sceneLeft) * Main.getLevel().getZoom(), (sceneBottom - sceneTop) * Main.getLevel().getZoom());
+        graphicsContext.setLineWidth(LevelManager.getLevel().getZoom());
+        graphicsContext.setLineDashOffset(3 * LevelManager.getLevel().getZoom());
+        graphicsContext.strokeRect(sceneLeft * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), sceneTop * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), (sceneRight - sceneLeft) * LevelManager.getLevel().getZoom(), (sceneBottom - sceneTop) * LevelManager.getLevel().getZoom());
         graphicsContext.setLineDashes(0);
     }
 }

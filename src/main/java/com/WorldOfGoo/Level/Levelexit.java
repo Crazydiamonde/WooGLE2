@@ -2,6 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -26,41 +27,41 @@ public class Levelexit extends EditorObject {
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
 
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             Position pos = Position.parse(getAttribute("pos"));
 
             double radius = Double.parseDouble(getAttribute("radius"));
 
-            double screenX = pos.getX() * Main.getLevel().getZoom() + Main.getLevel().getOffsetX() - radius * Main.getLevel().getZoom();
-            double screenY = -pos.getY() * Main.getLevel().getZoom() + Main.getLevel().getOffsetY() - radius * Main.getLevel().getZoom();
+            double screenX = pos.getX() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX() - radius * LevelManager.getLevel().getZoom();
+            double screenY = -pos.getY() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY() - radius * LevelManager.getLevel().getZoom();
 
             graphicsContext.setStroke(Renderer.pipeVertex);
-            graphicsContext.setLineWidth(Main.getLevel().getZoom() * 3);
-            graphicsContext.strokeOval(screenX + Main.getLevel().getZoom() * 3 / 2, screenY + Main.getLevel().getZoom() * 3 / 2, (radius - 1.5) * 2 * Main.getLevel().getZoom(), (radius - 1.5) * 2 * Main.getLevel().getZoom());
+            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 3);
+            graphicsContext.strokeOval(screenX + LevelManager.getLevel().getZoom() * 3 / 2, screenY + LevelManager.getLevel().getZoom() * 3 / 2, (radius - 1.5) * 2 * LevelManager.getLevel().getZoom(), (radius - 1.5) * 2 * LevelManager.getLevel().getZoom());
 
             if (this == Main.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
 
-                graphicsContext.strokeRect(screenX, screenY, radius * 2 * Main.getLevel().getZoom(), radius * 2 * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX, screenY, radius * 2 * LevelManager.getLevel().getZoom(), radius * 2 * LevelManager.getLevel().getZoom());
 
                 graphicsContext.setLineDashes(0);
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
 
-                graphicsContext.strokeRect(screenX - 4, screenY + radius * Main.getLevel().getZoom() - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * Main.getLevel().getZoom() - 4, screenY + radius * 2 * Main.getLevel().getZoom() - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * Main.getLevel().getZoom() - 4, screenY - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * 2 * Main.getLevel().getZoom() - 4, screenY + radius * Main.getLevel().getZoom() - 4, 8, 8);
+                graphicsContext.strokeRect(screenX - 4, screenY + radius * LevelManager.getLevel().getZoom() - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * LevelManager.getLevel().getZoom() - 4, screenY + radius * 2 * LevelManager.getLevel().getZoom() - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * LevelManager.getLevel().getZoom() - 4, screenY - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * 2 * LevelManager.getLevel().getZoom() - 4, screenY + radius * LevelManager.getLevel().getZoom() - 4, 8, 8);
             }
         }
     }
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             Position pos = Position.parse(getAttribute("pos"));
 
@@ -88,7 +89,7 @@ public class Levelexit extends EditorObject {
 
     @Override
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             Position pos = Position.parse(getAttribute("pos"));
 
@@ -105,7 +106,7 @@ public class Levelexit extends EditorObject {
             left = new Point2D((left.getX()), (-left.getY()));
             right = new Point2D((right.getX()), (-right.getY()));
             bottom = new Point2D((bottom.getX()), (-bottom.getY()));
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
 

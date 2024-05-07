@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
@@ -259,7 +260,7 @@ public class Renderer {
                         break;
                 }
             }
-            if (object instanceof Vertex && Main.getLevel().isShowGeometry()) {
+            if (object instanceof Vertex && LevelManager.getLevel().isShowGeometry()) {
                 if (previousVertex != null) {
                     ((Vertex) object).drawTo(graphicsContext, (Vertex) previousVertex, previousPipeColor);
                 }
@@ -271,7 +272,7 @@ public class Renderer {
         for (EditorObject object : orderObjectsByDepth(level)) {
             graphicsContext.save();
             imageGraphicsContext.save();
-            if (object.getAttribute("image") != null && !object.getAttribute("image").equals("") && Main.getLevel().isShowGraphics()) {
+            if (object.getAttribute("image") != null && !object.getAttribute("image").equals("") && LevelManager.getLevel().isShowGraphics()) {
                 object.drawImage(graphicsContext, imageGraphicsContext);
             }
             object.draw(graphicsContext, imageGraphicsContext);
@@ -284,10 +285,10 @@ public class Renderer {
 
             if (Main.getStrand1Gooball() != null) {
 
-                double x = Main.getStrand1Gooball().getDouble("x") * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double y = -Main.getStrand1Gooball().getDouble("y") * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double x = Main.getStrand1Gooball().getDouble("x") * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double y = -Main.getStrand1Gooball().getDouble("y") * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                graphicsContext.setLineWidth(3 * Main.getLevel().getZoom());
+                graphicsContext.setLineWidth(3 * LevelManager.getLevel().getZoom());
 
                 graphicsContext.strokeLine(x, y, Main.getMouseX(), Main.getMouseY());
 
@@ -305,5 +306,26 @@ public class Renderer {
         imageCanvas.getGraphicsContext2D().fillRect(0, 0, imageCanvas.getWidth(), imageCanvas.getHeight());
     }
 
+
+    public static void draw() {
+
+        WorldLevel level = LevelManager.getLevel();
+        Canvas canvas = Main.getCanvas();
+        Canvas imageCanvas = Main.getImageCanvas();
+
+        if (level != null) {
+            if (level.isShowSceneBGColor()) {
+                imageCanvas.getGraphicsContext2D()
+                        .setFill(Paint.valueOf(level.getSceneObject().getColor("backgroundcolor").toHexRGBA()));
+                imageCanvas.getGraphicsContext2D().fillRect(-5000000, -5000000, 10000000, 10000000);
+            } else {
+                imageCanvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
+            }
+            canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
+            Renderer.drawEverything(level, canvas, imageCanvas);
+        } else {
+            Renderer.clear(level, canvas, imageCanvas);
+        }
+    }
 
 }

@@ -6,6 +6,7 @@ import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -66,7 +67,7 @@ public class Strand extends EditorObject {
 
     @Override
     public void update() {
-        for (EditorObject object : Main.getLevel().getLevel()) {
+        for (EditorObject object : LevelManager.getLevel().getLevel()) {
             if (object instanceof BallInstance && object.getAttribute("id").equals(getAttribute("gb2"))) {
                 goo2 = (BallInstance)object;
                 ((BallInstance) object).getStrands().add(this);
@@ -84,7 +85,7 @@ public class Strand extends EditorObject {
                 ((BallInstance) object).getStrands().add(this);
             }
         }
-        for (EditorObject object : Main.getLevel().getLevel()) {
+        for (EditorObject object : LevelManager.getLevel().getLevel()) {
             if (object instanceof BallInstance && object.getAttribute("id").equals(getAttribute("gb1"))) {
                 goo1 = (BallInstance)object;
                 if (strand == null) {
@@ -102,10 +103,10 @@ public class Strand extends EditorObject {
         }
         if (strand != null) {
             try {
-                strandImage = GlobalResourceManager.getImage(strand.getAttribute("image"), Main.getLevel().getVersion());
+                strandImage = GlobalResourceManager.getImage(strand.getAttribute("image"), LevelManager.getLevel().getVersion());
             } catch (Exception e) {
-                if (!Main.failedResources.contains("From strand: \"" + strand.getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From strand: \"" + strand.getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                if (!Main.failedResources.contains("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                    Main.failedResources.add("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
             }
         }
@@ -116,9 +117,82 @@ public class Strand extends EditorObject {
     //     return new Point2D(x, m1 * (x - x1) + y1);
     // }
 
+    private static Point2D lineLineSegmentIntersection(double x1, double y1, double theta, double x2, double y2,
+                                                      double x3, double y3) {
+        // logger.info(x1 + ", " + y1 + ", " + theta + ", " + x2 + ", " + y2 + ",
+        // " + x3 + ", " + y3);
+        if (y3 == y2) {
+            y3 += 0.00001;
+        }
+        if (x3 == x2) {
+            x3 += 0.00001;
+        }
+        double m = (y3 - y2) / (x3 - x2);
+        double x = (y2 - x2 * m + x1 * Math.tan(theta) - y1) / (Math.tan(theta) - m);
+        double y = (x - x1) * Math.tan(theta) + y1;
+
+        double bruh = 0.01;
+        // logger.info(x + ", " + y);
+        // logger.info(y + ", " + ((x - x2) * m + y2));
+        // 385.94690307546693, 682.9469030754669
+        if (x > Math.min(x2, x3) - bruh && x < Math.max(x2, x3) + bruh && y > Math.min(y2, y3) - bruh
+                && y < Math.max(y2, y3) + bruh) {
+            // logger.info("e");
+            return new Point2D(x, y);
+        } else {
+            return null;
+        }
+    }
+
+    private static Point2D lineBoxIntersection(double x1, double y1, double theta, double x2, double y2, double sizeX,
+                                              double sizeY, double rotation) {
+
+        Point2D topLeft = EditorObject.rotate(new Point2D(x2 - sizeX / 2, y2 - sizeY / 2), -rotation,
+                new Point2D(x2, y2));
+        Point2D topRight = EditorObject.rotate(new Point2D(x2 + sizeX / 2, y2 - sizeY / 2), -rotation,
+                new Point2D(x2, y2));
+        Point2D bottomLeft = EditorObject.rotate(new Point2D(x2 - sizeX / 2, y2 + sizeY / 2), -rotation,
+                new Point2D(x2, y2));
+        Point2D bottomRight = EditorObject.rotate(new Point2D(x2 + sizeX / 2, y2 + sizeY / 2), -rotation,
+                new Point2D(x2, y2));
+
+        Point2D top = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), topRight.getX(),
+                topRight.getY());
+        Point2D bottom = lineLineSegmentIntersection(x1, y1, -theta, bottomLeft.getX(), bottomLeft.getY(),
+                bottomRight.getX(), bottomRight.getY());
+        Point2D left = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), bottomLeft.getX(),
+                bottomLeft.getY());
+        Point2D right = lineLineSegmentIntersection(x1, y1, -theta, topRight.getX(), topRight.getY(),
+                bottomRight.getX(), bottomRight.getY());
+
+        Point2D origin = new Point2D(x1, y1);
+
+        double topDistance = top == null ? 100000000 : top.distance(origin);
+        double bottomDistance = bottom == null ? 100000000 : bottom.distance(origin);
+        double leftDistance = left == null ? 100000000 : left.distance(origin);
+        double rightDistance = right == null ? 100000000 : right.distance(origin);
+
+        if (topDistance < bottomDistance && topDistance < leftDistance && topDistance < rightDistance) {
+            return top;
+        }
+
+        if (bottomDistance < leftDistance && bottomDistance < rightDistance) {
+            return bottom;
+        }
+
+        if (leftDistance < rightDistance) {
+            return left;
+        }
+
+        if (right == null) {
+            return new Point2D(0, 0);
+        }
+        return right;
+    }
+
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
-        if (Main.getLevel().getShowGoos() == 2) {
+        if (LevelManager.getLevel().getShowGoos() == 2) {
             if (goo1 != null && goo2 != null && strand != null) {
                 Position pos1 = new Position(goo1.getDouble("x"), -goo1.getDouble("y"));;
                 Position pos2 = new Position(goo2.getDouble("x"), -goo2.getDouble("y"));
@@ -138,7 +212,7 @@ public class Strand extends EditorObject {
                 imageGraphicsContext.restore();
             }
 
-        } else if (Main.getLevel().getShowGoos() == 1) {
+        } else if (LevelManager.getLevel().getShowGoos() == 1) {
 
             if (goo1 != null && goo2 != null) {
                 Position pos1 = new Position(goo1.getDouble("x"), -goo1.getDouble("y"));
@@ -164,7 +238,7 @@ public class Strand extends EditorObject {
                 graphicsContext.setTransform(new Affine());
 
                 graphicsContext.setStroke(Renderer.middleColor);
-                graphicsContext.setLineWidth(Main.getLevel().getZoom() * 3);
+                graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 3);
 
                 double theta = Renderer.angleTo(new Point2D(pos1.getX(), pos1.getY()), new Point2D(pos2.getX(), pos2.getY()));
 
@@ -175,14 +249,14 @@ public class Strand extends EditorObject {
                     double r1 = size1.getX() / 2;
                     hit1 = new Point2D(pos1.getX() + r1 * Math.cos(theta), pos1.getY() - r1 * Math.sin(theta));
                 } else {
-                    hit1 = Main.lineBoxIntersection(pos2.getX(), pos2.getY(), theta - 3.1415, pos1.getX(), pos1.getY(), size1.getX(), size1.getY(), Math.toRadians(rot1));
+                    hit1 = lineBoxIntersection(pos2.getX(), pos2.getY(), theta - 3.1415, pos1.getX(), pos1.getY(), size1.getX(), size1.getY(), Math.toRadians(rot1));
                 }
 
                 if (circle2) {
                     double r2 = size2.getX() / 2;
                     hit2 = new Point2D(pos2.getX() - r2 * Math.cos(theta), pos2.getY() + r2 * Math.sin(theta));
                 } else {
-                    hit2 = Main.lineBoxIntersection(pos1.getX(), pos1.getY(), theta, pos2.getX(), pos2.getY(), size2.getX(), size2.getY(), Math.toRadians(rot2));
+                    hit2 = lineBoxIntersection(pos1.getX(), pos1.getY(), theta, pos2.getX(), pos2.getY(), size2.getX(), size2.getY(), Math.toRadians(rot2));
                 }
 
                 double colorWeightA = 1.5 / (0.5 + Math.exp((Math.log(0.25)) / maxSize * hit1.distance(hit2))) - 2;
@@ -195,7 +269,7 @@ public class Strand extends EditorObject {
                     graphicsContext.setStroke(Paint.valueOf("8080" + HexFormat.of().toHexDigits((int) (Math.min(-colorWeightB * 256, 128) + 127)).substring(6) + "FF"));
                 }
 
-                graphicsContext.strokeLine(hit1.getX() * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), hit1.getY() * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), hit2.getX() * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), hit2.getY() * Main.getLevel().getZoom() + Main.getLevel().getOffsetY());
+                graphicsContext.strokeLine(hit1.getX() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), hit1.getY() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), hit2.getX() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), hit2.getY() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY());
                 graphicsContext.restore();
             }
         }

@@ -2,6 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -40,18 +41,18 @@ public class Vertex extends EditorObject {
 
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
 
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
-            double size = 10 * Main.getLevel().getZoom();
+            double size = 10 * LevelManager.getLevel().getZoom();
 
-            double screenX = Double.parseDouble(getAttribute("x")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-            double screenY = -Double.parseDouble(getAttribute("y")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+            double screenX = Double.parseDouble(getAttribute("x")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+            double screenY = -Double.parseDouble(getAttribute("y")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
             Affine t = graphicsContext.getTransform();
             t.appendRotation(45, screenX, screenY);
             graphicsContext.setTransform(t);
 
-            graphicsContext.setLineWidth(Main.getLevel().getZoom() * 5);
+            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 5);
             graphicsContext.setStroke(Renderer.pipeVertex);
 
             graphicsContext.strokeRect(screenX - size / 2, screenY - size / 2, size, size);
@@ -76,7 +77,7 @@ public class Vertex extends EditorObject {
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
 
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             double x = getDouble("x");
             double y = getDouble("y");
@@ -125,15 +126,15 @@ public class Vertex extends EditorObject {
     }
 
     public void drawTo(GraphicsContext graphicsContext, Vertex vertex, Paint color){
-        if (Main.getLevel().isShowGeometry()) {
-            double screenX1 = Double.parseDouble(getAttribute("x")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-            double screenY1 = -Double.parseDouble(getAttribute("y")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+        if (LevelManager.getLevel().isShowGeometry()) {
+            double screenX1 = Double.parseDouble(getAttribute("x")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+            double screenY1 = -Double.parseDouble(getAttribute("y")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-            double screenX2 = Double.parseDouble(vertex.getAttribute("x")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-            double screenY2 = -Double.parseDouble(vertex.getAttribute("y")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+            double screenX2 = Double.parseDouble(vertex.getAttribute("x")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+            double screenY2 = -Double.parseDouble(vertex.getAttribute("y")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
             graphicsContext.setStroke(color);
-            graphicsContext.setLineWidth(Main.getLevel().getZoom() * 10);
+            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 10);
             graphicsContext.strokeLine(screenX1, screenY1, screenX2, screenY2);
         }
     }

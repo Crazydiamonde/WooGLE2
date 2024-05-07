@@ -6,6 +6,7 @@ import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
 
+import com.WooGLEFX.Functions.LevelLoader;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -90,7 +91,7 @@ public class LevelSelector extends Application {
                             label.setPrefWidth(376);
                             label.setOnMouseClicked(mouseEvent -> {
                                 if (selectedLabel == label) {
-                                    Main.openLevel(selected, version);
+                                    LevelLoader.openLevel(selected, version);
                                     stage.close();
                                     selectedLabel = null;
                                     selected = "";
@@ -121,7 +122,7 @@ public class LevelSelector extends Application {
 
         openButton.setOnAction(actionEvent -> {
             if (!selected.equals("")) {
-                Main.openLevel(selected, version);
+                LevelLoader.openLevel(selected, version);
                 stage.close();
                 selectedLabel = null;
                 selected = "";

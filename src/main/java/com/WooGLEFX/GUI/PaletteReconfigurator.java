@@ -1,6 +1,6 @@
 package com.WooGLEFX.GUI;
 
-import com.WooGLEFX.Engine.FXCreator;
+import com.WooGLEFX.Engine.FX.FXCreator;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.EditorObjects._Ball;

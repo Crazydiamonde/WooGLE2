@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
+import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,17 +78,17 @@ public class Button extends EditorObject {
             Color color = Color.parse(getAttribute("colorize"));
             image = SceneLayer.colorize(image, color);
         } catch (FileNotFoundException e) {
-            Main.failedResources.add("From Button: image \"" + getAttribute("up") + "\" (version " + Main.getLevel().getVersion() + ")");
+            Main.failedResources.add("From Button: image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
             logger.trace("Image changed from " + oldValue + " to " + newValue);
             try {
-                image = GlobalResourceManager.getImage(getAttribute("up"), Main.getLevel().getVersion());
+                image = GlobalResourceManager.getImage(getAttribute("up"), LevelManager.getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));
                 image = SceneLayer.colorize(image, color);
             } catch (FileNotFoundException e) {
-                Main.failedResources.add("From Button: Image \"" + getAttribute("up") + "\" (version " + Main.getLevel().getVersion() + ")");
+                Main.failedResources.add("From Button: Image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
             }
         };
 
@@ -98,7 +99,7 @@ public class Button extends EditorObject {
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
 
-        if (Main.getLevel().isShowGraphics() && image != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image != null) {
 
             double x2 = getDouble("x");
             double y2 = getDouble("y");
@@ -131,7 +132,7 @@ public class Button extends EditorObject {
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
 
-        if (Main.getLevel().isShowGraphics() && image != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image != null) {
 
             if (getAttribute("up").equals("") || image == null) {
                 return;
@@ -168,8 +169,8 @@ public class Button extends EditorObject {
                 Point2D rotated6 = EditorObject.rotate(new Point2D(x - image.getWidth() * scalex / 2, -y + image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
                 Point2D rotated7 = EditorObject.rotate(new Point2D(x + image.getWidth() * scalex / 2, -y - image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
 
-                double screenX2 = (x) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY2 = (-y) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX2 = (x) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY2 = (-y) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.save();
                 Affine t2 = graphicsContext.getTransform();
@@ -180,33 +181,33 @@ public class Button extends EditorObject {
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
 
-                double screenX3 = (rotated2.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY3 = (rotated2.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX3 = (rotated2.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY3 = (rotated2.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX4 = (rotated3.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY4 = (rotated3.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX4 = (rotated3.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY4 = (rotated3.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX5 = (rotated4.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY5 = (rotated4.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX5 = (rotated4.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY5 = (rotated4.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX6 = (rotated5.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY6 = (rotated5.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX6 = (rotated5.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY6 = (rotated5.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX7 = (rotated6.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY7 = (rotated6.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX7 = (rotated6.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY7 = (rotated6.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX8 = (rotated7.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY8 = (rotated7.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX8 = (rotated7.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY8 = (rotated7.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
                 graphicsContext.setLineDashOffset(0);
-                graphicsContext.strokeRect(screenX2 - image.getWidth() * scalex * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaley * Main.getLevel().getZoom() / 2, image.getWidth() * scalex * Main.getLevel().getZoom(), image.getHeight() * scaley * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX2 - image.getWidth() * scalex * LevelManager.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaley * LevelManager.getLevel().getZoom() / 2, image.getWidth() * scalex * LevelManager.getLevel().getZoom(), image.getHeight() * scaley * LevelManager.getLevel().getZoom());
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashOffset(3);
-                graphicsContext.strokeRect(screenX2 - image.getWidth() * scalex * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaley * Main.getLevel().getZoom() / 2, image.getWidth() * scalex * Main.getLevel().getZoom(), image.getHeight() * scaley * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX2 - image.getWidth() * scalex * LevelManager.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaley * LevelManager.getLevel().getZoom() / 2, image.getWidth() * scalex * LevelManager.getLevel().getZoom(), image.getHeight() * scaley * LevelManager.getLevel().getZoom());
                 graphicsContext.setLineDashes(0);
                 graphicsContext.restore();
                 graphicsContext.setLineWidth(1);
@@ -221,7 +222,7 @@ public class Button extends EditorObject {
     }
     @Override
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
-        if (Main.getLevel().isShowGraphics() && image != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image != null) {
             double x2 = getDouble("x");
             double y2 = getDouble("y");
 
@@ -259,7 +260,7 @@ public class Button extends EditorObject {
             double screenX8 = (rotated7.getX());
             double screenY8 = (rotated7.getY());
 
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
             resizeSettings.setInitialScaleX(scaleX);

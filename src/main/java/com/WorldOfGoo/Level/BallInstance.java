@@ -5,6 +5,7 @@ import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -74,22 +75,22 @@ public class BallInstance extends EditorObject {
             if (!found) {
                 _Ball ball2 = null;
                 try {
-                    ball2 = FileManager.openBall(getAttribute("type"), Main.getLevel().getVersion());
+                    ball2 = FileManager.openBall(getAttribute("type"), LevelManager.getLevel().getVersion());
                 } catch (ParserConfigurationException | SAXException | IOException e) {
                     throw new RuntimeException(e);
                 }
 
                 for (EditorObject resrc : FileManager.commonBallResrcData){
-                    GlobalResourceManager.addResource(resrc, Main.getLevel().getVersion());
+                    GlobalResourceManager.addResource(resrc, LevelManager.getLevel().getVersion());
                 }
 
-                ball2.makeImages(Main.getLevel().getVersion());
-                ball2.setVersion(Main.getLevel().getVersion());
+                ball2.makeImages(LevelManager.getLevel().getVersion());
+                ball2.setVersion(LevelManager.getLevel().getVersion());
 
                 Main.getImportedBalls().add(ball2);
                 ball = ball2;
             }
-            for (EditorObject strand : Main.getLevel().getLevel()) {
+            for (EditorObject strand : LevelManager.getLevel().getLevel()) {
                 if (strand instanceof Strand) {
                     if (strand.getAttribute("gb2").equals(getAttribute("id"))) {
                         ((Strand) strand).setStrand(null);
@@ -103,7 +104,7 @@ public class BallInstance extends EditorObject {
 
         //TODO possibly make it so that when you make two gooballs have the same ID strands don't permanently break
         strands.clear();
-        for (EditorObject obj : Main.getLevel().getLevel()) {
+        for (EditorObject obj : LevelManager.getLevel().getLevel()) {
             if (obj instanceof Strand) {
                 if (obj.getAttribute("gb1").equals(getAttribute("id"))) {
                     strands.add((Strand)obj);
@@ -119,7 +120,7 @@ public class BallInstance extends EditorObject {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 strands.clear();
-                for (EditorObject obj : Main.getLevel().getLevel()) {
+                for (EditorObject obj : LevelManager.getLevel().getLevel()) {
                     if (obj instanceof Strand) {
                         if (obj.getAttribute("gb1").equals(getAttribute("id"))) {
                             strands.add((Strand)obj);
@@ -139,7 +140,7 @@ public class BallInstance extends EditorObject {
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
         if (ball != null) {
 
-            if (Main.getLevel().getShowGoos() == 2) {
+            if (LevelManager.getLevel().getShowGoos() == 2) {
 
                 double angle = Double.parseDouble(getAttribute("angle"));
 
@@ -248,8 +249,8 @@ public class BallInstance extends EditorObject {
                     double x3 = Double.parseDouble(getAttribute("x"));
                     double y3 = Double.parseDouble(getAttribute("y"));
 
-                    double screenX2 = (x3) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                    double screenY2 = (-y3) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                    double screenX2 = (x3) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                    double screenY2 = (-y3) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                     graphicsContext.save();
                     Affine t2 = new Affine();
@@ -263,15 +264,15 @@ public class BallInstance extends EditorObject {
                     graphicsContext.setLineWidth(1);
                     graphicsContext.setLineDashes(3);
                     graphicsContext.setLineDashOffset(0);
-                    graphicsContext.strokeRect(screenX2 - width * Main.getLevel().getZoom() / 2, screenY2 - height * Main.getLevel().getZoom() / 2, width * Main.getLevel().getZoom(), height * Main.getLevel().getZoom());
+                    graphicsContext.strokeRect(screenX2 - width * LevelManager.getLevel().getZoom() / 2, screenY2 - height * LevelManager.getLevel().getZoom() / 2, width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
                     graphicsContext.setStroke(Renderer.selectionOutline);
                     graphicsContext.setLineWidth(1);
                     graphicsContext.setLineDashOffset(3);
-                    graphicsContext.strokeRect(screenX2 - width * Main.getLevel().getZoom() / 2, screenY2 - height * Main.getLevel().getZoom() / 2, width * Main.getLevel().getZoom(), height * Main.getLevel().getZoom());
+                    graphicsContext.strokeRect(screenX2 - width * LevelManager.getLevel().getZoom() / 2, screenY2 - height * LevelManager.getLevel().getZoom() / 2, width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
                     graphicsContext.setLineDashes(0);
                     graphicsContext.restore();
                 }
-            } else if (Main.getLevel().getShowGoos() == 1) {
+            } else if (LevelManager.getLevel().getShowGoos() == 1) {
 
                 if (ball.getShapeType().equals("circle")) {
 
@@ -284,16 +285,16 @@ public class BallInstance extends EditorObject {
                     double screenY = -Double.parseDouble(getAttribute("y")) - height / 2.0;
 
                     graphicsContext.setStroke(Renderer.middleColor);
-                    graphicsContext.setLineWidth(3 * Main.getLevel().getZoom());
+                    graphicsContext.setLineWidth(3 * LevelManager.getLevel().getZoom());
 
-                    graphicsContext.strokeOval(screenX * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), screenY * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), width * Main.getLevel().getZoom(), height * Main.getLevel().getZoom());
+                    graphicsContext.strokeOval(screenX * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), screenY * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
 
                     if (this == Main.getSelected()) {
                         double x3 = Double.parseDouble(getAttribute("x"));
                         double y3 = Double.parseDouble(getAttribute("y"));
 
-                        double screenX2 = (x3) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                        double screenY2 = (-y3) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                        double screenX2 = (x3) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                        double screenY2 = (-y3) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                         graphicsContext.save();
                         Affine t2 = new Affine();
@@ -307,11 +308,11 @@ public class BallInstance extends EditorObject {
                         graphicsContext.setLineWidth(1);
                         graphicsContext.setLineDashes(3);
                         graphicsContext.setLineDashOffset(0);
-                        graphicsContext.strokeRect(screenX2 - width * Main.getLevel().getZoom() / 2, screenY2 - height * Main.getLevel().getZoom() / 2, width * Main.getLevel().getZoom(), height * Main.getLevel().getZoom());
+                        graphicsContext.strokeRect(screenX2 - width * LevelManager.getLevel().getZoom() / 2, screenY2 - height * LevelManager.getLevel().getZoom() / 2, width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
                         graphicsContext.setStroke(Renderer.selectionOutline);
                         graphicsContext.setLineWidth(1);
                         graphicsContext.setLineDashOffset(3);
-                        graphicsContext.strokeRect(screenX2 - width * Main.getLevel().getZoom() / 2, screenY2 - height * Main.getLevel().getZoom() / 2, width * Main.getLevel().getZoom(), height * Main.getLevel().getZoom());
+                        graphicsContext.strokeRect(screenX2 - width * LevelManager.getLevel().getZoom() / 2, screenY2 - height * LevelManager.getLevel().getZoom() / 2, width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
                         graphicsContext.setLineDashes(0);
                         graphicsContext.restore();
                     }
@@ -327,40 +328,40 @@ public class BallInstance extends EditorObject {
 
                     Point2D center = new Point2D(x2, y2);
 
-                    Point2D topRight2 = new Point2D(x2 + width / 2, y2 - height / 2).multiply(Main.getLevel().getZoom());
-                    Point2D topLeft2 = new Point2D(x2 - width / 2, y2 - height / 2).multiply(Main.getLevel().getZoom());
-                    Point2D bottomLeft2 = new Point2D(x2 - width / 2, y2 + height / 2).multiply(Main.getLevel().getZoom());
-                    Point2D bottomRight2 = new Point2D(x2 + width / 2, y2 + height / 2).multiply(Main.getLevel().getZoom());
+                    Point2D topRight2 = new Point2D(x2 + width / 2, y2 - height / 2).multiply(LevelManager.getLevel().getZoom());
+                    Point2D topLeft2 = new Point2D(x2 - width / 2, y2 - height / 2).multiply(LevelManager.getLevel().getZoom());
+                    Point2D bottomLeft2 = new Point2D(x2 - width / 2, y2 + height / 2).multiply(LevelManager.getLevel().getZoom());
+                    Point2D bottomRight2 = new Point2D(x2 + width / 2, y2 + height / 2).multiply(LevelManager.getLevel().getZoom());
 
                     double woag = Math.min(Math.min(1.5, Math.abs(width) / 4), Math.abs(height) / 4);
 
-                    Point2D topRight = new Point2D(x2 + width / 2 - woag, y2 - height / 2 + woag).multiply(Main.getLevel().getZoom());
-                    Point2D topLeft = new Point2D(x2 - width / 2 + woag, y2 - height / 2 + woag).multiply(Main.getLevel().getZoom());
-                    Point2D bottomLeft = new Point2D(x2 - width / 2 + woag, y2 + height / 2 - woag).multiply(Main.getLevel().getZoom());
-                    Point2D bottomRight = new Point2D(x2 + width / 2 - woag, y2 + height / 2 - woag).multiply(Main.getLevel().getZoom());
+                    Point2D topRight = new Point2D(x2 + width / 2 - woag, y2 - height / 2 + woag).multiply(LevelManager.getLevel().getZoom());
+                    Point2D topLeft = new Point2D(x2 - width / 2 + woag, y2 - height / 2 + woag).multiply(LevelManager.getLevel().getZoom());
+                    Point2D bottomLeft = new Point2D(x2 - width / 2 + woag, y2 + height / 2 - woag).multiply(LevelManager.getLevel().getZoom());
+                    Point2D bottomRight = new Point2D(x2 + width / 2 - woag, y2 + height / 2 - woag).multiply(LevelManager.getLevel().getZoom());
 
-                    topRight = EditorObject.rotate(topRight, rotation, center.multiply(Main.getLevel().getZoom()));
-                    topLeft = EditorObject.rotate(topLeft, rotation, center.multiply(Main.getLevel().getZoom()));
-                    bottomLeft = EditorObject.rotate(bottomLeft, rotation, center.multiply(Main.getLevel().getZoom()));
-                    bottomRight = EditorObject.rotate(bottomRight, rotation, center.multiply(Main.getLevel().getZoom()));
+                    topRight = EditorObject.rotate(topRight, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                    topLeft = EditorObject.rotate(topLeft, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                    bottomLeft = EditorObject.rotate(bottomLeft, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                    bottomRight = EditorObject.rotate(bottomRight, rotation, center.multiply(LevelManager.getLevel().getZoom()));
 
-                    topRight2 = EditorObject.rotate(topRight2, rotation, center.multiply(Main.getLevel().getZoom()));
-                    topLeft2 = EditorObject.rotate(topLeft2, rotation, center.multiply(Main.getLevel().getZoom()));
-                    bottomLeft2 = EditorObject.rotate(bottomLeft2, rotation, center.multiply(Main.getLevel().getZoom()));
-                    bottomRight2 = EditorObject.rotate(bottomRight2, rotation, center.multiply(Main.getLevel().getZoom()));
+                    topRight2 = EditorObject.rotate(topRight2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                    topLeft2 = EditorObject.rotate(topLeft2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                    bottomLeft2 = EditorObject.rotate(bottomLeft2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                    bottomRight2 = EditorObject.rotate(bottomRight2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
 
-                    topRight = new Point2D((topRight.getX()) + Main.getLevel().getOffsetX(), (-topRight.getY()) + Main.getLevel().getOffsetY());
-                    topLeft = new Point2D((topLeft.getX()) + Main.getLevel().getOffsetX(), (-topLeft.getY()) + Main.getLevel().getOffsetY());
-                    bottomLeft = new Point2D((bottomLeft.getX()) + Main.getLevel().getOffsetX(), (-bottomLeft.getY()) + Main.getLevel().getOffsetY());
-                    bottomRight = new Point2D((bottomRight.getX()) + Main.getLevel().getOffsetX(), (-bottomRight.getY()) + Main.getLevel().getOffsetY());
+                    topRight = new Point2D((topRight.getX()) + LevelManager.getLevel().getOffsetX(), (-topRight.getY()) + LevelManager.getLevel().getOffsetY());
+                    topLeft = new Point2D((topLeft.getX()) + LevelManager.getLevel().getOffsetX(), (-topLeft.getY()) + LevelManager.getLevel().getOffsetY());
+                    bottomLeft = new Point2D((bottomLeft.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomLeft.getY()) + LevelManager.getLevel().getOffsetY());
+                    bottomRight = new Point2D((bottomRight.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomRight.getY()) + LevelManager.getLevel().getOffsetY());
 
-                    topRight2 = new Point2D((topRight2.getX()) + Main.getLevel().getOffsetX(), (-topRight2.getY()) + Main.getLevel().getOffsetY());
-                    topLeft2 = new Point2D((topLeft2.getX()) + Main.getLevel().getOffsetX(), (-topLeft2.getY()) + Main.getLevel().getOffsetY());
-                    bottomLeft2 = new Point2D((bottomLeft2.getX()) + Main.getLevel().getOffsetX(), (-bottomLeft2.getY()) + Main.getLevel().getOffsetY());
-                    bottomRight2 = new Point2D((bottomRight2.getX()) + Main.getLevel().getOffsetX(), (-bottomRight2.getY()) + Main.getLevel().getOffsetY());
+                    topRight2 = new Point2D((topRight2.getX()) + LevelManager.getLevel().getOffsetX(), (-topRight2.getY()) + LevelManager.getLevel().getOffsetY());
+                    topLeft2 = new Point2D((topLeft2.getX()) + LevelManager.getLevel().getOffsetX(), (-topLeft2.getY()) + LevelManager.getLevel().getOffsetY());
+                    bottomLeft2 = new Point2D((bottomLeft2.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomLeft2.getY()) + LevelManager.getLevel().getOffsetY());
+                    bottomRight2 = new Point2D((bottomRight2.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomRight2.getY()) + LevelManager.getLevel().getOffsetY());
 
                     graphicsContext.setStroke(Renderer.middleColor);
-                    graphicsContext.setLineWidth(2 * woag * Main.getLevel().getZoom());
+                    graphicsContext.setLineWidth(2 * woag * LevelManager.getLevel().getZoom());
                     graphicsContext.strokeLine(topRight.getX(), topRight.getY(), topLeft.getX(), topLeft.getY());
                     graphicsContext.strokeLine(bottomLeft.getX(), bottomLeft.getY(), bottomRight.getX(), bottomRight.getY());
                     graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
@@ -385,7 +386,7 @@ public class BallInstance extends EditorObject {
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().getShowGoos() == 2 && ball != null) {
+        if (LevelManager.getLevel().getShowGoos() == 2 && ball != null) {
             double angle = Double.parseDouble(getAttribute("angle"));
 
             double width;
@@ -419,7 +420,7 @@ public class BallInstance extends EditorObject {
                     if (getAttribute("discovered").equals("false")) {
                         state = "sleeping";
                     } else {
-                        for (EditorObject obj : Main.getLevel().getLevel()) {
+                        for (EditorObject obj : LevelManager.getLevel().getLevel()) {
                             if (obj instanceof Strand) {
                                 if (obj.getAttribute("gb1").equals(getAttribute("id")) || obj.getAttribute("gb2").equals(getAttribute("id"))) {
                                     state = "attached";
@@ -492,7 +493,7 @@ public class BallInstance extends EditorObject {
                     }
                 }
             }
-        } else if (Main.getLevel().getShowGoos() == 1) {
+        } else if (LevelManager.getLevel().getShowGoos() == 1) {
 
             if (ball.getShapeType().equals("rectangle")) {
 

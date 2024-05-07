@@ -2,6 +2,7 @@ package com.WooGLEFX.EditorObjects;
 
 import com.WooGLEFX.Engine.EditorWindow;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 
 public class ParticleGraphicsInstance {
@@ -81,10 +82,10 @@ public class ParticleGraphicsInstance {
         this.pos.setX(this.originalPos.getX() + (this.speed * Math.cos(angle) + 0.5 * this.acceleration.getX() * dt * 50) * dt * 50);
         this.pos.setY(this.originalPos.getY() + (this.speed * Math.sin(angle) + 0.5 * this.acceleration.getY() * dt * 50) * dt * 50);
         if (lifespan == -1) {
-            if (pos.getX() < Main.getLevel().getSceneObject().getDouble("minx") ||
-                    pos.getY() < Main.getLevel().getSceneObject().getDouble("miny") ||
-                    pos.getX() > Main.getLevel().getSceneObject().getDouble("maxx") ||
-                    pos.getY() > Main.getLevel().getSceneObject().getDouble("maxy")) {
+            if (pos.getX() < LevelManager.getLevel().getSceneObject().getDouble("minx") ||
+                    pos.getY() < LevelManager.getLevel().getSceneObject().getDouble("miny") ||
+                    pos.getX() > LevelManager.getLevel().getSceneObject().getDouble("maxx") ||
+                    pos.getY() > LevelManager.getLevel().getSceneObject().getDouble("maxy")) {
                 return true;
             }
         } else if (dt > this.lifespan) {

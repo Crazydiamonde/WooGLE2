@@ -2,6 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -30,7 +31,7 @@ public class Camera extends EditorObject {
     @Override
     public DragSettings mouseIntersection (double mX, double mY) {
 
-        if (Main.getLevel().isShowCameras()) {
+        if (LevelManager.getLevel().isShowCameras()) {
 
             Position pos = Position.parse(getAttribute("endpos"));
             double zoom = getDouble("endzoom");
@@ -62,7 +63,7 @@ public class Camera extends EditorObject {
     @Override
     public void draw (GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
 
-        if (Main.getLevel().isShowCameras()) {
+        if (LevelManager.getLevel().isShowCameras()) {
 
             Position pos = Position.parse(getAttribute("endpos"));
             double zoom = getDouble("endzoom");
@@ -84,30 +85,30 @@ public class Camera extends EditorObject {
             double x = pos.getX() - width / 2;
             double y = -pos.getY() - height / 2;
 
-            graphicsContext.strokeRect(x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), width * Main.getLevel().getZoom(), height * Main.getLevel().getZoom());
+            graphicsContext.strokeRect(x * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), y * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
 
             if (this == Main.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
                 graphicsContext.setLineDashOffset(0);
-                graphicsContext.strokeRect(x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), width * Main.getLevel().getZoom(), height * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(x * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), y * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashOffset(3);
-                graphicsContext.strokeRect(x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY(), width * Main.getLevel().getZoom(), height * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(x * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), y * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
                 graphicsContext.setLineDashes(0);
 
-                Point2D topRight = new Point2D(x + width, y).multiply(Main.getLevel().getZoom());
-                Point2D topLeft = new Point2D(x, y).multiply(Main.getLevel().getZoom());
-                Point2D bottomLeft = new Point2D(x, y + height).multiply(Main.getLevel().getZoom());
-                Point2D bottomRight = new Point2D(x + width, y + height).multiply(Main.getLevel().getZoom());
+                Point2D topRight = new Point2D(x + width, y).multiply(LevelManager.getLevel().getZoom());
+                Point2D topLeft = new Point2D(x, y).multiply(LevelManager.getLevel().getZoom());
+                Point2D bottomLeft = new Point2D(x, y + height).multiply(LevelManager.getLevel().getZoom());
+                Point2D bottomRight = new Point2D(x + width, y + height).multiply(LevelManager.getLevel().getZoom());
 
                 graphicsContext.setLineWidth(1);
-                graphicsContext.strokeRect(topRight.getX() + Main.getLevel().getOffsetX() - 4, topRight.getY() + Main.getLevel().getOffsetY() - 4, 8, 8);
-                graphicsContext.strokeRect(topLeft.getX() + Main.getLevel().getOffsetX() - 4, topLeft.getY() + Main.getLevel().getOffsetY() - 4, 8, 8);
-                graphicsContext.strokeRect(bottomLeft.getX() + Main.getLevel().getOffsetX() - 4, bottomLeft.getY() + Main.getLevel().getOffsetY() - 4, 8, 8);
-                graphicsContext.strokeRect(bottomRight.getX() + Main.getLevel().getOffsetX() - 4, bottomRight.getY() + Main.getLevel().getOffsetY() - 4, 8, 8);
+                graphicsContext.strokeRect(topRight.getX() + LevelManager.getLevel().getOffsetX() - 4, topRight.getY() + LevelManager.getLevel().getOffsetY() - 4, 8, 8);
+                graphicsContext.strokeRect(topLeft.getX() + LevelManager.getLevel().getOffsetX() - 4, topLeft.getY() + LevelManager.getLevel().getOffsetY() - 4, 8, 8);
+                graphicsContext.strokeRect(bottomLeft.getX() + LevelManager.getLevel().getOffsetX() - 4, bottomLeft.getY() + LevelManager.getLevel().getOffsetY() - 4, 8, 8);
+                graphicsContext.strokeRect(bottomRight.getX() + LevelManager.getLevel().getOffsetX() - 4, bottomRight.getY() + LevelManager.getLevel().getOffsetY() - 4, 8, 8);
             }
         }
     }
@@ -115,7 +116,7 @@ public class Camera extends EditorObject {
     @Override
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
 
-        if (Main.getLevel().isShowCameras()) {
+        if (LevelManager.getLevel().isShowCameras()) {
 
             Position pos = Position.parse(getAttribute("endpos"));
             double zoom = getDouble("endzoom");
@@ -139,7 +140,7 @@ public class Camera extends EditorObject {
             topLeft = new Point2D((topLeft.getX()), (-topLeft.getY()));
             bottomLeft = new Point2D((bottomLeft.getX()), (-bottomLeft.getY()));
             bottomRight = new Point2D((bottomRight.getX()), (-bottomRight.getY()));
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             double x = pos.getX();
             double y = pos.getY();

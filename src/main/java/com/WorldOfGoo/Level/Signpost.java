@@ -1,5 +1,6 @@
 package com.WorldOfGoo.Level;
 
+import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +54,8 @@ public class Signpost extends EditorObject {
             Color color = getColor("colorize");
             image = SceneLayer.colorize(image, color);
         } catch (Exception e) {
-            if (!Main.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
-                Main.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+            if (!Main.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                Main.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
             }
             image = null;
         }
@@ -66,8 +67,8 @@ public class Signpost extends EditorObject {
                 Color color = getColor("colorize");
                 image = SceneLayer.colorize(image, color);
             } catch (Exception e) {
-                if (!Main.failedResources.contains("From signpost: \"" + getString("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From signpost: \"" + getString("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                if (!Main.failedResources.contains("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                    Main.failedResources.add("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
                 image = null;
             }
@@ -119,8 +120,8 @@ public class Signpost extends EditorObject {
                 Point2D rotated6 = EditorObject.rotate(new Point2D(x2 - image.getWidth() * scalex / 2, -y2 + image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x2, -y2));
                 Point2D rotated7 = EditorObject.rotate(new Point2D(x2 + image.getWidth() * scalex / 2, -y2 - image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x2, -y2));
 
-                double screenX2 = (x2) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY2 = (-y2) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX2 = (x2) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY2 = (-y2) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.save();
                 Affine t2 = graphicsContext.getTransform();
@@ -131,33 +132,33 @@ public class Signpost extends EditorObject {
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
 
-                double screenX3 = (rotated2.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY3 = (rotated2.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX3 = (rotated2.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY3 = (rotated2.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX4 = (rotated3.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY4 = (rotated3.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX4 = (rotated3.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY4 = (rotated3.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX5 = (rotated4.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY5 = (rotated4.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX5 = (rotated4.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY5 = (rotated4.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX6 = (rotated5.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY6 = (rotated5.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX6 = (rotated5.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY6 = (rotated5.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX7 = (rotated6.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY7 = (rotated6.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX7 = (rotated6.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY7 = (rotated6.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX8 = (rotated7.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY8 = (rotated7.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX8 = (rotated7.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY8 = (rotated7.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
                 graphicsContext.setLineDashOffset(0);
-                graphicsContext.strokeRect(screenX2 - image.getWidth() * scalex * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaley * Main.getLevel().getZoom() / 2, image.getWidth() * scalex * Main.getLevel().getZoom(), image.getHeight() * scaley * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX2 - image.getWidth() * scalex * LevelManager.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaley * LevelManager.getLevel().getZoom() / 2, image.getWidth() * scalex * LevelManager.getLevel().getZoom(), image.getHeight() * scaley * LevelManager.getLevel().getZoom());
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashOffset(3);
-                graphicsContext.strokeRect(screenX2 - image.getWidth() * scalex * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaley * Main.getLevel().getZoom() / 2, image.getWidth() * scalex * Main.getLevel().getZoom(), image.getHeight() * scaley * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX2 - image.getWidth() * scalex * LevelManager.getLevel().getZoom() / 2, screenY2 - image.getHeight() * scaley * LevelManager.getLevel().getZoom() / 2, image.getWidth() * scalex * LevelManager.getLevel().getZoom(), image.getHeight() * scaley * LevelManager.getLevel().getZoom());
                 graphicsContext.setLineDashes(0);
                 graphicsContext.restore();
                 graphicsContext.setLineWidth(1);
@@ -246,7 +247,7 @@ public class Signpost extends EditorObject {
             double screenX8 = (rotated7.getX());
             double screenY8 = (rotated7.getY());
 
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
             resizeSettings.setInitialScaleX(scalex);

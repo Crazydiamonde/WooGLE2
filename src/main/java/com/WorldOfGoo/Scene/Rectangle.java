@@ -6,6 +6,7 @@ import com.WooGLEFX.EditorObjects.GeometryImage;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -50,7 +51,7 @@ public class Rectangle extends EditorObject {
         setNameAttribute(getAttribute2("id"));
         if (!getAttribute("image").equals("")) {
             try {
-                image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
+                image.setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
             } catch (FileNotFoundException e) {
                 Alarms.errorMessage(e);
             }
@@ -59,7 +60,7 @@ public class Rectangle extends EditorObject {
         setChangeListener("image", (observable, oldValue, newValue) -> {
             if (!getAttribute("image").equals("")) {
                 try {
-                    image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
+                    image.setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
                 } catch (FileNotFoundException e) {
                     Alarms.errorMessage(e);
                 }
@@ -69,7 +70,7 @@ public class Rectangle extends EditorObject {
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
             double x2 = Double.parseDouble(getAttribute("x"));
             double y2 = Double.parseDouble(getAttribute("y"));
 
@@ -114,7 +115,7 @@ public class Rectangle extends EditorObject {
 
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             double x2 = Double.parseDouble(getAttribute("x"));
             double y2 = Double.parseDouble(getAttribute("y"));
@@ -137,42 +138,42 @@ public class Rectangle extends EditorObject {
 
             Point2D center = new Point2D(x2, y2);
 
-            Point2D topRight2 = new Point2D(x2 + width / 2, y2 - height / 2).multiply(Main.getLevel().getZoom());
-            Point2D topLeft2 = new Point2D(x2 - width / 2, y2 - height / 2).multiply(Main.getLevel().getZoom());
-            Point2D bottomLeft2 = new Point2D(x2 - width / 2, y2 + height / 2).multiply(Main.getLevel().getZoom());
-            Point2D bottomRight2 = new Point2D(x2 + width / 2, y2 + height / 2).multiply(Main.getLevel().getZoom());
+            Point2D topRight2 = new Point2D(x2 + width / 2, y2 - height / 2).multiply(LevelManager.getLevel().getZoom());
+            Point2D topLeft2 = new Point2D(x2 - width / 2, y2 - height / 2).multiply(LevelManager.getLevel().getZoom());
+            Point2D bottomLeft2 = new Point2D(x2 - width / 2, y2 + height / 2).multiply(LevelManager.getLevel().getZoom());
+            Point2D bottomRight2 = new Point2D(x2 + width / 2, y2 + height / 2).multiply(LevelManager.getLevel().getZoom());
 
             double woag = Math.min(Math.min(0.5, Math.abs(width) / 4), Math.abs(height) / 4);
 
-            Point2D topRight = new Point2D(x2 + width / 2 - woag, y2 - height / 2 + woag).multiply(Main.getLevel().getZoom());
-            Point2D topLeft = new Point2D(x2 - width / 2 + woag, y2 - height / 2 + woag).multiply(Main.getLevel().getZoom());
-            Point2D bottomLeft = new Point2D(x2 - width / 2 + woag, y2 + height / 2 - woag).multiply(Main.getLevel().getZoom());
-            Point2D bottomRight = new Point2D(x2 + width / 2 - woag, y2 + height / 2 - woag).multiply(Main.getLevel().getZoom());
+            Point2D topRight = new Point2D(x2 + width / 2 - woag, y2 - height / 2 + woag).multiply(LevelManager.getLevel().getZoom());
+            Point2D topLeft = new Point2D(x2 - width / 2 + woag, y2 - height / 2 + woag).multiply(LevelManager.getLevel().getZoom());
+            Point2D bottomLeft = new Point2D(x2 - width / 2 + woag, y2 + height / 2 - woag).multiply(LevelManager.getLevel().getZoom());
+            Point2D bottomRight = new Point2D(x2 + width / 2 - woag, y2 + height / 2 - woag).multiply(LevelManager.getLevel().getZoom());
 
-            topRight = EditorObject.rotate(topRight, rotation, center.multiply(Main.getLevel().getZoom()));
-            topLeft = EditorObject.rotate(topLeft, rotation, center.multiply(Main.getLevel().getZoom()));
-            bottomLeft = EditorObject.rotate(bottomLeft, rotation, center.multiply(Main.getLevel().getZoom()));
-            bottomRight = EditorObject.rotate(bottomRight, rotation, center.multiply(Main.getLevel().getZoom()));
+            topRight = EditorObject.rotate(topRight, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+            topLeft = EditorObject.rotate(topLeft, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+            bottomLeft = EditorObject.rotate(bottomLeft, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+            bottomRight = EditorObject.rotate(bottomRight, rotation, center.multiply(LevelManager.getLevel().getZoom()));
 
-            topRight2 = EditorObject.rotate(topRight2, rotation, center.multiply(Main.getLevel().getZoom()));
-            topLeft2 = EditorObject.rotate(topLeft2, rotation, center.multiply(Main.getLevel().getZoom()));
-            bottomLeft2 = EditorObject.rotate(bottomLeft2, rotation, center.multiply(Main.getLevel().getZoom()));
-            bottomRight2 = EditorObject.rotate(bottomRight2, rotation, center.multiply(Main.getLevel().getZoom()));
+            topRight2 = EditorObject.rotate(topRight2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+            topLeft2 = EditorObject.rotate(topLeft2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+            bottomLeft2 = EditorObject.rotate(bottomLeft2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+            bottomRight2 = EditorObject.rotate(bottomRight2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
 
-            topRight = new Point2D((topRight.getX()) + Main.getLevel().getOffsetX(), (-topRight.getY()) + Main.getLevel().getOffsetY());
-            topLeft = new Point2D((topLeft.getX()) + Main.getLevel().getOffsetX(), (-topLeft.getY()) + Main.getLevel().getOffsetY());
-            bottomLeft = new Point2D((bottomLeft.getX()) + Main.getLevel().getOffsetX(), (-bottomLeft.getY()) + Main.getLevel().getOffsetY());
-            bottomRight = new Point2D((bottomRight.getX()) + Main.getLevel().getOffsetX(), (-bottomRight.getY()) + Main.getLevel().getOffsetY());
+            topRight = new Point2D((topRight.getX()) + LevelManager.getLevel().getOffsetX(), (-topRight.getY()) + LevelManager.getLevel().getOffsetY());
+            topLeft = new Point2D((topLeft.getX()) + LevelManager.getLevel().getOffsetX(), (-topLeft.getY()) + LevelManager.getLevel().getOffsetY());
+            bottomLeft = new Point2D((bottomLeft.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomLeft.getY()) + LevelManager.getLevel().getOffsetY());
+            bottomRight = new Point2D((bottomRight.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomRight.getY()) + LevelManager.getLevel().getOffsetY());
 
-            topRight2 = new Point2D((topRight2.getX()) + Main.getLevel().getOffsetX(), (-topRight2.getY()) + Main.getLevel().getOffsetY());
-            topLeft2 = new Point2D((topLeft2.getX()) + Main.getLevel().getOffsetX(), (-topLeft2.getY()) + Main.getLevel().getOffsetY());
-            bottomLeft2 = new Point2D((bottomLeft2.getX()) + Main.getLevel().getOffsetX(), (-bottomLeft2.getY()) + Main.getLevel().getOffsetY());
-            bottomRight2 = new Point2D((bottomRight2.getX()) + Main.getLevel().getOffsetX(), (-bottomRight2.getY()) + Main.getLevel().getOffsetY());
+            topRight2 = new Point2D((topRight2.getX()) + LevelManager.getLevel().getOffsetX(), (-topRight2.getY()) + LevelManager.getLevel().getOffsetY());
+            topLeft2 = new Point2D((topLeft2.getX()) + LevelManager.getLevel().getOffsetX(), (-topLeft2.getY()) + LevelManager.getLevel().getOffsetY());
+            bottomLeft2 = new Point2D((bottomLeft2.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomLeft2.getY()) + LevelManager.getLevel().getOffsetY());
+            bottomRight2 = new Point2D((bottomRight2.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomRight2.getY()) + LevelManager.getLevel().getOffsetY());
 
             graphicsContext.setFill(Renderer.transparentBlue);
             graphicsContext.fillPolygon(new double[]{topRight.getX(), topLeft.getX(), bottomLeft.getX(), bottomRight.getX()}, new double[]{topRight.getY(), topLeft.getY(), bottomLeft.getY(), bottomRight.getY()}, 4);
             graphicsContext.setStroke(Renderer.solidBlue);
-            graphicsContext.setLineWidth(2 * woag * Main.getLevel().getZoom());
+            graphicsContext.setLineWidth(2 * woag * LevelManager.getLevel().getZoom());
             graphicsContext.strokeLine(topRight.getX(), topRight.getY(), topLeft.getX(), topLeft.getY());
             graphicsContext.strokeLine(bottomLeft.getX(), bottomLeft.getY(), bottomRight.getX(), bottomRight.getY());
             graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
@@ -202,8 +203,8 @@ public class Rectangle extends EditorObject {
                 middleLeft = EditorObject.rotate(middleLeft, rotation, center);
                 middleRight = EditorObject.rotate(middleRight, rotation, center);
 
-                middleLeft = new Point2D((middleLeft.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), (-middleLeft.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY());
-                middleRight = new Point2D((middleRight.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), (-middleRight.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY());
+                middleLeft = new Point2D((middleLeft.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), (-middleLeft.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY());
+                middleRight = new Point2D((middleRight.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), (-middleRight.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY());
 
                 graphicsContext.strokeOval(middleLeft.getX() - 4, middleLeft.getY() - 4, 8, 8);
                 graphicsContext.strokeOval(middleRight.getX() - 4, middleRight.getY() - 4, 8, 8);
@@ -224,7 +225,7 @@ public class Rectangle extends EditorObject {
 
     @Override
     public DragSettings mouseImageIntersection(double mX2, double mY2) {
-        if (Main.getLevel().isShowGraphics() && image.getImage() != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image.getImage() != null) {
             return image.mouseIntersection(mX2, mY2);
         }
         return new DragSettings(DragSettings.NONE);
@@ -233,7 +234,7 @@ public class Rectangle extends EditorObject {
     @Override
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
 
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             double x2 = Double.parseDouble(getAttribute("x"));
             double y2 = Double.parseDouble(getAttribute("y"));
@@ -273,7 +274,7 @@ public class Rectangle extends EditorObject {
             topLeft = new Point2D((topLeft.getX()), (-topLeft.getY()));
             bottomLeft = new Point2D((bottomLeft.getX()), (-bottomLeft.getY()));
             bottomRight = new Point2D((bottomRight.getX()), (-bottomRight.getY()));
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
 

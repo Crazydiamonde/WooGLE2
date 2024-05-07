@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -57,7 +58,7 @@ public class Particles extends EditorObject {
 
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
-        if (Main.getLevel().isShowParticles()) {
+        if (LevelManager.getLevel().isShowParticles()) {
             for (EditorObject obj : Main.getParticles()) {
                 if (obj instanceof Particleeffect || obj instanceof Ambientparticleeffect) {
                     if (obj.getAttribute("name").equals(getAttribute("effect"))) {
@@ -111,10 +112,10 @@ public class Particles extends EditorObject {
                                     double dy = Math.sin(Math.toRadians(rotation));
                                     double dx = Math.cos(Math.toRadians(rotation));
 
-                                    double minX = Main.getLevel().getSceneObject().getDouble("minx");
-                                    double minY = -Main.getLevel().getSceneObject().getDouble("miny");
-                                    double maxX = Main.getLevel().getSceneObject().getDouble("maxx");
-                                    double maxY = -Main.getLevel().getSceneObject().getDouble("maxy");
+                                    double minX = LevelManager.getLevel().getSceneObject().getDouble("minx");
+                                    double minY = -LevelManager.getLevel().getSceneObject().getDouble("miny");
+                                    double maxX = LevelManager.getLevel().getSceneObject().getDouble("maxx");
+                                    double maxY = -LevelManager.getLevel().getSceneObject().getDouble("maxy");
 
                                     double horizontalWeight = Math.abs(dx);
 
@@ -231,7 +232,7 @@ public class Particles extends EditorObject {
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().isShowParticles()) {
+        if (LevelManager.getLevel().isShowParticles()) {
             Position pos = getPosition("pos");
 
             double x2 = pos.getX();

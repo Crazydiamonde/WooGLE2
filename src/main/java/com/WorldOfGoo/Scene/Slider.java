@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -35,7 +36,7 @@ public class Slider extends EditorObject {
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
 
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             Position axis = Position.parse(getAttribute("axis"));
             double magnitude = Math.sqrt(axis.getX() * axis.getX() + axis.getY() * axis.getY());
@@ -51,7 +52,7 @@ public class Slider extends EditorObject {
 
             EditorObject geometry2 = null;
 
-            for (EditorObject maybeGeometry : Main.getLevel().getScene()) {
+            for (EditorObject maybeGeometry : LevelManager.getLevel().getScene()) {
                 if (maybeGeometry instanceof Rectangle || maybeGeometry instanceof Circle) {
                     if (maybeGeometry.getAttribute("id").equals(getAttribute("body1"))) {
                         geometry1 = maybeGeometry;
@@ -63,13 +64,13 @@ public class Slider extends EditorObject {
 
             if (geometry1 != null) {
 
-                double size = 10 * Main.getLevel().getZoom();
+                double size = 10 * LevelManager.getLevel().getZoom();
 
                 double x = geometry1.getDouble("x");
                 double y = geometry1.getDouble("y");
 
-                double screenX = x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY = -y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX = x * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY = -y * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.save();
 
@@ -77,7 +78,7 @@ public class Slider extends EditorObject {
                 //t.appendRotation(45, screenX, screenY);
                 //graphicsContext.setTransform(t);
 
-                graphicsContext.setLineWidth(Main.getLevel().getZoom() * 5);
+                graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 5);
                 graphicsContext.setStroke(Renderer.mechanics);
 
                 graphicsContext.strokeRect(screenX - size / 2, screenY - size / 2, size, size);
@@ -102,7 +103,7 @@ public class Slider extends EditorObject {
 
             if (geometry2 != null) {
 
-                double size = 10 * Main.getLevel().getZoom();
+                double size = 10 * LevelManager.getLevel().getZoom();
 
                 double x = geometry2.getDouble("x");
                 double y = geometry2.getDouble("y");
@@ -112,8 +113,8 @@ public class Slider extends EditorObject {
                     y += geometry2.getParent().getDouble("y");
                 }
 
-                double screenX = x * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY = -y * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX = x * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY = -y * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.save();
 
@@ -145,15 +146,15 @@ public class Slider extends EditorObject {
                 graphicsContext.restore();
                 graphicsContext.save();
 
-                double dst = Math.max(10000 * Main.getLevel().getZoom(), 10000);
+                double dst = Math.max(10000 * LevelManager.getLevel().getZoom(), 10000);
 
-                double screenX2 = (x - dst * dx) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY2 = (-y - dst * dy) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX2 = (x - dst * dx) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY2 = (-y - dst * dy) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX3 = (x + dst * dx) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY3 = (-y + dst * dy) * Main.getLevel().getZoom() + Main.getLevel().getZoom();
+                double screenX3 = (x + dst * dx) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY3 = (-y + dst * dy) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getZoom();
 
-                graphicsContext.setLineWidth(Main.getLevel().getZoom() * 5);
+                graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 5);
                 graphicsContext.setStroke(Renderer.mechanics);
 
                 graphicsContext.strokeLine(screenX2, screenY2, screenX3, screenY3);
@@ -167,7 +168,7 @@ public class Slider extends EditorObject {
         return new DragSettings(DragSettings.NONE);
         /*
 
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             Position anchor = Position.parse(getAttribute("anchor"));
             double x = anchor.getX();

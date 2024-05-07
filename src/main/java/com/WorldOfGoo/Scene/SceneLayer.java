@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
+import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,7 @@ import javafx.scene.transform.Affine;
 public class SceneLayer extends EditorObject {
 
     private static final Logger logger = LoggerFactory.getLogger(SceneLayer.class);
+
 
     private double animx = 0;
     private double animy = 0;
@@ -113,8 +115,8 @@ public class SceneLayer extends EditorObject {
                 image = colorize(image, color);
             } catch (FileNotFoundException e) {
                 image = null;
-                if (!Main.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                if (!Main.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                    Main.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
             }
         }
@@ -122,14 +124,14 @@ public class SceneLayer extends EditorObject {
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
             logger.trace("Image changed from " + oldValue + " to " + newValue);
             try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion());
+                image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));
                 image = colorize(image, color);
 
             } catch (FileNotFoundException e) {
                 image = null;
-                if (!Main.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + Main.getLevel().getVersion() + ")");
+                if (!Main.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                    Main.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
             }
         };
@@ -141,7 +143,7 @@ public class SceneLayer extends EditorObject {
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
 
-        if (Main.getLevel().isShowGraphics() && image != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image != null) {
 
             double x2 = getDouble("x");
             double y2 = getDouble("y");
@@ -152,13 +154,13 @@ public class SceneLayer extends EditorObject {
             double scaleY = getDouble("scaley");
 
             double rotation = rotation2;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 rotation += animrotation;
             }
 
             double scalex = scaleX;
             double scaley = scaleY;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 scalex *= animscalex;
                 scaley *= animscaley;
             }
@@ -167,7 +169,7 @@ public class SceneLayer extends EditorObject {
 
             double x = x2;
             double y = y2;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 x += rotated2.getX();
                 y -= rotated2.getY();
             }
@@ -200,7 +202,7 @@ public class SceneLayer extends EditorObject {
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
 
-        if (Main.getLevel().isShowGraphics() && image != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image != null) {
 
             if (getAttribute("image").equals("") || image == null) {
                 return;
@@ -215,13 +217,13 @@ public class SceneLayer extends EditorObject {
             double scaley = getDouble("scaley");
 
             double rotation2 = rotation;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 rotation2 += animrotation;
             }
 
             double scaleX = scalex;
             double scaleY = scaley;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 scaleX *= animscalex;
                 scaleY *= animscaley;
             }
@@ -230,7 +232,7 @@ public class SceneLayer extends EditorObject {
 
             double x2 = x;
             double y2 = y;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 x2 += rotated.getX();
                 y2 -= rotated.getY();
             }
@@ -258,8 +260,8 @@ public class SceneLayer extends EditorObject {
                 Point2D rotated6 = EditorObject.rotate(new Point2D(x2 - image.getWidth() * scalex / 2, -y2 + image.getHeight() * scaley / 2), -Math.toRadians(rotation2), new Point2D(x2, -y2));
                 Point2D rotated7 = EditorObject.rotate(new Point2D(x2 + image.getWidth() * scalex / 2, -y2 - image.getHeight() * scaley / 2), -Math.toRadians(rotation2), new Point2D(x2, -y2));
 
-                double screenX2 = (x2) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY2 = (-y2) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX2 = (x2) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY2 = (-y2) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.save();
                 Affine t2 = graphicsContext.getTransform();
@@ -270,33 +272,33 @@ public class SceneLayer extends EditorObject {
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
 
-                double screenX3 = (rotated2.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY3 = (rotated2.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX3 = (rotated2.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY3 = (rotated2.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX4 = (rotated3.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY4 = (rotated3.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX4 = (rotated3.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY4 = (rotated3.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX5 = (rotated4.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY5 = (rotated4.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX5 = (rotated4.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY5 = (rotated4.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX6 = (rotated5.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY6 = (rotated5.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX6 = (rotated5.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY6 = (rotated5.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX7 = (rotated6.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY7 = (rotated6.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX7 = (rotated6.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY7 = (rotated6.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-                double screenX8 = (rotated7.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY8 = (rotated7.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX8 = (rotated7.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY8 = (rotated7.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
                 graphicsContext.setLineDashOffset(0);
-                graphicsContext.strokeRect(screenX2 - image.getWidth() * Math.abs(scalex) * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * Math.abs(scaley) * Main.getLevel().getZoom() / 2, image.getWidth() * Math.abs(scalex) * Main.getLevel().getZoom(), image.getHeight() * Math.abs(scaley) * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX2 - image.getWidth() * Math.abs(scalex) * LevelManager.getLevel().getZoom() / 2, screenY2 - image.getHeight() * Math.abs(scaley) * LevelManager.getLevel().getZoom() / 2, image.getWidth() * Math.abs(scalex) * LevelManager.getLevel().getZoom(), image.getHeight() * Math.abs(scaley) * LevelManager.getLevel().getZoom());
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashOffset(3);
-                graphicsContext.strokeRect(screenX2 - image.getWidth() * Math.abs(scalex) * Main.getLevel().getZoom() / 2, screenY2 - image.getHeight() * Math.abs(scaley) * Main.getLevel().getZoom() / 2, image.getWidth() * Math.abs(scalex) * Main.getLevel().getZoom(), image.getHeight() * Math.abs(scaley) * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX2 - image.getWidth() * Math.abs(scalex) * LevelManager.getLevel().getZoom() / 2, screenY2 - image.getHeight() * Math.abs(scaley) * LevelManager.getLevel().getZoom() / 2, image.getWidth() * Math.abs(scalex) * LevelManager.getLevel().getZoom(), image.getHeight() * Math.abs(scaley) * LevelManager.getLevel().getZoom());
                 graphicsContext.setLineDashes(0);
                 graphicsContext.restore();
                 graphicsContext.setLineWidth(1);
@@ -311,7 +313,7 @@ public class SceneLayer extends EditorObject {
     }
     @Override
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
-        if (Main.getLevel().isShowGraphics() && image != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image != null) {
             double x2 = getDouble("x");
             double y2 = getDouble("y");
 
@@ -321,13 +323,13 @@ public class SceneLayer extends EditorObject {
             double scaleY = getDouble("scaley");
 
             double rotation = rotation2;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 rotation += animrotation;
             }
 
             double scalex = scaleX;
             double scaley = scaleY;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 scalex *= animscalex;
                 scaley *= animscaley;
             }
@@ -336,7 +338,7 @@ public class SceneLayer extends EditorObject {
 
             double x = x2;
             double y = y2;
-            if (Main.getLevel().isShowAnimations()) {
+            if (LevelManager.getLevel().isShowAnimations()) {
                 x += rotated.getX();
                 y -= rotated.getY();
             }
@@ -370,7 +372,7 @@ public class SceneLayer extends EditorObject {
             double screenX8 = (rotated7.getX());
             double screenY8 = (rotated7.getY());
 
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
             resizeSettings.setInitialScaleX(scaleX);
@@ -463,6 +465,13 @@ public class SceneLayer extends EditorObject {
         }
         return new DragSettings(DragSettings.NONE);
     }
+
+
+    private static double lerp(double a, double b, double c) {
+        return a + (b - a) * c;
+    }
+
+
     public void updateWithAnimation(WoGAnimation animation, float timer){
         double animspeed = getDouble("animspeed");
         double animdelay = getDouble("animdelay");
@@ -495,13 +504,13 @@ public class SceneLayer extends EditorObject {
                 }
                 float timerInterpolateValue = reverseInterpolate(animation.getFrameTimes()[i], animation.getFrameTimes()[nextIndex], (float)goodTimer);
                 if (i2 == 0) {
-                    animscalex = Main.lerp(currentFrame.getX(), nextFrame.getX(), timerInterpolateValue);
-                    animscaley = Main.lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
+                    animscalex = lerp(currentFrame.getX(), nextFrame.getX(), timerInterpolateValue);
+                    animscaley = lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
                 } else if (i2 == 1) {
-                    animrotation = Main.lerp(currentFrame.getAngle(), nextFrame.getAngle(), timerInterpolateValue);
+                    animrotation = lerp(currentFrame.getAngle(), nextFrame.getAngle(), timerInterpolateValue);
                 } else {
-                    animx = Main.lerp(currentFrame.getX(), nextFrame.getX(), timerInterpolateValue);
-                    animy = Main.lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
+                    animx = lerp(currentFrame.getX(), nextFrame.getX(), timerInterpolateValue);
+                    animy = lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
                 }
             }
         }

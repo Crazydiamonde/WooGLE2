@@ -6,6 +6,7 @@ import com.WooGLEFX.EditorObjects.GeometryImage;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -47,7 +48,7 @@ public class Compositegeom extends EditorObject {
     public void update() {
         if (!getAttribute("image").equals("")) {
             try {
-                image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
+                image.setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
             } catch (FileNotFoundException e) {
                 Alarms.errorMessage(e);
             }
@@ -56,7 +57,7 @@ public class Compositegeom extends EditorObject {
         setChangeListener("image", (observable, oldValue, newValue) -> {
             if (!getAttribute("image").equals("")) {
                 try {
-                    image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
+                    image.setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
                 } catch (FileNotFoundException e) {
                     Alarms.errorMessage(e);
                 }
@@ -65,14 +66,14 @@ public class Compositegeom extends EditorObject {
     }
 
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
-            double size = 10 * Main.getLevel().getZoom();
+            double size = 10 * LevelManager.getLevel().getZoom();
 
-            double screenX = Double.parseDouble(getAttribute("x")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-            double screenY = -Double.parseDouble(getAttribute("y")) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+            double screenX = Double.parseDouble(getAttribute("x")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+            double screenY = -Double.parseDouble(getAttribute("y")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
-            graphicsContext.setLineWidth(Main.getLevel().getZoom() * 5);
+            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 5);
             graphicsContext.setStroke(Renderer.compositeGeom);
 
             graphicsContext.strokeOval(screenX - size / 2, screenY - size / 2, size, size);
@@ -88,20 +89,20 @@ public class Compositegeom extends EditorObject {
 
                 Point2D center = new Point2D(x2, y2);
 
-                Point2D topRight2 = new Point2D(x2 + width / 2, y2 - height / 2).multiply(Main.getLevel().getZoom());
-                Point2D topLeft2 = new Point2D(x2 - width / 2, y2 - height / 2).multiply(Main.getLevel().getZoom());
-                Point2D bottomLeft2 = new Point2D(x2 - width / 2, y2 + height / 2).multiply(Main.getLevel().getZoom());
-                Point2D bottomRight2 = new Point2D(x2 + width / 2, y2 + height / 2).multiply(Main.getLevel().getZoom());
+                Point2D topRight2 = new Point2D(x2 + width / 2, y2 - height / 2).multiply(LevelManager.getLevel().getZoom());
+                Point2D topLeft2 = new Point2D(x2 - width / 2, y2 - height / 2).multiply(LevelManager.getLevel().getZoom());
+                Point2D bottomLeft2 = new Point2D(x2 - width / 2, y2 + height / 2).multiply(LevelManager.getLevel().getZoom());
+                Point2D bottomRight2 = new Point2D(x2 + width / 2, y2 + height / 2).multiply(LevelManager.getLevel().getZoom());
 
-                topRight2 = EditorObject.rotate(topRight2, rotation, center.multiply(Main.getLevel().getZoom()));
-                topLeft2 = EditorObject.rotate(topLeft2, rotation, center.multiply(Main.getLevel().getZoom()));
-                bottomLeft2 = EditorObject.rotate(bottomLeft2, rotation, center.multiply(Main.getLevel().getZoom()));
-                bottomRight2 = EditorObject.rotate(bottomRight2, rotation, center.multiply(Main.getLevel().getZoom()));
+                topRight2 = EditorObject.rotate(topRight2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                topLeft2 = EditorObject.rotate(topLeft2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                bottomLeft2 = EditorObject.rotate(bottomLeft2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
+                bottomRight2 = EditorObject.rotate(bottomRight2, rotation, center.multiply(LevelManager.getLevel().getZoom()));
 
-                topRight2 = new Point2D((topRight2.getX()) + Main.getLevel().getOffsetX(), (-topRight2.getY()) + Main.getLevel().getOffsetY());
-                topLeft2 = new Point2D((topLeft2.getX()) + Main.getLevel().getOffsetX(), (-topLeft2.getY()) + Main.getLevel().getOffsetY());
-                bottomLeft2 = new Point2D((bottomLeft2.getX()) + Main.getLevel().getOffsetX(), (-bottomLeft2.getY()) + Main.getLevel().getOffsetY());
-                bottomRight2 = new Point2D((bottomRight2.getX()) + Main.getLevel().getOffsetX(), (-bottomRight2.getY()) + Main.getLevel().getOffsetY());
+                topRight2 = new Point2D((topRight2.getX()) + LevelManager.getLevel().getOffsetX(), (-topRight2.getY()) + LevelManager.getLevel().getOffsetY());
+                topLeft2 = new Point2D((topLeft2.getX()) + LevelManager.getLevel().getOffsetX(), (-topLeft2.getY()) + LevelManager.getLevel().getOffsetY());
+                bottomLeft2 = new Point2D((bottomLeft2.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomLeft2.getY()) + LevelManager.getLevel().getOffsetY());
+                bottomRight2 = new Point2D((bottomRight2.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomRight2.getY()) + LevelManager.getLevel().getOffsetY());
 
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
@@ -122,8 +123,8 @@ public class Compositegeom extends EditorObject {
                 middleLeft = EditorObject.rotate(middleLeft, rotation, center);
                 middleRight = EditorObject.rotate(middleRight, rotation, center);
 
-                middleLeft = new Point2D((middleLeft.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), (-middleLeft.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY());
-                middleRight = new Point2D((middleRight.getX()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX(), (-middleRight.getY()) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY());
+                middleLeft = new Point2D((middleLeft.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), (-middleLeft.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY());
+                middleRight = new Point2D((middleRight.getX()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), (-middleRight.getY()) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY());
 
                 graphicsContext.strokeOval(middleLeft.getX() - 4, middleLeft.getY() - 4, 8, 8);
                 graphicsContext.strokeOval(middleRight.getX() - 4, middleRight.getY() - 4, 8, 8);
@@ -143,7 +144,7 @@ public class Compositegeom extends EditorObject {
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
 
             double x2 = getDouble("x");
             double y2 = getDouble("y");
@@ -168,7 +169,7 @@ public class Compositegeom extends EditorObject {
     @Override
     public DragSettings mouseImageIntersection(double mX2, double mY2) {
 
-        if (Main.getLevel().isShowGraphics() && image.getImage() != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image.getImage() != null) {
 
             Position pos = Position.parse(getAttribute("imagepos"));
             double x = pos.getX();

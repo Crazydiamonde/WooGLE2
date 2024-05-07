@@ -3,6 +3,9 @@ package com.WooGLEFX.GUI;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.WooGLEFX.Engine.FX.FXHierarchy;
+import com.WooGLEFX.Engine.Initializer;
+import com.WooGLEFX.Functions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,12 +89,12 @@ public class Alarms {
                 if (tab.getTabPane().getTabs().size() == 1) {
                     Main.getLevelSelectPane().setMinHeight(0);
                     Main.getLevelSelectPane().setMaxHeight(0);
-                    Main.hierarchy.setRoot(null);
+                    FXHierarchy.getHierarchy().setRoot(null);
                     Main.changeTableView(null);
                 }
                 Platform.runLater(() -> tab.getTabPane().getTabs().remove(tab));
             } else if (buttonType.equals(ButtonType.CANCEL)) {
-                level.setEditingStatus(level.getEditingStatus(), level == Main.getLevel());
+                level.setEditingStatus(level.getEditingStatus(), level == LevelManager.getLevel());
             }
         });
     }
@@ -107,7 +110,7 @@ public class Alarms {
                 if (tab.getTabPane().getTabs().size() == 1) {
                     Main.getLevelSelectPane().setMinHeight(0);
                     Main.getLevelSelectPane().setMaxHeight(0);
-                    Main.hierarchy.setRoot(null);
+                    FXHierarchy.getHierarchy().setRoot(null);
                     Main.changeTableView(null);
                 }
                 Platform.runLater(() -> {
@@ -115,7 +118,7 @@ public class Alarms {
                     Main.resumeLevelClosing();
                 });
             } else if (buttonType.equals(ButtonType.CANCEL)) {
-                level.setEditingStatus(level.getEditingStatus(), level == Main.getLevel());
+                level.setEditingStatus(level.getEditingStatus(), level == LevelManager.getLevel());
             }
         });
     }
@@ -134,7 +137,7 @@ public class Alarms {
 
         alert.showAndWait().ifPresent(buttonType -> {
             if (buttonType.equals(ButtonType.OK)) {
-                Main.confirmedCleanLevelResources(resourceNames);
+                LevelResourceManager.confirmedCleanLevelResources(resourceNames);
             }
         });
     }
@@ -217,14 +220,14 @@ public class Alarms {
             case "new" -> {
                 stage.setTitle("Create New Level");
                 okButton.setOnAction(event -> {
-                    Main.newLevel(enterNameHere.getText(), version);
+                    LevelLoader.newLevel(enterNameHere.getText(), version);
                     stage.close();
                 });
             }
             case "clone" -> {
                 stage.setTitle("Clone Level");
                 okButton.setOnAction(event -> {
-                    Main.cloneLevel(enterNameHere.getText(), version);
+                    LevelLoader.cloneLevel(enterNameHere.getText(), version);
                     stage.close();
                 });
             }
@@ -238,15 +241,15 @@ public class Alarms {
                             return;
                         }
                     }
-                    Main.renameLevel(enterNameHere.getText());
+                    LevelUpdater.renameLevel(LevelManager.getLevel(), enterNameHere.getText());
                     stage.close();
                 });
             }
             case "delete" -> {
                 stage.setTitle("Delete Level");
                 okButton.setOnAction(event -> {
-                    if (enterNameHere.getText().equals(Main.getLevel().getLevelName())) {
-                        Main.deleteLevelForReal();
+                    if (enterNameHere.getText().equals(LevelManager.getLevel().getLevelName())) {
+                        LevelUpdater.deleteLevelForReal(LevelManager.getLevel());
                         stage.close();
                     }
                 });
@@ -255,7 +258,7 @@ public class Alarms {
         cancelButton.setOnAction(actionEvent -> stage.close());
     }
 
-    public static void missingWOG() {
+    public static void missingWOG(String[] launchArguments) {
         VBox everythingBox = new VBox();
         everythingBox.setPadding(new Insets(10, 10, 10, 10));
         everythingBox.setSpacing(10);
@@ -268,17 +271,17 @@ public class Alarms {
         Stage stage = new Stage();
 
         selectOldButton.setOnAction(actionEvent -> {
-            if (Main.changeWorldOfGooDirectory(1.3)) {
+            if (GameResourceManager.changeWorldOfGooDirectory(1.3)) {
                 FileManager.setHasOldWOG(true);
-                Main.startWithWorldOfGooVersion();
+                Initializer.startWithWorldOfGooVersion(launchArguments);
                 stage.close();
             }
         });
 
         selectNewButton.setOnAction(actionEvent -> {
-            if (Main.changeWorldOfGooDirectory(1.5)) {
+            if (GameResourceManager.changeWorldOfGooDirectory(1.5)) {
                 FileManager.setHasNewWOG(true);
-                Main.startWithWorldOfGooVersion();
+                Initializer.startWithWorldOfGooVersion(launchArguments);
                 stage.close();
             }
         });

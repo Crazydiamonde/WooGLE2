@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.WooGLEFX.Functions.BlankObjectGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -31,6 +32,7 @@ import javafx.scene.image.Image;
 public class FileManager {
 
     private static final Logger logger = LoggerFactory.getLogger(FileManager.class);
+
 
     private static String oldWOGdir = "";
     private static boolean hasOldWOG = false;
@@ -235,13 +237,13 @@ public class FileManager {
                 defaultHandler.mode = 3;
                 saxParser.parse(addinF, defaultHandler);
             } else {
-                Main.supremeAddToList(addin, Main.generateBlankAddinObject(levelName));
+                Main.supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName));
             }
             if (textF.exists()) {
                 defaultHandler.mode = 4;
                 saxParser.parse(textF, defaultHandler);
             } else {
-                Main.supremeAddToList(text, Main.generateBlankTextObject());
+                Main.supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject());
             }
         } else if (version == 1.5) {
             File levelF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".level");
@@ -258,13 +260,13 @@ public class FileManager {
                 defaultHandler.mode = 3;
                 saxParser.parse(addinF, defaultHandler);
             } else {
-                Main.supremeAddToList(addin, Main.generateBlankAddinObject(levelName));
+                Main.supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName));
             }
             if (textF.exists()) {
                 defaultHandler.mode = 4;
                 saxParser.parse(textF, defaultHandler);
             } else {
-                Main.supremeAddToList(text, Main.generateBlankTextObject());
+                Main.supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject());
             }
         }
         return new WorldLevel(scene, level, resources, addin, text, version);

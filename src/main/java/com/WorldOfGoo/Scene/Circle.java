@@ -4,6 +4,7 @@ import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.EditorObjects.GeometryImage;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -45,7 +46,7 @@ public class Circle extends EditorObject {
     public void update() {
         if (!getAttribute("image").equals("")) {
             try {
-                image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
+                image.setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
             } catch (FileNotFoundException e) {
                 Alarms.errorMessage(e);
             }
@@ -54,7 +55,7 @@ public class Circle extends EditorObject {
         setChangeListener("image", (observable, oldValue, newValue) -> {
             if (!getAttribute("image").equals("")) {
                 try {
-                    image.setImage(GlobalResourceManager.getImage(getAttribute("image"), Main.getLevel().getVersion()));
+                    image.setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
                 } catch (FileNotFoundException e) {
                     Alarms.errorMessage(e);
                 }
@@ -64,7 +65,7 @@ public class Circle extends EditorObject {
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
             double x2 = Double.parseDouble(getAttribute("x"));
             double y2 = Double.parseDouble(getAttribute("y"));
 
@@ -100,7 +101,7 @@ public class Circle extends EditorObject {
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         graphicsContext.save();
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
             double x2 = Double.parseDouble(getAttribute("x"));
             double y2 = Double.parseDouble(getAttribute("y"));
 
@@ -115,31 +116,31 @@ public class Circle extends EditorObject {
                 y2 += Double.parseDouble(getParent().getAttribute("y"));
             }
 
-            double screenX = (x2) * Main.getLevel().getZoom() + Main.getLevel().getOffsetX() - radius * Main.getLevel().getZoom();
-            double screenY = (-y2) * Main.getLevel().getZoom() + Main.getLevel().getOffsetY() - radius * Main.getLevel().getZoom();
+            double screenX = (x2) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX() - radius * LevelManager.getLevel().getZoom();
+            double screenY = (-y2) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY() - radius * LevelManager.getLevel().getZoom();
 
             graphicsContext.setFill(Renderer.transparentBlue);
-            graphicsContext.fillOval(screenX + Main.getLevel().getZoom() / 2, screenY + Main.getLevel().getZoom() / 2, (radius - 0.5) * 2 * Main.getLevel().getZoom(), (radius - 0.5) * 2 * Main.getLevel().getZoom());
+            graphicsContext.fillOval(screenX + LevelManager.getLevel().getZoom() / 2, screenY + LevelManager.getLevel().getZoom() / 2, (radius - 0.5) * 2 * LevelManager.getLevel().getZoom(), (radius - 0.5) * 2 * LevelManager.getLevel().getZoom());
             graphicsContext.setStroke(Renderer.solidBlue);
-            graphicsContext.setLineWidth(Main.getLevel().getZoom());
-            graphicsContext.strokeOval(screenX + Main.getLevel().getZoom() / 2, screenY + Main.getLevel().getZoom() / 2, (radius - 0.5) * 2 * Main.getLevel().getZoom(), (radius - 0.5) * 2 * Main.getLevel().getZoom());
+            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom());
+            graphicsContext.strokeOval(screenX + LevelManager.getLevel().getZoom() / 2, screenY + LevelManager.getLevel().getZoom() / 2, (radius - 0.5) * 2 * LevelManager.getLevel().getZoom(), (radius - 0.5) * 2 * LevelManager.getLevel().getZoom());
 
             if (this == Main.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
                 graphicsContext.setLineDashOffset(0);
-                graphicsContext.strokeRect(screenX, screenY, radius * 2 * Main.getLevel().getZoom(), radius * 2 * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX, screenY, radius * 2 * LevelManager.getLevel().getZoom(), radius * 2 * LevelManager.getLevel().getZoom());
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashOffset(3);
-                graphicsContext.strokeRect(screenX, screenY, radius * 2 * Main.getLevel().getZoom(), radius * 2 * Main.getLevel().getZoom());
+                graphicsContext.strokeRect(screenX, screenY, radius * 2 * LevelManager.getLevel().getZoom(), radius * 2 * LevelManager.getLevel().getZoom());
                 graphicsContext.setLineDashes(0);
 
-                graphicsContext.strokeRect(screenX - 4, screenY + radius * Main.getLevel().getZoom() - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * Main.getLevel().getZoom() - 4, screenY + radius * 2 * Main.getLevel().getZoom() - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * Main.getLevel().getZoom() - 4, screenY - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * 2 * Main.getLevel().getZoom() - 4, screenY + radius * Main.getLevel().getZoom() - 4, 8, 8);
+                graphicsContext.strokeRect(screenX - 4, screenY + radius * LevelManager.getLevel().getZoom() - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * LevelManager.getLevel().getZoom() - 4, screenY + radius * 2 * LevelManager.getLevel().getZoom() - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * LevelManager.getLevel().getZoom() - 4, screenY - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * 2 * LevelManager.getLevel().getZoom() - 4, screenY + radius * LevelManager.getLevel().getZoom() - 4, 8, 8);
             }
         }
 
@@ -155,7 +156,7 @@ public class Circle extends EditorObject {
 
     @Override
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
-        if (Main.getLevel().isShowGeometry()) {
+        if (LevelManager.getLevel().isShowGeometry()) {
             double x2 = Double.parseDouble(getAttribute("x"));
             double y2 = Double.parseDouble(getAttribute("y"));
 
@@ -178,7 +179,7 @@ public class Circle extends EditorObject {
             left = new Point2D((left.getX()), (-left.getY()));
             right = new Point2D((right.getX()), (-right.getY()));
             bottom = new Point2D((bottom.getX()), (-bottom.getY()));
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
 
@@ -214,7 +215,7 @@ public class Circle extends EditorObject {
     @Override
     public DragSettings mouseImageIntersection(double mX2, double mY2) {
 
-        if (Main.getLevel().isShowGraphics() && image.getImage() != null) {
+        if (LevelManager.getLevel().isShowGraphics() && image.getImage() != null) {
 
             Position pos;
             if (getAttribute("imagepos").equals("")) {

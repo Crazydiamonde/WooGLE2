@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import com.WooGLEFX.Engine.FXCreator;
+import com.WooGLEFX.Engine.FX.FXHierarchy;
+import com.WooGLEFX.Engine.FX.FXCreator;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
@@ -295,7 +296,7 @@ public class WorldLevel {
 
         pane.getChildren().add(new ImageView(currentStatusImage));
 
-        TreeItem<EditorObject> root = Main.getHierarchy().getRoot();
+        TreeItem<EditorObject> root = FXHierarchy.getHierarchy().getRoot();
 
         //ChatGPT
         StackPane graphicContainer = new StackPane();
@@ -307,7 +308,7 @@ public class WorldLevel {
         TabPane god = levelTab.getTabPane();
         if (shouldSelect) {
             god.getSelectionModel().select(levelTab);
-            Main.getHierarchy().setRoot(root);
+            FXHierarchy.getHierarchy().setRoot(root);
         }
     }
 

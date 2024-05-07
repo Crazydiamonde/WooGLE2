@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -37,7 +38,7 @@ public class Linearforcefield extends EditorObject {
 
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
-        if (Main.getLevel().isShowForcefields()) {
+        if (LevelManager.getLevel().isShowForcefields()) {
             Position center = Position.parse(getAttribute("center"));
 
             Position force = Position.parse(getAttribute("force"));
@@ -57,30 +58,30 @@ public class Linearforcefield extends EditorObject {
 
             double woag = 3;
 
-            Point2D topRight2 = new Point2D(x2 + width / 2, y2 - height / 2).multiply(Main.getLevel().getZoom());
-            Point2D topLeft2 = new Point2D(x2 - width / 2, y2 - height / 2).multiply(Main.getLevel().getZoom());
-            Point2D bottomLeft2 = new Point2D(x2 - width / 2, y2 + height / 2).multiply(Main.getLevel().getZoom());
-            Point2D bottomRight2 = new Point2D(x2 + width / 2, y2 + height / 2).multiply(Main.getLevel().getZoom());
+            Point2D topRight2 = new Point2D(x2 + width / 2, y2 - height / 2).multiply(LevelManager.getLevel().getZoom());
+            Point2D topLeft2 = new Point2D(x2 - width / 2, y2 - height / 2).multiply(LevelManager.getLevel().getZoom());
+            Point2D bottomLeft2 = new Point2D(x2 - width / 2, y2 + height / 2).multiply(LevelManager.getLevel().getZoom());
+            Point2D bottomRight2 = new Point2D(x2 + width / 2, y2 + height / 2).multiply(LevelManager.getLevel().getZoom());
 
-            Point2D topRight = new Point2D(x2 + width / 2 - woag, y2 - height / 2 + woag).multiply(Main.getLevel().getZoom());
-            Point2D topLeft = new Point2D(x2 - width / 2 + woag, y2 - height / 2 + woag).multiply(Main.getLevel().getZoom());
-            Point2D bottomLeft = new Point2D(x2 - width / 2 + woag, y2 + height / 2 - woag).multiply(Main.getLevel().getZoom());
-            Point2D bottomRight = new Point2D(x2 + width / 2 - woag, y2 + height / 2 - woag).multiply(Main.getLevel().getZoom());
+            Point2D topRight = new Point2D(x2 + width / 2 - woag, y2 - height / 2 + woag).multiply(LevelManager.getLevel().getZoom());
+            Point2D topLeft = new Point2D(x2 - width / 2 + woag, y2 - height / 2 + woag).multiply(LevelManager.getLevel().getZoom());
+            Point2D bottomLeft = new Point2D(x2 - width / 2 + woag, y2 + height / 2 - woag).multiply(LevelManager.getLevel().getZoom());
+            Point2D bottomRight = new Point2D(x2 + width / 2 - woag, y2 + height / 2 - woag).multiply(LevelManager.getLevel().getZoom());
 
-            topRight = new Point2D((topRight.getX()) + Main.getLevel().getOffsetX(), (-topRight.getY()) + Main.getLevel().getOffsetY());
-            topLeft = new Point2D((topLeft.getX()) + Main.getLevel().getOffsetX(), (-topLeft.getY()) + Main.getLevel().getOffsetY());
-            bottomLeft = new Point2D((bottomLeft.getX()) + Main.getLevel().getOffsetX(), (-bottomLeft.getY()) + Main.getLevel().getOffsetY());
-            bottomRight = new Point2D((bottomRight.getX()) + Main.getLevel().getOffsetX(), (-bottomRight.getY()) + Main.getLevel().getOffsetY());
+            topRight = new Point2D((topRight.getX()) + LevelManager.getLevel().getOffsetX(), (-topRight.getY()) + LevelManager.getLevel().getOffsetY());
+            topLeft = new Point2D((topLeft.getX()) + LevelManager.getLevel().getOffsetX(), (-topLeft.getY()) + LevelManager.getLevel().getOffsetY());
+            bottomLeft = new Point2D((bottomLeft.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomLeft.getY()) + LevelManager.getLevel().getOffsetY());
+            bottomRight = new Point2D((bottomRight.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomRight.getY()) + LevelManager.getLevel().getOffsetY());
 
-            topRight2 = new Point2D((topRight2.getX()) + Main.getLevel().getOffsetX(), (-topRight2.getY()) + Main.getLevel().getOffsetY());
-            topLeft2 = new Point2D((topLeft2.getX()) + Main.getLevel().getOffsetX(), (-topLeft2.getY()) + Main.getLevel().getOffsetY());
-            bottomLeft2 = new Point2D((bottomLeft2.getX()) + Main.getLevel().getOffsetX(), (-bottomLeft2.getY()) + Main.getLevel().getOffsetY());
-            bottomRight2 = new Point2D((bottomRight2.getX()) + Main.getLevel().getOffsetX(), (-bottomRight2.getY()) + Main.getLevel().getOffsetY());
+            topRight2 = new Point2D((topRight2.getX()) + LevelManager.getLevel().getOffsetX(), (-topRight2.getY()) + LevelManager.getLevel().getOffsetY());
+            topLeft2 = new Point2D((topLeft2.getX()) + LevelManager.getLevel().getOffsetX(), (-topLeft2.getY()) + LevelManager.getLevel().getOffsetY());
+            bottomLeft2 = new Point2D((bottomLeft2.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomLeft2.getY()) + LevelManager.getLevel().getOffsetY());
+            bottomRight2 = new Point2D((bottomRight2.getX()) + LevelManager.getLevel().getOffsetX(), (-bottomRight2.getY()) + LevelManager.getLevel().getOffsetY());
 
             //graphicsContext.setFill(_Level.transparentBlue);
             //graphicsContext.fillPolygon(new double[]{topRight.getX(), topLeft.getX(), bottomLeft.getX(), bottomRight.getX()}, new double[]{topRight.getY(), topLeft.getY(), bottomLeft.getY(), bottomRight.getY()}, 4);
             graphicsContext.setStroke(Renderer.mechanics);
-            graphicsContext.setLineWidth(Main.getLevel().getZoom() * woag * 2);
+            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * woag * 2);
             if (width != 0 && height != 0) {
                 graphicsContext.strokeLine(topRight.getX(), topRight.getY(), topLeft.getX(), topLeft.getY());
                 graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
@@ -89,13 +90,13 @@ public class Linearforcefield extends EditorObject {
             }
 
             if (force.getX() != 0 || force.getY() != 0) {
-                double screenX = x2 * Main.getLevel().getZoom() + Main.getLevel().getOffsetX();
-                double screenY = -y2 * Main.getLevel().getZoom() + Main.getLevel().getOffsetY();
+                double screenX = x2 * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double screenY = -y2 * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 double forceScale = 20;
 
-                graphicsContext.setStroke(new LinearGradient(screenX, screenY, screenX + force.getX() * Main.getLevel().getZoom() * forceScale, screenY - force.getY() * Main.getLevel().getZoom() * forceScale, false, CycleMethod.NO_CYCLE, Renderer.stops));
-                graphicsContext.strokeLine(screenX, screenY, screenX + force.getX() * Main.getLevel().getZoom() * forceScale, screenY - force.getY() * Main.getLevel().getZoom() * forceScale);
+                graphicsContext.setStroke(new LinearGradient(screenX, screenY, screenX + force.getX() * LevelManager.getLevel().getZoom() * forceScale, screenY - force.getY() * LevelManager.getLevel().getZoom() * forceScale, false, CycleMethod.NO_CYCLE, Renderer.stops));
+                graphicsContext.strokeLine(screenX, screenY, screenX + force.getX() * LevelManager.getLevel().getZoom() * forceScale, screenY - force.getY() * LevelManager.getLevel().getZoom() * forceScale);
             }
 
             if (this == Main.getSelected()) {
@@ -113,17 +114,17 @@ public class Linearforcefield extends EditorObject {
                 Point2D forceBottomRight = new Point2D(x2 + forceMagnitude + woag, y2 + woag);
                 Point2D forceRight = new Point2D(x2 + forceMagnitude, y2);
 
-                forceTopLeft = rotate(forceTopLeft, -angle, new Point2D(x2, y2)).multiply(Main.getLevel().getZoom());
-                forceTopRight = rotate(forceTopRight, -angle, new Point2D(x2, y2)).multiply(Main.getLevel().getZoom());
-                forceBottomLeft = rotate(forceBottomLeft, -angle, new Point2D(x2, y2)).multiply(Main.getLevel().getZoom());
-                forceBottomRight = rotate(forceBottomRight, -angle, new Point2D(x2, y2)).multiply(Main.getLevel().getZoom());
-                forceRight = rotate(forceRight, -angle, new Point2D(x2, y2)).multiply(Main.getLevel().getZoom());
+                forceTopLeft = rotate(forceTopLeft, -angle, new Point2D(x2, y2)).multiply(LevelManager.getLevel().getZoom());
+                forceTopRight = rotate(forceTopRight, -angle, new Point2D(x2, y2)).multiply(LevelManager.getLevel().getZoom());
+                forceBottomLeft = rotate(forceBottomLeft, -angle, new Point2D(x2, y2)).multiply(LevelManager.getLevel().getZoom());
+                forceBottomRight = rotate(forceBottomRight, -angle, new Point2D(x2, y2)).multiply(LevelManager.getLevel().getZoom());
+                forceRight = rotate(forceRight, -angle, new Point2D(x2, y2)).multiply(LevelManager.getLevel().getZoom());
 
-                forceTopRight = new Point2D((forceTopRight.getX()) + Main.getLevel().getOffsetX(), (-forceTopRight.getY()) + Main.getLevel().getOffsetY());
-                forceTopLeft = new Point2D((forceTopLeft.getX()) + Main.getLevel().getOffsetX(), (-forceTopLeft.getY()) + Main.getLevel().getOffsetY());
-                forceBottomLeft = new Point2D((forceBottomLeft.getX()) + Main.getLevel().getOffsetX(), (-forceBottomLeft.getY()) + Main.getLevel().getOffsetY());
-                forceBottomRight = new Point2D((forceBottomRight.getX()) + Main.getLevel().getOffsetX(), (-forceBottomRight.getY()) + Main.getLevel().getOffsetY());
-                forceRight = new Point2D((forceRight.getX()) + Main.getLevel().getOffsetX(), (-forceRight.getY()) + Main.getLevel().getOffsetY());
+                forceTopRight = new Point2D((forceTopRight.getX()) + LevelManager.getLevel().getOffsetX(), (-forceTopRight.getY()) + LevelManager.getLevel().getOffsetY());
+                forceTopLeft = new Point2D((forceTopLeft.getX()) + LevelManager.getLevel().getOffsetX(), (-forceTopLeft.getY()) + LevelManager.getLevel().getOffsetY());
+                forceBottomLeft = new Point2D((forceBottomLeft.getX()) + LevelManager.getLevel().getOffsetX(), (-forceBottomLeft.getY()) + LevelManager.getLevel().getOffsetY());
+                forceBottomRight = new Point2D((forceBottomRight.getX()) + LevelManager.getLevel().getOffsetX(), (-forceBottomRight.getY()) + LevelManager.getLevel().getOffsetY());
+                forceRight = new Point2D((forceRight.getX()) + LevelManager.getLevel().getOffsetX(), (-forceRight.getY()) + LevelManager.getLevel().getOffsetY());
 
                 graphicsContext.strokePolygon(new double[]{forceTopRight.getX(), forceTopLeft.getX(), forceBottomLeft.getX(), forceBottomRight.getX()}, new double[]{forceTopRight.getY(), forceTopLeft.getY(), forceBottomLeft.getY(), forceBottomRight.getY()}, 4);
 
@@ -146,7 +147,7 @@ public class Linearforcefield extends EditorObject {
 
     @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (Main.getLevel().isShowForcefields()) {
+        if (LevelManager.getLevel().isShowForcefields()) {
             Position center = Position.parse(getAttribute("center"));
 
             double x2 = center.getX();
@@ -196,7 +197,7 @@ public class Linearforcefield extends EditorObject {
     @Override
     public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
 
-        if (Main.getLevel().isShowForcefields()) {
+        if (LevelManager.getLevel().isShowForcefields()) {
             Position center = Position.parse(getAttribute("center"));
 
             double x2 = center.getX();
@@ -223,7 +224,7 @@ public class Linearforcefield extends EditorObject {
             bottomLeft = new Point2D((bottomLeft.getX()), (-bottomLeft.getY()));
             bottomRight = new Point2D((bottomRight.getX()), (-bottomRight.getY()));
             right = new Point2D((right.getX()), (-right.getY()));
-            double distance = 4 / Main.getLevel().getZoom();
+            double distance = 4 / LevelManager.getLevel().getZoom();
 
             double dragSourceX = 0;
             double dragSourceY = 0;
@@ -265,7 +266,7 @@ public class Linearforcefield extends EditorObject {
                 dragAnchorY = -y2 - height / 2;
             }
             Point2D rotated = rotate(new Point2D(mX2, mY2), -angle, new Point2D(x2, -y2));
-            if (forceMagnitude != 0 && rotated.getX() > right.getX() - 4 / Main.getLevel().getZoom() && rotated.getX() < right.getX() + 4 / Main.getLevel().getZoom() && rotated.getY() > right.getY() - 4 / Main.getLevel().getZoom() && rotated.getY() < right.getY() + 4 / Main.getLevel().getZoom()) {
+            if (forceMagnitude != 0 && rotated.getX() > right.getX() - 4 / LevelManager.getLevel().getZoom() && rotated.getX() < right.getX() + 4 / LevelManager.getLevel().getZoom() && rotated.getY() > right.getY() - 4 / LevelManager.getLevel().getZoom() && rotated.getY() < right.getY() + 4 / LevelManager.getLevel().getZoom()) {
                 anchor = true;
                 dragSourceX = x2;
                 dragSourceY = -y2;
