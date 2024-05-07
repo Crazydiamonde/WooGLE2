@@ -1,8 +1,6 @@
 package com.WooGLEFX.Functions;
 
-import com.WooGLEFX.Engine.FX.FXHierarchy;
-import com.WooGLEFX.Engine.FX.FXPropertiesView;
-import com.WooGLEFX.Engine.FX.FXCreator;
+import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.UserActions.*;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -18,8 +16,8 @@ public class UndoManager {
         if (LevelManager.getLevel().getEditingStatus() == WorldLevel.NO_UNSAVED_CHANGES) {
             LevelManager.getLevel().setEditingStatus(WorldLevel.UNSAVED_CHANGES, true);
         }
-        FXCreator.undoItem.setDisable(false);
-        FXCreator.buttonUndo.setDisable(false);
+        FXMenu.undoItem.setDisable(false);
+        FXEditorButtons.buttonUndo.setDisable(false);
     }
 
     public static void undo() {
@@ -29,8 +27,8 @@ public class UndoManager {
         if (level.undoActions.size() != 0) {
             UserAction[] changes = level.undoActions.pop();
             level.redoActions.add(changes);
-            FXCreator.redoItem.setDisable(false);
-            FXCreator.buttonRedo.setDisable(false);
+            FXMenu.redoItem.setDisable(false);
+            FXEditorButtons.buttonRedo.setDisable(false);
             for (UserAction change : changes) {
                 if (change instanceof AttributeChangeAction) {
                     change.getObject().setAttribute(((AttributeChangeAction) change).getAttributeName(),
@@ -70,15 +68,15 @@ public class UndoManager {
         // TODO Undo stack should track if there are any unsaved changes, this isn't always true
         if (level.undoActions.size() == 0) {
             level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
-            FXCreator.undoItem.setDisable(true);
-            FXCreator.buttonUndo.setDisable(true);
+            FXMenu.undoItem.setDisable(true);
+            FXEditorButtons.buttonUndo.setDisable(true);
         }
     }
 
     public static void clearRedoActions() {
         LevelManager.getLevel().redoActions.clear();
-        FXCreator.redoItem.setDisable(true);
-        FXCreator.buttonRedo.setDisable(true);
+        FXMenu.redoItem.setDisable(true);
+        FXEditorButtons.buttonRedo.setDisable(true);
     }
 
     public static void redo() {
@@ -128,8 +126,8 @@ public class UndoManager {
             }
         }
         if (level.redoActions.size() == 0) {
-            FXCreator.redoItem.setDisable(true);
-            FXCreator.buttonRedo.setDisable(true);
+            FXMenu.redoItem.setDisable(true);
+            FXEditorButtons.buttonRedo.setDisable(true);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.Engine.FX.FXLevelSelectPane;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.LevelExporter;
@@ -50,15 +51,15 @@ public class LevelUpdater {
     }
 
     public static void saveAll() {
-        int selectedIndex = Main.getLevelSelectPane().getSelectionModel().getSelectedIndex();
-        for (Tab tab : Main.getLevelSelectPane().getTabs().toArray(new Tab[0])) {
+        int selectedIndex = FXLevelSelectPane.getLevelSelectPane().getSelectionModel().getSelectedIndex();
+        for (Tab tab : FXLevelSelectPane.getLevelSelectPane().getTabs().toArray(new Tab[0])) {
             LevelTab levelTab = (LevelTab) tab;
             if (levelTab.getLevel().getEditingStatus() == WorldLevel.UNSAVED_CHANGES) {
                 saveSpecificLevel(levelTab.getLevel(), levelTab.getLevel().getVersion());
                 levelTab.getLevel().setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, false);
             }
         }
-        Main.getLevelSelectPane().getSelectionModel().select(selectedIndex);
+        FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(selectedIndex);
     }
 
     public static void playLevel(WorldLevel level) {
@@ -139,7 +140,7 @@ public class LevelUpdater {
         String start = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         try {
             nuke(new File(start + "\\res\\levels\\" + level.getLevelName()));
-            Main.getLevelSelectPane().getTabs().remove(Main.getLevelSelectPane().getSelectionModel().getSelectedItem());
+            FXLevelSelectPane.getLevelSelectPane().getTabs().remove(FXLevelSelectPane.getLevelSelectPane().getSelectionModel().getSelectedItem());
         } catch (Exception e) {
             Alarms.errorMessage(e);
         }

@@ -1,6 +1,6 @@
 package com.WooGLEFX.Functions;
 
-import com.WooGLEFX.Engine.FX.FXCreator;
+import com.WooGLEFX.Engine.FX.FXEditorButtons;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -17,14 +17,19 @@ public class LevelManager {
     }
     public static void setLevel(WorldLevel _level) {
         level = _level;
-        FXCreator.enableAllButtons(false);
+        FXEditorButtons.enableAllButtons(false);
 
-        // Transform the canvas according to the updated translation and scale.
-        Main.t = new Affine();
-        Main.t.appendTranslation(level.getOffsetX(), level.getOffsetY());
-        Main.t.appendScale(level.getZoom(), level.getZoom());
-        Main.getImageCanvas().getGraphicsContext2D().setTransform(Main.t);
-        LevelManager.onSetLevel(level);
+        if (level != null) {
+
+            // Transform the canvas according to the updated translation and scale.
+            Main.t = new Affine();
+            Main.t.appendTranslation(level.getOffsetX(), level.getOffsetY());
+            Main.t.appendScale(level.getZoom(), level.getZoom());
+            Main.getImageCanvas().getGraphicsContext2D().setTransform(Main.t);
+
+        }
+
+        onSetLevel(level);
         Renderer.draw();
     }
 
@@ -35,35 +40,35 @@ public class LevelManager {
         vBox.getChildren().remove(2);
         if (level == null) {
             Main.getStage().setTitle("World of Goo Anniversary Editor");
-            vBox.getChildren().add(2, FXCreator.getNullGooballsToolbar());
+            vBox.getChildren().add(2, FXEditorButtons.getNullGooballsToolbar());
         } else {
             if (level.getVersion() == 1.3) {
-                vBox.getChildren().add(2, FXCreator.getOldGooballsToolbar());
+                vBox.getChildren().add(2, FXEditorButtons.getOldGooballsToolbar());
             } else {
-                vBox.getChildren().add(2, FXCreator.getNewGooballsToolbar());
+                vBox.getChildren().add(2, FXEditorButtons.getNewGooballsToolbar());
             }
             Main.getStage().setTitle(
                     level.getLevelName() + " (version " + level.getVersion() + ") — World of Goo Anniversary Editor");
-            FXCreator.buttonShowHideAnim.setGraphic(
+            FXEditorButtons.buttonShowHideAnim.setGraphic(
                     new ImageView(level.isShowAnimations() ? WorldLevel.showHideAnim : WorldLevel.showHideAnim0));
-            FXCreator.buttonShowHideCamera.setGraphic(
+            FXEditorButtons.buttonShowHideCamera.setGraphic(
                     new ImageView(level.isShowCameras() ? WorldLevel.showHideCam1 : WorldLevel.showHideCam0));
-            FXCreator.buttonShowHideForcefields.setGraphic(new ImageView(
+            FXEditorButtons.buttonShowHideForcefields.setGraphic(new ImageView(
                     level.isShowForcefields() ? WorldLevel.showHideForcefields1 : WorldLevel.showHideForcefields0));
-            FXCreator.buttonShowHideGeometry.setGraphic(new ImageView(
+            FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(
                     level.isShowGeometry() ? WorldLevel.showHideGeometry1 : WorldLevel.showHideGeometry0));
             switch (level.getShowGoos()) {
-                case 0 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs0));
-                case 1 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs1));
-                case 2 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs2));
+                case 0 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs0));
+                case 1 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs1));
+                case 2 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs2));
             }
-            FXCreator.buttonShowHideGraphics.setGraphic(
+            FXEditorButtons.buttonShowHideGraphics.setGraphic(
                     new ImageView(level.isShowGraphics() ? WorldLevel.showHideImages1 : WorldLevel.showHideImages0));
-            FXCreator.buttonShowHideLabels.setGraphic(
+            FXEditorButtons.buttonShowHideLabels.setGraphic(
                     new ImageView(level.isShowLabels() ? WorldLevel.showHideLabels1 : WorldLevel.showHideLabels0));
-            FXCreator.buttonShowHideParticles.setGraphic(new ImageView(
+            FXEditorButtons.buttonShowHideParticles.setGraphic(new ImageView(
                     level.isShowParticles() ? WorldLevel.showHideParticles1 : WorldLevel.showHideParticles0));
-            FXCreator.buttonShowHideSceneBGColor.setGraphic(new ImageView(
+            FXEditorButtons.buttonShowHideSceneBGColor.setGraphic(new ImageView(
                     level.isShowSceneBGColor() ? WorldLevel.showHideSceneBGColor1 : WorldLevel.showHideSceneBGColor0));
             Main.changeTableView(level.getSelected());
             Main.goToSelectedInHierarchy();

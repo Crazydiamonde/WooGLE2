@@ -1,9 +1,7 @@
 package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Engine.FX.FXHierarchy;
-import com.WooGLEFX.Engine.FX.FXPropertiesView;
-import com.WooGLEFX.Engine.FX.FXCreator;
+import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
@@ -48,8 +46,8 @@ public class LevelLoader {
     public static void newLevel(String name, double version) {
         logger.debug("New level");
 
-        Main.getLevelSelectPane().setMinHeight(30);
-        Main.getLevelSelectPane().setMaxHeight(30);
+        FXLevelSelectPane.getLevelSelectPane().setMinHeight(30);
+        FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
 
         ArrayList<EditorObject> sceneList = new ArrayList<>();
         sceneList.add(EditorObject.create("scene", new EditorAttribute[0], null));
@@ -65,7 +63,7 @@ public class LevelLoader {
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
         LevelManager.setLevel(level);
         level.setLevelName(name);
-        FXCreator.enableAllButtons(false);
+        FXEditorButtons.enableAllButtons(false);
 
         level.getSceneObject().setRealName("scene");
         level.getSceneObject().setTreeItem(new TreeItem<>(level.getSceneObject()));
@@ -101,19 +99,19 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(level.getSceneObject().getPropertiesTreeItem());
 
-        Tab levelSelectButton = FXCreator.levelSelectButton(level);
-        Main.getLevelSelectPane().getTabs().add(levelSelectButton);
+        Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
+        FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
 
-        int numTabs = Main.getLevelSelectPane().getTabs().size();
+        int numTabs = FXLevelSelectPane.getLevelSelectPane().getTabs().size();
         double tabSize = 1 / (numTabs + 1.0);
-        Main.getLevelSelectPane().setTabMaxWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
-        Main.getLevelSelectPane().setTabMinWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
+        FXLevelSelectPane.getLevelSelectPane().setTabMaxWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
+        FXLevelSelectPane.getLevelSelectPane().setTabMinWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
 
         LevelUpdater.saveLevel(level);
 
         level.setLevelTab(levelSelectButton);
         level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
-        Main.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
+        FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
         LevelManager.onSetLevel(level);
     }
 
@@ -125,9 +123,9 @@ public class LevelLoader {
             return;
         }
         // Don't open a level if it's already open
-        for (Tab tab : Main.getLevelSelectPane().getTabs()) {
+        for (Tab tab : FXLevelSelectPane.getLevelSelectPane().getTabs()) {
             if (tab.getText().equals(levelName)) {
-                Main.getLevelSelectPane().getSelectionModel().select(tab);
+                FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(tab);
                 return;
             }
         }
@@ -144,10 +142,10 @@ public class LevelLoader {
         }
 
         level.setLevelName(levelName);
-        FXCreator.enableAllButtons(false);
+        FXEditorButtons.enableAllButtons(false);
 
-        Main.getLevelSelectPane().setMinHeight(30);
-        Main.getLevelSelectPane().setMaxHeight(30);
+        FXLevelSelectPane.getLevelSelectPane().setMinHeight(30);
+        FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
 
         for (EditorObject object : level.getLevel()) {
             if (object instanceof BallInstance) {
@@ -211,13 +209,13 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(level.getSceneObject().getPropertiesTreeItem());
 
-        Tab levelSelectButton = FXCreator.levelSelectButton(level);
-        Main.getLevelSelectPane().getTabs().add(levelSelectButton);
+        Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
+        FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
 
-        int numTabs = Main.getLevelSelectPane().getTabs().size();
+        int numTabs = FXLevelSelectPane.getLevelSelectPane().getTabs().size();
         double tabSize = 1 / (numTabs + 1.0);
-        Main.getLevelSelectPane().setTabMaxWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
-        Main.getLevelSelectPane().setTabMinWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
+        FXLevelSelectPane.getLevelSelectPane().setTabMaxWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
+        FXLevelSelectPane.getLevelSelectPane().setTabMinWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
 
         if (Main.failedResources.size() > 0) {
             StringBuilder fullError = new StringBuilder();
@@ -229,14 +227,14 @@ public class LevelLoader {
 
         level.setLevelTab(levelSelectButton);
         level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
-        Main.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
+        FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
         LevelManager.onSetLevel(level);
     }
 
 
     public static void cloneLevel(String name, double version) {
-        Main.getLevelSelectPane().setMinHeight(30);
-        Main.getLevelSelectPane().setMaxHeight(30);
+        FXLevelSelectPane.getLevelSelectPane().setMinHeight(30);
+        FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
 
         ArrayList<EditorObject> sceneList = new ArrayList<>();
         ArrayList<EditorObject> levelList = new ArrayList<>();
@@ -256,7 +254,7 @@ public class LevelLoader {
         LevelManager.setLevel(level);
 
         level.setLevelName(name);
-        FXCreator.enableAllButtons(false);
+        FXEditorButtons.enableAllButtons(false);
 
         for (EditorObject object : level.getResources()) {
             if (object instanceof Resources) {
@@ -294,19 +292,19 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(level.getSceneObject().getPropertiesTreeItem());
 
-        Tab levelSelectButton = FXCreator.levelSelectButton(level);
-        Main.getLevelSelectPane().getTabs().add(levelSelectButton);
+        Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
+        FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
 
-        int numTabs = Main.getLevelSelectPane().getTabs().size();
+        int numTabs = FXLevelSelectPane.getLevelSelectPane().getTabs().size();
         double tabSize = 1 / (numTabs + 1.0);
-        Main.getLevelSelectPane().setTabMaxWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
-        Main.getLevelSelectPane().setTabMinWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
+        FXLevelSelectPane.getLevelSelectPane().setTabMaxWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
+        FXLevelSelectPane.getLevelSelectPane().setTabMinWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
 
         LevelUpdater.saveLevel(level);
 
         level.setLevelTab(levelSelectButton);
         level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
-        Main.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
+        FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
         LevelManager.onSetLevel(level);
     }
 

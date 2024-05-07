@@ -3,11 +3,11 @@ package com.WooGLEFX.Structures;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.WooGLEFX.Engine.FX.FXCreator;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -236,7 +236,7 @@ public class EditorObject {
     }
     public void setMetaAttributes(ArrayList<MetaEditorAttribute> metaAttributes) {
         this.metaAttributes = metaAttributes;
-        this.propertiesTreeItem = FXCreator.makePropertiesViewTreeItem(this);
+        this.propertiesTreeItem = FXPropertiesView.makePropertiesViewTreeItem(this);
     }
 
     public void setChangeListener(String attributeName, ChangeListener<String> changeListener) {

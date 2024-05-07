@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.WooGLEFX.Engine.FX.FXHierarchy;
+import com.WooGLEFX.Engine.FX.FXLevelSelectPane;
 import com.WooGLEFX.Engine.Initializer;
 import com.WooGLEFX.Functions.*;
 import org.slf4j.Logger;
@@ -87,8 +88,8 @@ public class Alarms {
         alert.showAndWait().ifPresent(buttonType -> {
             if (buttonType.equals(ButtonType.OK)) {
                 if (tab.getTabPane().getTabs().size() == 1) {
-                    Main.getLevelSelectPane().setMinHeight(0);
-                    Main.getLevelSelectPane().setMaxHeight(0);
+                    FXLevelSelectPane.getLevelSelectPane().setMinHeight(0);
+                    FXLevelSelectPane.getLevelSelectPane().setMaxHeight(0);
                     FXHierarchy.getHierarchy().setRoot(null);
                     Main.changeTableView(null);
                 }
@@ -108,8 +109,8 @@ public class Alarms {
         alert.showAndWait().ifPresent(buttonType -> {
             if (buttonType.equals(ButtonType.OK)) {
                 if (tab.getTabPane().getTabs().size() == 1) {
-                    Main.getLevelSelectPane().setMinHeight(0);
-                    Main.getLevelSelectPane().setMaxHeight(0);
+                    FXLevelSelectPane.getLevelSelectPane().setMinHeight(0);
+                    FXLevelSelectPane.getLevelSelectPane().setMaxHeight(0);
                     FXHierarchy.getHierarchy().setRoot(null);
                     Main.changeTableView(null);
                 }

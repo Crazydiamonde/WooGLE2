@@ -2,6 +2,8 @@ package com.WooGLEFX.Engine.FX;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
+import com.WooGLEFX.Functions.LevelManager;
+import com.WooGLEFX.Functions.ObjectAdder;
 import com.WooGLEFX.Functions.UndoManager;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
@@ -25,6 +27,10 @@ public class FXHierarchy {
     public static TreeTableView<EditorObject> getHierarchy() {
         return hierarchy;
     }
+
+
+    private static EditorObject moving;
+    private static int oldDropIndex;
 
 
     public static void init() {
@@ -141,7 +147,7 @@ public class FXHierarchy {
                     Main.changeTableView(hierarchy.getTreeItem(row.getIndex()).getValue());
                     if (event.getButton().equals(MouseButton.SECONDARY)) {
                         try {
-                            row.setContextMenu(FXCreator.contextMenuForEditorObject(row.getTreeItem().getValue()));
+                            row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }
@@ -156,8 +162,8 @@ public class FXHierarchy {
                     ClipboardContent content = new ClipboardContent();
                     content.putString(selected2.getValue().getClass().getName());
                     db.setContent(content);
-                    Main.setMoving(row.getItem());
-                    Main.setOldDropIndex(row.getIndex());
+                    moving = row.getItem();
+                    oldDropIndex = row.getIndex();
                     event.consume();
                 }
             });
@@ -181,7 +187,7 @@ public class FXHierarchy {
                     // TODO: This doesn't work and also you should be able to do so
                     if (!row.isEmpty() && row.getTreeItem().getChildren().size() == 0) {
                         int dropIndex = row.getIndex();
-                        int curIndex = Main.getOldDropIndex();
+                        int curIndex = oldDropIndex;
                         if (dropIndex > curIndex) {
                             // Dragged the item downwards; shift all of the items up
                             while (curIndex < dropIndex) {
@@ -195,12 +201,12 @@ public class FXHierarchy {
                                 curIndex--;
                             }
                         }
-                        hierarchy.getTreeItem(dropIndex).setValue(Main.getMoving());
+                        hierarchy.getTreeItem(dropIndex).setValue(moving);
                         hierarchy.getSelectionModel().select(dropIndex);
 
                         success = true;
 
-                        UndoManager.registerChange(new HierarchyDragAction(Main.getMoving(), Main.getOldDropIndex(), dropIndex));
+                        UndoManager.registerChange(new HierarchyDragAction(moving, oldDropIndex, dropIndex));
                         UndoManager.clearRedoActions();
                     }
                 }
@@ -217,6 +223,125 @@ public class FXHierarchy {
 
         // hierarchy.getStyleClass().add("column-header");
 
+    }
+
+    public static TabPane hierarchySwitcherButtons() {
+
+        // Create and customize the parent container.
+        TabPane thing = new TabPane();
+
+        // Create the three buttons.
+        Tab sceneSelectButton = new Tab("Scene");
+        Tab levelSelectButton = new Tab("Level");
+        Tab resrcSelectButton = new Tab("Resrc");
+        Tab textSelectButton = new Tab("Text");
+        Tab addinSelectButton = new Tab("Addin");
+
+        thing.getTabs().addAll(sceneSelectButton, levelSelectButton, resrcSelectButton, textSelectButton,
+                addinSelectButton);
+        thing.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        thing.setMinHeight(30);
+        thing.setMaxHeight(30);
+        thing.setPrefHeight(30);
+        thing.setPadding(new Insets(-6, -6, -6, -6));
+
+        thing.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
+            if (LevelManager.getLevel() != null) {
+                if (t1 == sceneSelectButton) {
+                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getScene().get(0).getTreeItem());
+                    FXHierarchy.getHierarchy().refresh();
+                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    LevelManager.getLevel().setCurrentlySelectedSection("Scene");
+                    FXHierarchy.getHierarchy().setShowRoot(true);
+                } else if (t1 == levelSelectButton) {
+                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getLevel().get(0).getTreeItem());
+                    FXHierarchy.getHierarchy().refresh();
+                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    LevelManager.getLevel().setCurrentlySelectedSection("Level");
+                    FXHierarchy.getHierarchy().setShowRoot(true);
+                } else if (t1 == resrcSelectButton) {
+                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
+                    FXHierarchy.getHierarchy().refresh();
+                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    LevelManager.getLevel().setCurrentlySelectedSection("Resrc");
+                    FXHierarchy.getHierarchy().setShowRoot(true);
+                } else if (t1 == textSelectButton) {
+                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getTextObject().getTreeItem());
+                    FXHierarchy.getHierarchy().refresh();
+                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    LevelManager.getLevel().setCurrentlySelectedSection("Text");
+                    FXHierarchy.getHierarchy().setShowRoot(true);
+                } else if (t1 == addinSelectButton) {
+                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getAddinObject().getTreeItem());
+                    FXHierarchy.getHierarchy().refresh();
+                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    LevelManager.getLevel().setCurrentlySelectedSection("Addin");
+                    FXHierarchy.getHierarchy().setShowRoot(true);
+                }
+            }
+        });
+
+        return thing;
+    }
+
+    public static ContextMenu contextMenuForEditorObject(EditorObject object) throws FileNotFoundException {
+
+        // Create the content menu.
+        ContextMenu menu = new ContextMenu();
+
+        // For every object that can be created as a child of this object:
+        for (String childToAdd : object.getPossibleChildren()) {
+
+            // Create a menu item representing creating this child.
+            MenuItem addItemItem = new MenuItem("Add " + childToAdd);
+
+            // Attempt to set graphics for this menu item.
+            addItemItem.setGraphic(new ImageView(FileManager.getObjectIcon(childToAdd)));
+
+            // Set the item's action to creating the child, with the object as its parent.
+            addItemItem.setOnAction(event -> {
+                switch (childToAdd) {
+                    case "BallInstance" -> ObjectAdder.addBall(object, "");
+                    case "Strand" -> ObjectAdder.addStrand(object);
+                    case "camera" -> ObjectAdder.addCamera(object);
+                    case "poi" -> ObjectAdder.addPoi(object);
+                    case "music" -> ObjectAdder.addMusic(object);
+                    case "loopsound" -> ObjectAdder.addLoopsound(object);
+                    case "linearforcefield" -> ObjectAdder.addLinearForcefield(object);
+                    case "radialforcefield" -> ObjectAdder.addRadialForcefield(object);
+                    case "particles" -> ObjectAdder.addParticle(object);
+                    case "SceneLayer" -> ObjectAdder.addSceneLayer(object);
+                    case "buttongroup" -> ObjectAdder.addButtongroup(object);
+                    case "button" -> ObjectAdder.addButton(object);
+                    case "circle" -> ObjectAdder.addCircle(object);
+                    case "rectangle" -> ObjectAdder.addRectangle(object);
+                    case "hinge" -> ObjectAdder.addHinge(object);
+                    case "compositegeom" -> ObjectAdder.addCompositegeom(object);
+                    case "label" -> ObjectAdder.addLabel(object);
+                    case "line" -> ObjectAdder.addLine(object);
+                    case "motor" -> ObjectAdder.addMotor(object);
+                    case "slider" -> ObjectAdder.addSlider(object);
+                    case "endoncollision" -> ObjectAdder.addEndoncollision(object);
+                    case "endonnogeom" -> ObjectAdder.addEndonnogeom(object);
+                    case "endonmessage" -> ObjectAdder.addEndonmessage(object);
+                    case "targetheight" -> ObjectAdder.addTargetheight(object);
+                    case "fire" -> ObjectAdder.addFire(object);
+                    case "levelexit" -> ObjectAdder.addLevelexit(object);
+                    case "pipe" -> ObjectAdder.addPipe(object);
+                    case "signpost" -> ObjectAdder.addSign(object);
+                    case "textstring" -> ObjectAdder.addString(object);
+                    case "resrcimage" -> ObjectAdder.addResrcImage(object);
+                    case "sound" -> ObjectAdder.addSound(object);
+                    case "setdefaults" -> ObjectAdder.addSetDefaults(object);
+                    case "Vertex" -> ObjectAdder.addPipeVertex(object);
+                    default -> throw new RuntimeException("Unknown child type: " + childToAdd);
+                }
+            });
+
+            menu.getItems().add(addItemItem);
+        }
+
+        return menu;
     }
 
 

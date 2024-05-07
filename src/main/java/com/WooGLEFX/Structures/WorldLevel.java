@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.WooGLEFX.Engine.FX.FXEditorButtons;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
-import com.WooGLEFX.Engine.FX.FXCreator;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
@@ -188,8 +188,8 @@ public class WorldLevel {
 
     public void setShowCameras(boolean showCameras) {
         this.showCameras = showCameras;
-        FXCreator.buttonShowHideCamera.setGraphic(new ImageView(showCameras ? showHideCam1 : showHideCam0));
-        FXCreator.buttonShowHideParticles.setGraphic(new ImageView(showParticles ? showHideParticles1 : showHideParticles0));
+        FXEditorButtons.buttonShowHideCamera.setGraphic(new ImageView(showCameras ? showHideCam1 : showHideCam0));
+        FXEditorButtons.buttonShowHideParticles.setGraphic(new ImageView(showParticles ? showHideParticles1 : showHideParticles0));
     }
 
     public boolean isShowForcefields() {
@@ -198,7 +198,7 @@ public class WorldLevel {
 
     public void setShowForcefields(boolean showForcefields) {
         this.showForcefields = showForcefields;
-        FXCreator.buttonShowHideForcefields.setGraphic(new ImageView(showForcefields ? showHideForcefields1 : showHideForcefields0));
+        FXEditorButtons.buttonShowHideForcefields.setGraphic(new ImageView(showForcefields ? showHideForcefields1 : showHideForcefields0));
     }
 
     public boolean isShowGeometry() {
@@ -207,7 +207,7 @@ public class WorldLevel {
 
     public void setShowGeometry(boolean showGeometry) {
         this.showGeometry = showGeometry;
-        FXCreator.buttonShowHideGeometry.setGraphic(new ImageView(showGeometry ? showHideGeometry1 : showHideGeometry0));
+        FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(showGeometry ? showHideGeometry1 : showHideGeometry0));
     }
 
     public boolean isShowGraphics() {
@@ -216,7 +216,7 @@ public class WorldLevel {
 
     public void setShowGraphics(boolean showGraphics) {
         this.showGraphics = showGraphics;
-        FXCreator.buttonShowHideGraphics.setGraphic(new ImageView(showGraphics ? showHideImages1 : showHideImages0));
+        FXEditorButtons.buttonShowHideGraphics.setGraphic(new ImageView(showGraphics ? showHideImages1 : showHideImages0));
     }
 
     public int getShowGoos() {
@@ -226,9 +226,9 @@ public class WorldLevel {
     public void setShowGoos(int showGoos) {
         this.showGoos = showGoos;
         switch (showGoos) {
-            case 0 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs0));
-            case 1 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs1));
-            case 2 -> FXCreator.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs2));
+            case 0 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs0));
+            case 1 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs1));
+            case 2 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs2));
         }
     }
 
@@ -238,7 +238,7 @@ public class WorldLevel {
 
     public void setShowParticles(boolean showParticles) {
         this.showParticles = showParticles;
-        FXCreator.buttonShowHideParticles.setGraphic(new ImageView(showParticles ? showHideParticles1 : showHideParticles0));
+        FXEditorButtons.buttonShowHideParticles.setGraphic(new ImageView(showParticles ? showHideParticles1 : showHideParticles0));
     }
 
     public boolean isShowLabels() {
@@ -247,7 +247,7 @@ public class WorldLevel {
 
     public void setShowLabels(boolean showLabels) {
         this.showLabels = showLabels;
-        FXCreator.buttonShowHideLabels.setGraphic(new ImageView(showLabels ? showHideLabels1 : showHideLabels0));
+        FXEditorButtons.buttonShowHideLabels.setGraphic(new ImageView(showLabels ? showHideLabels1 : showHideLabels0));
     }
 
     public boolean isShowAnimations() {
@@ -256,7 +256,7 @@ public class WorldLevel {
 
     public void setShowAnimations(boolean showAnimations) {
         this.showAnimations = showAnimations;
-        FXCreator.buttonShowHideAnim.setGraphic(new ImageView(showAnimations ? showHideAnim : showHideAnim0));
+        FXEditorButtons.buttonShowHideAnim.setGraphic(new ImageView(showAnimations ? showHideAnim : showHideAnim0));
     }
 
     public boolean isShowSceneBGColor() {
@@ -265,7 +265,7 @@ public class WorldLevel {
 
     public void setShowSceneBGColor(boolean showSceneBGColor) {
         this.showSceneBGColor = showSceneBGColor;
-        FXCreator.buttonShowHideSceneBGColor.setGraphic(new ImageView(showSceneBGColor ? showHideSceneBGColor1 : showHideSceneBGColor0));
+        FXEditorButtons.buttonShowHideSceneBGColor.setGraphic(new ImageView(showSceneBGColor ? showHideSceneBGColor1 : showHideSceneBGColor0));
     }
 
     public Tab getLevelTab() {

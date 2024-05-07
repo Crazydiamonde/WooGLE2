@@ -1,17 +1,27 @@
 package com.WooGLEFX.Engine.FX;
 
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.File.FileManager;
+import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Functions.LevelManager;
+import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Functions.UndoManager;
 import com.WooGLEFX.Structures.EditorAttribute;
+import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
+import com.WorldOfGoo.Resrc.ResrcImage;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
+import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+
+import java.io.File;
 
 public class FXPropertiesView {
 
@@ -141,7 +151,7 @@ public class FXPropertiesView {
                             double x = bounds.getMinX();
                             double y = bounds.getMinY() + 18;
 
-                            FXCreator.possibleAttributeValues(this).show(Main.getStage(), x, y);
+                            possibleAttributeValues(this).show(Main.getStage(), x, y);
                         }
                     }
 
@@ -163,7 +173,7 @@ public class FXPropertiesView {
 
                 cell.setOnMousePressed(event -> {
 
-                    cell.setContextMenu(FXCreator.possibleAttributeValues(cell));
+                    cell.setContextMenu(possibleAttributeValues(cell));
                     cell.getContextMenu().show(propertiesView, Main.getStage().getX()
                                     + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(),
                             100);
@@ -236,6 +246,139 @@ public class FXPropertiesView {
 
         // Set the "value" column to extend to the very edge of the TreeTableView.
         value.prefWidthProperty().bind(propertiesView.widthProperty().subtract(name.widthProperty()));
+    }
+
+
+    public static TreeItem<EditorAttribute> makePropertiesViewTreeItem(EditorObject object) {
+
+        // Create the root tree item.
+        TreeItem<EditorAttribute> treeItem = new TreeItem<>(
+                new EditorAttribute(object, "", "", "", new InputField("", InputField.NULL), false));
+
+        // Loop over the object's meta attributes.
+        for (MetaEditorAttribute metaEditorAttribute : object.getMetaAttributes()) {
+
+            // Find the object's EditorAttribute associated with this meta attribute
+            // (sharing the same name).
+            EditorAttribute attribute;
+            if (object.getAttribute(metaEditorAttribute.getName()) != null) {
+                attribute = object.getAttribute2(metaEditorAttribute.getName());
+            } else {
+                // If no such attribute exists, this attribute is instead the name of a category
+                // of attributes.
+                // In this case, create a dummy attribute with no value.
+                attribute = new EditorAttribute(object, metaEditorAttribute.getName(), "", "",
+                        new InputField("", InputField.NULL), false);
+            }
+            TreeItem<EditorAttribute> thisAttribute = new TreeItem<>(attribute);
+
+            // If this attribute is set to be open by default, set its tree item to open.
+            if (metaEditorAttribute.getOpenByDefault()) {
+                thisAttribute.setExpanded(true);
+            }
+
+            // If this attribute represents a category of attributes, it will have children.
+            // Add the children's TreeItems as children of the category's TreeItem.
+            for (MetaEditorAttribute childAttribute : metaEditorAttribute.getChildren()) {
+                thisAttribute.getChildren().add(new TreeItem<>(object.getAttribute2(childAttribute.getName())));
+            }
+
+            // Add the attribute's TreeItem as a child of the root's TreeItem.
+            treeItem.getChildren().add(thisAttribute);
+        }
+
+        return treeItem;
+    }
+
+    public static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell) {
+        ContextMenu contextMenu = new ContextMenu();
+        EditorAttribute attribute = cell.getTableRow().getItem();
+        if (attribute == null) {
+            return contextMenu;
+        }
+
+        switch (attribute.getInput().getType()) {
+            case InputField.IMAGE, InputField.IMAGE_REQUIRED -> {
+                for (EditorObject resource : LevelManager.getLevel().getResources()) {
+                    if (resource instanceof ResrcImage) {
+                        MenuItem setImageItem = new MenuItem();
+
+                        Label label = new Label(resource.getAttribute("id"));
+                        label.setMaxHeight(17);
+                        label.setMinHeight(17);
+                        label.setPrefHeight(17);
+                        label.setStyle("-fx-font-size: 11");
+                        label.setPadding(new Insets(0, 0, 0, 0));
+
+                        // Add thumbnail of the image to the menu item
+                        try {
+                            ImageView graphic = new ImageView(GlobalResourceManager.getImage(resource.getAttribute("id"), LevelManager.getLevel().getVersion()));
+                            graphic.setFitHeight(17);
+                            // Set width depending on height
+                            graphic.setFitWidth(graphic.getImage().getWidth() * 17 / graphic.getImage().getHeight());
+                            label.setGraphic(graphic);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        setImageItem.setGraphic(label);
+
+                        setImageItem.setOnAction(event -> {
+                            UndoManager.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                                    attribute.getValue(), resource.getAttribute("id")));
+                            UndoManager.clearRedoActions();
+                            attribute.setValue(resource.getAttribute("REALid"));
+                            if (contextMenu.isFocused()) {
+                                cell.commitEdit(attribute.getValue());
+                            }
+                        });
+
+                        contextMenu.getItems().add(setImageItem);
+                    }
+                }
+            }
+            case InputField.BALL -> {
+                String path = LevelManager.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir()
+                        : FileManager.getOldWOGdir();
+                File[] ballFiles = new File(path + "\\res\\balls").listFiles();
+                if (ballFiles != null) {
+                    for (File ballFile : ballFiles) {
+                        MenuItem setImageItem = new MenuItem(ballFile.getName());
+
+                        setImageItem.setOnAction(event -> {
+                            UndoManager.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                                    attribute.getValue(), ballFile.getName()));
+                            UndoManager.clearRedoActions();
+                            attribute.setValue(ballFile.getName());
+                            if (contextMenu.isFocused()) {
+                                cell.commitEdit(attribute.getValue());
+                            }
+                        });
+
+                        contextMenu.getItems().add(setImageItem);
+                    }
+                }
+            }
+            case InputField.PARTICLES -> {
+                for (String particleType : ParticleManager.getSortedParticleNames()) {
+                    MenuItem setImageItem = new MenuItem(particleType);
+
+                    setImageItem.setOnAction(event -> {
+                        UndoManager.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                                attribute.getValue(), particleType));
+                        UndoManager.clearRedoActions();
+                        attribute.setValue(particleType);
+                        if (contextMenu.isFocused()) {
+                            cell.commitEdit(attribute.getValue());
+                        }
+                    });
+
+                    contextMenu.getItems().add(setImageItem);
+                }
+            }
+        }
+
+        return contextMenu;
     }
 
 

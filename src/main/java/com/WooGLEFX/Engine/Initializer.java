@@ -1,9 +1,7 @@
 package com.WooGLEFX.Engine;
 
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Engine.FX.FXCreator;
-import com.WooGLEFX.Engine.FX.FXHierarchy;
-import com.WooGLEFX.Engine.FX.FXPropertiesView;
+import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.InputEvents.*;
@@ -78,7 +76,7 @@ public class Initializer {
         logger.info("1.3 = " + FileManager.getOldWOGdir());
         logger.info("1.5 = " + FileManager.getNewWOGdir());
 
-        Main.setLevelSelectPane(new TabPane());
+        FXLevelSelectPane.setLevelSelectPane(new TabPane());
 
         // Initialize stage name/icon
         Main.getStage().setTitle("World of Goo Anniversary Editor");
@@ -93,7 +91,7 @@ public class Initializer {
 
         // Make menu that currently does nothing
         try {
-            MenuBar bar = FXCreator.createMenu();
+            MenuBar bar = FXMenu.createMenu();
 
             // Import all goo balls and all misc resources from the game files
 
@@ -173,53 +171,56 @@ public class Initializer {
                     FXHierarchy.getHierarchy().setPrefHeight(height);
                 }
             });
-            Main.getSplitPane().getItems().addAll(new VBox(Main.getLevelSelectPane(), pane), Main.getViewPane());
+
+            TabPane levelSelectPane = FXLevelSelectPane.getLevelSelectPane();
+
+            Main.getSplitPane().getItems().addAll(new VBox(levelSelectPane, pane), Main.getViewPane());
             Main.getStage().addEventFilter(ScrollEvent.SCROLL, MouseWheelMovedManager::mouseWheelMoved);
 
-            Main.getLevelSelectPane().getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
+            levelSelectPane.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
                 if (t1 == null) {
                     LevelManager.setLevel(null);
                     LevelManager.onSetLevel(null);
-                    FXCreator.enableAllButtons(true);
+                    FXEditorButtons.enableAllButtons(true);
                     if (FileManager.isHasOldWOG()) {
-                        FXCreator.buttonNewOld.setDisable(false);
-                        FXCreator.buttonOpenOld.setDisable(false);
-                        FXCreator.newLevelOldItem.setDisable(false);
-                        FXCreator.openLevelOldItem.setDisable(false);
+                        FXEditorButtons.buttonNewOld.setDisable(false);
+                        FXEditorButtons.buttonOpenOld.setDisable(false);
+                        FXMenu.newLevelOldItem.setDisable(false);
+                        FXMenu.openLevelOldItem.setDisable(false);
                     }
                     if (FileManager.isHasNewWOG()) {
-                        FXCreator.buttonNewNew.setDisable(false);
-                        FXCreator.buttonOpenNew.setDisable(false);
-                        FXCreator.newLevelNewItem.setDisable(false);
-                        FXCreator.openLevelNewItem.setDisable(false);
+                        FXEditorButtons.buttonNewNew.setDisable(false);
+                        FXEditorButtons.buttonOpenNew.setDisable(false);
+                        FXMenu.newLevelNewItem.setDisable(false);
+                        FXMenu.openLevelNewItem.setDisable(false);
                     }
                 }
             });
 
-            Main.getLevelSelectPane().widthProperty().addListener(new ChangeListener<Number>() {
+            levelSelectPane.widthProperty().addListener(new ChangeListener<Number>() {
                 @Override
                 public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                    int numTabs = Main.getLevelSelectPane().getTabs().size();
+                    int numTabs = levelSelectPane.getTabs().size();
                     double tabSize = 1 / (numTabs + 1.0);
-                    Main.getLevelSelectPane()
-                            .setTabMaxWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
-                    Main.getLevelSelectPane()
-                            .setTabMinWidth(tabSize * (Main.getLevelSelectPane().getWidth() - 15) - 15);
+                    levelSelectPane
+                            .setTabMaxWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
+                    levelSelectPane
+                            .setTabMinWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
                 }
             });
 
             // Combine everything inside a VBox
             Main.setvBox(new VBox(bar));
             try {
-                FXCreator.buttons(Main.getvBox());
+                FXEditorButtons.buttons(Main.getvBox());
             } catch (IOException e) {
                 Alarms.errorMessage(e);
             }
 
-            Main.getLevelSelectPane().setMinHeight(0);
-            Main.getLevelSelectPane().setMaxHeight(0);
+            levelSelectPane.setMinHeight(0);
+            levelSelectPane.setMaxHeight(0);
 
-            Main.getLevelSelectPane().setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+            levelSelectPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 
             Main.getvBox().getChildren().add(Main.getSplitPane());
 
@@ -253,8 +254,8 @@ public class Initializer {
             FXPropertiesView.getPropertiesView().prefHeightProperty()
                     .bind(Main.getViewPane().heightProperty().subtract(FXPropertiesView.getPropertiesView().layoutYProperty()));
 
-            Main.getLevelSelectPane().setTabDragPolicy(TabPane.TabDragPolicy.REORDER);
-            Main.getLevelSelectPane().setStyle("-fx-open-tab-animation: NONE");
+            levelSelectPane.setTabDragPolicy(TabPane.TabDragPolicy.REORDER);
+            levelSelectPane.setStyle("-fx-open-tab-animation: NONE");
 
             Main.getSplitPane().getDividers().get(0).setPosition(0.8);
 
@@ -268,19 +269,19 @@ public class Initializer {
 
             FileManager.openFailedImage();
 
-            FXCreator.enableAllButtons(true);
+            FXEditorButtons.enableAllButtons(true);
 
             if (FileManager.isHasOldWOG()) {
-                FXCreator.buttonNewOld.setDisable(false);
-                FXCreator.buttonOpenOld.setDisable(false);
-                FXCreator.newLevelOldItem.setDisable(false);
-                FXCreator.openLevelOldItem.setDisable(false);
+                FXEditorButtons.buttonNewOld.setDisable(false);
+                FXEditorButtons.buttonOpenOld.setDisable(false);
+                FXMenu.newLevelOldItem.setDisable(false);
+                FXMenu.openLevelOldItem.setDisable(false);
             }
             if (FileManager.isHasNewWOG()) {
-                FXCreator.buttonNewNew.setDisable(false);
-                FXCreator.buttonOpenNew.setDisable(false);
-                FXCreator.newLevelNewItem.setDisable(false);
-                FXCreator.openLevelNewItem.setDisable(false);
+                FXEditorButtons.buttonNewNew.setDisable(false);
+                FXEditorButtons.buttonOpenNew.setDisable(false);
+                FXMenu.newLevelNewItem.setDisable(false);
+                FXMenu.openLevelNewItem.setDisable(false);
             }
 
             FXHierarchy.getHierarchy().sort();

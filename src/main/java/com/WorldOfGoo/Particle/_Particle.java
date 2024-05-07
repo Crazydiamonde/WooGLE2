@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 
@@ -48,7 +49,7 @@ public class _Particle extends EditorObject {
 
     public void update(double version) throws Exception {
         this.version = version;
-        for (EditorObject thing : Main.getParticles()) {
+        for (EditorObject thing : ParticleManager.getParticles()) {
             if (thing instanceof Axialsinoffset && thing.getParent() == this) {
                 axialsinoffsets.add((Axialsinoffset)thing);
             }

@@ -6,6 +6,7 @@ import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.AnimationManager;
 import com.WooGLEFX.Functions.LevelManager;
+import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 import com.WorldOfGoo.Level.BallInstance;
@@ -141,7 +142,7 @@ public class InputField {
             case TEXT:
                 return true;
             case PARTICLES:
-                for (EditorObject particle : Main.getParticles()) {
+                for (EditorObject particle : ParticleManager.getParticles()) {
                     if ((particle instanceof Particleeffect || particle instanceof Ambientparticleeffect) && particle.getAttribute("name").equals(potential)) {
                         return true;
                     }

@@ -6,6 +6,7 @@ import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
+import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -59,7 +60,7 @@ public class Particles extends EditorObject {
     @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         if (LevelManager.getLevel().isShowParticles()) {
-            for (EditorObject obj : Main.getParticles()) {
+            for (EditorObject obj : ParticleManager.getParticles()) {
                 if (obj instanceof Particleeffect || obj instanceof Ambientparticleeffect) {
                     if (obj.getAttribute("name").equals(getAttribute("effect"))) {
 

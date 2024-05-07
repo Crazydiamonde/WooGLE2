@@ -1,6 +1,7 @@
 package com.WooGLEFX.Functions;
 
-import com.WooGLEFX.Engine.FX.FXCreator;
+import com.WooGLEFX.Engine.FX.FXEditorButtons;
+import com.WooGLEFX.Engine.FX.FXMenu;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.File.FileManager;
@@ -84,14 +85,14 @@ public class GameResourceManager {
                     Alarms.errorMessage(e);
                 }
                 reloadWorldOfGoo(1.3);
-                FXCreator.buttonOpenOld.setDisable(false);
-                FXCreator.buttonNewOld.setDisable(false);
-                FXCreator.newLevelOldItem.setDisable(false);
-                FXCreator.openLevelOldItem.setDisable(false);
+                FXEditorButtons.buttonOpenOld.setDisable(false);
+                FXEditorButtons.buttonNewOld.setDisable(false);
+                FXMenu.newLevelOldItem.setDisable(false);
+                FXMenu.openLevelOldItem.setDisable(false);
                 if (LevelManager.getLevel() != null) {
-                    FXCreator.buttonSave.setDisable(false);
-                    FXCreator.cloneLevelItem.setDisable(false);
-                    FXCreator.saveLevelItem.setDisable(false);
+                    FXEditorButtons.buttonSave.setDisable(false);
+                    FXMenu.cloneLevelItem.setDisable(false);
+                    FXMenu.saveLevelItem.setDisable(false);
                 }
             } else {
                 FileManager.setNewWOGdir(worldOfGoo.getParent() + "\\game");
@@ -101,24 +102,24 @@ public class GameResourceManager {
                     Alarms.errorMessage(e);
                 }
                 reloadWorldOfGoo(1.5);
-                FXCreator.buttonOpenNew.setDisable(false);
-                FXCreator.buttonNewNew.setDisable(false);
-                FXCreator.newLevelNewItem.setDisable(false);
-                FXCreator.openLevelNewItem.setDisable(false);
+                FXEditorButtons.buttonOpenNew.setDisable(false);
+                FXEditorButtons.buttonNewNew.setDisable(false);
+                FXMenu.newLevelNewItem.setDisable(false);
+                FXMenu.openLevelNewItem.setDisable(false);
                 if (LevelManager.getLevel() != null) {
-                    FXCreator.buttonClone.setDisable(false);
-                    FXCreator.buttonSave.setDisable(false);
-                    FXCreator.cloneLevelItem.setDisable(false);
-                    FXCreator.saveLevelItem.setDisable(false);
+                    FXEditorButtons.buttonClone.setDisable(false);
+                    FXEditorButtons.buttonSave.setDisable(false);
+                    FXMenu.cloneLevelItem.setDisable(false);
+                    FXMenu.saveLevelItem.setDisable(false);
                 }
             }
-            if(FXCreator.getOldGooballsToolbar() != null) {
-                FXCreator.getOldGooballsToolbar().getItems().clear();
+            if(FXEditorButtons.getOldGooballsToolbar() != null) {
+                FXEditorButtons.getOldGooballsToolbar().getItems().clear();
             }
-            if(FXCreator.getNewGooballsToolbar() != null) {
-                FXCreator.getNewGooballsToolbar().getItems().clear();
+            if(FXEditorButtons.getNewGooballsToolbar() != null) {
+                FXEditorButtons.getNewGooballsToolbar().getItems().clear();
             }
-            FXCreator.addBallsTo();
+            FXEditorButtons.addBallsTo();
             return true;
         }
     }

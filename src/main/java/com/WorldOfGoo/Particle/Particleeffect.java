@@ -1,5 +1,6 @@
 package com.WorldOfGoo.Particle;
 
+import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Engine.Main;
@@ -29,7 +30,7 @@ public class Particleeffect extends EditorObject {
 
     @Override
     public void update(){
-        for (EditorObject thing : Main.getParticles()) {
+        for (EditorObject thing : ParticleManager.getParticles()) {
             if (thing instanceof _Particle && thing.getParent().getAttribute("name").equals(getAttribute("name"))) {
                 particles.add((_Particle) thing);
             }

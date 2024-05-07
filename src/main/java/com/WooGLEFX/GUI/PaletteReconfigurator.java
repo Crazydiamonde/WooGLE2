@@ -1,6 +1,6 @@
 package com.WooGLEFX.GUI;
 
-import com.WooGLEFX.Engine.FX.FXCreator;
+import com.WooGLEFX.Engine.FX.FXEditorButtons;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.EditorObjects._Ball;
@@ -130,9 +130,9 @@ public class PaletteReconfigurator extends Application {
             FileManager.setPaletteBalls(paletteBalls);
             FileManager.setPaletteVersions(paletteVersions);
 
-            FXCreator.getOldGooballsToolbar().getItems().clear();
-            FXCreator.getNewGooballsToolbar().getItems().clear();
-            FXCreator.addBallsTo();
+            FXEditorButtons.getOldGooballsToolbar().getItems().clear();
+            FXEditorButtons.getNewGooballsToolbar().getItems().clear();
+            FXEditorButtons.addBallsTo();
 
             try {
                 FileManager.saveProperties();

@@ -3,6 +3,7 @@ package com.WorldOfGoo.Level;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
+import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -29,7 +30,7 @@ public class Fire extends EditorObject {
     }
 
     private Particles findParticleFx() {
-        for (EditorObject particle : Main.getParticles()) {
+        for (EditorObject particle : ParticleManager.getParticles()) {
             if (particle.getAttribute("name") != null && particle.getAttribute("name").equals(getAttribute("particles"))) {
                 particleEffect = new Particles(this);
                 getChildren().remove(particleEffect);

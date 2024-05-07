@@ -17,6 +17,7 @@ import com.WorldOfGoo.Level.Music;
 import com.WorldOfGoo.Particle._Particle;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import com.WorldOfGoo.Resrc.Sound;
+import com.WorldOfGoo.Scene.Particles;
 import com.WorldOfGoo.Scene.SceneLayer;
 import com.WorldOfGoo.Text.TextString;
 import javafx.stage.FileChooser;
@@ -515,7 +516,7 @@ public class LevelResourceManager {
             try {
                 FileManager.openParticles(1.3);
                 ArrayList<EditorObject> particles2 = FileManager.commonBallData;
-                Main.getParticles().addAll(particles2);
+                ParticleManager.getParticles().addAll(particles2);
                 for (EditorObject particle : particles2) {
                     try {
                         if (particle instanceof _Particle) {
@@ -537,7 +538,7 @@ public class LevelResourceManager {
             try {
                 FileManager.openParticles(1.5);
                 ArrayList<EditorObject> particles2 = FileManager.commonBallData;
-                Main.getParticles().addAll(particles2);
+                ParticleManager.getParticles().addAll(particles2);
                 for (EditorObject particle : particles2) {
                     try {
                         if (particle instanceof _Particle) {
@@ -557,12 +558,12 @@ public class LevelResourceManager {
 
         // Load particle names, remove duplicates, and sort them alphabetically
         Set<String> particleNames = new HashSet<>();
-        Main.getParticles().stream()
+        ParticleManager.getParticles().stream()
                 .filter(particle -> particle.getAttribute("name") != null)
                 .forEach(particle -> particleNames.add(particle.getAttribute("name")));
-        Main.sortedParticleNames.clear();
-        Main.sortedParticleNames.addAll(particleNames);
-        Main.sortedParticleNames.sort(String::compareToIgnoreCase);
+        ParticleManager.getSortedParticleNames().clear();
+        ParticleManager.getSortedParticleNames().addAll(particleNames);
+        ParticleManager.getSortedParticleNames().sort(String::compareToIgnoreCase);
 
         // Load all animations from the game files
         try {

@@ -1,12 +1,9 @@
 package com.WooGLEFX.Engine;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Engine.FX.FXCreator;
-import com.WooGLEFX.Engine.FX.FXHierarchy;
-import com.WooGLEFX.Engine.FX.FXPropertiesView;
+import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.LevelExporter;
 import com.WooGLEFX.Functions.LevelManager;
@@ -88,25 +85,6 @@ public class Main extends Application {
     }
 
 
-    private static EditorObject moving;
-    public static EditorObject getMoving() {
-        return moving;
-    }
-    public static void setMoving(EditorObject moving) {
-        Main.moving = moving;
-    }
-
-
-    private static int oldDropIndex;
-    public static int getOldDropIndex() {
-        return oldDropIndex;
-    }
-
-    public static void setOldDropIndex(int oldDropIndex) {
-        Main.oldDropIndex = oldDropIndex;
-    }
-
-
     private static Pane thingPane;
     public static Pane getThingPane() {
         return thingPane;
@@ -146,26 +124,13 @@ public class Main extends Application {
     }
 
 
-    private static TabPane levelSelectPane;
-    public static TabPane getLevelSelectPane() {
-        return levelSelectPane;
-    }
-    public static void setLevelSelectPane(TabPane levelSelectPane) {
-        Main.levelSelectPane = levelSelectPane;
-    }
-
-
-    private static final List<EditorObject> particles = new ArrayList<>();
-    public static final List<String> sortedParticleNames = new ArrayList<>();
-
-
     public static Point2D getScreenCenter() {
         return new Point2D((thingPane.getWidth() / 2 - LevelManager.getLevel().getOffsetX()) / LevelManager.getLevel().getZoom(),
                 (thingPane.getHeight() / 2 - LevelManager.getLevel().getOffsetY()) / LevelManager.getLevel().getZoom());
     }
 
     public static double getMouseYOffset() {
-        return levelSelectPane.getHeight() + vBox.getChildren().get(4).getLayoutY();
+        return FXLevelSelectPane.getLevelSelectPane().getHeight() + vBox.getChildren().get(4).getLayoutY();
     }
 
 
@@ -198,17 +163,17 @@ public class Main extends Application {
     public static void selectionMode() {
         mode = SELECTION;
         // Highlight selection button blue
-        FXCreator.buttonSelectMoveAndResize.setStyle("-fx-background-color: #9999ff;");
+        FXEditorButtons.buttonSelectMoveAndResize.setStyle("-fx-background-color: #9999ff;");
         // Un-highlight strand button
-        FXCreator.buttonStrandMode.setStyle("");
+        FXEditorButtons.buttonStrandMode.setStyle("");
     }
 
     public static void strandMode() {
         mode = STRAND;
         // Highlight strand button
-        FXCreator.buttonStrandMode.setStyle("-fx-background-color: #9999ff;");
+        FXEditorButtons.buttonStrandMode.setStyle("-fx-background-color: #9999ff;");
         // Un-highlight selection button
-        FXCreator.buttonSelectMoveAndResize.setStyle("");
+        FXEditorButtons.buttonSelectMoveAndResize.setStyle("");
     }
 
     public static void saveBallInVersion(double oldVersion, double newVersion) {
@@ -216,13 +181,21 @@ public class Main extends Application {
     }
 
     public static void saveBallInVersion(String ball, double oldVersion, double newVersion) {
+
         try {
+
+            _Ball ballObject = FileManager.openBall(ball, oldVersion);
+
+            if (ballObject == null) return;
+
             if (newVersion == 1.3) {
-                LevelExporter.exportBallAsXML(FileManager.openBall(ball, oldVersion),
-                        FileManager.getOldWOGdir() + "\\res\\balls\\" + ball, 1.3, false);
+                LevelExporter.exportBallAsXML(ballObject,
+                        FileManager.getOldWOGdir() + "\\res\\balls\\" + ball,
+                        1.3, false);
             } else if (newVersion == 1.5) {
-                LevelExporter.exportBallAsXML(FileManager.openBall(ball, oldVersion),
-                        FileManager.getNewWOGdir() + "\\res\\balls\\" + ball, 1.5, false);
+                LevelExporter.exportBallAsXML(ballObject,
+                        FileManager.getNewWOGdir() + "\\res\\balls\\" + ball,
+                        1.5, false);
             }
         } catch (Exception e) {
             Alarms.errorMessage(e);
@@ -310,7 +283,6 @@ public class Main extends Application {
         }
     }
 
-
     public static void changeTableView(EditorObject obj) {
         if (obj == null) {
             FXPropertiesView.getPropertiesView().setRoot(null);
@@ -327,20 +299,17 @@ public class Main extends Application {
         Main.viewPane = viewPane;
     }
 
-    public static List<EditorObject> getParticles() {
-        return particles;
-    }
-
     @Override
     public void start(Stage stage) {
         Initializer.start(stage, launchArguments);
     }
 
-    public static final TabPane hierarchySwitcherButtons = FXCreator.hierarchySwitcherButtons();
+    public static final TabPane hierarchySwitcherButtons = FXHierarchy.hierarchySwitcherButtons();
 
 
 
     public static void resumeLevelClosing() {
+        TabPane levelSelectPane = FXLevelSelectPane.getLevelSelectPane();
         if (levelSelectPane.getTabs().size() == 0) {
             stage.close();
         } else {
