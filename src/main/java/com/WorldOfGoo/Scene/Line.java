@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -90,7 +91,7 @@ public class Line extends EditorObject {
                     screenX - realDir.getX() * LevelManager.getLevel().getZoom() * 4 + dst * realDir.getX(),
                     screenY - realDir.getY() * LevelManager.getLevel().getZoom() * 4 + dst * realDir.getY());
             graphicsContext.strokeLine(screenX, screenY, screenX + dst2 * dir.getX(), screenY + dst2 * dir.getY());
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
                 double screenX2 = screenX + (dst2 + 2 * LevelManager.getLevel().getZoom()) * dir.getX();
                 double screenY2 = screenY + (dst2 + 2 * LevelManager.getLevel().getZoom()) * dir.getY();
 

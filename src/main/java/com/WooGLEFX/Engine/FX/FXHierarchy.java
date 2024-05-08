@@ -1,6 +1,7 @@
 package com.WooGLEFX.Engine.FX;
 
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.ObjectAdder;
@@ -130,8 +131,8 @@ public class FXHierarchy {
         // properties view.
         hierarchy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                Main.setSelected(newValue.getValue());
-                Main.changeTableView(newValue.getValue());
+                SelectionManager.setSelected(newValue.getValue());
+                FXPropertiesView.changeTableView(newValue.getValue());
             }
         });
 
@@ -143,8 +144,8 @@ public class FXHierarchy {
 
             row.setOnMousePressed(event -> {
                 if (hierarchy.getTreeItem(row.getIndex()) != null) {
-                    Main.setSelected(hierarchy.getTreeItem(row.getIndex()).getValue());
-                    Main.changeTableView(hierarchy.getTreeItem(row.getIndex()).getValue());
+                    SelectionManager.setSelected(hierarchy.getTreeItem(row.getIndex()).getValue());
+                    FXPropertiesView.changeTableView(hierarchy.getTreeItem(row.getIndex()).getValue());
                     if (event.getButton().equals(MouseButton.SECONDARY)) {
                         try {
                             row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
@@ -223,12 +224,20 @@ public class FXHierarchy {
 
         // hierarchy.getStyleClass().add("column-header");
 
+        hierarchySwitcherButtons();
+
     }
 
-    public static TabPane hierarchySwitcherButtons() {
+    private static TabPane hierarchySwitcherButtons;
+    public static TabPane getHierarchySwitcherButtons() {
+        return hierarchySwitcherButtons;
+    }
+
+
+    public static void hierarchySwitcherButtons() {
 
         // Create and customize the parent container.
-        TabPane thing = new TabPane();
+        hierarchySwitcherButtons = new TabPane();
 
         // Create the three buttons.
         Tab sceneSelectButton = new Tab("Scene");
@@ -237,15 +246,15 @@ public class FXHierarchy {
         Tab textSelectButton = new Tab("Text");
         Tab addinSelectButton = new Tab("Addin");
 
-        thing.getTabs().addAll(sceneSelectButton, levelSelectButton, resrcSelectButton, textSelectButton,
+        hierarchySwitcherButtons.getTabs().addAll(sceneSelectButton, levelSelectButton, resrcSelectButton, textSelectButton,
                 addinSelectButton);
-        thing.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        thing.setMinHeight(30);
-        thing.setMaxHeight(30);
-        thing.setPrefHeight(30);
-        thing.setPadding(new Insets(-6, -6, -6, -6));
+        hierarchySwitcherButtons.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        hierarchySwitcherButtons.setMinHeight(30);
+        hierarchySwitcherButtons.setMaxHeight(30);
+        hierarchySwitcherButtons.setPrefHeight(30);
+        hierarchySwitcherButtons.setPadding(new Insets(-6, -6, -6, -6));
 
-        thing.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
+        hierarchySwitcherButtons.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
             if (LevelManager.getLevel() != null) {
                 if (t1 == sceneSelectButton) {
                     FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getScene().get(0).getTreeItem());
@@ -281,7 +290,6 @@ public class FXHierarchy {
             }
         });
 
-        return thing;
     }
 
     public static ContextMenu contextMenuForEditorObject(EditorObject object) throws FileNotFoundException {

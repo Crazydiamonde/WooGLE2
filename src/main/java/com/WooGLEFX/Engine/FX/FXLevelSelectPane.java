@@ -39,7 +39,7 @@ public class FXLevelSelectPane {
                     // If all tabs are closed, clear the side pane
                     FXHierarchy.getHierarchy().setRoot(null);
                     // Clear the properties pane too
-                    Main.changeTableView(null);
+                    FXPropertiesView.changeTableView(null);
                 }
                 tab.getTabPane().getTabs().remove(tab);
             }
@@ -59,11 +59,11 @@ public class FXLevelSelectPane {
                 }
 
                 switch (level.getCurrentlySelectedSection()) {
-                    case "Scene" -> Main.hierarchySwitcherButtons.getSelectionModel().select(0);
-                    case "Level" -> Main.hierarchySwitcherButtons.getSelectionModel().select(1);
-                    case "Resrc" -> Main.hierarchySwitcherButtons.getSelectionModel().select(2);
-                    case "Text" -> Main.hierarchySwitcherButtons.getSelectionModel().select(3);
-                    case "Addin" -> Main.hierarchySwitcherButtons.getSelectionModel().select(4);
+                    case "Scene" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(0);
+                    case "Level" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(1);
+                    case "Resrc" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(2);
+                    case "Text" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(3);
+                    case "Addin" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(4);
                 }
 
             } else {

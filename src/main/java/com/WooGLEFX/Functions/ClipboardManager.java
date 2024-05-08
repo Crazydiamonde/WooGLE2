@@ -4,6 +4,7 @@ import com.WooGLEFX.Engine.ClipboardHandler;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.UserActions.ObjectCreationAction;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -69,7 +70,7 @@ public class ClipboardManager {
                     }
                     // object.getParent().getChildren().add(0, object);
                     ObjectManager.create(level, object, 0);
-                    Main.setSelected(object);
+                    SelectionManager.setSelected(object);
                     UndoManager.registerChange(new ObjectCreationAction(object, FXHierarchy.getHierarchy().getRow(object.getTreeItem())
                             - FXHierarchy.getHierarchy().getRow(object.getParent().getTreeItem()) - 1));
                     level.redoActions.clear();

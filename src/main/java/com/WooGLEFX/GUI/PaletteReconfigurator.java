@@ -1,10 +1,10 @@
 package com.WooGLEFX.GUI;
 
 import com.WooGLEFX.Engine.FX.FXEditorButtons;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Functions.BallManager;
 import com.WooGLEFX.Structures.EditorObject;
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -99,7 +99,7 @@ public class PaletteReconfigurator extends Application {
                     double ballVersion = Double.parseDouble(label.getId());
 
                     boolean alreadyHasBall = false;
-                    for (_Ball ball : Main.getImportedBalls()) {
+                    for (_Ball ball : BallManager.getImportedBalls()) {
                         if (ball.getObjects().get(0).getAttribute("name").equals(ballName)) {
                             alreadyHasBall = true;
                             break;
@@ -121,7 +121,7 @@ public class PaletteReconfigurator extends Application {
                         if (ball != null) {
                             ball.makeImages(ballVersion);
                             ball.setVersion(ballVersion);
-                            Main.getImportedBalls().add(ball);
+                            BallManager.getImportedBalls().add(ball);
                         }
                     }
                 }

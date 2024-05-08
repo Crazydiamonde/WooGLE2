@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
@@ -211,7 +212,7 @@ public class Particles extends EditorObject {
             graphicsContext.setFont(font);
             graphicsContext.fillText(getString("effect"), screenX2 - width / 2, screenY2 - height / 2);
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
 
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);

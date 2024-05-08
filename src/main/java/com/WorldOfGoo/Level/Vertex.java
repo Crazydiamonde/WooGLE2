@@ -2,6 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -57,7 +58,7 @@ public class Vertex extends EditorObject {
 
             graphicsContext.strokeRect(screenX - size / 2, screenY - size / 2, size, size);
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
 
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);

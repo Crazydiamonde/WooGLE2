@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -24,6 +25,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
+import javafx.scene.transform.Affine;
 
 public class Renderer {
 
@@ -46,6 +48,8 @@ public class Renderer {
     public static final Paint noLevel = Paint.valueOf("A0A0A0FF");
     public static final Paint middleColor = Paint.valueOf("808080FF");
     public static final Paint particleLabels = Paint.valueOf("A81CFF");
+
+    public static Affine t;
 
     public static final Stop[] stops = new Stop[] { new Stop(0, javafx.scene.paint.Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")) };
 
@@ -280,17 +284,17 @@ public class Renderer {
             imageGraphicsContext.restore();
         }
 
-        if (Main.getMode() == Main.STRAND) {
+        if (SelectionManager.getMode() == SelectionManager.STRAND) {
             graphicsContext.save();
 
-            if (Main.getStrand1Gooball() != null) {
+            if (SelectionManager.getStrand1Gooball() != null) {
 
-                double x = Main.getStrand1Gooball().getDouble("x") * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
-                double y = -Main.getStrand1Gooball().getDouble("y") * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
+                double x = SelectionManager.getStrand1Gooball().getDouble("x") * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
+                double y = -SelectionManager.getStrand1Gooball().getDouble("y") * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
 
                 graphicsContext.setLineWidth(3 * LevelManager.getLevel().getZoom());
 
-                graphicsContext.strokeLine(x, y, Main.getMouseX(), Main.getMouseY());
+                graphicsContext.strokeLine(x, y, SelectionManager.getMouseX(), SelectionManager.getMouseY());
 
             }
 
@@ -310,8 +314,8 @@ public class Renderer {
     public static void draw() {
 
         WorldLevel level = LevelManager.getLevel();
-        Canvas canvas = Main.getCanvas();
-        Canvas imageCanvas = Main.getImageCanvas();
+        Canvas canvas = FXCanvas.getCanvas();
+        Canvas imageCanvas = FXCanvas.getImageCanvas();
 
         if (level != null) {
             if (level.isShowSceneBGColor()) {
@@ -324,7 +328,7 @@ public class Renderer {
             canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
             Renderer.drawEverything(level, canvas, imageCanvas);
         } else {
-            Renderer.clear(level, canvas, imageCanvas);
+            Renderer.clear(null, canvas, imageCanvas);
         }
     }
 

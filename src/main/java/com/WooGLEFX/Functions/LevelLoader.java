@@ -116,6 +116,8 @@ public class LevelLoader {
     }
 
 
+    public static final ArrayList<String> failedResources = new ArrayList<>();
+
 
     public static void openLevel(String levelName, double version) {
         // Don't open a level if none selected
@@ -129,7 +131,7 @@ public class LevelLoader {
                 return;
             }
         }
-        Main.failedResources.clear();
+        failedResources.clear();
 
         WorldLevel level;
 
@@ -150,7 +152,7 @@ public class LevelLoader {
         for (EditorObject object : level.getLevel()) {
             if (object instanceof BallInstance) {
                 boolean alreadyIn = false;
-                for (_Ball ball : Main.getImportedBalls()) {
+                for (_Ball ball : BallManager.getImportedBalls()) {
                     if (ball.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type"))
                             && ball.getVersion() == level.getVersion()) {
                         alreadyIn = true;
@@ -169,12 +171,12 @@ public class LevelLoader {
                             ball2.makeImages(version);
                             ball2.setVersion(version);
 
-                            Main.getImportedBalls().add(ball2);
+                            BallManager.getImportedBalls().add(ball2);
                         }
                     } catch (ParserConfigurationException | SAXException | IOException e) {
-                        if (!Main.failedResources
+                        if (!failedResources
                                 .contains("Ball: " + object.getAttribute("type") + " (version " + version + ")")) {
-                            Main.failedResources.add("Ball: " + object.getAttribute("type") + " (version " + version + ")");
+                            failedResources.add("Ball: " + object.getAttribute("type") + " (version " + version + ")");
                         }
                     }
                 }
@@ -217,9 +219,9 @@ public class LevelLoader {
         FXLevelSelectPane.getLevelSelectPane().setTabMaxWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
         FXLevelSelectPane.getLevelSelectPane().setTabMinWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
 
-        if (Main.failedResources.size() > 0) {
+        if (failedResources.size() > 0) {
             StringBuilder fullError = new StringBuilder();
-            for (String resource : Main.failedResources) {
+            for (String resource : failedResources) {
                 fullError.append("\n").append(resource);
             }
             Alarms.loadingResourcesError(fullError.toString().substring(1));
@@ -242,12 +244,12 @@ public class LevelLoader {
         ArrayList<EditorObject> addinList = new ArrayList<>();
         ArrayList<EditorObject> textList = new ArrayList<>();
 
-        Main.supremeAddToList(resourcesList, LevelManager.getLevel().getResourcesObject().deepClone(null));
-        Main.supremeAddToList(sceneList, LevelManager.getLevel().getSceneObject().deepClone(null));
-        Main.supremeAddToList(levelList, LevelManager.getLevel().getLevelObject().deepClone(null));
+        FileManager.supremeAddToList(resourcesList, LevelManager.getLevel().getResourcesObject().deepClone(null));
+        FileManager.supremeAddToList(sceneList, LevelManager.getLevel().getSceneObject().deepClone(null));
+        FileManager.supremeAddToList(levelList, LevelManager.getLevel().getLevelObject().deepClone(null));
         // Generate new addin object. idk why cloning it doesn't work, but this is arguably better anyway
-        Main.supremeAddToList(addinList, BlankObjectGenerator.generateBlankAddinObject(name));
-        Main.supremeAddToList(textList, LevelManager.getLevel().getTextObject().deepClone(null));
+        FileManager.supremeAddToList(addinList, BlankObjectGenerator.generateBlankAddinObject(name));
+        FileManager.supremeAddToList(textList, LevelManager.getLevel().getTextObject().deepClone(null));
 
         String oldLevelName = LevelManager.getLevel().getLevelName();
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
@@ -306,6 +308,12 @@ public class LevelLoader {
         level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
         FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
         LevelManager.onSetLevel(level);
+    }
+
+
+    public static void cloneLevel() {
+        double version = LevelManager.getLevel().getVersion();
+        Alarms.askForLevelName("clone", version);
     }
 
 

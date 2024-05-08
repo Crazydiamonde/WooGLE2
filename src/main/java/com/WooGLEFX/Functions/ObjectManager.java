@@ -1,7 +1,9 @@
 package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.Engine.FX.FXHierarchy;
+import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.UserActions.ObjectDestructionAction;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -117,8 +119,8 @@ public class ObjectManager {
             selected = parent.getChildren().get(row - 1);
         }
 
-        Main.setSelected(selected);
-        Main.changeTableView(selected);
+        SelectionManager.setSelected(selected);
+        FXPropertiesView.changeTableView(selected);
         // hierarchy.getFocusModel().focus(row);
         FXHierarchy.getHierarchy().getSelectionModel().select(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()));
         FXHierarchy.getHierarchy().refresh();

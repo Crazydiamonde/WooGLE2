@@ -4,11 +4,13 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXEditorButtons;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Structures.UserActions.UserAction;
 import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Level.Level;
@@ -368,8 +370,8 @@ public class WorldLevel {
         double middleX = (sceneObject.getDouble("minx") + sceneObject.getDouble("maxx")) / 2;
         double middleY = (sceneObject.getDouble("miny") + sceneObject.getDouble("maxy")) / 2;
 
-        double canvasWidth = Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth();
-        double canvasHeight = Main.getSplitPane().getHeight();
+        double canvasWidth = FXContainers.getSplitPane().getDividers().get(0).getPosition() * FXContainers.getSplitPane().getWidth();
+        double canvasHeight = FXContainers.getSplitPane().getHeight();
 
         offsetX = canvasWidth / 2 - middleX;
         offsetY = canvasHeight / 2 + middleY;
@@ -437,7 +439,7 @@ public class WorldLevel {
                             EditorObject myString = GlobalResourceManager.getText(label.getAttribute("text"), version).deepClone(textObject);
                             text.add(myString);
                         } catch (Exception e) {
-                            Main.failedResources.add(("Level text \"" + label.getAttribute("text") + "\" (version " + version + ")"));
+                            LevelLoader.failedResources.add(("Level text \"" + label.getAttribute("text") + "\" (version " + version + ")"));
                         }
                     }
                 }
@@ -460,7 +462,7 @@ public class WorldLevel {
                         try {
                             GlobalResourceManager.getText(signpost.getAttribute("text"), version).deepClone(textObject);
                         } catch (Exception e) {
-                            Main.failedResources.add(("Level text \"" + signpost.getAttribute("text") + "\" (version " + version + ")"));
+                            LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text") + "\" (version " + version + ")"));
                             EditorObject string = EditorObject.create("string", new EditorAttribute[0], textObject);
                             string.setAttribute("id", signpost.getAttribute("text"));
                         }

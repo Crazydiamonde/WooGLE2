@@ -2,6 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
@@ -85,7 +86,7 @@ public class Fire extends EditorObject {
             graphicsContext.setLineWidth(LevelManager.getLevel().getZoom());
             graphicsContext.strokeOval(screenX + LevelManager.getLevel().getZoom() / 2, screenY + LevelManager.getLevel().getZoom() / 2, (radius - 0.5) * 2 * LevelManager.getLevel().getZoom(), (radius - 0.5) * 2 * LevelManager.getLevel().getZoom());
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);

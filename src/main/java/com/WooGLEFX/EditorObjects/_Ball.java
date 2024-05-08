@@ -1,6 +1,7 @@
 package com.WooGLEFX.EditorObjects;
 
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WorldOfGoo.Ball.Part;
@@ -127,7 +128,7 @@ public class _Ball {
                         try {
                             ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
                         } catch (Exception e) {
-                            Main.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
+                            LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
                         }
                         word = "";
                     } else {
@@ -137,14 +138,14 @@ public class _Ball {
                 try {
                     ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
                 } catch (Exception e) {
-                    Main.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
+                    LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
                 }
 
                 if (!obj.getAttribute("pupil").equals("")){
                     try {
                         ((Part) obj).setPupilImage(GlobalResourceManager.getImage(obj.getAttribute("pupil"), version));
                     } catch (Exception e) {
-                        Main.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + obj.getAttribute("pupil") + "\" (version " + version + ")"));
+                        LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + obj.getAttribute("pupil") + "\" (version " + version + ")"));
                     }
                 }
             }

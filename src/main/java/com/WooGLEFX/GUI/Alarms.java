@@ -3,8 +3,10 @@ package com.WooGLEFX.GUI;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
 import com.WooGLEFX.Engine.FX.FXLevelSelectPane;
+import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Engine.Initializer;
 import com.WooGLEFX.Functions.*;
 import org.slf4j.Logger;
@@ -75,7 +77,7 @@ public class Alarms {
         alert.setHeaderText("Resources could not be loaded");
         alert.setContentText(error);
 
-        alert.initOwner(Main.getStage());
+        alert.initOwner(FXContainers.getStage());
 
         alert.show();
     }
@@ -91,7 +93,7 @@ public class Alarms {
                     FXLevelSelectPane.getLevelSelectPane().setMinHeight(0);
                     FXLevelSelectPane.getLevelSelectPane().setMaxHeight(0);
                     FXHierarchy.getHierarchy().setRoot(null);
-                    Main.changeTableView(null);
+                    FXPropertiesView.changeTableView(null);
                 }
                 Platform.runLater(() -> tab.getTabPane().getTabs().remove(tab));
             } else if (buttonType.equals(ButtonType.CANCEL)) {
@@ -112,11 +114,11 @@ public class Alarms {
                     FXLevelSelectPane.getLevelSelectPane().setMinHeight(0);
                     FXLevelSelectPane.getLevelSelectPane().setMaxHeight(0);
                     FXHierarchy.getHierarchy().setRoot(null);
-                    Main.changeTableView(null);
+                    FXPropertiesView.changeTableView(null);
                 }
                 Platform.runLater(() -> {
                     tab.getTabPane().getTabs().remove(tab);
-                    Main.resumeLevelClosing();
+                    LevelCloser.resumeLevelClosing();
                 });
             } else if (buttonType.equals(ButtonType.CANCEL)) {
                 level.setEditingStatus(level.getEditingStatus(), level == LevelManager.getLevel());
@@ -259,7 +261,7 @@ public class Alarms {
         cancelButton.setOnAction(actionEvent -> stage.close());
     }
 
-    public static void missingWOG(String[] launchArguments) {
+    public static void missingWOG() {
         VBox everythingBox = new VBox();
         everythingBox.setPadding(new Insets(10, 10, 10, 10));
         everythingBox.setSpacing(10);
@@ -274,7 +276,7 @@ public class Alarms {
         selectOldButton.setOnAction(actionEvent -> {
             if (GameResourceManager.changeWorldOfGooDirectory(1.3)) {
                 FileManager.setHasOldWOG(true);
-                Initializer.startWithWorldOfGooVersion(launchArguments);
+                Initializer.startWithWorldOfGooVersion();
                 stage.close();
             }
         });
@@ -282,7 +284,7 @@ public class Alarms {
         selectNewButton.setOnAction(actionEvent -> {
             if (GameResourceManager.changeWorldOfGooDirectory(1.5)) {
                 FileManager.setHasNewWOG(true);
-                Initializer.startWithWorldOfGooVersion(launchArguments);
+                Initializer.startWithWorldOfGooVersion();
                 stage.close();
             }
         });

@@ -208,6 +208,14 @@ public class FileManager {
     }
 
 
+    public static void supremeAddToList(ArrayList<EditorObject> list, EditorObject object) {
+        list.add(object);
+        for (EditorObject child : object.getChildren()) {
+            supremeAddToList(list, child);
+        }
+    }
+
+
     public static ArrayList<EditorObject> commonBallData;
     public static ArrayList<EditorObject> commonBallResrcData;
 
@@ -237,13 +245,13 @@ public class FileManager {
                 defaultHandler.mode = 3;
                 saxParser.parse(addinF, defaultHandler);
             } else {
-                Main.supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName));
+                supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName));
             }
             if (textF.exists()) {
                 defaultHandler.mode = 4;
                 saxParser.parse(textF, defaultHandler);
             } else {
-                Main.supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject());
+                supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject());
             }
         } else if (version == 1.5) {
             File levelF = new File(newWOGdir + "\\res\\levels\\" + levelName + "\\" + levelName + ".level");
@@ -260,13 +268,13 @@ public class FileManager {
                 defaultHandler.mode = 3;
                 saxParser.parse(addinF, defaultHandler);
             } else {
-                Main.supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName));
+                supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName));
             }
             if (textF.exists()) {
                 defaultHandler.mode = 4;
                 saxParser.parse(textF, defaultHandler);
             } else {
-                Main.supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject());
+                supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject());
             }
         }
         return new WorldLevel(scene, level, resources, addin, text, version);

@@ -2,6 +2,8 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
+import com.WooGLEFX.Engine.SelectionManager;
+import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,8 +117,8 @@ public class SceneLayer extends EditorObject {
                 image = colorize(image, color);
             } catch (FileNotFoundException e) {
                 image = null;
-                if (!Main.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+                if (!LevelLoader.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                    LevelLoader.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
             }
         }
@@ -130,8 +132,8 @@ public class SceneLayer extends EditorObject {
 
             } catch (FileNotFoundException e) {
                 image = null;
-                if (!Main.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+                if (!LevelLoader.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                    LevelLoader.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
             }
         };
@@ -249,7 +251,7 @@ public class SceneLayer extends EditorObject {
 
             imageGraphicsContext.restore();
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
 
                 Point2D rotated2 = EditorObject.rotate(new Point2D(x2 - image.getWidth() * scalex / 2, -y2 - image.getHeight() * scaley / 2), -Math.toRadians(rotation2), new Point2D(x2, -y2));
                 Point2D rotated3 = EditorObject.rotate(new Point2D(x2 + image.getWidth() * scalex / 2, -y2 + image.getHeight() * scaley / 2), -Math.toRadians(rotation2), new Point2D(x2, -y2));

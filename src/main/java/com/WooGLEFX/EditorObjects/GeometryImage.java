@@ -3,6 +3,7 @@ package com.WooGLEFX.EditorObjects;
 import com.WooGLEFX.Engine.Collision.RectangleCollision;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.EditorObject;
@@ -64,7 +65,7 @@ public class GeometryImage {
 
             imageGraphicsContext.drawImage(image, x - imgWidth / 2.0, -y - imgHeight / 2.0, imgWidth, imgHeight);
 
-            if (parent == Main.getSelected()) {
+            if (parent == SelectionManager.getSelected()) {
 
                 Point2D rotated2 = EditorObject.rotate(new Point2D(x - image.getWidth() * scaleX / 2, -y - image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));
                 Point2D rotated3 = EditorObject.rotate(new Point2D(x + image.getWidth() * scaleX / 2, -y + image.getHeight() * scaleY / 2), -Math.toRadians(rotation), new Point2D(x, -y));

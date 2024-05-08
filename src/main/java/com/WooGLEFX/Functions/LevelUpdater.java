@@ -1,6 +1,7 @@
 package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXLevelSelectPane;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
@@ -173,7 +174,7 @@ public class LevelUpdater {
         fileChooser.setInitialFileName(level.getLevelName());
         fileChooser.getExtensionFilters()
                 .add(new FileChooser.ExtensionFilter("World of Goo mod (*.goomod)", "*.goomod"));
-        File export = fileChooser.showSaveDialog(Main.getStage());
+        File export = fileChooser.showSaveDialog(FXContainers.getStage());
 
         ArrayList<_Ball> balls = new ArrayList<>();
         for (EditorObject object : level.getLevel()) {

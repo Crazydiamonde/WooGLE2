@@ -35,7 +35,7 @@ public class GameResourceManager {
             Alarms.errorMessage(e);
         }
 
-        Main.getImportedBalls().removeIf(ball -> ball.getVersion() == version);
+        BallManager.getImportedBalls().removeIf(ball -> ball.getVersion() == version);
 
         LevelResourceManager.importGameResources(version);
 
@@ -58,7 +58,7 @@ public class GameResourceManager {
                     if (ball != null) {
                         ball.makeImages(ballVersion);
                         ball.setVersion(ballVersion);
-                        Main.getImportedBalls().add(ball);
+                        BallManager.getImportedBalls().add(ball);
                     }
                 } catch (ParserConfigurationException | SAXException | IOException e) {
                     Alarms.errorMessage(e);

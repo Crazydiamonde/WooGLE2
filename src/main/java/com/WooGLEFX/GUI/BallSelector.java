@@ -2,6 +2,7 @@ package com.WooGLEFX.GUI;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
+import com.WooGLEFX.Functions.BallManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -122,7 +123,7 @@ public class BallSelector extends Application {
                         label.setPrefWidth(376);
                         label.setOnMouseClicked(mouseEvent -> {
                             if (selectedLabel == label) {
-                                Main.saveBallInVersion(selected, oldVersion, newVersion);
+                                BallManager.saveBallInVersion(selected, oldVersion, newVersion);
                                 stage.close();
                             } else if (selectedLabel != null) {
                                 selectedLabel.setStyle("");
@@ -146,7 +147,7 @@ public class BallSelector extends Application {
         cancelButton.setLayoutY(332);
 
         openButton.setOnAction(actionEvent -> {
-            Main.saveBallInVersion(selected, oldVersion, newVersion);
+            BallManager.saveBallInVersion(selected, oldVersion, newVersion);
             stage.close();
         });
 

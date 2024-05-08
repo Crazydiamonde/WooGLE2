@@ -2,6 +2,8 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
+import com.WooGLEFX.Engine.SelectionManager;
+import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +80,7 @@ public class Button extends EditorObject {
             Color color = Color.parse(getAttribute("colorize"));
             image = SceneLayer.colorize(image, color);
         } catch (FileNotFoundException e) {
-            Main.failedResources.add("From Button: image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+            LevelLoader.failedResources.add("From Button: image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
@@ -88,7 +90,7 @@ public class Button extends EditorObject {
                 Color color = Color.parse(getAttribute("colorize"));
                 image = SceneLayer.colorize(image, color);
             } catch (FileNotFoundException e) {
-                Main.failedResources.add("From Button: Image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+                LevelLoader.failedResources.add("From Button: Image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
             }
         };
 
@@ -158,7 +160,7 @@ public class Button extends EditorObject {
 
             imageGraphicsContext.restore();
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
 
                 Point2D rotated2 = EditorObject.rotate(new Point2D(x - image.getWidth() * scalex / 2, -y - image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));
                 Point2D rotated3 = EditorObject.rotate(new Point2D(x + image.getWidth() * scalex / 2, -y + image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x, -y));

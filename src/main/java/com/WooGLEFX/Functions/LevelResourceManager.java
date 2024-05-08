@@ -1,6 +1,8 @@
 package com.WooGLEFX.Functions;
 
+import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.AnimationReader;
 import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
@@ -97,7 +99,7 @@ public class LevelResourceManager {
         FileChooser fileChooser = new FileChooser();
         String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\images\\"));
-        List<File> resrcFiles = fileChooser.showOpenMultipleDialog(Main.getStage());
+        List<File> resrcFiles = fileChooser.showOpenMultipleDialog(FXContainers.getStage());
 
         if (resrcFiles != null && resrcFiles.size() > 0) {
             for (File resrcFile : resrcFiles) {
@@ -221,7 +223,7 @@ public class LevelResourceManager {
         EditorObject newTextObject = EditorObject.create("string", new EditorAttribute[0], level.getTextObject());
         ObjectAdder.fixString(newTextObject);
         level.getText().add(newTextObject);
-        Main.setSelected(newTextObject);
+        SelectionManager.setSelected(newTextObject);
         UndoManager.registerChange(
                 new ObjectCreationAction(newTextObject, level.getTextObject().getChildren().indexOf(newTextObject)));
         level.redoActions.clear();
@@ -281,7 +283,7 @@ public class LevelResourceManager {
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\music"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
-        File resrcFile = fileChooser.showOpenDialog(Main.getStage());
+        File resrcFile = fileChooser.showOpenDialog(FXContainers.getStage());
 
         if (resrcFile != null) {
             importMusic(level, resrcFile, true);
@@ -380,7 +382,7 @@ public class LevelResourceManager {
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\sounds"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
-        File resrcFile = fileChooser.showOpenDialog(Main.getStage());
+        File resrcFile = fileChooser.showOpenDialog(FXContainers.getStage());
 
         if (resrcFile != null) {
             importLoopsound(level, resrcFile, true);

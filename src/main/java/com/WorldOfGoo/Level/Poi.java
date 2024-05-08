@@ -2,6 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -59,7 +60,7 @@ public class Poi extends EditorObject {
                 graphicsContext.strokeRect(x * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), y * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
             }
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
@@ -218,6 +219,6 @@ public class Poi extends EditorObject {
         double zoomW = Math.abs(center.getX() - resizeDragAnchorX) / newWidth;
         double zoomH = Math.abs(center.getY() - resizeDragAnchorY) / newHeight;
 
-        setAttribute("zoom", Math.min(zoomW, zoomH) * Main.getDragSettings().getInitialScaleX());
+        setAttribute("zoom", Math.min(zoomW, zoomH) * SelectionManager.getDragSettings().getInitialScaleX());
     }
 }

@@ -1,8 +1,12 @@
 package com.WooGLEFX.Functions;
 
+import com.WooGLEFX.Engine.FX.FXCanvas;
+import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXEditorButtons;
+import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Structures.WorldLevel;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -22,10 +26,10 @@ public class LevelManager {
         if (level != null) {
 
             // Transform the canvas according to the updated translation and scale.
-            Main.t = new Affine();
-            Main.t.appendTranslation(level.getOffsetX(), level.getOffsetY());
-            Main.t.appendScale(level.getZoom(), level.getZoom());
-            Main.getImageCanvas().getGraphicsContext2D().setTransform(Main.t);
+            Renderer.t = new Affine();
+            Renderer.t.appendTranslation(level.getOffsetX(), level.getOffsetY());
+            Renderer.t.appendScale(level.getZoom(), level.getZoom());
+            FXCanvas.getImageCanvas().getGraphicsContext2D().setTransform(Renderer.t);
 
         }
 
@@ -35,11 +39,11 @@ public class LevelManager {
 
     public static void onSetLevel(WorldLevel level) {
 
-        VBox vBox = Main.getvBox();
+        VBox vBox = FXContainers.getvBox();
 
         vBox.getChildren().remove(2);
         if (level == null) {
-            Main.getStage().setTitle("World of Goo Anniversary Editor");
+            FXContainers.getStage().setTitle("World of Goo Anniversary Editor");
             vBox.getChildren().add(2, FXEditorButtons.getNullGooballsToolbar());
         } else {
             if (level.getVersion() == 1.3) {
@@ -47,7 +51,7 @@ public class LevelManager {
             } else {
                 vBox.getChildren().add(2, FXEditorButtons.getNewGooballsToolbar());
             }
-            Main.getStage().setTitle(
+            FXContainers.getStage().setTitle(
                     level.getLevelName() + " (version " + level.getVersion() + ") — World of Goo Anniversary Editor");
             FXEditorButtons.buttonShowHideAnim.setGraphic(
                     new ImageView(level.isShowAnimations() ? WorldLevel.showHideAnim : WorldLevel.showHideAnim0));
@@ -70,8 +74,8 @@ public class LevelManager {
                     level.isShowParticles() ? WorldLevel.showHideParticles1 : WorldLevel.showHideParticles0));
             FXEditorButtons.buttonShowHideSceneBGColor.setGraphic(new ImageView(
                     level.isShowSceneBGColor() ? WorldLevel.showHideSceneBGColor1 : WorldLevel.showHideSceneBGColor0));
-            Main.changeTableView(level.getSelected());
-            Main.goToSelectedInHierarchy();
+            FXPropertiesView.changeTableView(level.getSelected());
+            SelectionManager.goToSelectedInHierarchy();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.WorldOfGoo.Scene;
 
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
@@ -125,7 +126,7 @@ public class Circle extends EditorObject {
             graphicsContext.setLineWidth(LevelManager.getLevel().getZoom());
             graphicsContext.strokeOval(screenX + LevelManager.getLevel().getZoom() / 2, screenY + LevelManager.getLevel().getZoom() / 2, (radius - 0.5) * 2 * LevelManager.getLevel().getZoom(), (radius - 0.5) * 2 * LevelManager.getLevel().getZoom());
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
@@ -255,7 +256,7 @@ public class Circle extends EditorObject {
 
     @Override
     public void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY) {
-        if (Main.getDragSettings().isDraggingImage()) {
+        if (SelectionManager.getDragSettings().isDraggingImage()) {
             image.dragFromMouse(mouseX, mouseY, dragSourceX, dragSourceY);
         } else {
 
@@ -272,7 +273,7 @@ public class Circle extends EditorObject {
 
     @Override
     public void resizeFromMouse(double mouseX, double mouseY, double resizeDragSourceX, double resizeDragSourceY, double resizeDragAnchorX, double resizeDragAnchorY) {
-        if (Main.getDragSettings().isDraggingImage()) {
+        if (SelectionManager.getDragSettings().isDraggingImage()) {
             image.resizeFromMouse(mouseX, mouseY, resizeDragSourceX, resizeDragSourceY, resizeDragAnchorX, resizeDragAnchorY);
         } else {
             double x2 = Double.parseDouble(getAttribute("x"));
@@ -292,7 +293,7 @@ public class Circle extends EditorObject {
 
     @Override
     public void rotateFromMouse(double mouseX, double mouseY, double rotateAngleOffset) {
-        if (Main.getDragSettings().isDraggingImage()) {
+        if (SelectionManager.getDragSettings().isDraggingImage()) {
             image.rotateFromMouse(mouseX, mouseY, rotateAngleOffset);
         }
     }

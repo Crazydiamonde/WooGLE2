@@ -6,6 +6,8 @@ import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Functions.BallManager;
+import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -71,7 +73,7 @@ public class Strand extends EditorObject {
             if (object instanceof BallInstance && object.getAttribute("id").equals(getAttribute("gb2"))) {
                 goo2 = (BallInstance)object;
                 ((BallInstance) object).getStrands().add(this);
-                for (_Ball ball2 : Main.getImportedBalls()) {
+                for (_Ball ball2 : BallManager.getImportedBalls()) {
                     if (ball2.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type"))) {
                         for (EditorObject possiblyStrand : ball2.getObjects()) {
                             if (possiblyStrand.getRealName().equals("strand")) {
@@ -89,7 +91,7 @@ public class Strand extends EditorObject {
             if (object instanceof BallInstance && object.getAttribute("id").equals(getAttribute("gb1"))) {
                 goo1 = (BallInstance)object;
                 if (strand == null) {
-                    for (_Ball ball2 : Main.getImportedBalls()) {
+                    for (_Ball ball2 : BallManager.getImportedBalls()) {
                         if (ball2.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type"))) {
                             for (EditorObject possiblyStrand : ball2.getObjects()) {
                                 if (possiblyStrand.getRealName().equals("strand")) {
@@ -105,8 +107,8 @@ public class Strand extends EditorObject {
             try {
                 strandImage = GlobalResourceManager.getImage(strand.getAttribute("image"), LevelManager.getLevel().getVersion());
             } catch (Exception e) {
-                if (!Main.failedResources.contains("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+                if (!LevelLoader.failedResources.contains("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                    LevelLoader.failedResources.add("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -99,7 +100,7 @@ public class Linearforcefield extends EditorObject {
                 graphicsContext.strokeLine(screenX, screenY, screenX + force.getX() * LevelManager.getLevel().getZoom() * forceScale, screenY - force.getY() * LevelManager.getLevel().getZoom() * forceScale);
             }
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);

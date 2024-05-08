@@ -2,6 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -87,7 +88,7 @@ public class Camera extends EditorObject {
 
             graphicsContext.strokeRect(x * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), y * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
@@ -216,6 +217,6 @@ public class Camera extends EditorObject {
         double zoomW = Math.abs(center.getX() - resizeDragAnchorX) / newWidth;
         double zoomH = Math.abs(center.getY() - resizeDragAnchorY) / newHeight;
 
-        setAttribute("endzoom", Math.min(zoomW, zoomH) * Main.getDragSettings().getInitialScaleX());
+        setAttribute("endzoom", Math.min(zoomW, zoomH) * SelectionManager.getDragSettings().getInitialScaleX());
     }
 }

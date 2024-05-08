@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import com.WooGLEFX.EditorObjects.GeometryImage;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.GUI.Alarms;
@@ -179,7 +180,7 @@ public class Rectangle extends EditorObject {
             graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
             graphicsContext.strokeLine(bottomRight.getX(), bottomRight.getY(), topRight.getX(), topRight.getY());
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
@@ -354,7 +355,7 @@ public class Rectangle extends EditorObject {
 
     @Override
     public void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY) {
-        if (Main.getDragSettings().isDraggingImage()) {
+        if (SelectionManager.getDragSettings().isDraggingImage()) {
             image.dragFromMouse(mouseX, mouseY, dragSourceX, dragSourceY);
         } else {
 
@@ -371,7 +372,7 @@ public class Rectangle extends EditorObject {
 
     @Override
     public void resizeFromMouse(double mouseX, double mouseY, double resizeDragSourceX, double resizeDragSourceY, double resizeDragAnchorX, double resizeDragAnchorY){
-        if (Main.getDragSettings().isDraggingImage()) {
+        if (SelectionManager.getDragSettings().isDraggingImage()) {
             image.resizeFromMouse(mouseX, mouseY, resizeDragSourceX, resizeDragSourceY, resizeDragAnchorX, resizeDragAnchorY);
         } else {
             double rotation = Double.parseDouble(getAttribute("rotation"));
@@ -408,7 +409,7 @@ public class Rectangle extends EditorObject {
 
     @Override
     public void rotateFromMouse(double mouseX, double mouseY, double rotateAngleOffset) {
-        if (Main.getDragSettings().isDraggingImage()) {
+        if (SelectionManager.getDragSettings().isDraggingImage()) {
             image.rotateFromMouse(mouseX, mouseY, rotateAngleOffset);
         } else {
             double x2 = Double.parseDouble(getAttribute("x"));

@@ -81,8 +81,8 @@ public class FXMenu {
         reloadWorldOfGooNewItem.setOnAction(e -> GameResourceManager.reloadWorldOfGoo(1.5));
         changeWorldOfGooDirectoryOldItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(1.3));
         changeWorldOfGooDirectoryNewItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(1.5));
-        saveOldBallToNewItem.setOnAction(e -> Main.saveBallInVersion(1.3, 1.5));
-        saveNewBallToOldItem.setOnAction(e -> Main.saveBallInVersion(1.5, 1.3));
+        saveOldBallToNewItem.setOnAction(e -> BallManager.saveBallInVersion(1.3, 1.5));
+        saveNewBallToOldItem.setOnAction(e -> BallManager.saveBallInVersion(1.5, 1.3));
         configurePaletteItem.setOnAction(e -> {
             try {
                 new PaletteReconfigurator().start(new Stage());
@@ -90,7 +90,7 @@ public class FXMenu {
                 throw new RuntimeException(e1);
             }
         });
-        quitItem.setOnAction(e -> Main.quit());
+        quitItem.setOnAction(e -> LevelCloser.resumeLevelClosing());
 
         fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem,
                 changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, configurePaletteItem, quitItem);
@@ -110,7 +110,7 @@ public class FXMenu {
         newLevelNewItem.setOnAction(e -> LevelLoader.newLevel(1.5));
         openLevelOldItem.setOnAction(e -> LevelLoader.openLevel(1.3));
         openLevelNewItem.setOnAction(e -> LevelLoader.openLevel(1.5));
-        cloneLevelItem.setOnAction(e -> Main.cloneLevel());
+        cloneLevelItem.setOnAction(e -> LevelLoader.cloneLevel());
         saveLevelItem.setOnAction(e -> LevelUpdater.saveLevel(LevelManager.getLevel()));
         saveAllLevelsItem.setOnAction(e -> LevelUpdater.saveAll());
         saveAndPlayLevelItem.setOnAction(e -> LevelUpdater.playLevel(LevelManager.getLevel()));

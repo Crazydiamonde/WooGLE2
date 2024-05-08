@@ -1,7 +1,10 @@
 package com.WooGLEFX.Functions;
 
+import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
+import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
@@ -23,8 +26,8 @@ public class ObjectAdder {
         FXHierarchy.getHierarchy().getSelectionModel().select(FXHierarchy.getHierarchy().getRow(obj.getTreeItem()));
         obj.setLevel(LevelManager.getLevel());
         obj.update();
-        Main.setSelected(obj);
-        Main.changeTableView(LevelManager.getLevel().getSelected());
+        SelectionManager.setSelected(obj);
+        FXPropertiesView.changeTableView(LevelManager.getLevel().getSelected());
 
         UndoManager.registerChange(new ObjectCreationAction(obj,
                 FXHierarchy.getHierarchy().getRow(obj.getTreeItem()) - FXHierarchy.getHierarchy().getRow(obj.getParent().getTreeItem())));
@@ -109,8 +112,8 @@ public class ObjectAdder {
     public static void addBall(EditorObject parent, String type) {
         BallInstance obj = (BallInstance) EditorObject.create("BallInstance", new EditorAttribute[0], parent);
         obj.setAttribute("type", type);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         fixGooball(obj);
         obj.setRealName("BallInstance");
         LevelManager.getLevel().getLevel().add(obj);
@@ -119,7 +122,7 @@ public class ObjectAdder {
 
     public static void addLine(EditorObject parent) {
         Line obj = (Line) EditorObject.create("line", new EditorAttribute[0], parent);
-        obj.setAttribute("anchor", Main.getScreenCenter().getX() + "," + Main.getScreenCenter().getY());
+        obj.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("line");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
@@ -127,8 +130,8 @@ public class ObjectAdder {
 
     public static void addRectangle(EditorObject parent) {
         Rectangle obj = (Rectangle) EditorObject.create("rectangle", new EditorAttribute[0], parent);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setAttribute("static", true);
         obj.setRealName("rectangle");
         LevelManager.getLevel().getScene().add(obj);
@@ -137,8 +140,8 @@ public class ObjectAdder {
 
     public static void addCircle(EditorObject parent) {
         Circle obj = (Circle) EditorObject.create("circle", new EditorAttribute[0], parent);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("circle");
         obj.setAttribute("static", true);
         LevelManager.getLevel().getScene().add(obj);
@@ -147,8 +150,8 @@ public class ObjectAdder {
 
     public static SceneLayer addSceneLayer(EditorObject parent) {
         SceneLayer obj = (SceneLayer) EditorObject.create("SceneLayer", new EditorAttribute[0], parent);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("SceneLayer");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
@@ -157,8 +160,8 @@ public class ObjectAdder {
 
     public static void addCompositegeom(EditorObject parent) {
         Compositegeom obj = (Compositegeom) EditorObject.create("compositegeom", new EditorAttribute[0], parent);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("compositegeom");
         obj.setAttribute("static", true);
         LevelManager.getLevel().getScene().add(obj);
@@ -167,7 +170,7 @@ public class ObjectAdder {
 
     public static void addHinge(EditorObject parent) {
         Hinge obj = (Hinge) EditorObject.create("hinge", new EditorAttribute[0], parent);
-        obj.setAttribute("anchor", Main.getScreenCenter().getX() + "," + Main.getScreenCenter().getY());
+        obj.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("hinge");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
@@ -257,8 +260,8 @@ public class ObjectAdder {
         }
         Vertex obj = (Vertex) EditorObject.create("Vertex", new EditorAttribute[0], pipe);
         obj.setPrevious(previous);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("Vertex");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
@@ -266,8 +269,8 @@ public class ObjectAdder {
 
     public static void addFire(EditorObject parent) {
         Fire obj = (Fire) EditorObject.create("fire", new EditorAttribute[0], parent);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("fire");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
@@ -276,7 +279,7 @@ public class ObjectAdder {
     public static void addLinearForcefield(EditorObject parent) {
         Linearforcefield obj = (Linearforcefield) EditorObject.create("linearforcefield", new EditorAttribute[0],
                 parent);
-        obj.setAttribute("center", Main.getScreenCenter().getX() + "," + Main.getScreenCenter().getY());
+        obj.setAttribute("center", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("linearforcefield");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
@@ -285,7 +288,7 @@ public class ObjectAdder {
     public static void addRadialForcefield(EditorObject parent) {
         Radialforcefield obj = (Radialforcefield) EditorObject.create("radialforcefield", new EditorAttribute[0],
                 parent);
-        obj.setAttribute("center", Main.getScreenCenter().getX() + "," + Main.getScreenCenter().getY());
+        obj.setAttribute("center", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("radialforcefield");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
@@ -293,7 +296,7 @@ public class ObjectAdder {
 
     public static void addParticle(EditorObject parent) {
         Particles obj = (Particles) EditorObject.create("particles", new EditorAttribute[0], parent);
-        obj.setAttribute("pos", Main.getScreenCenter().getX() + "," + -Main.getScreenCenter().getY());
+        obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + "," + -FXCanvas.getScreenCenter().getY());
         obj.setRealName("particles");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
@@ -301,8 +304,8 @@ public class ObjectAdder {
 
     public static void addSign(EditorObject parent) {
         Signpost obj = (Signpost) EditorObject.create("signpost", new EditorAttribute[0], parent);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("signpost");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
@@ -351,8 +354,8 @@ public class ObjectAdder {
 
     public static void addLabel(EditorObject parent) {
         Label obj = (Label) EditorObject.create("label", new EditorAttribute[0], parent);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("label");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
@@ -367,7 +370,7 @@ public class ObjectAdder {
 
     public static void addCamera(EditorObject parent) {
         Camera obj = (Camera) EditorObject.create("camera", new EditorAttribute[0], parent);
-        obj.setAttribute("endpos", Main.getScreenCenter().getX() + "," + Main.getScreenCenter().getY());
+        obj.setAttribute("endpos", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("camera");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
@@ -375,7 +378,7 @@ public class ObjectAdder {
 
     public static void addPoi(EditorObject parent) {
         Poi obj = (Poi) EditorObject.create("poi", new EditorAttribute[0], parent);
-        obj.setAttribute("pos", Main.getScreenCenter().getX() + "," + Main.getScreenCenter().getY());
+        obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("poi");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
@@ -398,8 +401,8 @@ public class ObjectAdder {
 
     public static void addButton(EditorObject parent) {
         Button obj = (Button) EditorObject.create("button", new EditorAttribute[0], parent);
-        obj.setAttribute("x", Main.getScreenCenter().getX());
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("button");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
@@ -449,14 +452,14 @@ public class ObjectAdder {
 
     public static void addTargetheight(EditorObject parent) {
         Targetheight obj = (Targetheight) EditorObject.create("targetheight", new EditorAttribute[0], parent);
-        obj.setAttribute("pos", Main.getScreenCenter().getX() + ", " + -Main.getScreenCenter().getY());
+        obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + ", " + -FXCanvas.getScreenCenter().getY());
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addLevelexit(EditorObject parent) {
         Levelexit obj = (Levelexit) EditorObject.create("levelexit", new EditorAttribute[0], parent);
-        obj.setAttribute("y", -Main.getScreenCenter().getY());
+        obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }

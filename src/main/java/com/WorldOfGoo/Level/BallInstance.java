@@ -1,10 +1,12 @@
 package com.WorldOfGoo.Level;
 
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.Functions.BallManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.EditorObject;
@@ -58,14 +60,14 @@ public class BallInstance extends EditorObject {
     @Override
     public void update(){
         setNameAttribute(getAttribute2("id"));
-        for (_Ball ball2 : Main.getImportedBalls()) {
+        for (_Ball ball2 : BallManager.getImportedBalls()) {
             if (ball2.getVersion() == getLevel().getVersion() && ball2.getObjects().get(0).getAttribute("name").equals(getAttribute("type"))) {
                 ball = ball2;
             }
         }
         setChangeListener("type", ((observable, oldValue, newValue) -> {
             boolean found = false;
-            for (_Ball ball2 : Main.getImportedBalls()) {
+            for (_Ball ball2 : BallManager.getImportedBalls()) {
                 if (ball2.getVersion() == getLevel().getVersion() && ball2.getObjects().get(0).getAttribute("name").equals(getAttribute("type"))) {
                     found = true;
                     ball = ball2;
@@ -73,7 +75,7 @@ public class BallInstance extends EditorObject {
                 }
             }
             if (!found) {
-                _Ball ball2 = null;
+                _Ball ball2;
                 try {
                     ball2 = FileManager.openBall(getAttribute("type"), LevelManager.getLevel().getVersion());
                 } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -87,7 +89,7 @@ public class BallInstance extends EditorObject {
                 ball2.makeImages(LevelManager.getLevel().getVersion());
                 ball2.setVersion(LevelManager.getLevel().getVersion());
 
-                Main.getImportedBalls().add(ball2);
+                BallManager.getImportedBalls().add(ball2);
                 ball = ball2;
             }
             for (EditorObject strand : LevelManager.getLevel().getLevel()) {
@@ -245,7 +247,7 @@ public class BallInstance extends EditorObject {
                         }
                     }
                 }
-                if (this == Main.getSelected()) {
+                if (this == SelectionManager.getSelected()) {
                     double x3 = Double.parseDouble(getAttribute("x"));
                     double y3 = Double.parseDouble(getAttribute("y"));
 
@@ -289,7 +291,7 @@ public class BallInstance extends EditorObject {
 
                     graphicsContext.strokeOval(screenX * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), screenY * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), width * LevelManager.getLevel().getZoom(), height * LevelManager.getLevel().getZoom());
 
-                    if (this == Main.getSelected()) {
+                    if (this == SelectionManager.getSelected()) {
                         double x3 = Double.parseDouble(getAttribute("x"));
                         double y3 = Double.parseDouble(getAttribute("y"));
 
@@ -367,7 +369,7 @@ public class BallInstance extends EditorObject {
                     graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
                     graphicsContext.strokeLine(bottomRight.getX(), bottomRight.getY(), topRight.getX(), topRight.getY());
 
-                    if (this == Main.getSelected()) {
+                    if (this == SelectionManager.getSelected()) {
                         graphicsContext.setStroke(Renderer.selectionOutline2);
                         graphicsContext.setLineWidth(1);
                         graphicsContext.setLineDashes(3);

@@ -3,6 +3,7 @@ package com.WooGLEFX.Engine.FX;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.DelayedTooltip;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.*;
 import com.WooGLEFX.GUI.PaletteReconfigurator;
@@ -299,7 +300,7 @@ public class FXEditorButtons {
         int size = 18;
         int i = 0;
         for (String paletteBall : FileManager.getPaletteBalls()) {
-            for (_Ball ball : Main.getImportedBalls()) {
+            for (_Ball ball : BallManager.getImportedBalls()) {
                 if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall)
                         && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
                     Button button = createTemplateForBall(size, ball);
@@ -369,7 +370,7 @@ public class FXEditorButtons {
         buttonNewNew.setOnAction(e -> LevelLoader.newLevel(1.5));
         buttonOpenOld.setOnAction(e -> LevelLoader.openLevel(1.3));
         buttonOpenNew.setOnAction(e -> LevelLoader.openLevel(1.5));
-        buttonClone.setOnAction(e -> Main.cloneLevel());
+        buttonClone.setOnAction(e -> LevelLoader.cloneLevel());
         buttonSave.setOnAction(e -> LevelUpdater.saveLevel(LevelManager.getLevel()));
         buttonSaveAll.setOnAction(e -> LevelUpdater.saveAll());
         buttonSaveAndPlay.setOnAction(e -> LevelUpdater.playLevel(LevelManager.getLevel()));
@@ -387,9 +388,9 @@ public class FXEditorButtons {
         buttonCleanResources.setOnAction(e -> LevelResourceManager.cleanLevelResources(LevelManager.getLevel()));
         buttonSetMusic.setOnAction(e -> LevelResourceManager.importMusic(LevelManager.getLevel()));
         buttonSetLoopsound.setOnAction(e -> LevelResourceManager.importLoopsound(LevelManager.getLevel()));
-        buttonSelectMoveAndResize.setOnAction(e -> Main.selectionMode());
+        buttonSelectMoveAndResize.setOnAction(e -> SelectionManager.selectionMode());
         buttonSelectMoveAndResize.setStyle("-fx-background-color: #9999ff;"); // Highlighted by default
-        buttonStrandMode.setOnAction(e -> Main.strandMode());
+        buttonStrandMode.setOnAction(e -> SelectionManager.strandMode());
         buttonShowHideCamera.setOnAction(e -> VisibilityManager.showHideCameras());
         buttonShowHideForcefields.setOnAction(e -> VisibilityManager.showHideForcefields());
         buttonShowHideGeometry.setOnAction(e -> VisibilityManager.showHideGeometry());
@@ -543,7 +544,7 @@ public class FXEditorButtons {
 
     public static void enableAllButtons(boolean disable) {
         for (int i : new int[] { 1, 3 }) {
-            if (Main.getvBox().getChildren().get(i) instanceof ToolBar toolBar) {
+            if (FXContainers.getvBox().getChildren().get(i) instanceof ToolBar toolBar) {
                 for (Node node : toolBar.getItems()) {
                     node.setDisable(disable);
                 }

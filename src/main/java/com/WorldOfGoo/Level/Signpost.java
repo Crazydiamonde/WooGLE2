@@ -1,5 +1,7 @@
 package com.WorldOfGoo.Level;
 
+import com.WooGLEFX.Engine.SelectionManager;
+import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +56,8 @@ public class Signpost extends EditorObject {
             Color color = getColor("colorize");
             image = SceneLayer.colorize(image, color);
         } catch (Exception e) {
-            if (!Main.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                Main.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
             }
             image = null;
         }
@@ -67,8 +69,8 @@ public class Signpost extends EditorObject {
                 Color color = getColor("colorize");
                 image = SceneLayer.colorize(image, color);
             } catch (Exception e) {
-                if (!Main.failedResources.contains("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                    Main.failedResources.add("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+                if (!LevelLoader.failedResources.contains("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
+                    LevelLoader.failedResources.add("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
                 image = null;
             }
@@ -109,7 +111,7 @@ public class Signpost extends EditorObject {
 
             imageGraphicsContext.drawImage(image, screenX - imgWidth / 2.0, screenY - imgHeight / 2.0, imgWidth, imgHeight);
 
-            if (this == Main.getSelected()) {
+            if (this == SelectionManager.getSelected()) {
 
                 Point2D rotated2 = EditorObject.rotate(new Point2D(x2 - image.getWidth() * scalex / 2, -y2 - image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x2, -y2));
                 Point2D rotated3 = EditorObject.rotate(new Point2D(x2 + image.getWidth() * scalex / 2, -y2 + image.getHeight() * scaley / 2), -Math.toRadians(rotation), new Point2D(x2, -y2));
@@ -348,7 +350,7 @@ public class Signpost extends EditorObject {
         double newWidth;
         double newHeight;
 
-        boolean negativeX = Main.getDragSettings().getInitialScaleX() < 0;
+        boolean negativeX = SelectionManager.getDragSettings().getInitialScaleX() < 0;
         if (rotatedAnchor.getX() < rotatedSource.getX()) {
             negativeX = !negativeX;
         }
@@ -359,7 +361,7 @@ public class Signpost extends EditorObject {
             newWidth = rotatedReal.getX() - rotatedAnchor.getX();
         }
 
-        boolean negativeY = Main.getDragSettings().getInitialScaleY() < 0;
+        boolean negativeY = SelectionManager.getDragSettings().getInitialScaleY() < 0;
         if (rotatedAnchor.getY() < rotatedSource.getY()) {
             negativeY = !negativeY;
         }

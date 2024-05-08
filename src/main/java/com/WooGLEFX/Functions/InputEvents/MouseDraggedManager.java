@@ -1,8 +1,10 @@
 package com.WooGLEFX.Functions.InputEvents;
 
+import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -17,45 +19,45 @@ public class MouseDraggedManager {
 
         WorldLevel level = LevelManager.getLevel();
 
-        Main.setMouseX(event.getX());
-        Main.setMouseY(event.getY() - Main.getMouseYOffset());
-        if (level != null && level.getSelected() != null && Main.getDragSettings() != null) {
+        SelectionManager.setMouseX(event.getX());
+        SelectionManager.setMouseY(event.getY() - FXCanvas.getMouseYOffset());
+        if (level != null && level.getSelected() != null && SelectionManager.getDragSettings() != null) {
 
             // Calculate game-relative mouse coordinates.
-            double gameRelativeMouseX = (Main.getMouseX() - level.getOffsetX()) / level.getZoom();
-            double gameRelativeMouseY = (Main.getMouseY() - level.getOffsetY()) / level.getZoom();
+            double gameRelativeMouseX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();
+            double gameRelativeMouseY = (SelectionManager.getMouseY() - level.getOffsetY()) / level.getZoom();
 
             // Update the selected object according to what kind of operation is being
             // performed.
-            switch (Main.getDragSettings().getType()) {
+            switch (SelectionManager.getDragSettings().getType()) {
                 case DragSettings.MOVE -> level.getSelected().dragFromMouse(gameRelativeMouseX, gameRelativeMouseY,
-                        Main.getDragSettings().getInitialSourceX(), Main.getDragSettings().getInitialSourceY());
+                        SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
                 case DragSettings.RESIZE -> level.getSelected().resizeFromMouse(gameRelativeMouseX, gameRelativeMouseY,
-                        Main.getDragSettings().getInitialSourceX(), Main.getDragSettings().getInitialSourceY(), Main.getDragSettings().getAnchorX(),
-                        Main.getDragSettings().getAnchorY());
+                        SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY(), SelectionManager.getDragSettings().getAnchorX(),
+                        SelectionManager.getDragSettings().getAnchorY());
                 case DragSettings.ROTATE -> level.getSelected().rotateFromMouse(gameRelativeMouseX, gameRelativeMouseY,
-                        Main.getDragSettings().getRotateAngleOffset());
+                        SelectionManager.getDragSettings().getRotateAngleOffset());
                 case DragSettings.SETANCHOR -> level.getSelected().setAnchor(gameRelativeMouseX, gameRelativeMouseY,
-                        Main.getDragSettings().getInitialSourceX(), Main.getDragSettings().getInitialSourceY());
+                        SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
             }
 
             FXPropertiesView.getPropertiesView().refresh();
         }
         if (level != null && event.getButton() == MouseButton.SECONDARY) {
             // Pan the canvas according to the mouse's movement.
-            level.setOffsetX(level.getOffsetX() + event.getScreenX() - Main.getMouseStartX());
-            level.setOffsetY(level.getOffsetY() + event.getScreenY() - Main.getMouseStartY());
-            Main.setMouseStartX(event.getScreenX());
-            Main.setMouseStartY(event.getScreenY());
+            level.setOffsetX(level.getOffsetX() + event.getScreenX() - SelectionManager.getMouseStartX());
+            level.setOffsetY(level.getOffsetY() + event.getScreenY() - SelectionManager.getMouseStartY());
+            SelectionManager.setMouseStartX(event.getScreenX());
+            SelectionManager.setMouseStartY(event.getScreenY());
 
             // Apply the transformation to the canvas.
-            Main.t = new Affine();
-            Main.t.appendTranslation(level.getOffsetX(), level.getOffsetY());
-            Main.t.appendScale(level.getZoom(), level.getZoom());
-            Main.getImageCanvas().getGraphicsContext2D().setTransform(Main.t);
+            Renderer.t = new Affine();
+            Renderer.t.appendTranslation(level.getOffsetX(), level.getOffsetY());
+            Renderer.t.appendScale(level.getZoom(), level.getZoom());
+            FXCanvas.getImageCanvas().getGraphicsContext2D().setTransform(Renderer.t);
 
             // Redraw the canvas.
-            Renderer.drawEverything(level, Main.getCanvas(), Main.getImageCanvas());
+            Renderer.drawEverything(level, FXCanvas.getCanvas(), FXCanvas.getImageCanvas());
         }
     }
 

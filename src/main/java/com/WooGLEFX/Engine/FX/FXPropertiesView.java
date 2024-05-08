@@ -1,6 +1,7 @@
 package com.WooGLEFX.Engine.FX;
 
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelManager;
@@ -151,7 +152,7 @@ public class FXPropertiesView {
                             double x = bounds.getMinX();
                             double y = bounds.getMinY() + 18;
 
-                            possibleAttributeValues(this).show(Main.getStage(), x, y);
+                            possibleAttributeValues(this).show(FXContainers.getStage(), x, y);
                         }
                     }
 
@@ -174,8 +175,8 @@ public class FXPropertiesView {
                 cell.setOnMousePressed(event -> {
 
                     cell.setContextMenu(possibleAttributeValues(cell));
-                    cell.getContextMenu().show(propertiesView, Main.getStage().getX()
-                                    + Main.getSplitPane().getDividers().get(0).getPosition() * Main.getSplitPane().getWidth(),
+                    cell.getContextMenu().show(propertiesView, FXContainers.getStage().getX()
+                                    + FXContainers.getSplitPane().getDividers().get(0).getPosition() * FXContainers.getSplitPane().getWidth(),
                             100);
                     propertiesView.getSelectionModel().selectedItemProperty()
                             .addListener((observable, oldValue, newValue) -> {
@@ -186,8 +187,8 @@ public class FXPropertiesView {
 
                     if (cell.getContextMenu() != null) {
                         cell.getContextMenu().show(propertiesView,
-                                Main.getStage().getX() + Main.getSplitPane().getDividers().get(0).getPosition()
-                                        * Main.getSplitPane().getWidth(),
+                                FXContainers.getStage().getX() + FXContainers.getSplitPane().getDividers().get(0).getPosition()
+                                        * FXContainers.getSplitPane().getWidth(),
                                 100);
                     }
                     if (!cell.isSelected() && cell.getContextMenu() != null) {
@@ -215,14 +216,14 @@ public class FXPropertiesView {
             if (e.getNewValue().equals("") || attribute.getInput().verify(attribute.getObject(), e.getNewValue())) {
 
                 // Push an attribute change to the undo buffer.
-                UndoManager.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(), oldValue,
+                UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(), oldValue,
                         attribute.getValue()));
                 UndoManager.clearRedoActions();
 
                 // If we have edited the name or ID of the object, change the object's "Name or
                 // ID" value.
                 if (attribute.getName().equals("name") || attribute.getName().equals("id")) {
-                    Main.getSelected().setNameAttribute(attribute);
+                    SelectionManager.getSelected().setNameAttribute(attribute);
                 }
 
             } else {
@@ -324,7 +325,7 @@ public class FXPropertiesView {
                         setImageItem.setGraphic(label);
 
                         setImageItem.setOnAction(event -> {
-                            UndoManager.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                            UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
                                     attribute.getValue(), resource.getAttribute("id")));
                             UndoManager.clearRedoActions();
                             attribute.setValue(resource.getAttribute("REALid"));
@@ -346,7 +347,7 @@ public class FXPropertiesView {
                         MenuItem setImageItem = new MenuItem(ballFile.getName());
 
                         setImageItem.setOnAction(event -> {
-                            UndoManager.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                            UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
                                     attribute.getValue(), ballFile.getName()));
                             UndoManager.clearRedoActions();
                             attribute.setValue(ballFile.getName());
@@ -364,7 +365,7 @@ public class FXPropertiesView {
                     MenuItem setImageItem = new MenuItem(particleType);
 
                     setImageItem.setOnAction(event -> {
-                        UndoManager.registerChange(new AttributeChangeAction(Main.getSelected(), attribute.getName(),
+                        UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
                                 attribute.getValue(), particleType));
                         UndoManager.clearRedoActions();
                         attribute.setValue(particleType);
@@ -379,6 +380,15 @@ public class FXPropertiesView {
         }
 
         return contextMenu;
+    }
+
+
+    public static void changeTableView(EditorObject obj) {
+        if (obj == null) {
+            FXPropertiesView.getPropertiesView().setRoot(null);
+        } else {
+            FXPropertiesView.getPropertiesView().setRoot(obj.getPropertiesTreeItem());
+        }
     }
 
 

@@ -1,9 +1,12 @@
 package com.WooGLEFX.Functions.InputEvents;
 
+import com.WooGLEFX.Engine.FX.FXCanvas;
+import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -24,7 +27,7 @@ public class MousePressedManager {
 
         if (level != null) {
 
-            double editorViewWidth = Main.getSplitPane().getDividerPositions()[0] * Main.getSplitPane().getWidth();
+            double editorViewWidth = FXContainers.getSplitPane().getDividerPositions()[0] * FXContainers.getSplitPane().getWidth();
 
             if (event.getButton().equals(MouseButton.PRIMARY)) {
 
@@ -33,45 +36,45 @@ public class MousePressedManager {
                             || FXPropertiesView.getPropertiesView().getFocusModel().focusedIndexProperty().get() == -1) {
                         FXPropertiesView.getPropertiesView().edit(-1, null);
                     }
-                    Main.setOldAttributes(level.getSelected().cloneAttributes());
-                    Main.setOldSelected(level.getSelected());
+                    SelectionManager.setOldAttributes(level.getSelected().cloneAttributes());
+                    SelectionManager.setOldSelected(level.getSelected());
                 }
 
-                if (Main.getMode() == Main.SELECTION) {
-                    if (event.getX() < editorViewWidth && event.getY() > Main.getMouseYOffset()) {
+                if (SelectionManager.getMode() == SelectionManager.SELECTION) {
+                    if (event.getX() < editorViewWidth && event.getY() > FXCanvas.getMouseYOffset()) {
                         if (level.getSelected() != null) {
-                            Main.setDragSettings(level.getSelected().mouseIntersectingCorners(
+                            SelectionManager.setDragSettings(level.getSelected().mouseIntersectingCorners(
                                     (event.getX() - level.getOffsetX()) / level.getZoom(),
-                                    (event.getY() - Main.getMouseYOffset() - level.getOffsetY()) / level.getZoom()));
+                                    (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom()));
 
                             /* Dragging of already selected object that might be behind something else */
                             DragSettings thisSettings = level.getSelected().mouseIntersection(
                                     (event.getX() - level.getOffsetX()) / level.getZoom(),
-                                    (event.getY() - Main.getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                                    (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom());
                             DragSettings thisImageSettings = level.getSelected().mouseImageIntersection(
                                     (event.getX() - level.getOffsetX()) / level.getZoom(),
-                                    (event.getY() - Main.getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                                    (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom());
                             if (thisSettings.getType() != DragSettings.NONE) {
-                                Main.getStage().getScene().setCursor(Cursor.MOVE);
-                                Main.setDragSettings(thisSettings);
+                                FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
+                                SelectionManager.setDragSettings(thisSettings);
                             } else if (thisImageSettings.getType() != DragSettings.NONE) {
-                                Main.getStage().getScene().setCursor(Cursor.MOVE);
-                                Main.setDragSettings(thisImageSettings);
+                                FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
+                                SelectionManager.setDragSettings(thisImageSettings);
                             }
 
                         }
-                        if (Main.getDragSettings().getType() == DragSettings.NONE) {
+                        if (SelectionManager.getDragSettings().getType() == DragSettings.NONE) {
 
                             EditorObject prevSelected = level.getSelected();
-                            Main.setSelected(null);
+                            SelectionManager.setSelected(null);
                             ArrayList<EditorObject> byDepth = Renderer.orderObjectsBySelectionDepth(level);
                             for (int i = byDepth.size() - 1; i >= 0; i--) {
                                 EditorObject object = byDepth.get(i);
                                 if (object.mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(),
-                                                (event.getY() - Main.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
+                                                (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
                                         .getType() != DragSettings.NONE) {
-                                    Main.changeTableView(object);
-                                    Main.setSelected(object);
+                                    FXPropertiesView.changeTableView(object);
+                                    SelectionManager.setSelected(object);
                                     object.getParent().getTreeItem().setExpanded(true);
                                     FXHierarchy.getHierarchy().getSelectionModel().select(object.getTreeItem());
                                     // Scroll to this position in the selection model
@@ -82,10 +85,10 @@ public class MousePressedManager {
                                     // object.getAttribute("image").length() > 0) {
                                 } else if (object.mouseImageIntersection(
                                                 (event.getX() - level.getOffsetX()) / level.getZoom(),
-                                                (event.getY() - Main.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
+                                                (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
                                         .getType() != DragSettings.NONE) {
-                                    Main.changeTableView(object);
-                                    Main.setSelected(object);
+                                    FXPropertiesView.changeTableView(object);
+                                    SelectionManager.setSelected(object);
                                     object.getParent().getTreeItem().setExpanded(true);
                                     FXHierarchy.getHierarchy().getSelectionModel().select(object.getTreeItem());
                                     break;
@@ -94,28 +97,28 @@ public class MousePressedManager {
                             if (level.getSelected() != null && level.getSelected() == prevSelected) {
                                 DragSettings thisSettings = level.getSelected().mouseIntersection(
                                         (event.getX() - level.getOffsetX()) / level.getZoom(),
-                                        (event.getY() - Main.getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                                        (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom());
                                 DragSettings thisImageSettings = level.getSelected().mouseImageIntersection(
                                         (event.getX() - level.getOffsetX()) / level.getZoom(),
-                                        (event.getY() - Main.getMouseYOffset() - level.getOffsetY()) / level.getZoom());
+                                        (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom());
                                 if (thisSettings.getType() != DragSettings.NONE) {
-                                    Main.getStage().getScene().setCursor(Cursor.MOVE);
-                                    Main.setDragSettings(thisSettings);
+                                    FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
+                                    SelectionManager.setDragSettings(thisSettings);
                                 } else if (thisImageSettings.getType() != DragSettings.NONE) {
-                                    Main.getStage().getScene().setCursor(Cursor.MOVE);
-                                    Main.setDragSettings(thisImageSettings);
+                                    FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
+                                    SelectionManager.setDragSettings(thisImageSettings);
                                 }
                             }
                         }
                     }
-                } else if (Main.getMode() == Main.STRAND) {
+                } else if (SelectionManager.getMode() == SelectionManager.STRAND) {
                     for (EditorObject ball : level.getLevel().toArray(new EditorObject[0])) {
                         if (ball instanceof BallInstance && ball
                                 .mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(),
-                                        (event.getY() - Main.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
+                                        (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
                                 .getType() != DragSettings.NONE) {
-                            if (Main.getStrand1Gooball() == null) {
-                                Main.setStrand1Gooball(ball);
+                            if (SelectionManager.getStrand1Gooball() == null) {
+                                SelectionManager.setStrand1Gooball(ball);
                                 break;
                             }
                         }
@@ -123,10 +126,10 @@ public class MousePressedManager {
                 }
             } else if (event.getButton() == MouseButton.SECONDARY) {
                 // Mouse pan with right-click
-                if (event.getX() < editorViewWidth && event.getY() > Main.getMouseYOffset()) {
-                    Main.getStage().getScene().setCursor(Cursor.CLOSED_HAND);
-                    Main.setMouseStartX(event.getScreenX());
-                    Main.setMouseStartY(event.getScreenY());
+                if (event.getX() < editorViewWidth && event.getY() > FXCanvas.getMouseYOffset()) {
+                    FXContainers.getStage().getScene().setCursor(Cursor.CLOSED_HAND);
+                    SelectionManager.setMouseStartX(event.getScreenX());
+                    SelectionManager.setMouseStartY(event.getScreenY());
                 }
             }
         }
