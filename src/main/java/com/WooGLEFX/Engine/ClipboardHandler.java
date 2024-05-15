@@ -39,7 +39,7 @@ public class ClipboardHandler {
                     }
                     currentWord = "";
                 } else if (part == '<') {
-                    object = EditorObject.create(currentWord, new EditorAttribute[0], null);
+                    object = EditorObject.create(currentWord, null);
                     object.setRealName(currentWord);
                     currentWord = "";
                     settingAttribute = true;

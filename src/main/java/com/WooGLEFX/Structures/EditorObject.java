@@ -3,6 +3,7 @@ package com.WooGLEFX.Structures;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
 import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
@@ -10,10 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
-import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
-import com.WooGLEFX.Structures.SimpleStructures.WoGAnimation;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
 import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Addin.AddinAuthor;
@@ -85,13 +84,13 @@ import com.WorldOfGoo.Text.TextStrings;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 
 public class EditorObject {
 
     private static final Logger logger = LoggerFactory.getLogger(EditorObject.class);
+
 
     /** The name that World of Goo assigns to this object.
      * This is the same for every object of the same type. */
@@ -130,7 +129,7 @@ public class EditorObject {
     }
 
 
-    /** The optional secondary that is used to display the object's name.
+    /** The optional secondary attribute that is used to display the object's name.
      * This gets set to another attribute when the object is created. */
     private EditorAttribute nameAttribute2 = null;
     public EditorAttribute getObjName2() {
@@ -183,8 +182,18 @@ public class EditorObject {
                 }
             }
         }
+        logger.error("Missing attribute " + name + " for " + getRealName());
         return null;
     }
+    public boolean attributeExists(String name) {
+        for (EditorAttribute attribute : this.attributes) {
+            if (attribute.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public EditorAttribute getAttribute2(String name) {
         for (EditorAttribute attribute : this.attributes) {
             if (attribute.getName().equals(name)) {
@@ -201,23 +210,43 @@ public class EditorObject {
             }
         }
     }
-    public void addAttribute(String name, String value, int inputFieldType, boolean required) {
+
+
+    public EditorAttribute addAttribute(String name, int inputFieldType) {
+
+        EditorAttribute newAttribute = new EditorAttribute(name, inputFieldType);
 
         EditorAttribute[] newAttributes = new EditorAttribute[this.attributes.length + 1];
         int i2 = 0;
-        for (EditorAttribute attribute : this.attributes){
+        for (EditorAttribute attribute : this.attributes) {
             newAttributes[i2] = attribute;
             i2++;
         }
-        newAttributes[i2] = new EditorAttribute(this, name, value, "", new InputField(name, inputFieldType), required);
+        newAttributes[i2] = newAttribute;
+
         this.attributes = newAttributes;
+        return newAttribute;
+
     }
+
+
     public EditorAttribute[] cloneAttributes() {
+
         ArrayList<EditorAttribute> output = new ArrayList<>();
+
         for (EditorAttribute attribute : this.attributes) {
-            output.add(new EditorAttribute(this, attribute.getName(), attribute.getDefaultValue(), attribute.getValue(), attribute.getInput(), attribute.getRequiredInFile()));
+
+            EditorAttribute newAttribute = new EditorAttribute(attribute.getName(), attribute.getType());
+
+            if (!attribute.getDefaultValue().equals("")) newAttribute.setDefaultValue(attribute.getDefaultValue());
+            newAttribute.setValue(attribute.getValue());
+            if (attribute.getRequiredInFile()) newAttribute.assertRequired();
+            output.add(newAttribute);
+
         }
+
         return output.toArray(new EditorAttribute[0]);
+
     }
 
 
@@ -247,7 +276,7 @@ public class EditorObject {
         this.parent = _parent;
     }
 
-    public static EditorObject create(String _name, EditorAttribute[] _attributes, EditorObject _parent) {
+    public static EditorObject create(String _name, EditorObject _parent) {
         EditorObject toAdd = null;
         switch (_name) {
             case "Addin_addin" -> toAdd = new Addin(_parent);
@@ -325,9 +354,6 @@ public class EditorObject {
                 _parent.getChildren().add(toAdd);
             }
         }
-        for (EditorAttribute attribute : _attributes){
-            toAdd.setAttribute(attribute.getName(), attribute.getDefaultValue());
-        }
         toAdd.setTreeItem(new TreeItem<>(toAdd));
         if(toAdd instanceof Vertex){
             ((Vertex) toAdd).setPrevious(lastVertex);
@@ -340,14 +366,6 @@ public class EditorObject {
         return toAdd;
     }
 
-    public DragSettings mouseIntersection(double mX2, double mY2) { return new DragSettings(DragSettings.NONE); }
-
-    public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
-        return new DragSettings(DragSettings.NONE);
-    }
-
-    public DragSettings mouseImageIntersection(double mX2, double mY2) { return new DragSettings(DragSettings.NONE); }
-
     public static Point2D rotate(Point2D input, double theta, Point2D center){
 
         double rotatedX = (input.getX() - center.getX()) * Math.cos(theta) - (input.getY() - center.getY()) * Math.sin(theta);
@@ -358,7 +376,7 @@ public class EditorObject {
     }
 
     public EditorObject deepClone(EditorObject parent) {
-        EditorObject clone = create(realName, new EditorAttribute[0], parent);
+        EditorObject clone = create(realName, parent);
 
         for (EditorAttribute attribute : getAttributes()) {
             clone.setAttribute(attribute.getName(), attribute.getValue());
@@ -380,7 +398,7 @@ public class EditorObject {
         }
     }
 
-    private TreeItem<EditorAttribute> propertiesTreeItem = new TreeItem<>(new EditorAttribute(this, "", "", "", new InputField("", InputField.NULL), false));
+    private TreeItem<EditorAttribute> propertiesTreeItem = new TreeItem<>(EditorAttribute.NULL);
 
     public TreeItem<EditorAttribute> getPropertiesTreeItem() {
         return propertiesTreeItem;
@@ -389,10 +407,8 @@ public class EditorObject {
     public boolean isValid() {
         for (EditorAttribute attribute : this.attributes) {
             if (attribute.getValue().equals("")) {
-                if (!attribute.getInput().verify(this, attribute.getDefaultValue())) {
-                    return false;
-                }
-            } else if (!attribute.getInput().verify(this, attribute.getValue())) {
+                if (!InputField.verify(this, attribute.getType(), attribute.getDefaultValue())) return false;
+            } else if (!InputField.verify(this, attribute.getType(), attribute.getValue())) {
                 logger.warn("failed to verify " + attribute.getValue());
                 return false;
             }
@@ -465,7 +481,7 @@ public class EditorObject {
         }
     }
 
-    public AttributeChangeAction[] getUserActions(EditorAttribute[] oldAttributes){
+    public AttributeChangeAction[] getUserActions(EditorAttribute[] oldAttributes) {
         ArrayList<AttributeChangeAction> changes = new ArrayList<>();
         for (EditorAttribute attribute : this.attributes) {
             for (EditorAttribute oldAttribute : oldAttributes) {
@@ -485,7 +501,7 @@ public class EditorObject {
         }
     }
 
-    public void update(){
+    public void update() {
         if (getAttributes().length != 0) {
             nameAttribute = getAttributes()[0];
         }
@@ -495,33 +511,27 @@ public class EditorObject {
         return new String[0];
     }
 
-    public void updateWithAnimation(WoGAnimation animation, float timer){
 
+    private Image image;
+    public Image getImage() {
+        return image;
+    }
+    public void setImage(Image image) {
+        this.image = image;
     }
 
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
 
+    private final ArrayList<ObjectPosition> objectPositions = new ArrayList<>();
+    public ObjectPosition[] getObjectPositions() {
+        return objectPositions.toArray(new ObjectPosition[0]);
+    }
+    public void addObjectPosition(ObjectPosition objectPosition) {
+        objectPositions.add(objectPosition);
     }
 
-    public void drawImage(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
 
-    }
-
-    public void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY){
-        setAttribute("x", mouseX - dragSourceX);
-        setAttribute("y", dragSourceY - mouseY);
-    }
-
-    public void resizeFromMouse(double mouseX, double mouseY, double resizeDragSourceX, double resizeDragSourceY, double resizeDragAnchorX, double resizeDragAnchorY){
-
-    }
-
-    public void setAnchor(double mouseX, double mouseY, double anchorStartX, double anchorStartY) {
-
-    }
-
-    public void rotateFromMouse(double mouseX, double mouseY, double rotateAngleOffset){
-
+    public boolean isVisible() {
+        return false;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.WooGLEFX.Engine.FX;
 
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
@@ -43,12 +42,12 @@ public class FXPropertiesView {
         // value).
         TreeTableColumn<EditorAttribute, String> name = new TreeTableColumn<>();
         name.setGraphic(new Label("Name"));
-        name.setCellValueFactory(param -> param.getValue().getValue().nameProperty());
+        name.setCellValueFactory(param -> param.getValue().getValue().getNameProperty());
         propertiesView.getColumns().add(name);
 
         TreeTableColumn<EditorAttribute, String> value = new TreeTableColumn<>();
         value.setGraphic(new Label("Value"));
-        value.setCellValueFactory(param -> param.getValue().getValue().valueProperty());
+        value.setCellValueFactory(param -> param.getValue().getValue().getValueProperty());
         propertiesView.getColumns().add(value);
 
         // Limit the width of the "names" column.
@@ -80,7 +79,7 @@ public class FXPropertiesView {
             row.pressedProperty().addListener((observable, oldValue, newValue) -> {
                 // If we are editing a cell with null content or an uneditable cell, cancel the
                 // edit.
-                if (row.getTreeItem() == null || row.getTreeItem().getValue().getInput().getType() == InputField.NULL) {
+                if (row.getTreeItem() == null || row.getTreeItem().getValue().getType() == InputField.NULL) {
                     Platform.runLater(() -> propertiesView.edit(-1, null));
                 }
             });
@@ -127,7 +126,7 @@ public class FXPropertiesView {
 
                         if (!empty && getTableRow().getTreeItem() != null) {
                             EditorAttribute editorAttribute = getTableRow().getTreeItem().getValue();
-                            if (editorAttribute.getInput().verify(editorAttribute.getObject(), item)) {
+                            if (InputField.verify(SelectionManager.getSelected(), editorAttribute.getType(), item)) {
                                 setStyle("-fx-text-fill: #000000ff");
                             } else {
                                 setStyle("-fx-text-fill: #ff0000ff");
@@ -166,9 +165,8 @@ public class FXPropertiesView {
 
                     @Override
                     public void commitEdit(String s) {
-                        super.commitEdit(
-                                getTableRow().getItem().getInput().verify(getTableRow().getItem().getObject(), s) ? s
-                                        : before);
+                        int type = getTableRow().getItem().getType();
+                        super.commitEdit(InputField.verify(SelectionManager.getSelected(), type, s) ? s : before);
                     }
                 };
 
@@ -208,12 +206,12 @@ public class FXPropertiesView {
             // Change the actual attribute to reflect the edit.
             EditorAttribute attribute = propertiesView.getTreeItem(e.getTreeTablePosition().getRow()).getValue();
             String oldValue = attribute.getValue();
-            if (attribute.getInput().verify(attribute.getObject(), e.getNewValue())) {
+            if (InputField.verify(SelectionManager.getSelected(), attribute.getType(), e.getNewValue())) {
                 attribute.setValue(e.getNewValue());
             }
 
             // If the edit was actually valid:
-            if (e.getNewValue().equals("") || attribute.getInput().verify(attribute.getObject(), e.getNewValue())) {
+            if (e.getNewValue().equals("") || InputField.verify(SelectionManager.getSelected(), attribute.getType(), e.getNewValue())) {
 
                 // Push an attribute change to the undo buffer.
                 UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(), oldValue,
@@ -253,8 +251,7 @@ public class FXPropertiesView {
     public static TreeItem<EditorAttribute> makePropertiesViewTreeItem(EditorObject object) {
 
         // Create the root tree item.
-        TreeItem<EditorAttribute> treeItem = new TreeItem<>(
-                new EditorAttribute(object, "", "", "", new InputField("", InputField.NULL), false));
+        TreeItem<EditorAttribute> treeItem = new TreeItem<>(EditorAttribute.NULL);
 
         // Loop over the object's meta attributes.
         for (MetaEditorAttribute metaEditorAttribute : object.getMetaAttributes()) {
@@ -262,14 +259,13 @@ public class FXPropertiesView {
             // Find the object's EditorAttribute associated with this meta attribute
             // (sharing the same name).
             EditorAttribute attribute;
-            if (object.getAttribute(metaEditorAttribute.getName()) != null) {
+            if (object.attributeExists(metaEditorAttribute.getName())) {
                 attribute = object.getAttribute2(metaEditorAttribute.getName());
             } else {
                 // If no such attribute exists, this attribute is instead the name of a category
                 // of attributes.
                 // In this case, create a dummy attribute with no value.
-                attribute = new EditorAttribute(object, metaEditorAttribute.getName(), "", "",
-                        new InputField("", InputField.NULL), false);
+                attribute = new EditorAttribute(metaEditorAttribute.getName(), InputField.NULL);
             }
             TreeItem<EditorAttribute> thisAttribute = new TreeItem<>(attribute);
 
@@ -298,7 +294,7 @@ public class FXPropertiesView {
             return contextMenu;
         }
 
-        switch (attribute.getInput().getType()) {
+        switch (attribute.getType()) {
             case InputField.IMAGE, InputField.IMAGE_REQUIRED -> {
                 for (EditorObject resource : LevelManager.getLevel().getResources()) {
                     if (resource instanceof ResrcImage) {

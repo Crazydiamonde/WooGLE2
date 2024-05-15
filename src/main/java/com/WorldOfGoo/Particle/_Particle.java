@@ -13,39 +13,42 @@ import javafx.scene.image.Image;
 public class _Particle extends EditorObject {
 
     private ArrayList<Image> images = new ArrayList<>();
-
     public ArrayList<Image> getImages() {
         return images;
     }
-
     public void setImages(ArrayList<Image> images) {
         this.images = images;
     }
 
+
     private ArrayList<Axialsinoffset> axialsinoffsets = new ArrayList<>();
 
-    private double version;
 
+    private double version;
     public double getVersion() {
         return version;
     }
 
+
     public _Particle(EditorObject _parent) {
         super(_parent);
-        addAttribute("image", "", InputField.ANY, true);
-        addAttribute("rotspeed", "0", InputField.RANGE, true);
-        addAttribute("rotation", "0", InputField.RANGE, true);
-        addAttribute("directed", "false", InputField.FLAG, true);
-        addAttribute("scale", "1", InputField.RANGE, true);
-        addAttribute("finalscale", "1", InputField.RANGE, true);
-        addAttribute("fade", "false", InputField.FLAG, true);
-        addAttribute("additive", "false", InputField.FLAG, true);
-        addAttribute("lifespan", "1", InputField.RANGE, true);
-        addAttribute("speed", "0", InputField.RANGE, true);
-        addAttribute("movedir", "0", InputField.NUMBER, true);
-        addAttribute("movedirvar", "0", InputField.NUMBER, true);
-        addAttribute("acceleration", "0,0", InputField.POSITION, true);
+
+        addAttribute("image",        InputField.ANY)                              .assertRequired();
+        addAttribute("rotspeed",     InputField.RANGE)   .setDefaultValue("0")    .assertRequired();
+        addAttribute("rotation",     InputField.RANGE)   .setDefaultValue("0")    .assertRequired();
+        addAttribute("directed",     InputField.FLAG)    .setDefaultValue("false").assertRequired();
+        addAttribute("scale",        InputField.RANGE)   .setDefaultValue("1")    .assertRequired();
+        addAttribute("finalscale",   InputField.RANGE)   .setDefaultValue("1")    .assertRequired();
+        addAttribute("fade",         InputField.FLAG)    .setDefaultValue("false").assertRequired();
+        addAttribute("additive",     InputField.FLAG)    .setDefaultValue("false").assertRequired();
+        addAttribute("lifespan",     InputField.RANGE)   .setDefaultValue("1")    .assertRequired();
+        addAttribute("speed",        InputField.RANGE)   .setDefaultValue("0")    .assertRequired();
+        addAttribute("movedir",      InputField.NUMBER)  .setDefaultValue("0")    .assertRequired();
+        addAttribute("movedirvar",   InputField.NUMBER)  .setDefaultValue("0")    .assertRequired();
+        addAttribute("acceleration", InputField.POSITION).setDefaultValue("0,0") .assertRequired();
+
     }
+
 
     public void update(double version) throws Exception {
         this.version = version;

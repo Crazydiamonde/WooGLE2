@@ -2,12 +2,12 @@ package com.WooGLEFX.Engine.FX;
 
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.DelayedTooltip;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.*;
 import com.WooGLEFX.GUI.PaletteReconfigurator;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Ball.Part;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
@@ -629,6 +629,45 @@ public class FXEditorButtons {
                 toolbar.setContextMenu(contextMenu);
             }
         }
+    }
+
+
+    public static void updateButtons() {
+
+        WorldLevel level = LevelManager.getLevel();
+
+        Image animImage = level.isShowAnimations() ? WorldLevel.showHideAnim : WorldLevel.showHideAnim0;
+        buttonShowHideAnim.setGraphic(new ImageView(animImage));
+
+        Image cameraImage = level.isShowCameras() ? WorldLevel.showHideCam1 : WorldLevel.showHideCam0;
+        buttonShowHideCamera.setGraphic(new ImageView(cameraImage));
+
+        Image ffImage = level.isShowForcefields() ? WorldLevel.showHideForcefields1 : WorldLevel.showHideForcefields0;
+        buttonShowHideForcefields.setGraphic(new ImageView(ffImage));
+
+        Image geomImage = level.isShowGeometry() ? WorldLevel.showHideGeometry1 : WorldLevel.showHideGeometry0;
+        buttonShowHideGeometry.setGraphic(new ImageView(geomImage));
+
+        Image gooImage = null;
+        switch (level.getShowGoos()) {
+            case 0 -> gooImage = WorldLevel.showHideGoobs0;
+            case 1 -> gooImage = WorldLevel.showHideGoobs1;
+            case 2 -> gooImage = WorldLevel.showHideGoobs2;
+        }
+        FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(gooImage));
+
+        Image imagesImage = level.isShowGraphics() ? WorldLevel.showHideImages1 : WorldLevel.showHideImages0;
+        buttonShowHideGraphics.setGraphic(new ImageView(imagesImage));
+
+        Image labelsImage = level.isShowLabels() ? WorldLevel.showHideLabels1 : WorldLevel.showHideLabels0;
+        buttonShowHideLabels.setGraphic(new ImageView(labelsImage));
+
+        Image particlesImage = level.isShowParticles() ? WorldLevel.showHideParticles1 : WorldLevel.showHideParticles0;
+        buttonShowHideParticles.setGraphic(new ImageView(particlesImage));
+
+        Image bgImage = level.isShowSceneBGColor() ? WorldLevel.showHideBGColor1 : WorldLevel.showHideBGColor0;
+        buttonShowHideSceneBGColor.setGraphic(new ImageView(bgImage));
+
     }
 
 }

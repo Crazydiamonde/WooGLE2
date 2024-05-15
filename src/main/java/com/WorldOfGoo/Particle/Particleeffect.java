@@ -3,7 +3,6 @@ package com.WorldOfGoo.Particle;
 import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 import java.util.ArrayList;
@@ -20,13 +19,18 @@ public class Particleeffect extends EditorObject {
         this.particles = particles;
     }
 
-    public Particleeffect(EditorObject _parent){
+
+    public Particleeffect(EditorObject _parent) {
         super(_parent);
-        addAttribute("name", "", InputField.ANY, false);
-        addAttribute("maxparticles", "0", InputField.NUMBER, false);
-        addAttribute("rate", "0.25", InputField.NUMBER, false);
+
+        addAttribute("name", InputField.ANY);
+        addAttribute("maxparticles", InputField.NUMBER).setDefaultValue("0");
+        addAttribute("rate", InputField.NUMBER).setDefaultValue("0.25");
+
         setMetaAttributes(MetaEditorAttribute.parse("name,maxparticles,rate"));
+
     }
+
 
     @Override
     public void update(){

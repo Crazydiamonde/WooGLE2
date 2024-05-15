@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
@@ -13,17 +13,38 @@ import com.WooGLEFX.Structures.SimpleStructures.Position;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Slider extends EditorObject {
+
     public Slider(EditorObject _parent) {
         super(_parent);
         setRealName("slider");
-        addAttribute("body1", "", InputField.ANY, true);
-        addAttribute("body2", "", InputField.ANY, true);
-        addAttribute("axis", "1,0", InputField.POSITION, true);
-        addAttribute("bounce", "", InputField.NUMBER, false);
-        addAttribute("histop", "", InputField.NUMBER, false);
-        addAttribute("lostop", "", InputField.NUMBER, false);
-        addAttribute("stopcfm", "", InputField.NUMBER, false);
-        addAttribute("stoperp", "", InputField.NUMBER, false);
+
+        addAttribute("body1", InputField.ANY).assertRequired();
+        addAttribute("body2", InputField.ANY).assertRequired();
+        addAttribute("axis", InputField.POSITION).setDefaultValue("1,0").assertRequired();
+        addAttribute("bounce", InputField.NUMBER);
+        addAttribute("histop", InputField.NUMBER);
+        addAttribute("lostop", InputField.NUMBER);
+        addAttribute("stopcfm", InputField.NUMBER);
+        addAttribute("stoperp", InputField.NUMBER);
+
+        addObjectPosition(new ObjectPosition(ObjectPosition.POINT) {
+            public double getX() {
+                return getPosition("anchor").getX();
+            }
+            public void setX(double x) {
+                setAttribute("anchor", x + "," + getY());
+            }
+            public double getY() {
+                return getPosition("anchor").getY();
+            }
+            public void setY(double y) {
+                setAttribute("anchor", getX() + "," + y);
+            }
+
+            // TODO erm whar???
+
+        });
+
         setNameAttribute(getAttribute2("body1"));
         setNameAttribute2(getAttribute2("body2"));
         setChangeListener("body2", (observableValue, s, t1) -> {
@@ -32,9 +53,10 @@ public class Slider extends EditorObject {
             setAttribute("body1", bruh);
         });
         setMetaAttributes(MetaEditorAttribute.parse("body1,body2,axis,Slider<bounce,histop,lostop,stopcfm,stoperp>"));
+
     }
 
-    @Override
+
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
 
         if (LevelManager.getLevel().isShowGeometry()) {
@@ -164,9 +186,8 @@ public class Slider extends EditorObject {
         }
     }
 
-    @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
-        return new DragSettings(DragSettings.NONE);
+        return DragSettings.NULL;
         /*
 
         if (LevelManager.getLevel().isShowGeometry()) {
@@ -191,8 +212,10 @@ public class Slider extends EditorObject {
          */
     }
 
+
     @Override
-    public void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY){
-        setAttribute("anchor", (mouseX - dragSourceX) + "," + (dragSourceY - mouseY));
+    public boolean isVisible() {
+        return LevelManager.getLevel().isShowGeometry();
     }
+
 }

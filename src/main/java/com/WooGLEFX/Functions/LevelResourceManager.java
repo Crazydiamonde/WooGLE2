@@ -178,7 +178,7 @@ public class LevelResourceManager {
 
             String imageResourceName = "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_"
                     + normalizedFilename.toUpperCase();
-            EditorObject imageResourceObject = EditorObject.create("Image", new EditorAttribute[0], null);
+            EditorObject imageResourceObject = EditorObject.create("Image", null);
 
             imageResourceObject.setAttribute("id", imageResourceName);
             imageResourceObject.setAttribute(
@@ -220,7 +220,7 @@ public class LevelResourceManager {
     }
 
     public static void newTextResource(WorldLevel level) {
-        EditorObject newTextObject = EditorObject.create("string", new EditorAttribute[0], level.getTextObject());
+        EditorObject newTextObject = EditorObject.create("string", level.getTextObject());
         ObjectAdder.fixString(newTextObject);
         level.getText().add(newTextObject);
         SelectionManager.setSelected(newTextObject);
@@ -332,7 +332,7 @@ public class LevelResourceManager {
          * res\music.
          */
         String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_" + normalizedFilename.toUpperCase();
-        EditorObject soundResourceObject = EditorObject.create("Sound", new EditorAttribute[0], null);
+        EditorObject soundResourceObject = EditorObject.create("Sound", null);
 
         soundResourceObject.setAttribute("id", soundResourceName);
         soundResourceObject.setAttribute("path", soundPath);
@@ -366,7 +366,7 @@ public class LevelResourceManager {
         }
 
         /* Otherwise, create a new music object set to the sound resource's ID. */
-        EditorObject musicObject = EditorObject.create("music", new EditorAttribute[0], level.getLevelObject());
+        EditorObject musicObject = EditorObject.create("music", level.getLevelObject());
         musicObject.setAttribute("id", soundResourceName);
         level.getLevel().add(musicObject);
         UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
@@ -432,7 +432,7 @@ public class LevelResourceManager {
          */
         String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_"
                 + normalizedFilename.toUpperCase();
-        EditorObject soundResourceObject = EditorObject.create("Sound", new EditorAttribute[0], null);
+        EditorObject soundResourceObject = EditorObject.create("Sound", null);
 
         soundResourceObject.setAttribute("id", soundResourceName);
         soundResourceObject.setAttribute("path", soundPath);
@@ -466,7 +466,7 @@ public class LevelResourceManager {
         }
 
         /* Otherwise, create a new music object set to the sound resource's ID. */
-        EditorObject musicObject = EditorObject.create("loopsound", new EditorAttribute[0], level.getLevelObject());
+        EditorObject musicObject = EditorObject.create("loopsound", level.getLevelObject());
         musicObject.setAttribute("id", soundResourceName);
         level.getLevel().add(musicObject);
         UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
@@ -561,7 +561,7 @@ public class LevelResourceManager {
         // Load particle names, remove duplicates, and sort them alphabetically
         Set<String> particleNames = new HashSet<>();
         ParticleManager.getParticles().stream()
-                .filter(particle -> particle.getAttribute("name") != null)
+                .filter(particle -> particle.attributeExists("name"))
                 .forEach(particle -> particleNames.add(particle.getAttribute("name")));
         ParticleManager.getSortedParticleNames().clear();
         ParticleManager.getSortedParticleNames().addAll(particleNames);

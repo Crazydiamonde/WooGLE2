@@ -51,12 +51,15 @@ public class Strand extends EditorObject {
         this.strand = strand;
     }
 
+
     //TODO make strands selectable
     public Strand(EditorObject _parent) {
         super(_parent);
         setRealName("Strand");
-        addAttribute("gb1", "", InputField.GOOBALL_ID, true);
-        addAttribute("gb2", "", InputField.GOOBALL_ID, true);
+
+        addAttribute("gb1", InputField.GOOBALL_ID).assertRequired();
+        addAttribute("gb2", InputField.GOOBALL_ID).assertRequired();
+
         setNameAttribute(getAttribute2("gb1"));
         setNameAttribute2(getAttribute2("gb2"));
         setChangeListener("gb2", (observableValue, s, t1) -> {
@@ -65,7 +68,9 @@ public class Strand extends EditorObject {
             setAttribute("gb1", bruh);
         });
         setMetaAttributes(MetaEditorAttribute.parse("gb1,gb2,"));
+
     }
+
 
     @Override
     public void update() {
@@ -192,7 +197,6 @@ public class Strand extends EditorObject {
         return right;
     }
 
-    @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         if (LevelManager.getLevel().getShowGoos() == 2) {
             if (goo1 != null && goo2 != null && strand != null) {
@@ -277,10 +281,10 @@ public class Strand extends EditorObject {
         }
     }
 
+
     @Override
-    public DragSettings mouseIntersection(double mX2, double mY2) {
-
-        return new DragSettings(DragSettings.NONE);
-
+    public boolean isVisible() {
+        return LevelManager.getLevel().getShowGoos() != 0;
     }
+
 }

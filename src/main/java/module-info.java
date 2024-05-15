@@ -24,5 +24,8 @@ module com.example.WOGAnniversaryEditor {
   exports com.WooGLEFX.Structures.SimpleStructures;
   exports com.WooGLEFX.Structures.Resources;
   exports com.WooGLEFX.Engine;
-    exports com.WooGLEFX.Engine.FX;
+  exports com.WooGLEFX.Engine.FX;
+  exports com.WooGLEFX.EditorObjects.Components;
+    exports com.WooGLEFX.EditorObjects.ObjectCollision;
+
 }

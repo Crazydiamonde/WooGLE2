@@ -4,26 +4,30 @@ import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 
 public class BallStrand extends EditorObject {
+
     public BallStrand(EditorObject _parent) {
         super(_parent);
-        addAttribute("type", "", InputField.ANY, true);
-        addAttribute("image", "", InputField.IMAGE, true);
-        addAttribute("inactiveimage", "", InputField.ANY, true);
-        addAttribute("springconstmin", "", InputField.ANY, true);
-        addAttribute("springconstmax", "", InputField.ANY, true);
-        addAttribute("dampfac", "", InputField.ANY, true);
-        addAttribute("maxlen2", "0", InputField.ANY, true);
-        addAttribute("maxlen1", "", InputField.ANY, false);
-        addAttribute("maxforce", "", InputField.ANY, true);
-        addAttribute("minlen", "", InputField.ANY, true);
-        addAttribute("walkable", "", InputField.ANY, false);
-        addAttribute("thickness", "24", InputField.NUMBER, false);
-        addAttribute("ignitedelay", "", InputField.ANY, false);
-        addAttribute("burnspeed", "", InputField.ANY, false);
-        addAttribute("fireparticles", "", InputField.ANY, false);
-        addAttribute("burntimage", "", InputField.ANY, false);
-        addAttribute("geom", "", InputField.ANY, false);
-        addAttribute("shrinklen", "", InputField.ANY, false);
-        addAttribute("rope", "", InputField.ANY, false);
+
+        addAttribute("type",           InputField.ANY)                     .assertRequired();
+        addAttribute("image",          InputField.IMAGE)                   .assertRequired();
+        addAttribute("inactiveimage",  InputField.ANY)                     .assertRequired();
+        addAttribute("springconstmin", InputField.ANY)                     .assertRequired();
+        addAttribute("springconstmax", InputField.ANY)                     .assertRequired();
+        addAttribute("dampfac",        InputField.ANY)                     .assertRequired();
+        addAttribute("maxlen2",        InputField.ANY).setDefaultValue("0").assertRequired();
+        addAttribute("maxlen1",        InputField.ANY);
+        addAttribute("maxforce",       InputField.ANY)                     .assertRequired();
+        addAttribute("minlen",         InputField.ANY)                     .assertRequired();
+        addAttribute("walkable",       InputField.ANY);
+        addAttribute("thickness",      InputField.NUMBER)                  .setDefaultValue("24");
+        addAttribute("ignitedelay",    InputField.ANY);
+        addAttribute("burnspeed",      InputField.ANY);
+        addAttribute("fireparticles",  InputField.ANY);
+        addAttribute("burntimage",     InputField.ANY);
+        addAttribute("geom",           InputField.ANY);
+        addAttribute("shrinklen",      InputField.ANY);
+        addAttribute("rope",           InputField.ANY);
+
     }
+
 }

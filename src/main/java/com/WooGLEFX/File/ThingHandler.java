@@ -30,7 +30,7 @@ public class ThingHandler extends DefaultHandler {
                 zName = "Addin_" + zName;
             }
         }
-        EditorObject obj = EditorObject.create(zName, new EditorAttribute[0], parent);
+        EditorObject obj = EditorObject.create(zName, parent);
         for (int i = 0; i < attributes.getLength(); i++) {
             obj.setAttribute(attributes.getQName(i), attributes.getValue(i));
         }

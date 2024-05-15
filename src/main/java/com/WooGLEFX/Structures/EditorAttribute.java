@@ -5,62 +5,62 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 
 public class EditorAttribute {
+
+    public static final EditorAttribute NULL = new EditorAttribute(null, InputField.NULL);
+
+
     private final StringProperty name = new SimpleStringProperty();
-    private final StringProperty value = new SimpleStringProperty("");
-    private final String defaultValue;
-    private final InputField input;
-    private final EditorObject object;
-
-    public EditorObject getObject() {
-        return object;
-    }
-
-    private final boolean requiredInFile;
-
-    public static final EditorAttribute NULL = new EditorAttribute(null, "", "", "", new InputField("", InputField.NULL), false);
-
-    public boolean getRequiredInFile() {
-        return requiredInFile;
-    }
-
-    public StringProperty valueProperty() {
-        return value;
-    }
-    public StringProperty nameProperty() {
+    public StringProperty getNameProperty() {
         return name;
     }
-
-    public void setChangeListener(ChangeListener<String> changeListener) {
-        this.value.addListener(changeListener);
-    }
-
     public String getName() {
         return name.getValue();
     }
 
+
+    private final StringProperty value = new SimpleStringProperty("");
+    public StringProperty getValueProperty() {
+        return value;
+    }
     public String getValue() {
         return value.getValue();
     }
-
     public void setValue(String value) {
         this.value.setValue(value);
     }
+    public void setChangeListener(ChangeListener<String> changeListener) {
+        this.value.addListener(changeListener);
+    }
 
+
+    private String defaultValue = "";
     public String getDefaultValue() {
         return defaultValue;
     }
-
-    public InputField getInput() {
-        return input;
-    }
-
-
-    public EditorAttribute(EditorObject object, String name, String defaultValue, String initialValue, InputField inputField, boolean requiredInFile) {
-        this.object = object;
-        this.name.setValue(name);
+    public EditorAttribute setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
-        this.value.setValue(initialValue);
-        this.input = inputField;
-        this.requiredInFile = requiredInFile;
+        return this;
     }
+
+
+    private final int type;
+    public int getType() {
+        return type;
+    }
+
+
+    private boolean requiredInFile;
+    public boolean getRequiredInFile() {
+        return requiredInFile;
+    }
+    public void assertRequired() {
+        requiredInFile = true;
+    }
+
+
+    public EditorAttribute(String name, int type) {
+        this.name.setValue(name);
+        this.type = type;
+    }
+
 }

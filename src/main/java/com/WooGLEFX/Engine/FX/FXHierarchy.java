@@ -1,6 +1,5 @@
 package com.WooGLEFX.Engine.FX;
 
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.LevelManager;
@@ -55,14 +54,13 @@ public class FXHierarchy {
             if (param.getValue().getValue().getObjName() != null) {
                 if (param.getValue().getValue().getObjName2() != null
                         && !param.getValue().getValue().getObjName2().getValue().equals("")) {
-                    return param.getValue().getValue().getObjName().valueProperty().concat(",")
-                            .concat(param.getValue().getValue().getObjName2().valueProperty());
+                    return param.getValue().getValue().getObjName().getValueProperty().concat(",")
+                            .concat(param.getValue().getValue().getObjName2().getValueProperty());
                 } else {
-                    return param.getValue().getValue().getObjName().valueProperty();
+                    return param.getValue().getValue().getObjName().getValueProperty();
                 }
             } else {
-                return new EditorAttribute(param.getValue().getValue(), "AAAAA", "AAAAA", "AAAAA",
-                        new InputField("AAAAA", InputField.ANY), false).valueProperty();
+                return new EditorAttribute("AAAAA", InputField.ANY).getValueProperty();
             }
         });
 

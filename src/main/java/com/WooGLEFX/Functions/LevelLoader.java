@@ -50,15 +50,15 @@ public class LevelLoader {
         FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
 
         ArrayList<EditorObject> sceneList = new ArrayList<>();
-        sceneList.add(EditorObject.create("scene", new EditorAttribute[0], null));
+        sceneList.add(EditorObject.create("scene", null));
         ArrayList<EditorObject> levelList = new ArrayList<>();
-        levelList.add(EditorObject.create("level", new EditorAttribute[0], null));
+        levelList.add(EditorObject.create("level", null));
         ArrayList<EditorObject> resourcesList = new ArrayList<>();
-        resourcesList.add(EditorObject.create("ResourceManifest", new EditorAttribute[0], null));
+        resourcesList.add(EditorObject.create("ResourceManifest", null));
         ArrayList<EditorObject> addinList = new ArrayList<>();
         addinList.add(BlankObjectGenerator.generateBlankAddinObject(name));
         ArrayList<EditorObject> textList = new ArrayList<>();
-        textList.add(EditorObject.create("strings", new EditorAttribute[0], null));
+        textList.add(EditorObject.create("strings", null));
 
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
         LevelManager.setLevel(level);
@@ -73,8 +73,7 @@ public class LevelLoader {
         level.getResourcesObject().setRealName("ResourceManifest");
         level.getResourcesObject().setTreeItem(new TreeItem<>(level.getResourcesObject()));
 
-        EditorObject resourcesThing = EditorObject.create("Resources", new EditorAttribute[0],
-                level.getResourcesObject());
+        EditorObject resourcesThing = EditorObject.create("Resources", level.getResourcesObject());
         resourcesThing.setTreeItem(new TreeItem<>(resourcesThing));
         resourcesThing.setAttribute("id", "scene_" + level.getLevelName());
         resourcesThing.getTreeItem().setExpanded(true);

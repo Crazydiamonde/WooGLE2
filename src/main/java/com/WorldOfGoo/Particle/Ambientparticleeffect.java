@@ -10,22 +10,24 @@ import java.util.ArrayList;
 public class Ambientparticleeffect extends EditorObject {
 
     private ArrayList<_Particle> particles = new ArrayList<>();
-
     public ArrayList<_Particle> getParticles() {
         return particles;
     }
-
     public void setParticles(ArrayList<_Particle> particles) {
         this.particles = particles;
     }
 
-    public Ambientparticleeffect(EditorObject _parent){
+
+    public Ambientparticleeffect(EditorObject _parent) {
         super(_parent);
-        addAttribute("name", "0", InputField.NUMBER, true);
-        addAttribute("maxparticles", "0", InputField.NUMBER, true);
-        addAttribute("rate", "0.25", InputField.NUMBER, true);
-        addAttribute("margin", "0", InputField.NUMBER, true);
+
+        addAttribute("name", InputField.NUMBER).setDefaultValue("0").assertRequired();
+        addAttribute("maxparticles", InputField.NUMBER).setDefaultValue("0").assertRequired();
+        addAttribute("rate", InputField.NUMBER).setDefaultValue("0").assertRequired();
+        addAttribute("margin", InputField.NUMBER).setDefaultValue("0").assertRequired();
+
     }
+
 
     @Override
     public void update(){
@@ -35,4 +37,5 @@ public class Ambientparticleeffect extends EditorObject {
             }
         }
     }
+
 }

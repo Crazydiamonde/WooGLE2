@@ -142,8 +142,7 @@ public class Initializer {
 
             // Configure PropertiesView
             FXPropertiesView.getPropertiesView().prefWidthProperty().bind(FXHierarchy.getHierarchy().widthProperty());
-            FXPropertiesView.getPropertiesView().setRoot(
-                    new TreeItem<>(new EditorAttribute(null, "", "", "", new InputField("", InputField.ANY), false)));
+            FXPropertiesView.getPropertiesView().setRoot(new TreeItem<>(EditorAttribute.NULL));
 
             // Combine everything weirdly
             FXContainers.setSplitPane(new SplitPane());

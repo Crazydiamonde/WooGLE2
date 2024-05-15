@@ -75,7 +75,7 @@ public class SelectionManager {
     }
 
 
-    private static DragSettings dragSettings = new DragSettings(DragSettings.NONE);
+    private static DragSettings dragSettings = DragSettings.NULL;
     public static DragSettings getDragSettings() {
         return dragSettings;
     }

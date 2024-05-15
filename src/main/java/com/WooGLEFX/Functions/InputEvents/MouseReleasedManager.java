@@ -41,18 +41,17 @@ public class MouseReleasedManager {
             FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
 
             // Clear all drag settings now that the mouse has been released.
-            SelectionManager.setDragSettings(new DragSettings(DragSettings.NONE));
+            SelectionManager.setDragSettings(DragSettings.NULL);
             // If we have started placing a strand, attempt to complete the strand.
             if (SelectionManager.getMode() == SelectionManager.STRAND && SelectionManager.getStrand1Gooball() != null) {
                 for (EditorObject ball : level.getLevel().toArray(new EditorObject[0])) {
                     if (ball != SelectionManager.getStrand1Gooball()) {
-                        if (ball instanceof BallInstance && ball
+                        if (ball instanceof BallInstance ballInstance && ballInstance
                                 .mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(),
                                         (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
-                                .getType() != DragSettings.NONE) {
+                                 != DragSettings.NULL) {
 
-                            EditorObject strand = EditorObject.create("Strand", new EditorAttribute[0],
-                                    level.getLevelObject());
+                            EditorObject strand = EditorObject.create("Strand", level.getLevelObject());
 
                             strand.setAttribute("gb1", SelectionManager.getStrand1Gooball().getAttribute("id"));
                             strand.setAttribute("gb2", ball.getAttribute("id"));

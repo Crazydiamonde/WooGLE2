@@ -1,9 +1,12 @@
 package com.WooGLEFX.Functions.InputEvents;
 
+import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersectingCorners;
+import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectDrag;
+import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectResize;
+import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectRotate;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
@@ -55,9 +58,10 @@ public class MouseWheelMovedManager {
                 level.setZoom(newScaleX);
 
                 if (level.getSelected() != null) {
-                    DragSettings hit = level.getSelected().mouseIntersectingCorners(mouseX, mouseY);
+                    DragSettings hit = MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), mouseX, mouseY);
                     switch (hit.getType()) {
-                        case DragSettings.NONE -> FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
+                        case -1 -> FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
+                        case DragSettings.MOVE -> FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
                         case DragSettings.RESIZE -> FXContainers.getStage().getScene().setCursor(Cursor.NE_RESIZE);
                         case DragSettings.ROTATE -> FXContainers.getStage().getScene().setCursor(Cursor.OPEN_HAND);
                     }
@@ -68,14 +72,21 @@ public class MouseWheelMovedManager {
 
                     // Update the selected object according to what kind of operation is being
                     // performed.
-                    switch (SelectionManager.getDragSettings().getType()) {
-                        case DragSettings.MOVE -> level.getSelected().dragFromMouse(gameRelativeMouseX,
-                                gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
-                        case DragSettings.RESIZE -> level.getSelected().resizeFromMouse(gameRelativeMouseX,
-                                gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY(),
-                                SelectionManager.getDragSettings().getAnchorX(), SelectionManager.getDragSettings().getAnchorY());
-                        case DragSettings.ROTATE -> level.getSelected().rotateFromMouse(gameRelativeMouseX,
-                                gameRelativeMouseY, SelectionManager.getDragSettings().getRotateAngleOffset());
+
+                    DragSettings dragSettings = SelectionManager.getDragSettings();
+
+                    switch (dragSettings.getType()) {
+
+                        case DragSettings.MOVE -> ObjectDrag.dragFromMouse(gameRelativeMouseX, gameRelativeMouseY,
+                                dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY());
+
+                        case DragSettings.RESIZE -> ObjectResize.resizeFromMouse(
+                                gameRelativeMouseX, gameRelativeMouseY,
+                                dragSettings.getAnchorX(), dragSettings.getAnchorY());
+
+                        case DragSettings.ROTATE -> ObjectRotate.rotateFromMouse(
+                                gameRelativeMouseX, gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY(), dragSettings.getRotateAngleOffset());
+
                     }
 
                     FXPropertiesView.getPropertiesView().refresh();

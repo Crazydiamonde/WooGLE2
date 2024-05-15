@@ -40,6 +40,9 @@ public class Color {
     }
 
     public static Color parse(String input){
+
+        if (input.equals("1")) return new Color(255, 255, 255, 255);
+
         // Remove all spaces from the string
         input = input.replaceAll("\\s+","");
         try {

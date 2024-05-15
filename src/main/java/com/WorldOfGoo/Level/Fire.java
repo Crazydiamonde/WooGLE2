@@ -1,38 +1,66 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.Engine.Main;
-import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.Engine.SelectionManager;
+import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
-import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WorldOfGoo.Scene.Particles;
-
-import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class Fire extends EditorObject {
 
     private Particles particleEffect;
 
+
     public Fire(EditorObject _parent) {
         super(_parent);
         setRealName("fire");
-        addAttribute("depth", "0", InputField.NUMBER, true);
-        addAttribute("particles", "", InputField.PARTICLES, true);
-        addAttribute("x", "0", InputField.NUMBER, true);
-        addAttribute("y", "0", InputField.NUMBER, true);
-        addAttribute("radius", "50", InputField.NUMBER, true);
+
+        addAttribute("depth",     InputField.NUMBER)   .setDefaultValue("0") .assertRequired();
+        addAttribute("particles", InputField.PARTICLES)                      .assertRequired();
+        addAttribute("x",         InputField.NUMBER)   .setDefaultValue("0") .assertRequired();
+        addAttribute("y",         InputField.NUMBER)   .setDefaultValue("0") .assertRequired();
+        addAttribute("radius",    InputField.NUMBER)   .setDefaultValue("50").assertRequired();
+
+        addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE) {
+            public double getX() {
+                return getDouble("x");
+            }
+            public void setX(double x) {
+                setAttribute("x", x);
+            }
+            public double getY() {
+                return -getDouble("y");
+            }
+            public void setY(double y) {
+                setAttribute("y", -y);
+            }
+            public double getRadius() {
+                return getDouble("radius");
+            }
+            public void setRadius(double radius) {
+                setAttribute("radius", radius);
+            }
+            public Paint getBorderColor() {
+                return new Color(1.0, 0.25, 0.0, 1.0);
+            }
+            public Paint getFillColor() {
+                return new Color(1.0, 0.25, 0.0, 0.1);
+            }
+        });
+
         setNameAttribute(getAttribute2("particles"));
         setMetaAttributes(MetaEditorAttribute.parse("x,y,radius,particles,depth,"));
+
     }
+
 
     private Particles findParticleFx() {
         for (EditorObject particle : ParticleManager.getParticles()) {
-            if (particle.getAttribute("name") != null && particle.getAttribute("name").equals(getAttribute("particles"))) {
+            if (particle.attributeExists("name") && particle.getAttribute("name").equals(getAttribute("particles"))) {
                 particleEffect = new Particles(this);
                 getChildren().remove(particleEffect);
                 particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
@@ -44,6 +72,7 @@ public class Fire extends EditorObject {
         }
         return null;
     }
+
 
     @Override
     public void update() {
@@ -66,118 +95,10 @@ public class Fire extends EditorObject {
         });
     }
 
-    @Override
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
-        if (particleEffect != null && LevelManager.getLevel().isShowParticles()) {
-            particleEffect.draw(graphicsContext, imageGraphicsContext);
-        }
-        if (LevelManager.getLevel().isShowGeometry()) {
-            double x2 = Double.parseDouble(getAttribute("x"));
-            double y2 = Double.parseDouble(getAttribute("y"));
-
-            double radius = Double.parseDouble(getAttribute("radius"));
-
-            double screenX = (x2) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX() - radius * LevelManager.getLevel().getZoom();
-            double screenY = (-y2) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY() - radius * LevelManager.getLevel().getZoom();
-
-            graphicsContext.setFill(Renderer.transparentRed);
-            graphicsContext.fillOval(screenX + LevelManager.getLevel().getZoom() / 2, screenY + LevelManager.getLevel().getZoom() / 2, (radius - 0.5) * 2 * LevelManager.getLevel().getZoom(), (radius - 0.5) * 2 * LevelManager.getLevel().getZoom());
-            graphicsContext.setStroke(Renderer.solidRed);
-            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom());
-            graphicsContext.strokeOval(screenX + LevelManager.getLevel().getZoom() / 2, screenY + LevelManager.getLevel().getZoom() / 2, (radius - 0.5) * 2 * LevelManager.getLevel().getZoom(), (radius - 0.5) * 2 * LevelManager.getLevel().getZoom());
-
-            if (this == SelectionManager.getSelected()) {
-                graphicsContext.setStroke(Renderer.selectionOutline2);
-                graphicsContext.setLineWidth(1);
-                graphicsContext.setLineDashes(3);
-                graphicsContext.setLineDashOffset(0);
-                graphicsContext.strokeRect(screenX, screenY, radius * 2 * LevelManager.getLevel().getZoom(), radius * 2 * LevelManager.getLevel().getZoom());
-                graphicsContext.setStroke(Renderer.selectionOutline);
-                graphicsContext.setLineWidth(1);
-                graphicsContext.setLineDashOffset(3);
-                graphicsContext.strokeRect(screenX, screenY, radius * 2 * LevelManager.getLevel().getZoom(), radius * 2 * LevelManager.getLevel().getZoom());
-                graphicsContext.setLineDashes(0);
-
-                graphicsContext.strokeRect(screenX - 4, screenY + radius * LevelManager.getLevel().getZoom() - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * LevelManager.getLevel().getZoom() - 4, screenY + radius * 2 * LevelManager.getLevel().getZoom() - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * LevelManager.getLevel().getZoom() - 4, screenY - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * 2 * LevelManager.getLevel().getZoom() - 4, screenY + radius * LevelManager.getLevel().getZoom() - 4, 8, 8);
-            }
-        }
-    }
 
     @Override
-    public DragSettings mouseIntersection(double mX2, double mY2) {
-        if (LevelManager.getLevel().isShowGeometry()) {
-            double x2 = Double.parseDouble(getAttribute("x"));
-            double y2 = Double.parseDouble(getAttribute("y"));
-
-            double radius = Double.parseDouble(getAttribute("radius"));
-
-            if ((mX2 - x2) * (mX2 - x2) + (mY2 + y2) * (mY2 + y2) < radius * radius) {
-                DragSettings dragSettings = new DragSettings(DragSettings.MOVE);
-                dragSettings.setInitialSourceX(mX2 - x2);
-                dragSettings.setInitialSourceY(mY2 + y2);
-                return dragSettings;
-            } else {
-                return new DragSettings(DragSettings.NONE);
-            }
-        } else {
-            return new DragSettings(DragSettings.NONE);
-        }
-    }
-
-    @Override
-    public DragSettings mouseIntersectingCorners(double mX2, double mY2) {
-        if (LevelManager.getLevel().isShowGeometry()) {
-            double x2 = Double.parseDouble(getAttribute("x"));
-            double y2 = Double.parseDouble(getAttribute("y"));
-
-            double radius = Double.parseDouble(getAttribute("radius"));
-
-            Point2D left = new Point2D(x2 - radius, y2);
-            Point2D top = new Point2D(x2, y2 + radius);
-            Point2D right = new Point2D(x2 + radius, y2);
-            Point2D bottom = new Point2D(x2, y2 - radius);
-            top = new Point2D((top.getX()), (-top.getY()));
-            left = new Point2D((left.getX()), (-left.getY()));
-            right = new Point2D((right.getX()), (-right.getY()));
-            bottom = new Point2D((bottom.getX()), (-bottom.getY()));
-            double distance = 4 / LevelManager.getLevel().getZoom();
-
-            DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
-
-            boolean resize = false;
-
-            if (mX2 > left.getX() - distance && mX2 < left.getX() + distance && mY2 > left.getY() - distance && mY2 < left.getY() + distance) {
-                resize = true;
-            }
-            if (mX2 > top.getX() - distance && mX2 < top.getX() + distance && mY2 > top.getY() - distance && mY2 < top.getY() + distance) {
-                resize = true;
-            }
-            if (mX2 > right.getX() - distance && mX2 < right.getX() + distance && mY2 > right.getY() - distance && mY2 < right.getY() + distance) {
-                resize = true;
-            }
-            if (mX2 > bottom.getX() - distance && mX2 < bottom.getX() + distance && mY2 > bottom.getY() - distance && mY2 < bottom.getY() + distance) {
-                resize = true;
-            }
-
-            if (resize) {
-                resizeSettings.setInitialSourceX(0);
-                resizeSettings.setInitialSourceY(0);
-                resizeSettings.setAnchorX(0);
-                resizeSettings.setAnchorY(0);
-                return resizeSettings;
-            }
-        }
-        return new DragSettings(DragSettings.NONE);
-    }
-
-    @Override
-    public void resizeFromMouse(double mouseX, double mouseY, double resizeDragSourceX, double resizeDragSourceY, double resizeDragAnchorX, double resizeDragAnchorY) {
-        double x2 = Double.parseDouble(getAttribute("x"));
-        double y2 = -Double.parseDouble(getAttribute("y"));
-        setAttribute("radius", Math.sqrt((mouseX - x2) * (mouseX - x2) + (mouseY - y2) * (mouseY - y2)));
+    public boolean isVisible() {
+        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

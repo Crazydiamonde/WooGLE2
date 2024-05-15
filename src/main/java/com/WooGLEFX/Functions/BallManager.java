@@ -26,22 +26,17 @@ public class BallManager {
 
         try {
 
-            _Ball ballObject = FileManager.openBall(ball, oldVersion);
+            _Ball _ball = FileManager.openBall(ball, oldVersion);
+            if (_ball == null) return;
 
-            if (ballObject == null) return;
+            String dir = newVersion == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
 
-            if (newVersion == 1.3) {
-                LevelExporter.exportBallAsXML(ballObject,
-                        FileManager.getOldWOGdir() + "\\res\\balls\\" + ball,
-                        1.3, false);
-            } else if (newVersion == 1.5) {
-                LevelExporter.exportBallAsXML(ballObject,
-                        FileManager.getNewWOGdir() + "\\res\\balls\\" + ball,
-                        1.5, false);
-            }
+            LevelExporter.exportBallAsXML(_ball, dir + "\\res\\balls\\" + ball, newVersion, false);
+
         } catch (Exception e) {
             Alarms.errorMessage(e);
         }
+
     }
 
 }

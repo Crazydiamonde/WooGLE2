@@ -1,8 +1,11 @@
 package com.WooGLEFX.Functions.InputEvents;
 
+import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectDrag;
+import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectResize;
+import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectRotate;
+import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectSetAnchor;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
@@ -30,15 +33,10 @@ public class MouseDraggedManager {
             // Update the selected object according to what kind of operation is being
             // performed.
             switch (SelectionManager.getDragSettings().getType()) {
-                case DragSettings.MOVE -> level.getSelected().dragFromMouse(gameRelativeMouseX, gameRelativeMouseY,
-                        SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
-                case DragSettings.RESIZE -> level.getSelected().resizeFromMouse(gameRelativeMouseX, gameRelativeMouseY,
-                        SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY(), SelectionManager.getDragSettings().getAnchorX(),
-                        SelectionManager.getDragSettings().getAnchorY());
-                case DragSettings.ROTATE -> level.getSelected().rotateFromMouse(gameRelativeMouseX, gameRelativeMouseY,
-                        SelectionManager.getDragSettings().getRotateAngleOffset());
-                case DragSettings.SETANCHOR -> level.getSelected().setAnchor(gameRelativeMouseX, gameRelativeMouseY,
-                        SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
+                case DragSettings.MOVE -> ObjectDrag.dragFromMouse(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
+                case DragSettings.RESIZE -> ObjectResize.resizeFromMouse(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getAnchorX(), SelectionManager.getDragSettings().getAnchorY());
+                case DragSettings.ROTATE -> ObjectRotate.rotateFromMouse(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY(), SelectionManager.getDragSettings().getRotateAngleOffset());
+                case DragSettings.SETANCHOR -> ObjectSetAnchor.setAnchor(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
             }
 
             FXPropertiesView.getPropertiesView().refresh();

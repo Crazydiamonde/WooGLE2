@@ -5,12 +5,17 @@ import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class Addin extends EditorObject {
+
     public Addin(EditorObject _parent) {
         super(_parent);
         setRealName("addin");
-        addAttribute("spec-version", "", InputField.NUMBER_POSITIVE, true);
+
+        addAttribute("spec-version", InputField.NUMBER_POSITIVE).assertRequired();
         setAttribute("spec-version", "1.1");
+
         setNameAttribute(getAttribute2("spec-version"));
         setMetaAttributes(MetaEditorAttribute.parse("spec-version,"));
+
     }
+
 }

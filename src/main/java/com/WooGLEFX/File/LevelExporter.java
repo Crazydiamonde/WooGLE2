@@ -448,7 +448,7 @@ public class LevelExporter {
         Files.write(textPath, Collections.singleton(text), StandardCharsets.UTF_8);
     }
 
-    public static void exportBallAsXML(_Ball ball, String outputPathString, double version, boolean exportingInGoomod) throws IOException {
+    public static void exportBallAsXML(_Ball ball, String outputPathString, double version, boolean goomod) throws IOException {
         /* General Parts */
         /* Walking Animations */
         /* Attached Animations */
@@ -470,12 +470,12 @@ public class LevelExporter {
         String ballsPathText = outputPathString + "\\balls.xml";
         String resourcesPathText = outputPathString + "\\resources.xml";
 
-        if (!exportingInGoomod && version == 1.3) {
+        if (!goomod && version == 1.3) {
             ballsPathText += ".bin";
             resourcesPathText += ".bin";
         }
 
-        if (exportingInGoomod) {
+        if (goomod) {
             ballsPathText += ".xml";
             resourcesPathText += ".xml";
         }
@@ -497,7 +497,7 @@ public class LevelExporter {
         if (version == 1.3) {
             AESBinFormat.encodeFile(new File(ballsPathText), ballXML.getBytes());
             AESBinFormat.encodeFile(new File(resourcesPathText), resrcXML.getBytes());
-            if (!exportingInGoomod) {
+            if (!goomod) {
                 if (Files.exists(Path.of(FileManager.getNewWOGdir() + "\\res\\balls\\" + name))) {
                     File[] images = new File(FileManager.getNewWOGdir() + "\\res\\balls\\" + name).listFiles();
                     if (images != null) {
@@ -515,7 +515,7 @@ public class LevelExporter {
         if (version == 1.5) {
             Files.write(ballsPath, Collections.singleton(ballXML), StandardCharsets.UTF_8);
             Files.write(resourcesPath, Collections.singleton(resrcXML), StandardCharsets.UTF_8);
-            if (!exportingInGoomod) {
+            if (!goomod) {
                 if (Files.exists(Path.of(FileManager.getOldWOGdir() + "\\res\\balls\\" + name))) {
                     File[] images = new File(FileManager.getOldWOGdir() + "\\res\\balls\\" + name).listFiles();
                     if (images != null) {

@@ -5,11 +5,16 @@ import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class AddinID extends EditorObject {
+
     public AddinID(EditorObject _parent) {
         super(_parent);
         setRealName("id");
-        addAttribute("value", "", InputField.ANY, true);
+
+        addAttribute("value", InputField.ANY).assertRequired();
+
         setNameAttribute(getAttribute2("value"));
         setMetaAttributes(MetaEditorAttribute.parse("value,"));
+
     }
+
 }

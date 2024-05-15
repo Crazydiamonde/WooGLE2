@@ -2,8 +2,8 @@ package com.WorldOfGoo.Scene;
 
 import java.util.ArrayList;
 
+import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
@@ -28,18 +28,40 @@ import javafx.scene.transform.Affine;
 
 public class Particles extends EditorObject {
 
-    private ArrayList<ArrayList<ParticleGraphicsInstance>> drawing = new ArrayList<>();
+    private final ArrayList<ArrayList<ParticleGraphicsInstance>> drawing = new ArrayList<>();
+
 
     public Particles(EditorObject _parent) {
         super(_parent);
         setRealName("particles");
-        addAttribute("effect", "", InputField.PARTICLES, true);
-        addAttribute("depth", "-20", InputField.NUMBER, true);
-        addAttribute("pos", "0,0", InputField.POSITION, false);
-        addAttribute("pretick", "0", InputField.NUMBER, false);
-        addAttribute("enabled", "true", InputField.FLAG, false);
+
+        addAttribute("effect",  InputField.PARTICLES)                      .assertRequired();
+        addAttribute("depth",   InputField.NUMBER)  .setDefaultValue("-20").assertRequired();
+        addAttribute("pos",     InputField.POSITION).setDefaultValue("0,0");
+        addAttribute("pretick", InputField.NUMBER)  .setDefaultValue("0");
+        addAttribute("enabled", InputField.FLAG);
+
+        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
+            public double getX() {
+                return getPosition("pos").getX();
+            }
+            public void setX(double x) {
+                setAttribute("pos", x + "," + -getY());
+            }
+            public double getY() {
+                return -getPosition("pos").getY();
+            }
+            public void setY(double y) {
+                setAttribute("pos", getX() + "," + -y);
+            }
+
+            // TODO label width and height
+
+        });
+
         setNameAttribute(getAttribute2("effect"));
         setMetaAttributes(MetaEditorAttribute.parse("effect,pos,depth,pretick,enabled,"));
+
     }
 
     @Override
@@ -47,7 +69,7 @@ public class Particles extends EditorObject {
         setNameAttribute(getAttribute2("effect"));
     }
 
-    private ArrayList<Integer> counts = new ArrayList<>();
+    private final ArrayList<Integer> counts = new ArrayList<>();
 
     // private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
     //     double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
@@ -58,7 +80,6 @@ public class Particles extends EditorObject {
         return a * m + b * (1 - m);
     }
 
-    @Override
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         if (LevelManager.getLevel().isShowParticles()) {
             for (EditorObject obj : ParticleManager.getParticles()) {
@@ -232,7 +253,6 @@ public class Particles extends EditorObject {
 
     }
 
-    @Override
     public DragSettings mouseIntersection(double mX2, double mY2) {
         if (LevelManager.getLevel().isShowParticles()) {
             Position pos = getPosition("pos");
@@ -255,11 +275,13 @@ public class Particles extends EditorObject {
                 }
             }
         }
-        return new DragSettings(DragSettings.NONE);
+        return DragSettings.NULL;
     }
 
+
     @Override
-    public void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY) {
-        setAttribute("pos", (mouseX - dragSourceX) + "," + (dragSourceY - mouseY));
+    public boolean isVisible() {
+        return LevelManager.getLevel().isShowParticles();
     }
+
 }

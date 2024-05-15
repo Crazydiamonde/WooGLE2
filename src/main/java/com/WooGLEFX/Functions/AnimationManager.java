@@ -1,6 +1,7 @@
 package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.WoGAnimation;
 import com.WorldOfGoo.Scene.SceneLayer;
@@ -18,13 +19,13 @@ public class AnimationManager {
     public static void updateAnimations(float timeElapsed) {
         if (LevelManager.getLevel() != null) {
             for (EditorObject object : LevelManager.getLevel().getScene()) {
-                if (object instanceof SceneLayer) {
+                if (object instanceof SceneLayer sceneLayer) {
                     String anim = object.getAttribute("anim");
                     if (!anim.equals("")) {
                         for (WoGAnimation animation : animations) {
                             if (animation.getName().equals(anim + ".anim.binuni")
                                     || animation.getName().equals(anim + ".anim.binltl")) {
-                                object.updateWithAnimation(animation, timeElapsed);
+                                sceneLayer.updateWithAnimation(animation, timeElapsed);
                             }
                         }
                     }

@@ -14,7 +14,6 @@ import javafx.scene.transform.Affine;
 
 public class LevelManager {
 
-
     private static WorldLevel level = null;
     public static WorldLevel getLevel() {
         return level;
@@ -42,41 +41,27 @@ public class LevelManager {
         VBox vBox = FXContainers.getvBox();
 
         vBox.getChildren().remove(2);
+
         if (level == null) {
             FXContainers.getStage().setTitle("World of Goo Anniversary Editor");
             vBox.getChildren().add(2, FXEditorButtons.getNullGooballsToolbar());
-        } else {
-            if (level.getVersion() == 1.3) {
-                vBox.getChildren().add(2, FXEditorButtons.getOldGooballsToolbar());
-            } else {
-                vBox.getChildren().add(2, FXEditorButtons.getNewGooballsToolbar());
-            }
-            FXContainers.getStage().setTitle(
-                    level.getLevelName() + " (version " + level.getVersion() + ") — World of Goo Anniversary Editor");
-            FXEditorButtons.buttonShowHideAnim.setGraphic(
-                    new ImageView(level.isShowAnimations() ? WorldLevel.showHideAnim : WorldLevel.showHideAnim0));
-            FXEditorButtons.buttonShowHideCamera.setGraphic(
-                    new ImageView(level.isShowCameras() ? WorldLevel.showHideCam1 : WorldLevel.showHideCam0));
-            FXEditorButtons.buttonShowHideForcefields.setGraphic(new ImageView(
-                    level.isShowForcefields() ? WorldLevel.showHideForcefields1 : WorldLevel.showHideForcefields0));
-            FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(
-                    level.isShowGeometry() ? WorldLevel.showHideGeometry1 : WorldLevel.showHideGeometry0));
-            switch (level.getShowGoos()) {
-                case 0 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs0));
-                case 1 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs1));
-                case 2 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(WorldLevel.showHideGoobs2));
-            }
-            FXEditorButtons.buttonShowHideGraphics.setGraphic(
-                    new ImageView(level.isShowGraphics() ? WorldLevel.showHideImages1 : WorldLevel.showHideImages0));
-            FXEditorButtons.buttonShowHideLabels.setGraphic(
-                    new ImageView(level.isShowLabels() ? WorldLevel.showHideLabels1 : WorldLevel.showHideLabels0));
-            FXEditorButtons.buttonShowHideParticles.setGraphic(new ImageView(
-                    level.isShowParticles() ? WorldLevel.showHideParticles1 : WorldLevel.showHideParticles0));
-            FXEditorButtons.buttonShowHideSceneBGColor.setGraphic(new ImageView(
-                    level.isShowSceneBGColor() ? WorldLevel.showHideSceneBGColor1 : WorldLevel.showHideSceneBGColor0));
-            FXPropertiesView.changeTableView(level.getSelected());
-            SelectionManager.goToSelectedInHierarchy();
+            return;
         }
+
+        if (level.getVersion() == 1.3) {
+            vBox.getChildren().add(2, FXEditorButtons.getOldGooballsToolbar());
+        } else {
+            vBox.getChildren().add(2, FXEditorButtons.getNewGooballsToolbar());
+        }
+
+        String levelName = level.getLevelName() + " (version " + level.getVersion() + ")";
+        FXContainers.getStage().setTitle(levelName + " — World of Goo Anniversary Editor");
+
+        FXEditorButtons.updateButtons();
+
+        FXPropertiesView.changeTableView(level.getSelected());
+        SelectionManager.goToSelectedInHierarchy();
+
     }
 
 }

@@ -1,6 +1,6 @@
 package com.WooGLEFX.GUI;
 
-import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.BallManager;
 import javafx.application.Application;
@@ -27,66 +27,45 @@ public class BallSelector extends Application {
     public static String selected = "";
     public static Label selectedLabel = null;
 
-    public static final String[] originalBalls = new String[] {
-            "Anchor",
-            "AnchorFriendly",
-            "AnchorSticky",
-            "AnchorStickyInvisible",
-            "balloon",
-            "Beauty",
-            "BeautyProduct",
-            "BeautyProductEye",
-            "Bit",
-            "BlockHead",
-            "BombMini",
-            "BombShaft",
-            "BombSticky",
-            "Bone",
-            "common",
-            "common_albino",
-            "common_black",
-            "Distant",
-            "Drained",
-            "DrainedIsh",
-            "EvilEye",
-            "Fish",
-            "Fuse",
-            "generic",
-            "GooProduct",
-            "Hex",
-            "IconWindowRect",
-            "IconWindowSquare",
-            "Ivy",
-            "Peddler",
-            "Pilot",
-            "Pixel",
-            "PixelProduct",
-            "Pokey",
-            "RectHead",
-            "SimCommon",
-            "Spam",
-            "TimeBug",
-            "Ugly",
-            "UglyProduct",
-            "UndeletePill",
-            "UndeletePillFizz",
-            "UtilAttachUnwalkable",
-            "UtilAttachWalkable",
-            "UtilChapter2",
-            "UtilGooGlobber",
-            "UtilGooGlobberMom",
-            "UtilGooGlobberMomQuiet",
-            "UtilNoAttachUnwalkable",
-            "UtilNoAttachWalkableSmall",
-            "UtilProductLauncherScreamer",
-            "water",
-            "WindowRect",
-            "WindowSquare",
-            "ZBomb",
-            "ZBombMom"
-    };
-
     public static File ballDir = null;
+
+
+    private void addBallLabels(Stage stage, VBox allBallsBox) {
+
+        if (ballDir == null) return;
+
+        File[] balls = ballDir.listFiles();
+        if (balls == null) return;
+
+        for (File ballFile : balls) addBallLabel(ballFile, stage, allBallsBox);
+
+    }
+
+
+    private void addBallLabel(File ballFile, Stage stage, VBox allBallsBox) {
+
+        for (String ballName : BaseGameResources.GOO_BALL_TYPES) if (ballName.equals(ballFile.getName())) return;
+
+        Label label = new Label(ballFile.getName());
+
+        label.setPrefWidth(376);
+
+        label.setOnMouseClicked(mouseEvent -> {
+            if (selectedLabel == label) {
+                BallManager.saveBallInVersion(selected, oldVersion, newVersion);
+                stage.close();
+            } else if (selectedLabel != null) {
+                selectedLabel.setStyle("");
+            }
+            label.setStyle("-fx-background-color: #C0E0FFFF");
+            selectedLabel = label;
+            selected = label.getText();
+        });
+
+        allBallsBox.getChildren().add(label);
+
+    }
+
 
     @Override
     public void start(Stage stage) {
@@ -95,11 +74,8 @@ public class BallSelector extends Application {
 
         VBox allBallsBox = new VBox();
 
-        if (oldVersion == 1.3){
-            ballDir = new File(FileManager.getOldWOGdir() + "\\res\\balls");
-        } else if (oldVersion == 1.5){
-            ballDir = new File(FileManager.getNewWOGdir() + "\\res\\balls");
-        }
+        String dir = oldVersion == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        ballDir = new File(dir + "\\res\\balls");
 
         ScrollPane realPane = new ScrollPane(allBallsBox);
 
@@ -108,35 +84,7 @@ public class BallSelector extends Application {
 
         Label selectBallToSave = new Label("Select ball to save:");
 
-        if (ballDir != null) {
-            File[] balls = ballDir.listFiles();
-            if (balls != null) {
-                for (File ballFile : balls) {
-                    boolean ok = true;
-                    for (String ballName : originalBalls) {
-                        if (ballName.equals(ballFile.getName())) {
-                            ok = false;
-                        }
-                    }
-                    if (ok) {
-                        Label label = new Label(ballFile.getName());
-                        label.setPrefWidth(376);
-                        label.setOnMouseClicked(mouseEvent -> {
-                            if (selectedLabel == label) {
-                                BallManager.saveBallInVersion(selected, oldVersion, newVersion);
-                                stage.close();
-                            } else if (selectedLabel != null) {
-                                selectedLabel.setStyle("");
-                            }
-                            label.setStyle("-fx-background-color: #C0E0FFFF");
-                            selectedLabel = label;
-                            selected = label.getText();
-                        });
-                        allBallsBox.getChildren().add(label);
-                    }
-                }
-            }
-        }
+        addBallLabels(stage, allBallsBox);
 
         Button openButton = new Button("Save");
         Button cancelButton = new Button("Cancel");
@@ -166,4 +114,5 @@ public class BallSelector extends Application {
         stage.show();
 
     }
+
 }

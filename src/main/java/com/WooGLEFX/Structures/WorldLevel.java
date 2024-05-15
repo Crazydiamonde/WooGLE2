@@ -7,7 +7,6 @@ import java.util.Stack;
 import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXEditorButtons;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelLoader;
@@ -74,8 +73,8 @@ public class WorldLevel {
     public static Image showHideLabels1;
     public static Image showHideParticles0;
     public static Image showHideParticles1;
-    public static Image showHideSceneBGColor0;
-    public static Image showHideSceneBGColor1;
+    public static Image showHideBGColor0;
+    public static Image showHideBGColor1;
 
     public static final int NO_UNSAVED_CHANGES = 0;
     public static final int UNSAVED_CHANGES = 1;
@@ -115,8 +114,8 @@ public class WorldLevel {
             showHideLabels1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png");
             showHideParticles0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles_disabled.png");
             showHideParticles1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png");
-            showHideSceneBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
-            showHideSceneBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
+            showHideBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
+            showHideBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
             noChangesImageOld = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_old.png");
             changesImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_old.png");
             changesUnmodifiableImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_old.png");
@@ -267,7 +266,7 @@ public class WorldLevel {
 
     public void setShowSceneBGColor(boolean showSceneBGColor) {
         this.showSceneBGColor = showSceneBGColor;
-        FXEditorButtons.buttonShowHideSceneBGColor.setGraphic(new ImageView(showSceneBGColor ? showHideSceneBGColor1 : showHideSceneBGColor0));
+        FXEditorButtons.buttonShowHideSceneBGColor.setGraphic(new ImageView(showSceneBGColor ? showHideBGColor1 : showHideBGColor0));
     }
 
     public Tab getLevelTab() {
@@ -463,7 +462,7 @@ public class WorldLevel {
                             GlobalResourceManager.getText(signpost.getAttribute("text"), version).deepClone(textObject);
                         } catch (Exception e) {
                             LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text") + "\" (version " + version + ")"));
-                            EditorObject string = EditorObject.create("string", new EditorAttribute[0], textObject);
+                            EditorObject string = EditorObject.create("string", textObject);
                             string.setAttribute("id", signpost.getAttribute("text"));
                         }
                     }

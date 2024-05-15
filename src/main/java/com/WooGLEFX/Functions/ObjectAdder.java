@@ -110,7 +110,7 @@ public class ObjectAdder {
 
 
     public static void addBall(EditorObject parent, String type) {
-        BallInstance obj = (BallInstance) EditorObject.create("BallInstance", new EditorAttribute[0], parent);
+        BallInstance obj = (BallInstance) EditorObject.create("BallInstance", parent);
         obj.setAttribute("type", type);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
@@ -121,7 +121,7 @@ public class ObjectAdder {
     }
 
     public static void addLine(EditorObject parent) {
-        Line obj = (Line) EditorObject.create("line", new EditorAttribute[0], parent);
+        Line obj = (Line) EditorObject.create("line", parent);
         obj.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("line");
         LevelManager.getLevel().getScene().add(obj);
@@ -129,7 +129,7 @@ public class ObjectAdder {
     }
 
     public static void addRectangle(EditorObject parent) {
-        Rectangle obj = (Rectangle) EditorObject.create("rectangle", new EditorAttribute[0], parent);
+        Rectangle obj = (Rectangle) EditorObject.create("rectangle", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setAttribute("static", true);
@@ -139,7 +139,7 @@ public class ObjectAdder {
     }
 
     public static void addCircle(EditorObject parent) {
-        Circle obj = (Circle) EditorObject.create("circle", new EditorAttribute[0], parent);
+        Circle obj = (Circle) EditorObject.create("circle", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("circle");
@@ -149,7 +149,7 @@ public class ObjectAdder {
     }
 
     public static SceneLayer addSceneLayer(EditorObject parent) {
-        SceneLayer obj = (SceneLayer) EditorObject.create("SceneLayer", new EditorAttribute[0], parent);
+        SceneLayer obj = (SceneLayer) EditorObject.create("SceneLayer", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("SceneLayer");
@@ -159,7 +159,7 @@ public class ObjectAdder {
     }
 
     public static void addCompositegeom(EditorObject parent) {
-        Compositegeom obj = (Compositegeom) EditorObject.create("compositegeom", new EditorAttribute[0], parent);
+        Compositegeom obj = (Compositegeom) EditorObject.create("compositegeom", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("compositegeom");
@@ -169,7 +169,7 @@ public class ObjectAdder {
     }
 
     public static void addHinge(EditorObject parent) {
-        Hinge obj = (Hinge) EditorObject.create("hinge", new EditorAttribute[0], parent);
+        Hinge obj = (Hinge) EditorObject.create("hinge", parent);
         obj.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("hinge");
         LevelManager.getLevel().getScene().add(obj);
@@ -219,11 +219,11 @@ public class ObjectAdder {
                 /*
                  * Create a pipe with a vertex at the level exit and at the scene intersection.
                  */
-                EditorObject pipe = EditorObject.create("pipe", new EditorAttribute[0], LevelManager.getLevel().getLevelObject());
-                EditorObject vertex1 = EditorObject.create("Vertex", new EditorAttribute[0], pipe);
+                EditorObject pipe = EditorObject.create("pipe", LevelManager.getLevel().getLevelObject());
+                EditorObject vertex1 = EditorObject.create("Vertex", pipe);
                 vertex1.setAttribute("x", levelexit.getPosition("pos").getX());
                 vertex1.setAttribute("y", levelexit.getPosition("pos").getY());
-                EditorObject vertex2 = EditorObject.create("Vertex", new EditorAttribute[0], pipe);
+                EditorObject vertex2 = EditorObject.create("Vertex", pipe);
                 vertex2.setAttribute("x", closestPoint.getX());
                 vertex2.setAttribute("y", closestPoint.getY());
                 ((Vertex) vertex2).setPrevious((Vertex) vertex1);
@@ -258,7 +258,7 @@ public class ObjectAdder {
                 previous = (Vertex) child;
             }
         }
-        Vertex obj = (Vertex) EditorObject.create("Vertex", new EditorAttribute[0], pipe);
+        Vertex obj = (Vertex) EditorObject.create("Vertex", pipe);
         obj.setPrevious(previous);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
@@ -268,7 +268,7 @@ public class ObjectAdder {
     }
 
     public static void addFire(EditorObject parent) {
-        Fire obj = (Fire) EditorObject.create("fire", new EditorAttribute[0], parent);
+        Fire obj = (Fire) EditorObject.create("fire", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("fire");
@@ -277,7 +277,7 @@ public class ObjectAdder {
     }
 
     public static void addLinearForcefield(EditorObject parent) {
-        Linearforcefield obj = (Linearforcefield) EditorObject.create("linearforcefield", new EditorAttribute[0],
+        Linearforcefield obj = (Linearforcefield) EditorObject.create("linearforcefield",
                 parent);
         obj.setAttribute("center", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("linearforcefield");
@@ -286,7 +286,7 @@ public class ObjectAdder {
     }
 
     public static void addRadialForcefield(EditorObject parent) {
-        Radialforcefield obj = (Radialforcefield) EditorObject.create("radialforcefield", new EditorAttribute[0],
+        Radialforcefield obj = (Radialforcefield) EditorObject.create("radialforcefield",
                 parent);
         obj.setAttribute("center", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("radialforcefield");
@@ -295,7 +295,7 @@ public class ObjectAdder {
     }
 
     public static void addParticle(EditorObject parent) {
-        Particles obj = (Particles) EditorObject.create("particles", new EditorAttribute[0], parent);
+        Particles obj = (Particles) EditorObject.create("particles", parent);
         obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + "," + -FXCanvas.getScreenCenter().getY());
         obj.setRealName("particles");
         LevelManager.getLevel().getScene().add(obj);
@@ -303,7 +303,7 @@ public class ObjectAdder {
     }
 
     public static void addSign(EditorObject parent) {
-        Signpost obj = (Signpost) EditorObject.create("signpost", new EditorAttribute[0], parent);
+        Signpost obj = (Signpost) EditorObject.create("signpost", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("signpost");
@@ -312,7 +312,7 @@ public class ObjectAdder {
     }
 
     public static void addString(EditorObject parent) {
-        TextString obj = (TextString) EditorObject.create("string", new EditorAttribute[0], parent);
+        TextString obj = (TextString) EditorObject.create("string", parent);
         obj.setAttribute("id", "TEXT_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_STR0");
         obj.setAttribute("text", "");
         fixString(obj);
@@ -322,7 +322,7 @@ public class ObjectAdder {
     }
 
     public static void addResrcImage(EditorObject parent) {
-        ResrcImage obj = (ResrcImage) EditorObject.create("Image", new EditorAttribute[0], parent);
+        ResrcImage obj = (ResrcImage) EditorObject.create("Image", parent);
         obj.setAttribute("id", "IMAGE_SCENE_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_IMG0");
         obj.setAttribute("path", "");
         obj.setAttribute("REALid", "IMAGE_SCENE_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_IMG0");
@@ -333,7 +333,7 @@ public class ObjectAdder {
     }
 
     public static void addSound(EditorObject parent) {
-        Sound obj = (Sound) EditorObject.create("Sound", new EditorAttribute[0], parent);
+        Sound obj = (Sound) EditorObject.create("Sound", parent);
         obj.setAttribute("id", "SOUND_LEVEL_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_SND0");
         obj.setAttribute("path", "");
         obj.setAttribute("REALid", "SOUND_LEVEL_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_SND0");
@@ -344,7 +344,7 @@ public class ObjectAdder {
     }
 
     public static void addSetDefaults(EditorObject parent) {
-        SetDefaults obj = (SetDefaults) EditorObject.create("SetDefaults", new EditorAttribute[0], parent);
+        SetDefaults obj = (SetDefaults) EditorObject.create("SetDefaults", parent);
         obj.setAttribute("path", "./");
         obj.setAttribute("idprefix", "");
         obj.setRealName("SetDefaults");
@@ -353,7 +353,7 @@ public class ObjectAdder {
     }
 
     public static void addLabel(EditorObject parent) {
-        Label obj = (Label) EditorObject.create("label", new EditorAttribute[0], parent);
+        Label obj = (Label) EditorObject.create("label", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("label");
@@ -362,14 +362,14 @@ public class ObjectAdder {
     }
 
     public static void addStrand(EditorObject parent) {
-        Strand obj = (Strand) EditorObject.create("Strand", new EditorAttribute[0], parent);
+        Strand obj = (Strand) EditorObject.create("Strand", parent);
         obj.setRealName("Strand");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addCamera(EditorObject parent) {
-        Camera obj = (Camera) EditorObject.create("camera", new EditorAttribute[0], parent);
+        Camera obj = (Camera) EditorObject.create("camera", parent);
         obj.setAttribute("endpos", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("camera");
         LevelManager.getLevel().getLevel().add(obj);
@@ -377,7 +377,7 @@ public class ObjectAdder {
     }
 
     public static void addPoi(EditorObject parent) {
-        Poi obj = (Poi) EditorObject.create("poi", new EditorAttribute[0], parent);
+        Poi obj = (Poi) EditorObject.create("poi", parent);
         obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         obj.setRealName("poi");
         LevelManager.getLevel().getLevel().add(obj);
@@ -385,7 +385,7 @@ public class ObjectAdder {
     }
 
     public static void addMusic(EditorObject parent) {
-        Music obj = (Music) EditorObject.create("music", new EditorAttribute[0], parent);
+        Music obj = (Music) EditorObject.create("music", parent);
         obj.setRealName("music");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
@@ -393,14 +393,14 @@ public class ObjectAdder {
     }
 
     public static void addLoopsound(EditorObject parent) {
-        Loopsound obj = (Loopsound) EditorObject.create("loopsound", new EditorAttribute[0], parent);
+        Loopsound obj = (Loopsound) EditorObject.create("loopsound", parent);
         obj.setRealName("loopsound");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addButton(EditorObject parent) {
-        Button obj = (Button) EditorObject.create("button", new EditorAttribute[0], parent);
+        Button obj = (Button) EditorObject.create("button", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setRealName("button");
@@ -409,63 +409,63 @@ public class ObjectAdder {
     }
 
     public static void addButtongroup(EditorObject parent) {
-        Buttongroup obj = (Buttongroup) EditorObject.create("buttongroup", new EditorAttribute[0], parent);
+        Buttongroup obj = (Buttongroup) EditorObject.create("buttongroup", parent);
         obj.setRealName("buttongroup");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addMotor(EditorObject parent) {
-        Motor obj = (Motor) EditorObject.create("motor", new EditorAttribute[0], parent);
+        Motor obj = (Motor) EditorObject.create("motor", parent);
         obj.setRealName("motor");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addSlider(EditorObject parent) {
-        Slider obj = (Slider) EditorObject.create("slider", new EditorAttribute[0], parent);
+        Slider obj = (Slider) EditorObject.create("slider", parent);
         obj.setRealName("slider");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addEndoncollision(EditorObject parent) {
-        Endoncollision obj = (Endoncollision) EditorObject.create("endoncollision", new EditorAttribute[0], parent);
+        Endoncollision obj = (Endoncollision) EditorObject.create("endoncollision", parent);
         obj.setRealName("endoncollision");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addEndonnogeom(EditorObject parent) {
-        Endonnogeom obj = (Endonnogeom) EditorObject.create("endonnogeom", new EditorAttribute[0], parent);
+        Endonnogeom obj = (Endonnogeom) EditorObject.create("endonnogeom", parent);
         obj.setRealName("endonnogeom");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addEndonmessage(EditorObject parent) {
-        Endonmessage obj = (Endonmessage) EditorObject.create("endonmessage", new EditorAttribute[0], parent);
+        Endonmessage obj = (Endonmessage) EditorObject.create("endonmessage", parent);
         obj.setRealName("endonmessage");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addTargetheight(EditorObject parent) {
-        Targetheight obj = (Targetheight) EditorObject.create("targetheight", new EditorAttribute[0], parent);
+        Targetheight obj = (Targetheight) EditorObject.create("targetheight", parent);
         obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + ", " + -FXCanvas.getScreenCenter().getY());
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addLevelexit(EditorObject parent) {
-        Levelexit obj = (Levelexit) EditorObject.create("levelexit", new EditorAttribute[0], parent);
+        Levelexit obj = (Levelexit) EditorObject.create("levelexit", parent);
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addPipe(EditorObject parent) {
-        Pipe obj = (Pipe) EditorObject.create("pipe", new EditorAttribute[0], parent);
+        Pipe obj = (Pipe) EditorObject.create("pipe", parent);
         obj.setRealName("endonmessage");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);

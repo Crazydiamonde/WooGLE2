@@ -54,7 +54,7 @@ public class BallFileOpener extends DefaultHandler {
             if (qName.equals("particles") || qName.equals("sound")) {
                 qName = "ball_" + qName;
             }
-            EditorObject obj = EditorObject.create(qName, new EditorAttribute[0], parent);
+            EditorObject obj = EditorObject.create(qName, parent);
             for (int i = 0; i < attributes.getLength(); i++){
                 obj.setAttribute(attributes.getQName(i), attributes.getValue(i));
             }

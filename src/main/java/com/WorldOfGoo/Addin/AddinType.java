@@ -5,12 +5,17 @@ import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class AddinType extends EditorObject {
+
     public AddinType(EditorObject _parent) {
         super(_parent);
         setRealName("type");
-        addAttribute("value", "", InputField.ANY, true);
+
+        addAttribute("value", InputField.ANY).assertRequired();
         setNameAttribute(getAttribute2("value"));
         setAttribute("value", "level");
+
         setMetaAttributes(MetaEditorAttribute.parse(","));
+
     }
+
 }

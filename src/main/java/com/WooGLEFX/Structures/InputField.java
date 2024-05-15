@@ -45,46 +45,16 @@ public class InputField {
     public static final int UNIQUE_GOOBALL_ID = 22;
     public static final int IMAGE_PATH = 23;
     public static final int SOUND_PATH = 24;
+    public static final int FONT = 25;
+
+    public static final int CONTEXT = 26;
     //TODO make imagepath and soundpath actual field types and make verifying them possible which is hard because of setdefaults
 
-    public boolean required;
-
-    public boolean requiredInSave = false;
-
-    private final String name;
-    private final int type;
-
-    public String getName() {
-        return name;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public InputField(String name, int type) {
-        this.name = name;
-        this.type = type;
-        this.required = false;
-    }
-
-    public InputField(String name, int type, boolean required) {
-        this.name = name;
-        this.type = type;
-        this.required = required;
-    }
-
-    public InputField(boolean requiredInSave, String name, int type) {
-        this.name = name;
-        this.type = type;
-        this.requiredInSave = requiredInSave;
-    }
-
-    public boolean verify(EditorObject object, String potential) {
+    public static boolean verify(EditorObject object, int type, String potential) {
         if (potential.equals("")){
-            return !required && !(type == ANY_REQUIRED || type == IMAGE_REQUIRED);
+            return !(type == ANY_REQUIRED || type == IMAGE_REQUIRED);
         }
-        switch (this.type) {
+        switch (type) {
             case NUMBER:
                 try {
                     Double.parseDouble(potential);
@@ -115,7 +85,7 @@ public class InputField {
                 }
             case IMAGE, IMAGE_REQUIRED:
                 for (EditorObject resrc : object.getLevel().getResources()) {
-                    if (resrc.getAttribute("id") != null && resrc.getAttribute("id").equals(potential)) {
+                    if (resrc.attributeExists("id") && resrc.getAttribute("id").equals(potential)) {
                         return true;
                     }
                 }

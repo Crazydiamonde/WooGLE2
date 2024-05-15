@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import com.WooGLEFX.EditorObjects.ObjectDetection.Draw;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
@@ -29,22 +30,12 @@ import javafx.scene.transform.Affine;
 
 public class Renderer {
 
-    public static final Paint solidRed = Paint.valueOf("FF4000FF");
-    public static final Paint solidBlue = Paint.valueOf("0040FFFF");
-    public static final Paint transparentRed = Paint.valueOf("FF800040");
-    public static final Paint transparentBlue = Paint.valueOf("0080FF40");
     public static final Paint selectionOutline = Paint.valueOf("000000FF");
     public static final Paint selectionOutline2 = Paint.valueOf("FFFFFFFF");
     public static final Paint mechanics = Paint.valueOf("FFFF00FF");
-    public static final Paint pipeVertex = Paint.valueOf("FF5599FF");
     public static final Paint PIPE = Paint.valueOf("404040FF");
     public static final Paint PIPE_BEAUTY = Paint.valueOf("FFA6B7FF");
     public static final Paint PIPE_ISH = Paint.valueOf("5FFF5FFF");
-    public static final Paint compositeGeom = Paint.valueOf("00FF00FF");
-    public static final Paint poiNormal = Paint.valueOf("41C0C080");
-    public static final Paint poiWidescreen = Paint.valueOf("21FE8080");
-    public static final Paint endNormal = Paint.valueOf("004040FF");
-    public static final Paint endWidescreen = Paint.valueOf("006030FF");
     public static final Paint noLevel = Paint.valueOf("A0A0A0FF");
     public static final Paint middleColor = Paint.valueOf("808080FF");
     public static final Paint particleLabels = Paint.valueOf("A81CFF");
@@ -53,15 +44,8 @@ public class Renderer {
 
     public static final Stop[] stops = new Stop[] { new Stop(0, javafx.scene.paint.Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")) };
 
-    public static double angleTo(Point2D p1, Point2D p2){
-        double dx = p2.getX() - p1.getX();
-        double dy = p2.getY() - p1.getY();
-        double magnitude = Math.sqrt(dx * dx + dy * dy);
-        if (dy > 0) {
-            return -Math.acos(dx / magnitude);
-        } else {
-            return Math.acos(dx / magnitude);
-        }
+    public static double angleTo(Point2D p1, Point2D p2) {
+        return Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX());
     }
 
     public static void addAppropriately(EditorObject obj, ArrayList<EditorObject> list) {
@@ -92,7 +76,7 @@ public class Renderer {
         ArrayList<EditorObject> scene = new ArrayList<>();
 
         for (EditorObject object : level.getScene()) {
-            if (object.getAttribute("depth") != null && !(object instanceof Linearforcefield)) {
+            if (object.attributeExists("depth") && !(object instanceof Linearforcefield)) {
                 double depth = object.getDouble("depth");
                 if (depth < -0.001) {
                     addAppropriately(object, lowDepth);
@@ -115,7 +99,7 @@ public class Renderer {
         }
 
         for (EditorObject object : level.getLevel()) {
-            if (object.getAttribute("depth") != null) {
+            if (object.attributeExists("depth")) {
                 double depth = object.getDouble("depth");
                 if (depth < -0.001) {
                     addAppropriately(object, lowDepth);
@@ -167,7 +151,7 @@ public class Renderer {
         ArrayList<EditorObject> balls = new ArrayList<>();
 
         for (EditorObject object : level.getScene()) {
-            if (object.getAttribute("depth") != null && !(object instanceof Linearforcefield)) {
+            if (object.attributeExists("depth") && !(object instanceof Linearforcefield)) {
                 double depth = object.getDouble("depth");
                 if (depth < -0.001) {
                     addAppropriately(object, lowDepth);
@@ -190,7 +174,7 @@ public class Renderer {
         }
 
         for (EditorObject object : level.getLevel()) {
-            if (object.getAttribute("depth") != null) {
+            if (object.attributeExists("depth")) {
                 double depth = object.getDouble("depth");
                 if (depth < -0.001) {
                     addAppropriately(object, lowDepth);
@@ -252,17 +236,11 @@ public class Renderer {
         for (EditorObject object : level.getLevel()) {
             if (object instanceof Pipe && previousPipeColor == null) {
                 String pipeColor = object.getAttribute("type");
-                switch (pipeColor) {
-                    case "BEAUTY":
-                        previousPipeColor = PIPE_BEAUTY;
-                        break;
-                    case "ISH":
-                        previousPipeColor = PIPE_ISH;
-                        break;
-                    default:
-                        previousPipeColor = PIPE;
-                        break;
-                }
+                previousPipeColor = switch (pipeColor) {
+                    case "BEAUTY" -> PIPE_BEAUTY;
+                    case "ISH" -> PIPE_ISH;
+                    default -> PIPE;
+                };
             }
             if (object instanceof Vertex && LevelManager.getLevel().isShowGeometry()) {
                 if (previousVertex != null) {
@@ -276,10 +254,7 @@ public class Renderer {
         for (EditorObject object : orderObjectsByDepth(level)) {
             graphicsContext.save();
             imageGraphicsContext.save();
-            if (object.getAttribute("image") != null && !object.getAttribute("image").equals("") && LevelManager.getLevel().isShowGraphics()) {
-                object.drawImage(graphicsContext, imageGraphicsContext);
-            }
-            object.draw(graphicsContext, imageGraphicsContext);
+            Draw.draw(graphicsContext, imageGraphicsContext, object);
             graphicsContext.restore();
             imageGraphicsContext.restore();
         }

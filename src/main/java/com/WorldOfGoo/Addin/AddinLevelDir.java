@@ -5,11 +5,16 @@ import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class AddinLevelDir extends EditorObject {
+
     public AddinLevelDir(EditorObject _parent) {
         super(_parent);
         setRealName("dir");
-        addAttribute("value", "", InputField.ANY, true);
+
+        addAttribute("value", InputField.ANY).assertRequired();
+
         setNameAttribute(getAttribute2("value"));
         setMetaAttributes(MetaEditorAttribute.parse("value,"));
+
     }
+
 }

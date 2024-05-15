@@ -2,7 +2,6 @@ package com.WooGLEFX.GUI;
 
 import java.io.File;
 
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
 
