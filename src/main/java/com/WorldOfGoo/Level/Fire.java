@@ -44,11 +44,17 @@ public class Fire extends EditorObject {
             public void setRadius(double radius) {
                 setAttribute("radius", radius);
             }
+            public double getEdgeSize() {
+                return 0.5;
+            }
             public Paint getBorderColor() {
                 return new Color(1.0, 0.25, 0.0, 1.0);
             }
             public Paint getFillColor() {
                 return new Color(1.0, 0.25, 0.0, 0.1);
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
             }
         });
 
@@ -93,12 +99,6 @@ public class Fire extends EditorObject {
                 particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
             }
         });
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

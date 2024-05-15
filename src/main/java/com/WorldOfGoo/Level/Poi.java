@@ -56,17 +56,14 @@ public class Poi extends EditorObject {
             public Paint getFillColor() {
                 return new Color(0.25, 0.8, 0.8, 0.1);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowCameras();
+            }
         });
 
         setNameAttribute(EditorAttribute.NULL);
         setMetaAttributes(MetaEditorAttribute.parse("pos,traveltime,pause,zoom,"));
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowCameras();
     }
 
 }

@@ -11,15 +11,9 @@ public class MouseIntersection {
 
     public static DragSettings mouseIntersection(EditorObject editorObject, double mouseX, double mouseY) {
 
-        if (!editorObject.isVisible()) return DragSettings.NULL;
-
-        if (editorObject instanceof BallInstance ballInstance) {
-            return ballInstance.mouseIntersection(mouseX, mouseY);
-        }
-
         for (ObjectPosition objectPosition : editorObject.getObjectPositions()) {
 
-            DragSettings dragSettings = forPosition(objectPosition, mouseX, mouseY, editorObject.getImage());
+            DragSettings dragSettings = forPosition(objectPosition, mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
 
         }
@@ -29,7 +23,9 @@ public class MouseIntersection {
     }
 
 
-    public static DragSettings forPosition(ObjectPosition objectPosition, double mouseX, double mouseY, Image image) {
+    public static DragSettings forPosition(ObjectPosition objectPosition, double mouseX, double mouseY) {
+
+        if (!objectPosition.isVisible()) return DragSettings.NULL;
 
         switch (objectPosition.getId()) {
 
@@ -52,8 +48,7 @@ public class MouseIntersection {
                 return AnchorCollider.mouseIntersection(objectPosition, mouseX, mouseY);
             }
             case ObjectPosition.IMAGE -> {
-                if (image == null) return DragSettings.NULL;
-                return ImageCollider.mouseIntersection(objectPosition, mouseX, mouseY, image);
+                return ImageCollider.mouseIntersection(objectPosition, mouseX, mouseY);
             }
             case ObjectPosition.LINE -> {
                 return LineCollider.mouseIntersection(objectPosition, mouseX, mouseY);

@@ -3,17 +3,20 @@ package com.WorldOfGoo.Scene;
 import java.io.FileNotFoundException;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Compositegeom extends EditorObject {
+
+    private Image image;
+
 
     public Compositegeom(EditorObject _parent) {
         super(_parent);
@@ -67,6 +70,9 @@ public class Compositegeom extends EditorObject {
             public Paint getFillColor() {
                 return new Color(0, 1.0, 0, 0.25);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
+            }
         });
 
         addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
@@ -102,6 +108,18 @@ public class Compositegeom extends EditorObject {
             public void setHeight(double height) {
                 setAttribute("imagescale", getPosition("imagescale").getX() + "," + (height / getImage().getHeight()));
             }
+            public Image getImage() {
+                return image;
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
+            }
+            public boolean isResizable() {
+                return false;
+            }
+            public boolean isRotatable() {
+                return false;
+            }
         });
 
         setNameAttribute(getAttribute2("id"));
@@ -114,7 +132,7 @@ public class Compositegeom extends EditorObject {
     public void update() {
         if (!getAttribute("image").equals("")) {
             try {
-                setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
+                image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
             } catch (FileNotFoundException e) {
                 Alarms.errorMessage(e);
             }
@@ -123,7 +141,7 @@ public class Compositegeom extends EditorObject {
         setChangeListener("image", (observable, oldValue, newValue) -> {
             if (!getAttribute("image").equals("")) {
                 try {
-                    setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
+                    image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
                 } catch (FileNotFoundException e) {
                     Alarms.errorMessage(e);
                 }
@@ -134,12 +152,6 @@ public class Compositegeom extends EditorObject {
     @Override
     public String[] getPossibleChildren() {
         return new String[]{ "Circle", "Rectangle" };
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

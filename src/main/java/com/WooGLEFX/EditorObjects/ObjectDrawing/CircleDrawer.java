@@ -47,10 +47,12 @@ public class CircleDrawer {
             graphicsContext.strokeRect(screenX, screenY, radius * 2 * zoom, radius * 2 * zoom);
             graphicsContext.setLineDashes(0);
 
-            graphicsContext.strokeRect(screenX - 4, screenY + radius * zoom - 4, 8, 8);
-            graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY + radius * 2 * zoom - 4, 8, 8);
-            graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY - 4, 8, 8);
-            graphicsContext.strokeRect(screenX + radius * 2 * zoom - 4, screenY + radius * zoom - 4, 8, 8);
+            if (objectPosition.isResizable()) {
+                graphicsContext.strokeRect(screenX - 4, screenY + radius * zoom - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY + radius * 2 * zoom - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY - 4, 8, 8);
+                graphicsContext.strokeRect(screenX + radius * 2 * zoom - 4, screenY + radius * zoom - 4, 8, 8);
+            }
 
         }
 

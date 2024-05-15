@@ -48,10 +48,12 @@ public class CircleCollider {
         Point2D bottom = new Point2D(x, y + radius);
         double distance = 4 / LevelManager.getLevel().getZoom();
 
-        if (rectangleIntersection(mouseX, mouseY, left, distance) ||
-            rectangleIntersection(mouseX, mouseY, top, distance) ||
-            rectangleIntersection(mouseX, mouseY, right, distance) ||
-            rectangleIntersection(mouseX, mouseY, bottom, distance)) {
+        if (objectPosition.isResizable() && (
+                rectangleIntersection(mouseX, mouseY, left, distance) ||
+                rectangleIntersection(mouseX, mouseY, top, distance) ||
+                rectangleIntersection(mouseX, mouseY, right, distance) ||
+                rectangleIntersection(mouseX, mouseY, bottom, distance)
+        )) {
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE);
             resizeSettings.setObjectPosition(objectPosition);

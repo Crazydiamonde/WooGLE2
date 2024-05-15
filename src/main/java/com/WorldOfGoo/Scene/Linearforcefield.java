@@ -67,6 +67,12 @@ public class Linearforcefield extends EditorObject {
             public Paint getFillColor() {
                 return new Color(1.0, 1.0, 0, 0.1);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowForcefields();
+            }
+            public boolean isRotatable() {
+                return false;
+            }
         });
 
         addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
@@ -97,17 +103,14 @@ public class Linearforcefield extends EditorObject {
             public Paint getBorderColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, Renderer.stops);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowForcefields();
+            }
         });
 
         setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,center,width,height,Force Field<type,force,dampeningfactor,rotationaldampeningfactor,antigrav,geomonly,enabled>Water<water,color,depth>"));
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowForcefields();
     }
 
 }

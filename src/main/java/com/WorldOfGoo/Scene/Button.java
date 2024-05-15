@@ -95,6 +95,9 @@ public class Button extends EditorObject {
             public void setHeight(double height) {
                 setAttribute("scaley", height / image.getHeight());
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGraphics();
+            }
         });
 
         setNameAttribute(getAttribute2("id"));
@@ -128,12 +131,6 @@ public class Button extends EditorObject {
         setChangeListener("up", wizard);
         setChangeListener("colorize", wizard);
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGraphics();
     }
 
 }

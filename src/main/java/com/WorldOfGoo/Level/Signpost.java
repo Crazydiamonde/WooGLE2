@@ -4,6 +4,7 @@ import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
+import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,9 @@ import javafx.beans.value.ChangeListener;
 public class Signpost extends EditorObject {
 
     private static final Logger logger = LoggerFactory.getLogger(Signpost.class);
+
+
+    private Image image;
 
 
     public Signpost(EditorObject _parent) {
@@ -69,6 +73,12 @@ public class Signpost extends EditorObject {
             public void setHeight(double height) {
                 setAttribute("scaley", height / getImage().getHeight());
             }
+            public Image getImage() {
+                return image;
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGraphics();
+            }
         });
 
         setNameAttribute(getAttribute2("name"));
@@ -81,38 +91,32 @@ public class Signpost extends EditorObject {
     public void update() {
         setNameAttribute(getAttribute2("name"));
         try {
-            setImage(GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion()));
+            image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
             Color color = Color.parse(getAttribute("colorize"));
-            setImage(SceneLayer.colorize(getImage(), color));
+            image = SceneLayer.colorize(image, color);
         } catch (Exception e) {
             if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
                 LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
             }
-            setImage(null);
+            image = null;
         }
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
             logger.trace("Image changed from " + oldValue + " to " + newValue);
             try {
-                setImage(GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion()));
+                image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));
-                setImage(SceneLayer.colorize(getImage(), color));
+                image = SceneLayer.colorize(image, color);
             } catch (Exception e) {
                 if (!LevelLoader.failedResources.contains("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
                     LevelLoader.failedResources.add("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
-                setImage(null);
+                image = null;
             }
         };
 
         setChangeListener("image", wizard);
         setChangeListener("colorize", wizard);
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGraphics();
     }
 
 }

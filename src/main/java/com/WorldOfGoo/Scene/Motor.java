@@ -20,10 +20,4 @@ public class Motor extends EditorObject {
 
     }
 
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
-    }
-
 }

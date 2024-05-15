@@ -54,6 +54,15 @@ public class Hinge extends EditorObject {
             public Paint getFillColor() {
                 return new Color(1.0, 1.0, 0, 0.1);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
+            }
+            public boolean isResizable() {
+                return false;
+            }
+            public boolean isRotatable() {
+                return false;
+            }
         });
 
         setNameAttribute(getAttribute2("body1"));
@@ -65,12 +74,6 @@ public class Hinge extends EditorObject {
         });
         setMetaAttributes(MetaEditorAttribute.parse("anchor,body1,body2,?Hinge<bounce,histop,lostop,stopcfm,stoperp>"));
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

@@ -50,10 +50,4 @@ public class Scene extends EditorObject {
         graphicsContext.setLineDashes(0);
     }
 
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
-    }
-
 }

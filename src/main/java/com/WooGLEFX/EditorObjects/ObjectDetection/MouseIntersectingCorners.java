@@ -13,11 +13,9 @@ public class MouseIntersectingCorners {
 
     public static DragSettings mouseIntersectingCorners(EditorObject editorObject, double mouseX, double mouseY) {
 
-        if (!editorObject.isVisible()) return DragSettings.NULL;
-
         for (ObjectPosition objectPosition : editorObject.getObjectPositions()) {
 
-            DragSettings dragSettings = forPosition(objectPosition, mouseX, mouseY, editorObject.getImage());
+            DragSettings dragSettings = forPosition(objectPosition, mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
 
         }
@@ -27,7 +25,9 @@ public class MouseIntersectingCorners {
     }
 
 
-    public static DragSettings forPosition(ObjectPosition objectPosition, double mouseX, double mouseY, Image image) {
+    public static DragSettings forPosition(ObjectPosition objectPosition, double mouseX, double mouseY) {
+
+        if (!objectPosition.isVisible()) return DragSettings.NULL;
 
         switch (objectPosition.getId()) {
 
@@ -36,7 +36,7 @@ public class MouseIntersectingCorners {
             }
             case ObjectPosition.RECTANGLE, ObjectPosition.RECTANGLE_HOLLOW -> {
                 boolean canRotate = (objectPosition.getId() == ObjectPosition.RECTANGLE);
-                return RectangleCollider.mouseIntersectingCorners(objectPosition, mouseX, mouseY, canRotate);
+                return RectangleCollider.mouseIntersectingCorners(objectPosition, mouseX, mouseY);
             }
             case ObjectPosition.CIRCLE, ObjectPosition.CIRCLE_HOLLOW -> {
                 return CircleCollider.mouseIntersectingCorners(objectPosition, mouseX, mouseY);
@@ -45,7 +45,6 @@ public class MouseIntersectingCorners {
                 return AnchorCollider.mouseIntersectingCorners(objectPosition, mouseX, mouseY);
             }
             case ObjectPosition.IMAGE -> {
-                if (image == null) return DragSettings.NULL;
                 return ImageCollider.mouseIntersectingCorners(objectPosition, mouseX, mouseY);
             }
 

@@ -80,6 +80,9 @@ public class Vertex extends EditorObject {
             public Paint getFillColor() {
                 return new Color(1.0, 0, 1.0, 0.1);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
+            }
         });
 
         setNameAttribute(getAttribute2("x"));
@@ -106,12 +109,6 @@ public class Vertex extends EditorObject {
             graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 10);
             graphicsContext.strokeLine(screenX1, screenY1, screenX2, screenY2);
         }
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

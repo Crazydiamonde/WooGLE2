@@ -27,13 +27,17 @@ public class MouseMovedManager {
         DragSettings hit = MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), x, y);
         Cursor cursor = null;
         switch (hit.getType()) {
+            case DragSettings.NONE -> cursor = Cursor.DEFAULT;
             case DragSettings.RESIZE -> cursor = Cursor.NE_RESIZE;
             case DragSettings.ROTATE, DragSettings.SETANCHOR -> cursor = Cursor.OPEN_HAND;
         }
         if (cursor != null) FXContainers.getStage().getScene().setCursor(cursor);
-        else if (MouseIntersection.mouseIntersection(level.getSelected(), x, y) != DragSettings.NULL) {
-            FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
-        } else FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
+        else {
+            DragSettings intersectionSettings = MouseIntersection.mouseIntersection(level.getSelected(), x, y);
+            if (intersectionSettings != DragSettings.NULL && intersectionSettings.getType() != DragSettings.NONE) {
+                FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
+            } else FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
+        }
 
     }
 

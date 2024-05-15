@@ -44,6 +44,9 @@ public class Label extends EditorObject {
             public void setRotation(double rotation) {
                 setAttribute("rotation", rotation);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowLabels();
+            }
 
             // TODO label width and height
 
@@ -52,12 +55,6 @@ public class Label extends EditorObject {
         setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation,scale,depth,colorize,overlay,screenspace,Text<text,font,align>"));
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowLabels();
     }
 
 }

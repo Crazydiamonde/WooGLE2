@@ -68,20 +68,23 @@ public class MousePressedManager {
                 }
                 if (level.getSelected() != null && level.getSelected() == prevSelected) {
                     DragSettings thisSettings = MouseIntersection.mouseIntersection(level.getSelected(), mouseX, mouseY);
-                    if (thisSettings != DragSettings.NULL) {
+                    if (thisSettings != DragSettings.NULL && thisSettings.getType() != DragSettings.NONE) {
                         FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
                         SelectionManager.setDragSettings(thisSettings);
                     }
                 }
             } else if (SelectionManager.getMode() == SelectionManager.STRAND) {
-                for (EditorObject ball : level.getLevel().toArray(new EditorObject[0])) {
-                    if (ball instanceof BallInstance ballInstance && ballInstance
-                            .mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(),
-                                    (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
-                             != DragSettings.NULL) {
-                        if (SelectionManager.getStrand1Gooball() == null) {
-                            SelectionManager.setStrand1Gooball(ball);
-                            break;
+
+                double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
+                double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
+
+                for (EditorObject editorObject : level.getLevel().toArray(new EditorObject[0])) {
+                    if (editorObject instanceof BallInstance ballInstance) {
+                        if (MouseIntersection.mouseIntersection(ballInstance, mouseX, mouseY) != DragSettings.NULL) {
+                            if (SelectionManager.getStrand1Gooball() == null) {
+                                SelectionManager.setStrand1Gooball(ballInstance);
+                                break;
+                            }
                         }
                     }
                 }

@@ -35,7 +35,7 @@ public class RectangleCollider {
     }
 
 
-    public static DragSettings mouseIntersectingCorners(ObjectPosition objectPosition, double mouseX, double mouseY, boolean canRotate) {
+    public static DragSettings mouseIntersectingCorners(ObjectPosition objectPosition, double mouseX, double mouseY) {
 
         double x = objectPosition.getX();
         double y = objectPosition.getY();
@@ -82,28 +82,28 @@ public class RectangleCollider {
         boolean resize = false;
         boolean rotate = false;
 
-        if (mouseX > topLeft.getX() - distance && mouseX < topLeft.getX() + distance && mouseY > topLeft.getY() - distance && mouseY < topLeft.getY() + distance) {
+        if (objectPosition.isResizable() && mouseX > topLeft.getX() - distance && mouseX < topLeft.getX() + distance && mouseY > topLeft.getY() - distance && mouseY < topLeft.getY() + distance) {
             resize  = true;
             dragSourceX = x - width / 2;
             dragSourceY = y + height / 2;
             dragAnchorX = x + width / 2;
             dragAnchorY = y - height / 2;
         }
-        if (mouseX > topRight.getX() - distance && mouseX < topRight.getX() + distance && mouseY > topRight.getY() - distance && mouseY < topRight.getY() + distance) {
+        if (objectPosition.isResizable() && mouseX > topRight.getX() - distance && mouseX < topRight.getX() + distance && mouseY > topRight.getY() - distance && mouseY < topRight.getY() + distance) {
             resize  = true;
             dragSourceX = x + width / 2;
             dragSourceY = y + height / 2;
             dragAnchorX = x - width / 2;
             dragAnchorY = y - height / 2;
         }
-        if (mouseX > bottomLeft.getX() - distance && mouseX < bottomLeft.getX() + distance && mouseY > bottomLeft.getY() - distance && mouseY < bottomLeft.getY() + distance) {
+        if (objectPosition.isResizable() && mouseX > bottomLeft.getX() - distance && mouseX < bottomLeft.getX() + distance && mouseY > bottomLeft.getY() - distance && mouseY < bottomLeft.getY() + distance) {
             resize  = true;
             dragSourceX = x - width / 2;
             dragSourceY = y - height / 2;
             dragAnchorX = x + width / 2;
             dragAnchorY = y + height / 2;
         }
-        if (mouseX > bottomRight.getX() - distance && mouseX < bottomRight.getX() + distance && mouseY > bottomRight.getY() - distance && mouseY < bottomRight.getY() + distance) {
+        if (objectPosition.isResizable() && mouseX > bottomRight.getX() - distance && mouseX < bottomRight.getX() + distance && mouseY > bottomRight.getY() - distance && mouseY < bottomRight.getY() + distance) {
             resize  = true;
             dragSourceX = x + width / 2;
             dragSourceY = y - height / 2;
@@ -111,14 +111,14 @@ public class RectangleCollider {
             dragAnchorY = y + height / 2;
         }
 
-        if (canRotate && mouseX > left.getX() - distance && mouseX < left.getX() + distance && mouseY > left.getY() - distance && mouseY < left.getY() + distance) {
+        if (objectPosition.isRotatable() && mouseX > left.getX() - distance && mouseX < left.getX() + distance && mouseY > left.getY() - distance && mouseY < left.getY() + distance) {
             rotate = true;
             dragSourceX = x - width / 2;
             dragSourceY = y;
             rotateAngleOffset = rotation;
         }
 
-        if (canRotate && mouseX > right.getX() - distance && mouseX < right.getX() + distance && mouseY > right.getY() - distance && mouseY < right.getY() + distance) {
+        if (objectPosition.isRotatable() && mouseX > right.getX() - distance && mouseX < right.getX() + distance && mouseY > right.getY() - distance && mouseY < right.getY() + distance) {
             rotate = true;
             dragSourceX = x + width / 2;
             dragSourceY = y;

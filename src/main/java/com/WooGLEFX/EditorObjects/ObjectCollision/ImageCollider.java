@@ -8,7 +8,10 @@ import javafx.scene.image.Image;
 
 public class ImageCollider {
 
-    public static DragSettings mouseIntersection(ObjectPosition objectPosition, double mouseX, double mouseY, Image image) {
+    public static DragSettings mouseIntersection(ObjectPosition objectPosition, double mouseX, double mouseY) {
+
+        Image image = objectPosition.getImage();
+        if (image == null) return DragSettings.NULL;
 
         double x = objectPosition.getX();
         double y = objectPosition.getY();
@@ -26,7 +29,7 @@ public class ImageCollider {
             double goodY = (mY - (y - height / 2)) / (height / image.getHeight());
             int pixel = image.getPixelReader().getArgb((int) goodX, (int) goodY);
             if (pixel >> 24 != 0) {
-                DragSettings dragSettings = new DragSettings(DragSettings.MOVE);
+                DragSettings dragSettings = new DragSettings(objectPosition.isDraggable() ? DragSettings.MOVE : DragSettings.NONE);
                 dragSettings.setInitialSourceX(mouseX - x);
                 dragSettings.setInitialSourceY(mouseY - y);
                 dragSettings.setObjectPosition(objectPosition);
@@ -41,7 +44,9 @@ public class ImageCollider {
 
     public static DragSettings mouseIntersectingCorners(ObjectPosition objectPosition, double mouseX, double mouseY) {
 
-        DragSettings dragSettings = RectangleCollider.mouseIntersectingCorners(objectPosition, mouseX, mouseY, true);
+        if (objectPosition.getImage() == null) return DragSettings.NULL;
+
+        DragSettings dragSettings = RectangleCollider.mouseIntersectingCorners(objectPosition, mouseX, mouseY);
         dragSettings.setObjectPosition(objectPosition);
         return dragSettings;
 

@@ -11,7 +11,10 @@ import javafx.scene.transform.Affine;
 
 public class ImageDrawer {
 
-    public static void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext, ObjectPosition objectPosition, Image image, boolean selected, boolean geometryImage) {
+    public static void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext, ObjectPosition objectPosition, boolean selected) {
+
+        Image image = objectPosition.getImage();
+        if (image == null) return;
 
         double x = objectPosition.getX();
         double y = objectPosition.getY();
@@ -53,38 +56,55 @@ public class ImageDrawer {
             double screenY2 = y * zoom + offsetY;
 
             graphicsContext.setLineWidth(1);
-            graphicsContext.setStroke(Renderer.selectionOutline);
-            if (!geometryImage) {
-                graphicsContext.fillRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
-                graphicsContext.fillRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
-                graphicsContext.fillRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
-                graphicsContext.fillRect(topRight.getX() - 4, topRight.getY() - 4, 8, 8);
-                graphicsContext.fillOval(left.getX() - 4, left.getY() - 4, 8, 8);
-                graphicsContext.fillOval(right.getX() - 4, right.getY() - 4, 8, 8);
-                graphicsContext.setStroke(Renderer.selectionOutline2);
+            if (objectPosition.isResizable()) {
+
+                graphicsContext.setStroke(Renderer.selectionOutline);
+                if (!true) {
+                    graphicsContext.fillRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
+                    graphicsContext.fillRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
+                    graphicsContext.fillRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
+                    graphicsContext.fillRect(topRight.getX() - 4, topRight.getY() - 4, 8, 8);
+                    graphicsContext.setStroke(Renderer.selectionOutline2);
+                }
+                graphicsContext.strokeRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
+                graphicsContext.strokeRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
+                graphicsContext.strokeRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
+                graphicsContext.strokeRect(topRight.getX() - 4, topRight.getY() - 4, 8, 8);
+
             }
-            graphicsContext.strokeRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
-            graphicsContext.strokeRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
-            graphicsContext.strokeRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
-            graphicsContext.strokeRect(topRight.getX() - 4, topRight.getY() - 4, 8, 8);
-            graphicsContext.strokeOval(left.getX() - 4, left.getY() - 4, 8, 8);
-            graphicsContext.strokeOval(right.getX() - 4, right.getY() - 4, 8, 8);
+
+            if (objectPosition.isRotatable()) {
+
+                graphicsContext.setStroke(Renderer.selectionOutline);
+                if (!true) {
+                    graphicsContext.fillOval(left.getX() - 4, left.getY() - 4, 8, 8);
+                    graphicsContext.fillOval(right.getX() - 4, right.getY() - 4, 8, 8);
+                    graphicsContext.setStroke(Renderer.selectionOutline2);
+                }
+                graphicsContext.strokeOval(left.getX() - 4, left.getY() - 4, 8, 8);
+                graphicsContext.strokeOval(right.getX() - 4, right.getY() - 4, 8, 8);
+
+            }
 
             Affine t2 = graphicsContext.getTransform();
             t2.appendRotation(Math.toDegrees(rotation), screenX2, screenY2);
             graphicsContext.setTransform(t2);
 
-            graphicsContext.setStroke(Renderer.selectionOutline2);
-            graphicsContext.setLineWidth(1);
-            graphicsContext.setLineDashes(3);
-            graphicsContext.setLineDashOffset(0);
-            graphicsContext.strokeRect(screenX2 - width * zoom / 2, screenY2 - height * zoom / 2, width * zoom, height * zoom);
+            if (objectPosition.isSelectable()) {
 
-            graphicsContext.setStroke(Renderer.selectionOutline);
-            graphicsContext.setLineWidth(1);
-            graphicsContext.setLineDashOffset(3);
-            graphicsContext.strokeRect(screenX2 - width * zoom / 2, screenY2 - height * zoom / 2, width * zoom, height * zoom);
-            graphicsContext.setLineDashes(0);
+                graphicsContext.setStroke(Renderer.selectionOutline2);
+                graphicsContext.setLineWidth(1);
+                graphicsContext.setLineDashes(3);
+                graphicsContext.setLineDashOffset(0);
+                graphicsContext.strokeRect(screenX2 - width * zoom / 2, screenY2 - height * zoom / 2, width * zoom, height * zoom);
+
+                graphicsContext.setStroke(Renderer.selectionOutline);
+                graphicsContext.setLineWidth(1);
+                graphicsContext.setLineDashOffset(3);
+                graphicsContext.strokeRect(screenX2 - width * zoom / 2, screenY2 - height * zoom / 2, width * zoom, height * zoom);
+                graphicsContext.setLineDashes(0);
+
+            }
 
         }
 

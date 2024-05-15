@@ -1,13 +1,12 @@
 package com.WooGLEFX.Functions.InputEvents;
 
+import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersection;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXContainers;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.ObjectAdder;
 import com.WooGLEFX.Functions.UndoManager;
-import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.UserActions.UserAction;
@@ -45,22 +44,26 @@ public class MouseReleasedManager {
             // If we have started placing a strand, attempt to complete the strand.
             if (SelectionManager.getMode() == SelectionManager.STRAND && SelectionManager.getStrand1Gooball() != null) {
                 for (EditorObject ball : level.getLevel().toArray(new EditorObject[0])) {
-                    if (ball != SelectionManager.getStrand1Gooball()) {
-                        if (ball instanceof BallInstance ballInstance && ballInstance
-                                .mouseIntersection((event.getX() - level.getOffsetX()) / level.getZoom(),
-                                        (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom())
-                                 != DragSettings.NULL) {
+                    if (ball instanceof BallInstance ballInstance) {
+                        if (ball != SelectionManager.getStrand1Gooball()) {
 
-                            EditorObject strand = EditorObject.create("Strand", level.getLevelObject());
+                            double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
+                            double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
-                            strand.setAttribute("gb1", SelectionManager.getStrand1Gooball().getAttribute("id"));
-                            strand.setAttribute("gb2", ball.getAttribute("id"));
+                            if (MouseIntersection.mouseIntersection(ballInstance, mouseX, mouseY) != DragSettings.NULL) {
 
-                            strand.setRealName("Strand");
+                                EditorObject strand = EditorObject.create("Strand", level.getLevelObject());
 
-                            level.getLevel().add(strand);
-                            ObjectAdder.addAnything(strand, level.getLevelObject());
-                            break;
+                                strand.setAttribute("gb1", SelectionManager.getStrand1Gooball().getAttribute("id"));
+                                strand.setAttribute("gb2", ball.getAttribute("id"));
+
+                                strand.setRealName("Strand");
+
+                                level.getLevel().add(strand);
+                                ObjectAdder.addAnything(strand, level.getLevelObject());
+                                break;
+
+                            }
                         }
                     }
                 }

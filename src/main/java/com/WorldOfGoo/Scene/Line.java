@@ -43,6 +43,9 @@ public class Line extends EditorObject {
             public Paint getBorderColor() {
                 return new Color(0.0, 0.25, 1.0, 1.0);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
+            }
         });
 
         addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
@@ -74,17 +77,14 @@ public class Line extends EditorObject {
             public Paint getBorderColor() {
                 return new Color(0.0, 0.25, 1.0, 1.0);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
+            }
         });
 
         setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,anchor,normal,material,tag,break,"));
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

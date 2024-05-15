@@ -4,6 +4,7 @@ import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 
 public class DragSettings {
 
+    public static final int NONE = -2;
     public static final int MOVE = 0;
     public static final int RESIZE = 1;
     public static final int ROTATE = 2;

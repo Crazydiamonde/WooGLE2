@@ -1,7 +1,6 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -48,17 +47,14 @@ public class Levelexit extends EditorObject {
             public Paint getFillColor() {
                 return new Color(1.0, 0, 1.0, 0.1);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
+            }
         });
 
         setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,pos,radius,filter,"));
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

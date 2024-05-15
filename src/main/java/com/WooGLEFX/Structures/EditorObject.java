@@ -512,15 +512,6 @@ public class EditorObject {
     }
 
 
-    private Image image;
-    public Image getImage() {
-        return image;
-    }
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-
     private final ArrayList<ObjectPosition> objectPositions = new ArrayList<>();
     public ObjectPosition[] getObjectPositions() {
         return objectPositions.toArray(new ObjectPosition[0]);
@@ -528,10 +519,8 @@ public class EditorObject {
     public void addObjectPosition(ObjectPosition objectPosition) {
         objectPositions.add(objectPosition);
     }
-
-
-    public boolean isVisible() {
-        return false;
+    public void clearObjectPositions() {
+        objectPositions.clear();
     }
 
 }

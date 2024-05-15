@@ -10,10 +10,14 @@ import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Rectangle extends EditorObject {
+
+    private Image image;
+
 
     public Rectangle(EditorObject _parent) {
         super(_parent);
@@ -174,6 +178,12 @@ public class Rectangle extends EditorObject {
             public Paint getFillColor() {
                 return new Color(0, 0.5, 1.0, 0.25);
             }
+            public Image getImage() {
+                return image;
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
+            }
         });
 
         addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
@@ -209,6 +219,9 @@ public class Rectangle extends EditorObject {
             public void setHeight(double height) {
                 setAttribute("imagescale", getPosition("imagescale").getX() + "," + (height / getImage().getHeight()));
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGraphics();
+            }
         });
 
         setNameAttribute(getAttribute2("id"));
@@ -222,7 +235,7 @@ public class Rectangle extends EditorObject {
 
         if (!getAttribute("image").equals("")) {
             try {
-                setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
+                image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
             } catch (FileNotFoundException e) {
                 Alarms.errorMessage(e);
             }
@@ -232,19 +245,13 @@ public class Rectangle extends EditorObject {
         setChangeListener("image", (observable, oldValue, newValue) -> {
             if (!getAttribute("image").equals("")) {
                 try {
-                    setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
+                    image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
                 } catch (FileNotFoundException e) {
                     Alarms.errorMessage(e);
                 }
             }
         });
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

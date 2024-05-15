@@ -9,7 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class RectangleDrawer {
 
-    public static void draw(GraphicsContext graphicsContext, ObjectPosition objectPosition, boolean selected, boolean isForceField) {
+    public static void draw(GraphicsContext graphicsContext, ObjectPosition objectPosition, boolean selected) {
 
         double x = objectPosition.getX();
         double y = objectPosition.getY();
@@ -93,10 +93,12 @@ public class RectangleDrawer {
             graphicsContext.setLineDashes(0);
 
             graphicsContext.setLineWidth(1);
-            graphicsContext.strokeRect(topRight2.getX() - 4, topRight2.getY() - 4, 8, 8);
-            graphicsContext.strokeRect(topLeft2.getX() - 4, topLeft2.getY() - 4, 8, 8);
-            graphicsContext.strokeRect(bottomLeft2.getX() - 4, bottomLeft2.getY() - 4, 8, 8);
-            graphicsContext.strokeRect(bottomRight2.getX() - 4, bottomRight2.getY() - 4, 8, 8);
+            if (objectPosition.isResizable()) {
+                graphicsContext.strokeRect(topRight2.getX() - 4, topRight2.getY() - 4, 8, 8);
+                graphicsContext.strokeRect(topLeft2.getX() - 4, topLeft2.getY() - 4, 8, 8);
+                graphicsContext.strokeRect(bottomLeft2.getX() - 4, bottomLeft2.getY() - 4, 8, 8);
+                graphicsContext.strokeRect(bottomRight2.getX() - 4, bottomRight2.getY() - 4, 8, 8);
+            }
 
             Point2D middleLeft = new Point2D(x - width / 2, y);
             middleLeft = EditorObject.rotate(middleLeft, rotation, center);
@@ -106,8 +108,10 @@ public class RectangleDrawer {
             middleRight = EditorObject.rotate(middleRight, rotation, center);
             middleRight = new Point2D(middleRight.getX() * zoom + offsetX, middleRight.getY() * zoom + offsetY);
 
-            if (!isForceField) graphicsContext.strokeOval(middleLeft.getX() - 4, middleLeft.getY() - 4, 8, 8);
-            if (!isForceField) graphicsContext.strokeOval(middleRight.getX() - 4, middleRight.getY() - 4, 8, 8);
+            if (objectPosition.isRotatable()) {
+                graphicsContext.strokeOval(middleLeft.getX() - 4, middleLeft.getY() - 4, 8, 8);
+                graphicsContext.strokeOval(middleRight.getX() - 4, middleRight.getY() - 4, 8, 8);
+            }
 
         }
 

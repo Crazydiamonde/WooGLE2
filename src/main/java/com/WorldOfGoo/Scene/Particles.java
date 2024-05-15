@@ -278,10 +278,4 @@ public class Particles extends EditorObject {
         return DragSettings.NULL;
     }
 
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowParticles();
-    }
-
 }

@@ -7,12 +7,16 @@ import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.io.FileNotFoundException;
 
 public class Circle extends EditorObject {
+
+    private Image image;
+
 
     public Circle(EditorObject _parent) {
         super(_parent);
@@ -128,11 +132,17 @@ public class Circle extends EditorObject {
             public void setRadius(double radius) {
                 setAttribute("radius", radius);
             }
+            public double getEdgeSize() {
+                return 0.5;
+            }
             public Paint getBorderColor() {
                 return new Color(0, 0.25, 1.0, 1.0);
             }
             public Paint getFillColor() {
                 return new Color(0, 0.5, 1.0, 0.25);
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGeometry();
             }
         });
 
@@ -142,7 +152,7 @@ public class Circle extends EditorObject {
                 else return getPosition("imagepos").getX();
             }
             public void setX(double x) {
-                setAttribute("pos", x + "," + -getY());
+                setAttribute("imagepos", x + "," + -getY());
             }
             public double getY() {
                 if (getAttribute("imagepos").isEmpty()) return -getDouble("y");
@@ -169,6 +179,12 @@ public class Circle extends EditorObject {
             public void setHeight(double height) {
                 setAttribute("imagescale", getPosition("imagescale").getX() + "," + (height / getImage().getHeight()));
             }
+            public Image getImage() {
+                return image;
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGraphics();
+            }
         });
 
         setNameAttribute(getAttribute2("id"));
@@ -182,7 +198,7 @@ public class Circle extends EditorObject {
 
         if (!getAttribute("image").equals("")) {
             try {
-                setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
+                image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
             } catch (FileNotFoundException e) {
                 Alarms.errorMessage(e);
             }
@@ -192,19 +208,13 @@ public class Circle extends EditorObject {
         setChangeListener("image", (observable, oldValue, newValue) -> {
             if (!getAttribute("image").equals("")) {
                 try {
-                    setImage(GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion()));
+                    image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
                 } catch (FileNotFoundException e) {
                     Alarms.errorMessage(e);
                 }
             }
         });
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
     }
 
 }

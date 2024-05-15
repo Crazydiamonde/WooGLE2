@@ -24,6 +24,9 @@ public class SceneLayer extends EditorObject {
     private static final Logger logger = LoggerFactory.getLogger(SceneLayer.class);
 
 
+    private Image image;
+
+
     private double animx = 0;
     private double animy = 0;
     private double animrotation = 0;
@@ -88,6 +91,12 @@ public class SceneLayer extends EditorObject {
             public void setHeight(double height) {
                 setAttribute("scaley", height / getImage().getHeight());
             }
+            public Image getImage() {
+                return image;
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowGraphics();
+            }
         });
 
         setNameAttribute(getAttribute2("name"));
@@ -143,11 +152,11 @@ public class SceneLayer extends EditorObject {
     public void update() {
         if (!getAttribute("image").equals("")) {
             try {
-                setImage(GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion()));
+                image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));
-                setImage(colorize(getImage(), color));
+                image = colorize(image, color);
             } catch (FileNotFoundException e) {
-                setImage(null);
+                image = null;
                 if (!LevelLoader.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
                     LevelLoader.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
@@ -157,12 +166,12 @@ public class SceneLayer extends EditorObject {
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
             logger.trace("Image changed from " + oldValue + " to " + newValue);
             try {
-                setImage(GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion()));
+                image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
                 Color color = Color.parse(getAttribute("colorize"));
-                setImage(colorize(getImage(), color));
+                image = colorize(image, color);
 
             } catch (FileNotFoundException e) {
-                setImage(null);
+                image = null;
                 if (!LevelLoader.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
                     LevelLoader.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
                 }
@@ -220,12 +229,6 @@ public class SceneLayer extends EditorObject {
                 animy = lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
             }
         }
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGraphics();
     }
 
 }

@@ -212,10 +212,4 @@ public class Slider extends EditorObject {
          */
     }
 
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
-    }
-
 }

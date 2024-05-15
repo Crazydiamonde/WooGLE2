@@ -26,11 +26,5 @@ public class Pipe extends EditorObject {
         return new String[]{"Vertex"};
     }
 
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowGeometry();
-    }
-
 }
 

@@ -1,7 +1,9 @@
 package com.WorldOfGoo.Level;
 
 import java.util.HexFormat;
+import java.util.Random;
 
+import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
@@ -16,6 +18,7 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 import com.WorldOfGoo.Ball.BallStrand;
 
+import com.WorldOfGoo.Ball.Part;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -52,7 +55,6 @@ public class Strand extends EditorObject {
     }
 
 
-    //TODO make strands selectable
     public Strand(EditorObject _parent) {
         super(_parent);
         setRealName("Strand");
@@ -117,6 +119,7 @@ public class Strand extends EditorObject {
                 }
             }
         }
+        addPartAsObjectPosition();
     }
 
     // private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
@@ -197,28 +200,56 @@ public class Strand extends EditorObject {
         return right;
     }
 
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
-        if (LevelManager.getLevel().getShowGoos() == 2) {
-            if (goo1 != null && goo2 != null && strand != null) {
-                Position pos1 = new Position(goo1.getDouble("x"), -goo1.getDouble("y"));;
-                Position pos2 = new Position(goo2.getDouble("x"), -goo2.getDouble("y"));
-                if (strandImage == null) {
-                    update();
-                }
-                double width = strand.getDouble("thickness");
-                double height = new Point2D(pos1.getX(), pos1.getY()).distance(new Point2D(pos2.getX(), pos2.getY()));
 
-                imageGraphicsContext.save();
-                Affine t = imageGraphicsContext.getTransform();
-                t.appendRotation(180 - Math.toDegrees(Renderer.angleTo(new Point2D(pos2.getX(), pos2.getY()), new Point2D(pos1.getX(), pos1.getY()))) + 90, pos2.getX(), pos2.getY());
-                imageGraphicsContext.setTransform(t);
+    private void addPartAsObjectPosition() {
 
-                imageGraphicsContext.drawImage(strandImage, pos2.getX() - width / 2, pos2.getY(), width, height);
+        clearObjectPositions();
 
-                imageGraphicsContext.restore();
+        if (goo1 == null || goo2 == null) return;
+
+        if (strandImage == null) {
+            update();
+        }
+
+        if (strandImage != null) addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+            public double getX() {
+                return (goo1.getDouble("x") + goo2.getDouble("x")) / 2;
             }
+            public double getY() {
+                return (-goo1.getDouble("y") - goo2.getDouble("y")) / 2;
+            }
+            public double getRotation() {
+                return Math.PI / 2 + Renderer.angleTo(new Point2D(goo1.getDouble("x"), -goo1.getDouble("y")),
+                        new Point2D(goo2.getDouble("x"), -goo2.getDouble("y")));
+            }
+            public double getWidth() {
+                return strand.getDouble("thickness");
+            }
+            public double getHeight() {
+                return new Point2D(goo1.getDouble("x"), goo1.getDouble("y")).distance(new Point2D(goo2.getDouble("x"), goo2.getDouble("y")));
+            }
+            public Image getImage(){
+                return strandImage;
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().getShowGoos() == 2;
+            }
+            public boolean isDraggable() {
+                return false;
+            }
+            public boolean isResizable() {
+                return false;
+            }
+            public boolean isRotatable() {
+                return false;
+            }
+        });
 
-        } else if (LevelManager.getLevel().getShowGoos() == 1) {
+    }
+
+
+    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
+        if (LevelManager.getLevel().getShowGoos() == 1) {
 
             if (goo1 != null && goo2 != null) {
                 Position pos1 = new Position(goo1.getDouble("x"), -goo1.getDouble("y"));
@@ -279,12 +310,6 @@ public class Strand extends EditorObject {
                 graphicsContext.restore();
             }
         }
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().getShowGoos() != 0;
     }
 
 }

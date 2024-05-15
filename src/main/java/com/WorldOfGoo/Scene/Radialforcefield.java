@@ -58,6 +58,9 @@ public class Radialforcefield extends EditorObject {
             public Paint getFillColor() {
                 return new Color(1.0, 1.0, 0, 0.1);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowForcefields();
+            }
         });
 
         addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
@@ -76,7 +79,9 @@ public class Radialforcefield extends EditorObject {
             public Paint getBorderColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, Renderer.stops);
             }
-
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowForcefields();
+            }
         });
 
         addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
@@ -98,17 +103,14 @@ public class Radialforcefield extends EditorObject {
             public Paint getBorderColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, Renderer.stops);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowForcefields();
+            }
         });
 
         setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,center,radius,forceatcenter,forceatedge,dampeningfactor,rotationaldampeningfactor,antigrav,"));
 
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowForcefields();
     }
 
 }

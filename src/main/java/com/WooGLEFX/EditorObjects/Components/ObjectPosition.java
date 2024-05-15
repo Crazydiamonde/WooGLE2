@@ -1,5 +1,6 @@
 package com.WooGLEFX.EditorObjects.Components;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 
 public class ObjectPosition {
@@ -82,16 +83,34 @@ public class ObjectPosition {
     }
 
 
-    public double getEdgeSize() {
-        return 0;
-    }
-
-
     public Paint getBorderColor() {
         return null;
     }
     public Paint getFillColor() {
         return null;
+    }
+
+
+    public double getEdgeSize() {
+        return 0;
+    }
+    public Image getImage() {
+        return null;
+    }
+    public boolean isVisible() {
+        return true;
+    }
+    public boolean isSelectable() {
+        return true;
+    }
+    public boolean isDraggable() {
+        return true;
+    }
+    public boolean isResizable() {
+        return true;
+    }
+    public boolean isRotatable() {
+        return true;
     }
 
 }

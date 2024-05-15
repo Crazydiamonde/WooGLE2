@@ -54,6 +54,12 @@ public class Camera extends EditorObject {
             public Paint getFillColor() {
                 return new Color(0.0, 0.5, 0.5, 0.1);
             }
+            public boolean isVisible() {
+                return LevelManager.getLevel().isShowCameras();
+            }
+            public boolean isRotatable() {
+                return false;
+            }
         });
 
         setNameAttribute(getAttribute2("aspect"));
@@ -65,12 +71,6 @@ public class Camera extends EditorObject {
     @Override
     public String[] getPossibleChildren() {
         return new String[]{ "poi" };
-    }
-
-
-    @Override
-    public boolean isVisible() {
-        return LevelManager.getLevel().isShowCameras();
     }
 
 }
