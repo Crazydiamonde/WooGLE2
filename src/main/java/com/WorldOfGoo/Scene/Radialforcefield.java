@@ -74,7 +74,10 @@ public class Radialforcefield extends EditorObject {
                 return -getDouble("forceatcenter") * 20;
             }
             public void setAnchor(double anchorX, double anchorY) {
-                setAttribute("forceatcenter", anchorX / 20 + "," + -anchorY / 20);
+                setAttribute("forceatcenter", -anchorY / 20);
+            }
+            public double getEdgeSize() {
+                return 3;
             }
             public Paint getBorderColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, Renderer.stops);
@@ -95,7 +98,7 @@ public class Radialforcefield extends EditorObject {
                 return -getDouble("forceatedge") * 20;
             }
             public void setAnchor(double anchorX, double anchorY) {
-                setAttribute("forceatedge", anchorX / 20 + "," + -anchorY / 20);
+                setAttribute("forceatedge", -anchorY / 20);
             }
             public double getEdgeSize() {
                 return 3;

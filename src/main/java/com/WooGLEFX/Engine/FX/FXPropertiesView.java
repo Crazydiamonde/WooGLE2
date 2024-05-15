@@ -96,6 +96,16 @@ public class FXPropertiesView {
                     // This prevents the cell from retaining other cells' information.
                     setText(null);
                 } else {
+
+                    if (getTableRow().getTreeItem() != null) {
+                        EditorAttribute editorAttribute = getTableRow().getTreeItem().getValue();
+                        if (InputField.verify(SelectionManager.getSelected(), editorAttribute.getType(), editorAttribute.getValue())) {
+                            setStyle("-fx-text-fill: #000000ff");
+                        } else {
+                            setStyle("-fx-text-fill: #ff0000ff");
+                        }
+                    }
+
                     // Update this cell's text.
                     setText(item);
                     // Override the default padding that ruins the text.
@@ -123,15 +133,6 @@ public class FXPropertiesView {
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
-
-                        if (!empty && getTableRow().getTreeItem() != null) {
-                            EditorAttribute editorAttribute = getTableRow().getTreeItem().getValue();
-                            if (InputField.verify(SelectionManager.getSelected(), editorAttribute.getType(), item)) {
-                                setStyle("-fx-text-fill: #000000ff");
-                            } else {
-                                setStyle("-fx-text-fill: #ff0000ff");
-                            }
-                        }
 
                         // Override the default padding that ruins the text.
                         setPadding(new Insets(0, 0, 0, 2));

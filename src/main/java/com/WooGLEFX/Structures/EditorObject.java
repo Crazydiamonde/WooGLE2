@@ -407,7 +407,7 @@ public class EditorObject {
     public boolean isValid() {
         for (EditorAttribute attribute : this.attributes) {
             if (attribute.getValue().equals("")) {
-                if (!InputField.verify(this, attribute.getType(), attribute.getDefaultValue())) return false;
+                if (!InputField.verify(this, attribute.getType(), attribute.getDefaultValue()) && attribute.getRequiredInFile()) return false;
             } else if (!InputField.verify(this, attribute.getType(), attribute.getValue())) {
                 logger.warn("failed to verify " + attribute.getValue());
                 return false;
@@ -423,7 +423,7 @@ public class EditorObject {
             try {
                 return Double.parseDouble(getAttribute(attributeName));
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not parse double " + attributeName + " for " + getRealName() + ": found value " + getAttribute(attributeName));
+                return 0;
             }
         }
     }
@@ -435,7 +435,7 @@ public class EditorObject {
             try {
                 return Position.parse(getAttribute(attributeName));
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not parse position " + attributeName + " for " + getRealName() + ": found value " + getAttribute(attributeName));
+                return new Position(0,0);
             }
         }
     }
@@ -447,7 +447,7 @@ public class EditorObject {
             try {
                 return Color.parse(getAttribute(attributeName));
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not parse color " + attributeName + " for " + getRealName() + ": found value " + getAttribute(attributeName));
+                return new Color(0, 0, 0, 0);
             }
         }
     }
@@ -457,7 +457,7 @@ public class EditorObject {
         if (attribute != null) {
             return attribute;
         } else {
-            throw new RuntimeException("Could not find string attribute " + attributeName + " for " + getRealName());
+            return "";
         }
     }
 
@@ -468,7 +468,7 @@ public class EditorObject {
             try {
                 return GlobalResourceManager.getImage(getAttribute(attributeName), level.getVersion());
             } catch (FileNotFoundException e) {
-                throw new RuntimeException("Could not parse image " + attributeName + " for " + getRealName() + ": found value " + getAttribute(attributeName));
+                return null;
             }
         }
     }

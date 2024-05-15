@@ -84,7 +84,7 @@ public class InputField {
                     return false;
                 }
             case IMAGE, IMAGE_REQUIRED:
-                for (EditorObject resrc : object.getLevel().getResources()) {
+                for (EditorObject resrc : LevelManager.getLevel().getResources()) {
                     if (resrc.attributeExists("id") && resrc.getAttribute("id").equals(potential)) {
                         return true;
                     }
@@ -94,7 +94,7 @@ public class InputField {
                 try {
                     Color.parse(potential);
                     return true;
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     return false;
                 }
             case ANIMATION:
