@@ -41,7 +41,7 @@ public class MousePressedManager {
             }
 
             if (SelectionManager.getMode() == SelectionManager.SELECTION) {
-                if (event.getX() > editorViewWidth && event.getY() < FXCanvas.getMouseYOffset()) return;
+                if (event.getX() > editorViewWidth || event.getY() < FXCanvas.getMouseYOffset()) return;
 
                 double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
                 double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
