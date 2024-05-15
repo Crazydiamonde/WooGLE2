@@ -48,40 +48,29 @@ public class MousePressedManager {
 
                 if (level.getSelected() != null) {
                     SelectionManager.setDragSettings(MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), mouseX, mouseY));
-
                     if (SelectionManager.getDragSettings() != DragSettings.NULL) return;
+                }
 
-                    /* Dragging of already selected object that might be behind something else */
+                EditorObject prevSelected = level.getSelected();
+                SelectionManager.setSelected(null);
+                ArrayList<EditorObject> byDepth = Renderer.orderObjectsBySelectionDepth(level);
+                for (int i = byDepth.size() - 1; i >= 0; i--) {
+                    EditorObject object = byDepth.get(i);
+                    if (MouseIntersection.mouseIntersection(object, mouseX, mouseY) != DragSettings.NULL) {
+                        SelectionManager.setSelected(object);
+                        FXPropertiesView.changeTableView(object);
+                        object.getParent().getTreeItem().setExpanded(true);
+                        FXHierarchy.getHierarchy().getSelectionModel().select(object.getTreeItem());
+                        // Scroll to this position in the selection model
+                        FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(object.getTreeItem()));
+                        break;
+                    }
+                }
+                if (level.getSelected() != null && level.getSelected() == prevSelected) {
                     DragSettings thisSettings = MouseIntersection.mouseIntersection(level.getSelected(), mouseX, mouseY);
                     if (thisSettings != DragSettings.NULL) {
                         FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
                         SelectionManager.setDragSettings(thisSettings);
-                    }
-
-                }
-                if (SelectionManager.getDragSettings() == DragSettings.NULL) {
-
-                    EditorObject prevSelected = level.getSelected();
-                    SelectionManager.setSelected(null);
-                    ArrayList<EditorObject> byDepth = Renderer.orderObjectsBySelectionDepth(level);
-                    for (int i = byDepth.size() - 1; i >= 0; i--) {
-                        EditorObject object = byDepth.get(i);
-                        if (MouseIntersection.mouseIntersection(object, mouseX, mouseY) != DragSettings.NULL) {
-                            SelectionManager.setSelected(object);
-                            FXPropertiesView.changeTableView(object);
-                            object.getParent().getTreeItem().setExpanded(true);
-                            FXHierarchy.getHierarchy().getSelectionModel().select(object.getTreeItem());
-                            // Scroll to this position in the selection model
-                            FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(object.getTreeItem()));
-                            break;
-                        }
-                    }
-                    if (level.getSelected() != null && level.getSelected() == prevSelected) {
-                        DragSettings thisSettings = MouseIntersection.mouseIntersection(level.getSelected(), mouseX, mouseY);
-                        if (thisSettings != DragSettings.NULL) {
-                            FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
-                            SelectionManager.setDragSettings(thisSettings);
-                        }
                     }
                 }
             } else if (SelectionManager.getMode() == SelectionManager.STRAND) {
