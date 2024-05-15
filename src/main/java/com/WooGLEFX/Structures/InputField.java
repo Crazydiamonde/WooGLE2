@@ -102,7 +102,7 @@ public class InputField {
             case FLAG:
                 return potential.equals("true") || potential.equals("false");
             case BALL:
-                String path = object.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
+                String path = LevelManager.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
                 for (File ballFile : new File(path + "\\res\\balls").listFiles()) {
                     if (ballFile.getName().equals(potential)) {
                         return true;

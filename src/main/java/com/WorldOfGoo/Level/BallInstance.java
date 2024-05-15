@@ -99,6 +99,7 @@ public class BallInstance extends EditorObject {
                     }
                 }
             }
+            refreshObjectPositions();
         }));
 
         BallInstance thisBall = this;
@@ -131,6 +132,7 @@ public class BallInstance extends EditorObject {
                     }
                 }
             }
+            refreshObjectPositions();
         });
         refreshObjectPositions();
     }
