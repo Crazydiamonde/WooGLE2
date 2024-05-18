@@ -32,8 +32,7 @@ public class Particles extends EditorObject {
 
 
     public Particles(EditorObject _parent) {
-        super(_parent);
-        setRealName("particles");
+        super(_parent, "particles");
 
         addAttribute("effect",  InputField.PARTICLES)                      .assertRequired();
         addAttribute("depth",   InputField.NUMBER)  .setDefaultValue("-20").assertRequired();
@@ -43,13 +42,13 @@ public class Particles extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
             public double getX() {
-                return getPosition("pos").getX();
+                return getAttribute("pos").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("pos", x + "," + -getY());
             }
             public double getY() {
-                return -getPosition("pos").getY();
+                return -getAttribute("pos").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("pos", getX() + "," + -y);
@@ -59,15 +58,16 @@ public class Particles extends EditorObject {
 
         });
 
-        setNameAttribute(getAttribute2("effect"));
         setMetaAttributes(MetaEditorAttribute.parse("effect,pos,depth,pretick,enabled,"));
 
     }
 
+
     @Override
-    public void update() {
-        setNameAttribute(getAttribute2("effect"));
+    public String getName() {
+        return getAttribute("effect").stringValue();
     }
+
 
     private final ArrayList<Integer> counts = new ArrayList<>();
 
@@ -80,6 +80,7 @@ public class Particles extends EditorObject {
         return a * m + b * (1 - m);
     }
 
+    /*
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
         if (LevelManager.getLevel().isShowParticles()) {
             for (EditorObject obj : ParticleManager.getParticles()) {
@@ -277,5 +278,7 @@ public class Particles extends EditorObject {
         }
         return DragSettings.NULL;
     }
+
+     */
 
 }

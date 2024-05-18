@@ -16,8 +16,7 @@ public class Fire extends EditorObject {
 
 
     public Fire(EditorObject _parent) {
-        super(_parent);
-        setRealName("fire");
+        super(_parent, "fire");
 
         addAttribute("depth",     InputField.NUMBER)   .setDefaultValue("0") .assertRequired();
         addAttribute("particles", InputField.PARTICLES)                      .assertRequired();
@@ -27,19 +26,19 @@ public class Fire extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE) {
             public double getX() {
-                return getDouble("x");
+                return getAttribute("x").doubleValue();
             }
             public void setX(double x) {
                 setAttribute("x", x);
             }
             public double getY() {
-                return -getDouble("y");
+                return -getAttribute("y").doubleValue();
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
             public double getRadius() {
-                return getDouble("radius");
+                return getAttribute("radius").doubleValue();
             }
             public void setRadius(double radius) {
                 setAttribute("radius", radius);
@@ -54,51 +53,62 @@ public class Fire extends EditorObject {
                 return new Color(1.0, 0.25, 0.0, 0.1);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGeometry();
+                return LevelManager.getLevel().getShowGeometry() != 0;
             }
         });
 
-        setNameAttribute(getAttribute2("particles"));
         setMetaAttributes(MetaEditorAttribute.parse("x,y,radius,particles,depth,"));
+
+        getAttribute("particles").addChangeListener((observableValue, s, t1) -> particleEffect = findParticleFx());
+        getAttribute("x").addChangeListener((observableValue, s, t1) -> adjustParticleEffectPosition());
+        getAttribute("y").addChangeListener((observableValue, s, t1) -> adjustParticleEffectPosition());
 
     }
 
 
+    @Override
+    public String getName() {
+        return getAttribute("particles").stringValue();
+    }
+
+
+    private void adjustParticleEffectPosition() {
+        double x = getAttribute("x").doubleValue();
+        double y = getAttribute("y").doubleValue();
+        if (particleEffect != null) particleEffect.setAttribute("pos", x + "," + y);
+    }
+
+
     private Particles findParticleFx() {
-        for (EditorObject particle : ParticleManager.getParticles()) {
-            if (particle.attributeExists("name") && particle.getAttribute("name").equals(getAttribute("particles"))) {
-                particleEffect = new Particles(this);
-                getChildren().remove(particleEffect);
-                particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
-                particleEffect.setAttribute("depth", getAttribute("depth"));
-                particleEffect.setAttribute("effect", getAttribute("particles"));
-                particleEffect.update();
-                return particleEffect;
-            }
+
+        String particles = getAttribute("particles").stringValue();
+
+        for (EditorObject object : ParticleManager.getParticles()) if (object instanceof Particles particle) {
+
+            String name = particle.getAttribute("name").stringValue();
+            if (!name.equals(particles)) continue;
+
+            Particles particleEffect = new Particles(this);
+            getChildren().remove(particleEffect);
+
+            double x = getAttribute("x").doubleValue();
+            double y = getAttribute("y").doubleValue();
+            particleEffect.setAttribute("pos", x + "," + y);
+            particleEffect.setAttribute("depth", getAttribute("depth").doubleValue());
+            particleEffect.setAttribute("effect", particles);
+            particleEffect.update();
+            return particleEffect;
+
         }
+
         return null;
+
     }
 
 
     @Override
     public void update() {
-        findParticleFx();
-        setChangeListener("particles", (observableValue, s, t1) -> {
-            Particles found = findParticleFx();
-            if (found == null) {
-                particleEffect = null;
-            }
-        });
-        setChangeListener("x", (observableValue, s, t1) -> {
-            if (particleEffect != null) {
-                particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
-            }
-        });
-        setChangeListener("y", (observableValue, s, t1) -> {
-            if (particleEffect != null) {
-                particleEffect.setAttribute("pos", getAttribute("x") + "," + getAttribute("y"));
-            }
-        });
+        particleEffect = findParticleFx();
     }
 
 }

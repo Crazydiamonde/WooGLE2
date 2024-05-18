@@ -15,8 +15,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class Slider extends EditorObject {
 
     public Slider(EditorObject _parent) {
-        super(_parent);
-        setRealName("slider");
+        super(_parent, "slider");
 
         addAttribute("body1", InputField.ANY).assertRequired();
         addAttribute("body2", InputField.ANY).assertRequired();
@@ -29,13 +28,13 @@ public class Slider extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.POINT) {
             public double getX() {
-                return getPosition("anchor").getX();
+                return getAttribute("anchor").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("anchor", x + "," + getY());
             }
             public double getY() {
-                return getPosition("anchor").getY();
+                return getAttribute("anchor").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("anchor", getX() + "," + y);
@@ -45,23 +44,27 @@ public class Slider extends EditorObject {
 
         });
 
-        setNameAttribute(getAttribute2("body1"));
-        setNameAttribute2(getAttribute2("body2"));
-        setChangeListener("body2", (observableValue, s, t1) -> {
-            String bruh = getAttribute("body1");
-            setAttribute("body1", "AAAAA");
-            setAttribute("body1", bruh);
-        });
         setMetaAttributes(MetaEditorAttribute.parse("body1,body2,axis,Slider<bounce,histop,lostop,stopcfm,stoperp>"));
 
     }
 
 
+
+    @Override
+    public String getName() {
+        String body1 = getAttribute("body1").stringValue();
+        String body2 = getAttribute("body2").stringValue();
+        return body1 + ", " + body2;
+    }
+
+
+    /*
+
     public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext){
 
         if (LevelManager.getLevel().isShowGeometry()) {
 
-            Position axis = Position.parse(getAttribute("axis"));
+            Position axis = getAttribute("axis").positionValue();
             double magnitude = Math.sqrt(axis.getX() * axis.getX() + axis.getY() * axis.getY());
             // double theta = Math.asin(axis.getY() / magnitude);
             // if (axis.getX() < 0) {
@@ -208,8 +211,7 @@ public class Slider extends EditorObject {
         } else {
             return false;
         }
-
-         */
     }
+     */
 
 }

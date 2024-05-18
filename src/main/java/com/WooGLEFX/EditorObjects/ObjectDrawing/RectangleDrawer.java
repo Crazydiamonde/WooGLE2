@@ -1,6 +1,7 @@
 package com.WooGLEFX.EditorObjects.ObjectDrawing;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
@@ -19,42 +20,42 @@ public class RectangleDrawer {
 
         Point2D center = new Point2D(x, y);
 
-        double woag = Math.min(Math.min(objectPosition.getEdgeSize(), Math.abs(width) / 4), Math.abs(height) / 4);
+        double woag = Math.min(Math.min(objectPosition.getEdgeSize(), Math.abs(width) / 2), Math.abs(height) / 2) / 2;
 
         double offsetX = LevelManager.getLevel().getOffsetX();
         double offsetY = LevelManager.getLevel().getOffsetY();
         double zoom = LevelManager.getLevel().getZoom();
 
         Point2D topLeft = new Point2D(x - width / 2 + woag, y - height / 2 + woag);
-        topLeft = EditorObject.rotate(topLeft, rotation, center);
+        topLeft = ObjectUtil.rotate(topLeft, rotation, center);
         topLeft = topLeft.multiply(zoom).add(offsetX, offsetY);
 
         Point2D topRight = new Point2D(x + width / 2 - woag, y - height / 2 + woag);
-        topRight = EditorObject.rotate(topRight, rotation, center);
+        topRight = ObjectUtil.rotate(topRight, rotation, center);
         topRight = topRight.multiply(zoom).add(offsetX, offsetY);
 
         Point2D bottomLeft = new Point2D(x - width / 2 + woag, y + height / 2 - woag);
-        bottomLeft = EditorObject.rotate(bottomLeft, rotation, center);
+        bottomLeft = ObjectUtil.rotate(bottomLeft, rotation, center);
         bottomLeft = bottomLeft.multiply(zoom).add(offsetX, offsetY);
 
         Point2D bottomRight = new Point2D(x + width / 2 - woag, y + height / 2 - woag);
-        bottomRight = EditorObject.rotate(bottomRight, rotation, center);
+        bottomRight = ObjectUtil.rotate(bottomRight, rotation, center);
         bottomRight = bottomRight.multiply(zoom).add(offsetX, offsetY);
 
         Point2D topRight2 = new Point2D(x + width / 2, y - height / 2);
-        topRight2 = EditorObject.rotate(topRight2, rotation, center);
+        topRight2 = ObjectUtil.rotate(topRight2, rotation, center);
         topRight2 = topRight2.multiply(zoom).add(offsetX, offsetY);
 
         Point2D topLeft2 = new Point2D(x - width / 2, y - height / 2);
-        topLeft2 = EditorObject.rotate(topLeft2, rotation, center);
+        topLeft2 = ObjectUtil.rotate(topLeft2, rotation, center);
         topLeft2 = topLeft2.multiply(zoom).add(offsetX, offsetY);
 
         Point2D bottomLeft2 = new Point2D(x - width / 2, y + height / 2);
-        bottomLeft2 = EditorObject.rotate(bottomLeft2, rotation, center);
+        bottomLeft2 = ObjectUtil.rotate(bottomLeft2, rotation, center);
         bottomLeft2 = bottomLeft2.multiply(zoom).add(offsetX, offsetY);
 
         Point2D bottomRight2 = new Point2D(x + width / 2, y + height / 2);
-        bottomRight2 = EditorObject.rotate(bottomRight2, rotation, center);
+        bottomRight2 = ObjectUtil.rotate(bottomRight2, rotation, center);
         bottomRight2 = bottomRight2.multiply(zoom).add(offsetX, offsetY);
 
         graphicsContext.setFill(objectPosition.getFillColor());
@@ -101,11 +102,11 @@ public class RectangleDrawer {
             }
 
             Point2D middleLeft = new Point2D(x - width / 2, y);
-            middleLeft = EditorObject.rotate(middleLeft, rotation, center);
+            middleLeft = ObjectUtil.rotate(middleLeft, rotation, center);
             middleLeft = new Point2D(middleLeft.getX() * zoom + offsetX, middleLeft.getY() * zoom + offsetY);
 
             Point2D middleRight = new Point2D(x + width / 2, y);
-            middleRight = EditorObject.rotate(middleRight, rotation, center);
+            middleRight = ObjectUtil.rotate(middleRight, rotation, center);
             middleRight = new Point2D(middleRight.getX() * zoom + offsetX, middleRight.getY() * zoom + offsetY);
 
             if (objectPosition.isRotatable()) {

@@ -1,6 +1,6 @@
 package com.WooGLEFX.Engine.FX;
 
-import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
@@ -9,12 +9,9 @@ import javafx.scene.control.TabPane;
 
 public class FXLevelSelectPane {
 
-    private static TabPane levelSelectPane;
+    private static final TabPane levelSelectPane = new TabPane();
     public static TabPane getLevelSelectPane() {
         return levelSelectPane;
-    }
-    public static void setLevelSelectPane(TabPane _levelSelectPane) {
-        levelSelectPane = _levelSelectPane;
     }
 
 
@@ -70,13 +67,56 @@ public class FXLevelSelectPane {
                 // Destroy and replace the level tab to prevent an unknown freezing issue.
                 if (level.getLevelTab() != null && level.getLevelTab().getTabPane() != null
                         && level.getLevelTab().getTabPane().getTabs().contains(level.getLevelTab())
-                        && level.getLevelTab().getTabPane().getTabs().size() != 0) {
+                        && !level.getLevelTab().getTabPane().getTabs().isEmpty()) {
                     level.setEditingStatus(level.getEditingStatus(), false);
                 }
             }
         });
 
         return tab;
+    }
+
+
+    public static void init() {
+
+        levelSelectPane.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
+            if (t1 == null) {
+                LevelManager.setLevel(null);
+                LevelManager.onSetLevel(null);
+                FXEditorButtons.enableAllButtons(true);
+                if (FileManager.isHasOldWOG()) {
+                    FXEditorButtons.buttonNewOld.setDisable(false);
+                    FXEditorButtons.buttonOpenOld.setDisable(false);
+                    FXMenu.newLevelOldItem.setDisable(false);
+                    FXMenu.openLevelOldItem.setDisable(false);
+                }
+                if (FileManager.isHasNewWOG()) {
+                    FXEditorButtons.buttonNewNew.setDisable(false);
+                    FXEditorButtons.buttonOpenNew.setDisable(false);
+                    FXMenu.newLevelNewItem.setDisable(false);
+                    FXMenu.openLevelNewItem.setDisable(false);
+                }
+            }
+        });
+
+        levelSelectPane.widthProperty().addListener((observableValue, number, t1) -> {
+            int numTabs = levelSelectPane.getTabs().size();
+            double tabSize = 1 / (numTabs + 1.0);
+            levelSelectPane.setTabMaxWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
+            levelSelectPane.setTabMinWidth(tabSize * (levelSelectPane.getWidth() - 15) - 15);
+        });
+
+        levelSelectPane.setMinHeight(0);
+        levelSelectPane.setMaxHeight(0);
+
+        levelSelectPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+
+        FXPropertiesView.getPropertiesView().prefHeightProperty()
+                .bind(FXContainers.getViewPane().heightProperty().subtract(FXPropertiesView.getPropertiesView().layoutYProperty()));
+
+        levelSelectPane.setTabDragPolicy(TabPane.TabDragPolicy.REORDER);
+        levelSelectPane.setStyle("-fx-open-tab-animation: NONE");
+
     }
 
 

@@ -4,8 +4,6 @@ import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectCollision.*;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
-import com.WorldOfGoo.Level.BallInstance;
-import javafx.scene.image.Image;
 
 public class MouseIntersection {
 

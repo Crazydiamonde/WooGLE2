@@ -10,22 +10,21 @@ import java.util.ArrayList;
 public class Particleeffect extends EditorObject {
 
     private ArrayList<_Particle> particles = new ArrayList<>();
-
     public ArrayList<_Particle> getParticles() {
         return particles;
     }
-
     public void setParticles(ArrayList<_Particle> particles) {
         this.particles = particles;
     }
 
 
     public Particleeffect(EditorObject _parent) {
-        super(_parent);
+        super(_parent, "particleeffect");
 
         addAttribute("name", InputField.ANY);
         addAttribute("maxparticles", InputField.NUMBER).setDefaultValue("0");
         addAttribute("rate", InputField.NUMBER).setDefaultValue("0.25");
+        addAttribute("margin", InputField.NUMBER).setDefaultValue("0");
 
         setMetaAttributes(MetaEditorAttribute.parse("name,maxparticles,rate"));
 
@@ -33,7 +32,7 @@ public class Particleeffect extends EditorObject {
 
 
     @Override
-    public void update(){
+    public void update() {
         for (EditorObject thing : ParticleManager.getParticles()) {
             if (thing instanceof _Particle && thing.getParent().getAttribute("name").equals(getAttribute("name"))) {
                 particles.add((_Particle) thing);

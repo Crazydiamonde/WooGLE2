@@ -7,14 +7,18 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 public class AddinID extends EditorObject {
 
     public AddinID(EditorObject _parent) {
-        super(_parent);
-        setRealName("id");
+        super(_parent, "id");
 
         addAttribute("value", InputField.ANY).assertRequired();
 
-        setNameAttribute(getAttribute2("value"));
         setMetaAttributes(MetaEditorAttribute.parse("value,"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("value").stringValue();
     }
 
 }

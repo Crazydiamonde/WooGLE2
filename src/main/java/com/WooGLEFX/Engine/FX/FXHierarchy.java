@@ -9,6 +9,7 @@ import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.UserActions.HierarchyDragAction;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -23,7 +24,7 @@ import java.io.FileNotFoundException;
 
 public class FXHierarchy {
 
-    private static TreeTableView<EditorObject> hierarchy;
+    private static final TreeTableView<EditorObject> hierarchy = new TreeTableView<>();
     public static TreeTableView<EditorObject> getHierarchy() {
         return hierarchy;
     }
@@ -35,34 +36,19 @@ public class FXHierarchy {
 
     public static void init() {
 
-        // Create the TreeTableView.
-        hierarchy = new TreeTableView<>();
-
         hierarchy.setPlaceholder(new Label());
 
         // Create the columns the hierarchy uses ("Element" and its "ID or Name")
         TreeTableColumn<EditorObject, String> hierarchyElements = new TreeTableColumn<>();
         hierarchyElements.setGraphic(new Label("Elements"));
-        hierarchyElements.setCellValueFactory(new TreeItemPropertyValueFactory<>("realName"));
+        hierarchyElements.setCellValueFactory(new TreeItemPropertyValueFactory<>("type"));
         hierarchy.getColumns().add(hierarchyElements);
         hierarchyElements.setPrefWidth(200);
 
         TreeTableColumn<EditorObject, String> hierarchyNames = new TreeTableColumn<>();
         hierarchyNames.setGraphic(new Label("ID or Name"));
 
-        hierarchyNames.setCellValueFactory(param -> {
-            if (param.getValue().getValue().getObjName() != null) {
-                if (param.getValue().getValue().getObjName2() != null
-                        && !param.getValue().getValue().getObjName2().getValue().equals("")) {
-                    return param.getValue().getValue().getObjName().getValueProperty().concat(",")
-                            .concat(param.getValue().getValue().getObjName2().getValueProperty());
-                } else {
-                    return param.getValue().getValue().getObjName().getValueProperty();
-                }
-            } else {
-                return new EditorAttribute("AAAAA", InputField.ANY).getValueProperty();
-            }
-        });
+        hierarchyNames.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));
 
         hierarchy.getColumns().add(hierarchyNames);
 
@@ -95,7 +81,20 @@ public class FXHierarchy {
                         // If the cell's EditorObject is invalid, display its graphic with a warning
                         // symbol.
                         // Otherwise, just display its graphic.
-                        if (!getTableRow().getItem().isValid()) {
+
+                        boolean valid = true;
+
+                        EditorObject editorObject = getTableRow().getItem();
+
+                        for (EditorAttribute attribute : editorObject.getAttributes()) {
+                            if (attribute.stringValue().isEmpty()) {
+                                if (!InputField.verify(editorObject, attribute.getType(), attribute.getDefaultValue()) && attribute.getRequiredInFile()) return;
+                            } else if (!InputField.verify(editorObject, attribute.getType(), attribute.actualValue())) {
+                                valid = false;
+                            }
+                        }
+
+                        if (!valid) {
                             ImageView failedImg = new ImageView(FileManager.getFailedImage());
                             setGraphic(new StackPane(imageView, failedImg));
                         } else {
@@ -184,7 +183,7 @@ public class FXHierarchy {
                 if (event.getDragboard().hasString()) {
                     // Don't allow drag-and-drop onto element with children
                     // TODO: This doesn't work and also you should be able to do so
-                    if (!row.isEmpty() && row.getTreeItem().getChildren().size() == 0) {
+                    if (!row.isEmpty() && row.getTreeItem().getChildren().isEmpty()) {
                         int dropIndex = row.getIndex();
                         int curIndex = oldDropIndex;
                         if (dropIndex > curIndex) {
@@ -222,20 +221,19 @@ public class FXHierarchy {
 
         // hierarchy.getStyleClass().add("column-header");
 
+        hierarchy.setPrefHeight(FXStage.getStage().getHeight() * 0.4);
+
         hierarchySwitcherButtons();
 
     }
 
-    private static TabPane hierarchySwitcherButtons;
+    private static final TabPane hierarchySwitcherButtons = new TabPane();
     public static TabPane getHierarchySwitcherButtons() {
         return hierarchySwitcherButtons;
     }
 
 
     public static void hierarchySwitcherButtons() {
-
-        // Create and customize the parent container.
-        hierarchySwitcherButtons = new TabPane();
 
         // Create the three buttons.
         Tab sceneSelectButton = new Tab("Scene");
@@ -255,38 +253,40 @@ public class FXHierarchy {
         hierarchySwitcherButtons.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
             if (LevelManager.getLevel() != null) {
                 if (t1 == sceneSelectButton) {
-                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getScene().get(0).getTreeItem());
-                    FXHierarchy.getHierarchy().refresh();
-                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    hierarchy.setRoot(LevelManager.getLevel().getScene().get(0).getTreeItem());
+                    hierarchy.refresh();
+                    hierarchy.getRoot().setExpanded(true);
                     LevelManager.getLevel().setCurrentlySelectedSection("Scene");
-                    FXHierarchy.getHierarchy().setShowRoot(true);
+                    hierarchy.setShowRoot(true);
                 } else if (t1 == levelSelectButton) {
-                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getLevel().get(0).getTreeItem());
-                    FXHierarchy.getHierarchy().refresh();
-                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    hierarchy.setRoot(LevelManager.getLevel().getLevel().get(0).getTreeItem());
+                    hierarchy.refresh();
+                    hierarchy.getRoot().setExpanded(true);
                     LevelManager.getLevel().setCurrentlySelectedSection("Level");
-                    FXHierarchy.getHierarchy().setShowRoot(true);
+                    hierarchy.setShowRoot(true);
                 } else if (t1 == resrcSelectButton) {
-                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
-                    FXHierarchy.getHierarchy().refresh();
-                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    hierarchy.setRoot(LevelManager.getLevel().getResourcesObject().getChildren().get(0).getTreeItem());
+                    hierarchy.refresh();
+                    hierarchy.getRoot().setExpanded(true);
                     LevelManager.getLevel().setCurrentlySelectedSection("Resrc");
-                    FXHierarchy.getHierarchy().setShowRoot(true);
+                    hierarchy.setShowRoot(true);
                 } else if (t1 == textSelectButton) {
-                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getTextObject().getTreeItem());
-                    FXHierarchy.getHierarchy().refresh();
-                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    hierarchy.setRoot(LevelManager.getLevel().getTextObject().getTreeItem());
+                    hierarchy.refresh();
+                    hierarchy.getRoot().setExpanded(true);
                     LevelManager.getLevel().setCurrentlySelectedSection("Text");
-                    FXHierarchy.getHierarchy().setShowRoot(true);
+                    hierarchy.setShowRoot(true);
                 } else if (t1 == addinSelectButton) {
-                    FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getAddinObject().getTreeItem());
-                    FXHierarchy.getHierarchy().refresh();
-                    FXHierarchy.getHierarchy().getRoot().setExpanded(true);
+                    hierarchy.setRoot(LevelManager.getLevel().getAddinObject().getTreeItem());
+                    hierarchy.refresh();
+                    hierarchy.getRoot().setExpanded(true);
                     LevelManager.getLevel().setCurrentlySelectedSection("Addin");
-                    FXHierarchy.getHierarchy().setShowRoot(true);
+                    hierarchy.setShowRoot(true);
                 }
             }
         });
+
+        hierarchy.sort();
 
     }
 

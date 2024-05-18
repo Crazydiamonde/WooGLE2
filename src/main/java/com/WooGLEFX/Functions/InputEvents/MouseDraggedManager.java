@@ -21,10 +21,11 @@ public class MouseDraggedManager {
     public static void eventMouseDragged(MouseEvent event) {
 
         WorldLevel level = LevelManager.getLevel();
+        if (level == null) return;
 
         SelectionManager.setMouseX(event.getX());
         SelectionManager.setMouseY(event.getY() - FXCanvas.getMouseYOffset());
-        if (level != null && level.getSelected() != null && SelectionManager.getDragSettings() != null) {
+        if (level.getSelected() != null && SelectionManager.getDragSettings() != null) {
 
             // Calculate game-relative mouse coordinates.
             double gameRelativeMouseX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();
@@ -41,7 +42,8 @@ public class MouseDraggedManager {
 
             FXPropertiesView.getPropertiesView().refresh();
         }
-        if (level != null && event.getButton() == MouseButton.SECONDARY) {
+
+        if (event.getButton() == MouseButton.SECONDARY) {
             // Pan the canvas according to the mouse's movement.
             level.setOffsetX(level.getOffsetX() + event.getScreenX() - SelectionManager.getMouseStartX());
             level.setOffsetY(level.getOffsetY() + event.getScreenY() - SelectionManager.getMouseStartY());
@@ -52,11 +54,11 @@ public class MouseDraggedManager {
             Renderer.t = new Affine();
             Renderer.t.appendTranslation(level.getOffsetX(), level.getOffsetY());
             Renderer.t.appendScale(level.getZoom(), level.getZoom());
-            FXCanvas.getImageCanvas().getGraphicsContext2D().setTransform(Renderer.t);
 
             // Redraw the canvas.
-            Renderer.drawEverything(level, FXCanvas.getCanvas(), FXCanvas.getImageCanvas());
+            Renderer.drawLevelToCanvas(level, FXCanvas.getCanvas());
         }
+
     }
 
 }

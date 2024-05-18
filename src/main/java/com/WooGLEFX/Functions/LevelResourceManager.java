@@ -1,7 +1,7 @@
 package com.WooGLEFX.Functions;
 
-import com.WooGLEFX.Engine.FX.FXContainers;
-import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.EditorObjects.ObjectCreator;
+import com.WooGLEFX.Engine.FX.FXStage;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.AnimationReader;
 import com.WooGLEFX.File.BaseGameResources;
@@ -10,6 +10,7 @@ import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
 import com.WooGLEFX.Structures.UserActions.ImportResourceAction;
 import com.WooGLEFX.Structures.UserActions.ObjectCreationAction;
@@ -19,7 +20,6 @@ import com.WorldOfGoo.Level.Music;
 import com.WorldOfGoo.Particle._Particle;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import com.WorldOfGoo.Resrc.Sound;
-import com.WorldOfGoo.Scene.Particles;
 import com.WorldOfGoo.Scene.SceneLayer;
 import com.WorldOfGoo.Text.TextString;
 import javafx.stage.FileChooser;
@@ -48,7 +48,7 @@ public class LevelResourceManager {
 
     public static void deleteResource(WorldLevel level, String file) {
         String path = new File(file).getName();
-        String startPath = level.getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
+        String startPath = level.getVersion() == GameVersion.NEW ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
         File levelFile = new File(startPath + "\\res\\levels\\" + level.getLevelName());
         File[] levelChildren = levelFile.listFiles();
         if (levelChildren != null) {
@@ -72,7 +72,7 @@ public class LevelResourceManager {
                  * level file
                  */
                 try {
-                    GlobalResourceManager.updateResource(editorObject.getAttribute("REALid"), level.getVersion());
+                    GlobalResourceManager.updateResource(editorObject.getAttribute("REALid").stringValue(), level.getVersion());
                 } catch (FileNotFoundException e) {
                     failedToLoad.append(editorObject.getAttribute("REALid")).append("\n");
                     logger.error("", e);
@@ -89,7 +89,7 @@ public class LevelResourceManager {
             editorObject.update();
         }
 
-        if (!failedToLoad.toString().equals("")) {
+        if (!failedToLoad.toString().isEmpty()) {
             Alarms.loadingResourcesError(failedToLoad.toString());
         }
 
@@ -97,11 +97,11 @@ public class LevelResourceManager {
 
     public static void importImages(WorldLevel level) {
         FileChooser fileChooser = new FileChooser();
-        String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String wogDir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\images\\"));
-        List<File> resrcFiles = fileChooser.showOpenMultipleDialog(FXContainers.getStage());
+        List<File> resrcFiles = fileChooser.showOpenMultipleDialog(FXStage.getStage());
 
-        if (resrcFiles != null && resrcFiles.size() > 0) {
+        if (resrcFiles != null && !resrcFiles.isEmpty()) {
             for (File resrcFile : resrcFiles) {
                 importImage(level, resrcFile);
             }
@@ -114,7 +114,7 @@ public class LevelResourceManager {
             BufferedImage image = ImageIO.read(resrcFile);
             String normalizedFilename = resrcFile.getName().split("\\.")[0].replace(' ', '_');
             String path = "";
-            if (level.getVersion() == 1.3) {
+            if (level.getVersion() == GameVersion.OLD) {
                 path = FileManager.getOldWOGdir();
                 // If file with this name already exists, rename it
                 if (new File(FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName() + "\\"
@@ -126,7 +126,7 @@ public class LevelResourceManager {
                     }
                     normalizedFilename += "_" + i;
                 }
-            } else if (level.getVersion() == 1.5) {
+            } else if (level.getVersion() == GameVersion.NEW) {
                 path = FileManager.getNewWOGdir();
                 // If file with this name already exists, rename it
                 if (new File(FileManager.getNewWOGdir() + "\\res\\levels\\" + level.getLevelName() + "\\"
@@ -141,11 +141,11 @@ public class LevelResourceManager {
             }
 
             String imgPath = resrcFile.getPath();
-            if (level.getVersion() == 1.3) {
+            if (level.getVersion() == GameVersion.OLD) {
                 if (resrcFile.getPath().contains(FileManager.getOldWOGdir())) {
                     imgPath = resrcFile.getPath().replace(FileManager.getOldWOGdir(), "");
                 }
-            } else if (level.getVersion() == 1.5) {
+            } else if (level.getVersion() == GameVersion.NEW) {
                 if (resrcFile.getPath().contains(FileManager.getNewWOGdir())) {
                     imgPath = resrcFile.getPath().replace(FileManager.getNewWOGdir(), "");
                 }
@@ -159,7 +159,7 @@ public class LevelResourceManager {
             if (rescTestPath.endsWith(".png")) {
                 rescTestPath = rescTestPath.substring(0, rescTestPath.length() - 4);
             }
-            if (level.getVersion() == 1.5 && rescTestPath.endsWith("@2x")) {
+            if (level.getVersion() == GameVersion.NEW && rescTestPath.endsWith("@2x")) {
                 // Strip @2x suffix, since this is handled transparently by the game already
                 rescTestPath = rescTestPath.substring(0, rescTestPath.length() - 3);
             }
@@ -170,7 +170,7 @@ public class LevelResourceManager {
                         + ".png";
             } else {
                 imgPath = resourcePath = rescTestPath;
-                if (level.getVersion() == 1.5 && normalizedFilename.endsWith("@2x")) {
+                if (level.getVersion() == GameVersion.NEW && normalizedFilename.endsWith("@2x")) {
                     // Strip @2x suffix from here too
                     normalizedFilename = normalizedFilename.substring(0, normalizedFilename.length() - 3);
                 }
@@ -178,7 +178,7 @@ public class LevelResourceManager {
 
             String imageResourceName = "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_"
                     + normalizedFilename.toUpperCase();
-            EditorObject imageResourceObject = EditorObject.create("Image", null);
+            EditorObject imageResourceObject = ObjectCreator.create("Image", null);
 
             imageResourceObject.setAttribute("id", imageResourceName);
             imageResourceObject.setAttribute(
@@ -220,7 +220,7 @@ public class LevelResourceManager {
     }
 
     public static void newTextResource(WorldLevel level) {
-        EditorObject newTextObject = EditorObject.create("string", level.getTextObject());
+        EditorObject newTextObject = ObjectCreator.create("string", level.getTextObject());
         ObjectAdder.fixString(newTextObject);
         level.getText().add(newTextObject);
         SelectionManager.setSelected(newTextObject);
@@ -240,9 +240,9 @@ public class LevelResourceManager {
 
         for (EditorObject editorObject : level.getScene()) {
             for (EditorAttribute attribute : editorObject.getAttributes()) {
-                if (!attribute.getValue().equals("")) {
+                if (!attribute.stringValue().isEmpty()) {
                     for (EditorObject resourceObject : possiblyUnusedResources) {
-                        if (resourceObject.getAttribute("id").equals(attribute.getValue())) {
+                        if (resourceObject.getAttribute("id").stringValue().equals(attribute.stringValue())) {
                             possiblyUnusedResources.remove(resourceObject);
                             break;
                         }
@@ -253,9 +253,9 @@ public class LevelResourceManager {
 
         for (EditorObject editorObject : level.getLevel()) {
             for (EditorAttribute attribute : editorObject.getAttributes()) {
-                if (!attribute.getValue().equals("")) {
+                if (!attribute.stringValue().isEmpty()) {
                     for (EditorObject resourceObject : possiblyUnusedResources) {
-                        if (resourceObject.getAttribute("id").equals(attribute.getValue())) {
+                        if (resourceObject.getAttribute("id").stringValue().equals(attribute.stringValue())) {
                             possiblyUnusedResources.remove(resourceObject);
                             break;
                         }
@@ -279,11 +279,11 @@ public class LevelResourceManager {
 
     public static void importMusic(WorldLevel level) {
         FileChooser fileChooser = new FileChooser();
-        String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String wogDir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\music"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
-        File resrcFile = fileChooser.showOpenDialog(FXContainers.getStage());
+        File resrcFile = fileChooser.showOpenDialog(FXStage.getStage());
 
         if (resrcFile != null) {
             importMusic(level, resrcFile, true);
@@ -299,12 +299,12 @@ public class LevelResourceManager {
 
         boolean alreadyInstalled = false;
         /* check for file in 1.3 version */
-        if (level.getVersion() == 1.3
+        if (level.getVersion() == GameVersion.OLD
                 && new File(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
             alreadyInstalled = true;
         }
         /* check for file in 1.5 version */
-        if (level.getVersion() == 1.5
+        if (level.getVersion() == GameVersion.NEW
                 && new File(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
             alreadyInstalled = true;
         }
@@ -313,10 +313,10 @@ public class LevelResourceManager {
         String soundPath = "res/levels/" + level.getLevelName() + "/" + normalizedFilename;
         if (!alreadyInstalled) {
             try {
-                if (level.getVersion() == 1.3) {
+                if (level.getVersion() == GameVersion.OLD) {
                     Files.copy(resrcFile.toPath(),
                             Paths.get(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()));
-                } else if (level.getVersion() == 1.5) {
+                } else if (level.getVersion() == GameVersion.NEW) {
                     Files.copy(resrcFile.toPath(),
                             Paths.get(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()));
                 }
@@ -332,7 +332,7 @@ public class LevelResourceManager {
          * res\music.
          */
         String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_" + normalizedFilename.toUpperCase();
-        EditorObject soundResourceObject = EditorObject.create("Sound", null);
+        EditorObject soundResourceObject = ObjectCreator.create("Sound", null);
 
         soundResourceObject.setAttribute("id", soundResourceName);
         soundResourceObject.setAttribute("path", soundPath);
@@ -356,7 +356,7 @@ public class LevelResourceManager {
         /* If a music object already exists, change its sound attribute. */
         for (EditorObject music : level.getLevel()) {
             if (music instanceof Music) {
-                String oldID = music.getAttribute("id");
+                String oldID = music.getAttribute("id").stringValue();
                 music.setAttribute("id", soundResourceName);
                 UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                         new AttributeChangeAction(music, "id", oldID, soundResourceName));
@@ -366,7 +366,7 @@ public class LevelResourceManager {
         }
 
         /* Otherwise, create a new music object set to the sound resource's ID. */
-        EditorObject musicObject = EditorObject.create("music", level.getLevelObject());
+        EditorObject musicObject = ObjectCreator.create("music", level.getLevelObject());
         musicObject.setAttribute("id", soundResourceName);
         level.getLevel().add(musicObject);
         UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
@@ -378,11 +378,11 @@ public class LevelResourceManager {
 
     public static void importLoopsound(WorldLevel level) {
         FileChooser fileChooser = new FileChooser();
-        String wogDir = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String wogDir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\sounds"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
-        File resrcFile = fileChooser.showOpenDialog(FXContainers.getStage());
+        File resrcFile = fileChooser.showOpenDialog(FXStage.getStage());
 
         if (resrcFile != null) {
             importLoopsound(level, resrcFile, true);
@@ -398,12 +398,12 @@ public class LevelResourceManager {
 
         boolean alreadyInstalled = false;
         /* check for file in 1.3 version */
-        if (level.getVersion() == 1.3
+        if (level.getVersion() == GameVersion.OLD
                 && new File(FileManager.getOldWOGdir() + "\\res\\sounds\\" + resrcFile.getName()).exists()) {
             alreadyInstalled = true;
         }
         /* check for file in 1.5 version */
-        if (level.getVersion() == 1.5
+        if (level.getVersion() == GameVersion.NEW
                 && new File(FileManager.getNewWOGdir() + "\\res\\sounds\\" + resrcFile.getName()).exists()) {
             alreadyInstalled = true;
         }
@@ -412,10 +412,10 @@ public class LevelResourceManager {
         String soundPath = "res/levels/" + level.getLevelName() + "/" + normalizedFilename;
         if (!alreadyInstalled) {
             try {
-                if (level.getVersion() == 1.3) {
+                if (level.getVersion() == GameVersion.OLD) {
                     Files.copy(resrcFile.toPath(),
                             Paths.get(FileManager.getOldWOGdir() + "\\res\\sounds\\" + resrcFile.getName()));
-                } else if (level.getVersion() == 1.5) {
+                } else if (level.getVersion() == GameVersion.NEW) {
                     Files.copy(resrcFile.toPath(),
                             Paths.get(FileManager.getNewWOGdir() + "\\res\\sounds\\" + resrcFile.getName()));
                 }
@@ -432,7 +432,7 @@ public class LevelResourceManager {
          */
         String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_"
                 + normalizedFilename.toUpperCase();
-        EditorObject soundResourceObject = EditorObject.create("Sound", null);
+        EditorObject soundResourceObject = ObjectCreator.create("Sound", null);
 
         soundResourceObject.setAttribute("id", soundResourceName);
         soundResourceObject.setAttribute("path", soundPath);
@@ -456,7 +456,7 @@ public class LevelResourceManager {
         /* If a music object already exists, change its sound attribute. */
         for (EditorObject music : level.getLevel()) {
             if (music instanceof Loopsound) {
-                String oldID = music.getAttribute("id");
+                String oldID = music.getAttribute("id").stringValue();
                 music.setAttribute("id", soundResourceName);
                 UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                         new AttributeChangeAction(music, "id", oldID, soundResourceName));
@@ -466,7 +466,7 @@ public class LevelResourceManager {
         }
 
         /* Otherwise, create a new music object set to the sound resource's ID. */
-        EditorObject musicObject = EditorObject.create("loopsound", level.getLevelObject());
+        EditorObject musicObject = ObjectCreator.create("loopsound", level.getLevelObject());
         musicObject.setAttribute("id", soundResourceName);
         level.getLevel().add(musicObject);
         UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
@@ -477,18 +477,18 @@ public class LevelResourceManager {
     }
 
 
-    public static void importGameResources(double version) {
+    public static void importGameResources(GameVersion version) {
         ArrayList<String> allFailedResources = new ArrayList<>();
 
         // Open resources.xml for 1.3
         // This takes forever to finish
-        if (version == 1.3 && FileManager.isHasOldWOG()) {
+        if (version == GameVersion.OLD && FileManager.isHasOldWOG()) {
             try {
-                ArrayList<EditorObject> resources = FileManager.openResources(1.3);
+                ArrayList<EditorObject> resources = FileManager.openResources(GameVersion.OLD);
                 if (resources != null) {
                     for (EditorObject resrc : resources) {
                         if (resrc instanceof ResrcImage) {
-                            GlobalResourceManager.addResource(resrc, 1.3);
+                            GlobalResourceManager.addResource(resrc, GameVersion.OLD);
                         }
                     }
                 }
@@ -499,13 +499,13 @@ public class LevelResourceManager {
 
         // Open resources.xml for 1.5
         // This happens instantly
-        if (version == 1.5 && FileManager.isHasNewWOG()) {
+        if (version == GameVersion.NEW && FileManager.isHasNewWOG()) {
             try {
-                ArrayList<EditorObject> resources = FileManager.openResources(1.5);
+                ArrayList<EditorObject> resources = FileManager.openResources(GameVersion.NEW);
                 if (resources != null) {
                     for (EditorObject resrc : resources) {
                         if (resrc instanceof ResrcImage) {
-                            GlobalResourceManager.addResource(resrc, 1.5);
+                            GlobalResourceManager.addResource(resrc, GameVersion.NEW);
                         }
                     }
                 }
@@ -514,15 +514,15 @@ public class LevelResourceManager {
             }
         }
 
-        if (version == 1.3 && FileManager.isHasOldWOG()) {
+        if (version == GameVersion.OLD && FileManager.isHasOldWOG()) {
             try {
-                FileManager.openParticles(1.3);
+                FileManager.openParticles(GameVersion.OLD);
                 ArrayList<EditorObject> particles2 = FileManager.commonBallData;
                 ParticleManager.getParticles().addAll(particles2);
                 for (EditorObject particle : particles2) {
                     try {
                         if (particle instanceof _Particle) {
-                            ((_Particle) particle).update(1.3);
+                            ((_Particle) particle).update(GameVersion.OLD);
                         } else {
                             particle.update();
                         }
@@ -536,15 +536,15 @@ public class LevelResourceManager {
             }
         }
 
-        if (version == 1.5 && FileManager.isHasNewWOG()) {
+        if (version == GameVersion.NEW && FileManager.isHasNewWOG()) {
             try {
-                FileManager.openParticles(1.5);
+                FileManager.openParticles(GameVersion.NEW);
                 ArrayList<EditorObject> particles2 = FileManager.commonBallData;
                 ParticleManager.getParticles().addAll(particles2);
                 for (EditorObject particle : particles2) {
                     try {
                         if (particle instanceof _Particle) {
-                            ((_Particle) particle).update(1.5);
+                            ((_Particle) particle).update(GameVersion.NEW);
                         } else {
                             particle.update();
                         }
@@ -562,14 +562,14 @@ public class LevelResourceManager {
         Set<String> particleNames = new HashSet<>();
         ParticleManager.getParticles().stream()
                 .filter(particle -> particle.attributeExists("name"))
-                .forEach(particle -> particleNames.add(particle.getAttribute("name")));
+                .forEach(particle -> particleNames.add(particle.getAttribute("name").stringValue()));
         ParticleManager.getSortedParticleNames().clear();
         ParticleManager.getSortedParticleNames().addAll(particleNames);
         ParticleManager.getSortedParticleNames().sort(String::compareToIgnoreCase);
 
         // Load all animations from the game files
         try {
-            if (version == 1.3 && FileManager.isHasOldWOG()) {
+            if (version == GameVersion.OLD && FileManager.isHasOldWOG()) {
                 File bruh1 = new File(FileManager.getOldWOGdir() + "\\res\\anim");
                 File[] animationsArray = bruh1.listFiles();
                 if (animationsArray != null) {
@@ -585,7 +585,7 @@ public class LevelResourceManager {
                     }
                 }
             }
-            if (version == 1.5 && FileManager.isHasNewWOG()) {
+            if (version == GameVersion.NEW && FileManager.isHasNewWOG()) {
                 File bruh2 = new File(FileManager.getNewWOGdir() + "\\res\\anim");
                 File[] animationsArray = bruh2.listFiles();
                 if (animationsArray != null) {
@@ -603,13 +603,13 @@ public class LevelResourceManager {
             Alarms.errorMessage(e);
         }
 
-        if (version == 1.3 && FileManager.isHasOldWOG()) {
+        if (version == GameVersion.OLD && FileManager.isHasOldWOG()) {
             try {
-                ArrayList<EditorObject> textList = FileManager.openText(1.3);
+                ArrayList<EditorObject> textList = FileManager.openText(GameVersion.OLD);
                 if (textList != null) {
                     for (EditorObject text : textList) {
                         if (text instanceof TextString) {
-                            GlobalResourceManager.addResource(text, 1.3);
+                            GlobalResourceManager.addResource(text, GameVersion.OLD);
                         }
                     }
                 }
@@ -617,13 +617,13 @@ public class LevelResourceManager {
                 Alarms.errorMessage(e);
             }
         }
-        if (version == 1.5 && FileManager.isHasNewWOG()) {
+        if (version == GameVersion.NEW && FileManager.isHasNewWOG()) {
             try {
-                ArrayList<EditorObject> textList = FileManager.openText(1.5);
+                ArrayList<EditorObject> textList = FileManager.openText(GameVersion.NEW);
                 if (textList != null) {
                     for (EditorObject text : textList) {
                         if (text instanceof TextString) {
-                            GlobalResourceManager.addResource(text, 1.5);
+                            GlobalResourceManager.addResource(text, GameVersion.NEW);
                         }
                     }
                 }

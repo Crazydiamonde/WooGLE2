@@ -6,7 +6,7 @@ import com.WooGLEFX.Structures.InputField;
 public class Axialsinoffset extends EditorObject {
 
     public Axialsinoffset(EditorObject _parent) {
-        super(_parent);
+        super(_parent, "axialsinoffset");
 
         addAttribute("amp",        InputField.RANGE).setDefaultValue("0").assertRequired();
         addAttribute("freq",       InputField.RANGE).setDefaultValue("0").assertRequired();

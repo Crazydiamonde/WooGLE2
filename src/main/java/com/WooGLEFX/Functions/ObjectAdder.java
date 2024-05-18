@@ -1,5 +1,6 @@
 package com.WooGLEFX.Functions;
 
+import com.WooGLEFX.EditorObjects.ObjectCreator;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
@@ -24,7 +25,6 @@ public class ObjectAdder {
         // parent.getTreeItem().getChildren().add(obj.getTreeItem());
         FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(obj.getTreeItem()));
         FXHierarchy.getHierarchy().getSelectionModel().select(FXHierarchy.getHierarchy().getRow(obj.getTreeItem()));
-        obj.setLevel(LevelManager.getLevel());
         obj.update();
         SelectionManager.setSelected(obj);
         FXPropertiesView.changeTableView(LevelManager.getLevel().getSelected());
@@ -51,7 +51,7 @@ public class ObjectAdder {
 
                 // Check if the ball's ID is "goo[number]".
                 // If it is, flag that number as already taken.
-                String id = ball.getAttribute("id");
+                String id = ball.getAttribute("id").stringValue();
                 if (id.length() > 3 && id.startsWith("goo")) {
                     try {
                         taken[Integer.parseInt(id.substring(3))] = true;
@@ -87,7 +87,7 @@ public class ObjectAdder {
 
                 // Check if the string's ID is "TEXT_[level name]_STR[number]".
                 // If it is, flag that number as already taken.
-                String id = string.getAttribute("id");
+                String id = string.getAttribute("id").stringValue();
                 if (id.length() > 9 + LevelManager.getLevel().getLevelName().length()
                         && id.startsWith("TEXT_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_STR")) {
                     try {
@@ -110,68 +110,61 @@ public class ObjectAdder {
 
 
     public static void addBall(EditorObject parent, String type) {
-        BallInstance obj = (BallInstance) EditorObject.create("BallInstance", parent);
+        BallInstance obj = (BallInstance) ObjectCreator.create("BallInstance", parent);
         obj.setAttribute("type", type);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         fixGooball(obj);
-        obj.setRealName("BallInstance");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addLine(EditorObject parent) {
-        Line obj = (Line) EditorObject.create("line", parent);
+        Line obj = (Line) ObjectCreator.create("line", parent);
         obj.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        obj.setRealName("line");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addRectangle(EditorObject parent) {
-        Rectangle obj = (Rectangle) EditorObject.create("rectangle", parent);
+        Rectangle obj = (Rectangle) ObjectCreator.create("rectangle", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         obj.setAttribute("static", true);
-        obj.setRealName("rectangle");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addCircle(EditorObject parent) {
-        Circle obj = (Circle) EditorObject.create("circle", parent);
+        Circle obj = (Circle) ObjectCreator.create("circle", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("circle");
         obj.setAttribute("static", true);
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static SceneLayer addSceneLayer(EditorObject parent) {
-        SceneLayer obj = (SceneLayer) EditorObject.create("SceneLayer", parent);
+        SceneLayer obj = (SceneLayer) ObjectCreator.create("SceneLayer", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("SceneLayer");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
         return obj;
     }
 
     public static void addCompositegeom(EditorObject parent) {
-        Compositegeom obj = (Compositegeom) EditorObject.create("compositegeom", parent);
+        Compositegeom obj = (Compositegeom) ObjectCreator.create("compositegeom", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("compositegeom");
         obj.setAttribute("static", true);
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addHinge(EditorObject parent) {
-        Hinge obj = (Hinge) EditorObject.create("hinge", parent);
+        Hinge obj = (Hinge) ObjectCreator.create("hinge", parent);
         obj.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        obj.setRealName("hinge");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
@@ -185,28 +178,28 @@ public class ObjectAdder {
 
                 /* Calculate the point closest to the scene from the level exit. */
                 double distanceToLeft = Math
-                        .abs(levelexit.getPosition("pos").getX() - LevelManager.getLevel().getSceneObject().getDouble("minx"));
+                        .abs(levelexit.getAttribute("pos").positionValue().getX() - LevelManager.getLevel().getSceneObject().getAttribute("minx").doubleValue());
                 double distanceToRight = Math
-                        .abs(levelexit.getPosition("pos").getX() - LevelManager.getLevel().getSceneObject().getDouble("maxx"));
+                        .abs(levelexit.getAttribute("pos").positionValue().getX() - LevelManager.getLevel().getSceneObject().getAttribute("maxx").doubleValue());
                 double distanceToTop = Math
-                        .abs(levelexit.getPosition("pos").getY() - LevelManager.getLevel().getSceneObject().getDouble("miny"));
+                        .abs(levelexit.getAttribute("pos").positionValue().getY() - LevelManager.getLevel().getSceneObject().getAttribute("miny").doubleValue());
                 double distanceToBottom = Math
-                        .abs(levelexit.getPosition("pos").getY() - LevelManager.getLevel().getSceneObject().getDouble("maxy"));
+                        .abs(levelexit.getAttribute("pos").positionValue().getY() - LevelManager.getLevel().getSceneObject().getAttribute("maxy").doubleValue());
 
                 Point2D closestPoint;
                 if (distanceToLeft <= distanceToRight && distanceToLeft <= distanceToTop
                         && distanceToLeft <= distanceToBottom) {
-                    closestPoint = new Point2D(LevelManager.getLevel().getSceneObject().getDouble("minx"),
-                            levelexit.getPosition("pos").getY());
+                    closestPoint = new Point2D(LevelManager.getLevel().getSceneObject().getAttribute("minx").doubleValue(),
+                            levelexit.getAttribute("pos").positionValue().getY());
                 } else if (distanceToRight <= distanceToTop && distanceToRight <= distanceToBottom) {
-                    closestPoint = new Point2D(LevelManager.getLevel().getSceneObject().getDouble("maxx"),
-                            levelexit.getPosition("pos").getY());
+                    closestPoint = new Point2D(LevelManager.getLevel().getSceneObject().getAttribute("maxx").doubleValue(),
+                            levelexit.getAttribute("pos").positionValue().getY());
                 } else if (distanceToTop <= distanceToBottom) {
-                    closestPoint = new Point2D(levelexit.getPosition("pos").getX(),
-                            LevelManager.getLevel().getSceneObject().getDouble("miny"));
+                    closestPoint = new Point2D(levelexit.getAttribute("pos").positionValue().getX(),
+                            LevelManager.getLevel().getSceneObject().getAttribute("miny").doubleValue());
                 } else {
-                    closestPoint = new Point2D(levelexit.getPosition("pos").getX(),
-                            LevelManager.getLevel().getSceneObject().getDouble("maxy"));
+                    closestPoint = new Point2D(levelexit.getAttribute("pos").positionValue().getX(),
+                            LevelManager.getLevel().getSceneObject().getAttribute("maxy").doubleValue());
                 }
 
                 /* Delete the old pipe. */
@@ -219,11 +212,11 @@ public class ObjectAdder {
                 /*
                  * Create a pipe with a vertex at the level exit and at the scene intersection.
                  */
-                EditorObject pipe = EditorObject.create("pipe", LevelManager.getLevel().getLevelObject());
-                EditorObject vertex1 = EditorObject.create("Vertex", pipe);
-                vertex1.setAttribute("x", levelexit.getPosition("pos").getX());
-                vertex1.setAttribute("y", levelexit.getPosition("pos").getY());
-                EditorObject vertex2 = EditorObject.create("Vertex", pipe);
+                EditorObject pipe = ObjectCreator.create("pipe", LevelManager.getLevel().getLevelObject());
+                EditorObject vertex1 = ObjectCreator.create("Vertex", pipe);
+                vertex1.setAttribute("x", levelexit.getAttribute("pos").positionValue().getX());
+                vertex1.setAttribute("y", levelexit.getAttribute("pos").positionValue().getY());
+                EditorObject vertex2 = ObjectCreator.create("Vertex", pipe);
                 vertex2.setAttribute("x", closestPoint.getX());
                 vertex2.setAttribute("y", closestPoint.getY());
                 ((Vertex) vertex2).setPrevious((Vertex) vertex1);
@@ -258,215 +251,191 @@ public class ObjectAdder {
                 previous = (Vertex) child;
             }
         }
-        Vertex obj = (Vertex) EditorObject.create("Vertex", pipe);
+        Vertex obj = (Vertex) ObjectCreator.create("Vertex", pipe);
         obj.setPrevious(previous);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("Vertex");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addFire(EditorObject parent) {
-        Fire obj = (Fire) EditorObject.create("fire", parent);
+        Fire obj = (Fire) ObjectCreator.create("fire", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("fire");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addLinearForcefield(EditorObject parent) {
-        Linearforcefield obj = (Linearforcefield) EditorObject.create("linearforcefield",
+        Linearforcefield obj = (Linearforcefield) ObjectCreator.create("linearforcefield",
                 parent);
         obj.setAttribute("center", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        obj.setRealName("linearforcefield");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addRadialForcefield(EditorObject parent) {
-        Radialforcefield obj = (Radialforcefield) EditorObject.create("radialforcefield",
+        Radialforcefield obj = (Radialforcefield) ObjectCreator.create("radialforcefield",
                 parent);
         obj.setAttribute("center", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        obj.setRealName("radialforcefield");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addParticle(EditorObject parent) {
-        Particles obj = (Particles) EditorObject.create("particles", parent);
+        Particles obj = (Particles) ObjectCreator.create("particles", parent);
         obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + "," + -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("particles");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addSign(EditorObject parent) {
-        Signpost obj = (Signpost) EditorObject.create("signpost", parent);
+        Signpost obj = (Signpost) ObjectCreator.create("signpost", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("signpost");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addString(EditorObject parent) {
-        TextString obj = (TextString) EditorObject.create("string", parent);
+        TextString obj = (TextString) ObjectCreator.create("string", parent);
         obj.setAttribute("id", "TEXT_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_STR0");
         obj.setAttribute("text", "");
         fixString(obj);
-        obj.setRealName("string");
         LevelManager.getLevel().getText().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addResrcImage(EditorObject parent) {
-        ResrcImage obj = (ResrcImage) EditorObject.create("Image", parent);
+        ResrcImage obj = (ResrcImage) ObjectCreator.create("Image", parent);
         obj.setAttribute("id", "IMAGE_SCENE_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_IMG0");
         obj.setAttribute("path", "");
         obj.setAttribute("REALid", "IMAGE_SCENE_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_IMG0");
         obj.setAttribute("REALpath", "");
-        obj.setRealName("Image");
         LevelManager.getLevel().getResources().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addSound(EditorObject parent) {
-        Sound obj = (Sound) EditorObject.create("Sound", parent);
+        Sound obj = (Sound) ObjectCreator.create("Sound", parent);
         obj.setAttribute("id", "SOUND_LEVEL_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_SND0");
         obj.setAttribute("path", "");
         obj.setAttribute("REALid", "SOUND_LEVEL_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_SND0");
         obj.setAttribute("REALpath", "");
-        obj.setRealName("Sound");
         LevelManager.getLevel().getResources().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addSetDefaults(EditorObject parent) {
-        SetDefaults obj = (SetDefaults) EditorObject.create("SetDefaults", parent);
+        SetDefaults obj = (SetDefaults) ObjectCreator.create("SetDefaults", parent);
         obj.setAttribute("path", "./");
         obj.setAttribute("idprefix", "");
-        obj.setRealName("SetDefaults");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addLabel(EditorObject parent) {
-        Label obj = (Label) EditorObject.create("label", parent);
+        Label obj = (Label) ObjectCreator.create("label", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("label");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addStrand(EditorObject parent) {
-        Strand obj = (Strand) EditorObject.create("Strand", parent);
-        obj.setRealName("Strand");
+        Strand obj = (Strand) ObjectCreator.create("Strand", parent);
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addCamera(EditorObject parent) {
-        Camera obj = (Camera) EditorObject.create("camera", parent);
+        Camera obj = (Camera) ObjectCreator.create("camera", parent);
         obj.setAttribute("endpos", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        obj.setRealName("camera");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addPoi(EditorObject parent) {
-        Poi obj = (Poi) EditorObject.create("poi", parent);
+        Poi obj = (Poi) ObjectCreator.create("poi", parent);
         obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        obj.setRealName("poi");
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addMusic(EditorObject parent) {
-        Music obj = (Music) EditorObject.create("music", parent);
-        obj.setRealName("music");
+        Music obj = (Music) ObjectCreator.create("music", parent);
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
         // possibly rework music logic?
     }
 
     public static void addLoopsound(EditorObject parent) {
-        Loopsound obj = (Loopsound) EditorObject.create("loopsound", parent);
-        obj.setRealName("loopsound");
+        Loopsound obj = (Loopsound) ObjectCreator.create("loopsound", parent);
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addButton(EditorObject parent) {
-        Button obj = (Button) EditorObject.create("button", parent);
+        Button obj = (Button) ObjectCreator.create("button", parent);
         obj.setAttribute("x", FXCanvas.getScreenCenter().getX());
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        obj.setRealName("button");
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addButtongroup(EditorObject parent) {
-        Buttongroup obj = (Buttongroup) EditorObject.create("buttongroup", parent);
-        obj.setRealName("buttongroup");
+        Buttongroup obj = (Buttongroup) ObjectCreator.create("buttongroup", parent);
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addMotor(EditorObject parent) {
-        Motor obj = (Motor) EditorObject.create("motor", parent);
-        obj.setRealName("motor");
+        Motor obj = (Motor) ObjectCreator.create("motor", parent);
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addSlider(EditorObject parent) {
-        Slider obj = (Slider) EditorObject.create("slider", parent);
-        obj.setRealName("slider");
+        Slider obj = (Slider) ObjectCreator.create("slider", parent);
         LevelManager.getLevel().getScene().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addEndoncollision(EditorObject parent) {
-        Endoncollision obj = (Endoncollision) EditorObject.create("endoncollision", parent);
-        obj.setRealName("endoncollision");
+        Endoncollision obj = (Endoncollision) ObjectCreator.create("endoncollision", parent);
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addEndonnogeom(EditorObject parent) {
-        Endonnogeom obj = (Endonnogeom) EditorObject.create("endonnogeom", parent);
-        obj.setRealName("endonnogeom");
+        Endonnogeom obj = (Endonnogeom) ObjectCreator.create("endonnogeom", parent);
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addEndonmessage(EditorObject parent) {
-        Endonmessage obj = (Endonmessage) EditorObject.create("endonmessage", parent);
-        obj.setRealName("endonmessage");
+        Endonmessage obj = (Endonmessage) ObjectCreator.create("endonmessage", parent);
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addTargetheight(EditorObject parent) {
-        Targetheight obj = (Targetheight) EditorObject.create("targetheight", parent);
+        Targetheight obj = (Targetheight) ObjectCreator.create("targetheight", parent);
         obj.setAttribute("pos", FXCanvas.getScreenCenter().getX() + ", " + -FXCanvas.getScreenCenter().getY());
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addLevelexit(EditorObject parent) {
-        Levelexit obj = (Levelexit) EditorObject.create("levelexit", parent);
+        Levelexit obj = (Levelexit) ObjectCreator.create("levelexit", parent);
         obj.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }
 
     public static void addPipe(EditorObject parent) {
-        Pipe obj = (Pipe) EditorObject.create("pipe", parent);
-        obj.setRealName("endonmessage");
+        Pipe obj = (Pipe) ObjectCreator.create("pipe", parent);
         LevelManager.getLevel().getLevel().add(obj);
         addAnything(obj, parent);
     }

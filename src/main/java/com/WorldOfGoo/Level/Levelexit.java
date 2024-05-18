@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -11,8 +12,7 @@ import javafx.scene.paint.Paint;
 public class Levelexit extends EditorObject {
 
     public Levelexit(EditorObject _parent) {
-        super(_parent);
-        setRealName("levelexit");
+        super(_parent, "levelexit");
 
         addAttribute("id",     InputField.ANY)     .setDefaultValue("theExit").assertRequired();
         addAttribute("pos",    InputField.POSITION).setDefaultValue("0,0")    .assertRequired();
@@ -21,25 +21,28 @@ public class Levelexit extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE_HOLLOW) {
             public double getX() {
-                return getPosition("pos").getX();
+                return getAttribute("pos").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("pos", x + "," + -getY());
             }
             public double getY() {
-                return -getPosition("pos").getY();
+                return -getAttribute("pos").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("pos", getX() + "," + -y);
             }
             public double getRadius() {
-                return getDouble("radius");
+                return getAttribute("radius").doubleValue();
             }
             public void setRadius(double radius) {
                 setAttribute("radius", radius);
             }
             public double getEdgeSize() {
-                return 1.0;
+                return 2;
+            }
+            public double getDepth() {
+                return Renderer.GEOMETRY;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 0, 1.0, 1.0);
@@ -48,13 +51,18 @@ public class Levelexit extends EditorObject {
                 return new Color(1.0, 0, 1.0, 0.1);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGeometry();
+                return LevelManager.getLevel().getShowGeometry() != 0;
             }
         });
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,pos,radius,filter,"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
     }
 
 }

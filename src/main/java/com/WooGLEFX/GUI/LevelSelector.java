@@ -6,6 +6,7 @@ import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
 
 import com.WooGLEFX.Functions.LevelLoader;
+import com.WooGLEFX.Structures.GameVersion;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,9 +20,9 @@ import javafx.stage.Stage;
 
 public class LevelSelector extends Application {
 
-    private final double version;
+    private final GameVersion version;
 
-    public LevelSelector(double version) {
+    public LevelSelector(GameVersion version) {
         this.version = version;
     }
 
@@ -37,9 +38,9 @@ public class LevelSelector extends Application {
 
         VBox allLevelsBox = new VBox();
 
-        if (version == 1.3){
+        if (version == GameVersion.OLD){
             levelDir = new File(FileManager.getOldWOGdir() + "\\res\\levels");
-        } else if (version == 1.5){
+        } else if (version == GameVersion.NEW){
             levelDir = new File(FileManager.getNewWOGdir() + "\\res\\levels");
         }
 

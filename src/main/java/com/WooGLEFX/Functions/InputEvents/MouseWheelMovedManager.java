@@ -7,6 +7,7 @@ import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectRotate;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
+import com.WooGLEFX.Engine.FX.FXScene;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
@@ -51,7 +52,6 @@ public class MouseWheelMovedManager {
                 Renderer.t = new Affine();
                 Renderer.t.appendTranslation(newTranslateX, newTranslateY);
                 Renderer.t.appendScale(newScaleX, newScaleY);
-                FXCanvas.getImageCanvas().getGraphicsContext2D().setTransform(Renderer.t);
 
                 level.setOffsetX(newTranslateX);
                 level.setOffsetY(newTranslateY);
@@ -60,10 +60,10 @@ public class MouseWheelMovedManager {
                 if (level.getSelected() != null) {
                     DragSettings hit = MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), mouseX, mouseY);
                     switch (hit.getType()) {
-                        case -1 -> FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
-                        case DragSettings.MOVE -> FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
-                        case DragSettings.RESIZE -> FXContainers.getStage().getScene().setCursor(Cursor.NE_RESIZE);
-                        case DragSettings.ROTATE -> FXContainers.getStage().getScene().setCursor(Cursor.OPEN_HAND);
+                        case -1 -> FXScene.getScene().setCursor(Cursor.DEFAULT);
+                        case DragSettings.MOVE -> FXScene.getScene().setCursor(Cursor.MOVE);
+                        case DragSettings.RESIZE -> FXScene.getScene().setCursor(Cursor.NE_RESIZE);
+                        case DragSettings.ROTATE -> FXScene.getScene().setCursor(Cursor.OPEN_HAND);
                     }
 
                     // Calculate game-relative mouse coordinates.
@@ -93,7 +93,7 @@ public class MouseWheelMovedManager {
                 }
 
                 // Redraw the canvas.
-                Renderer.drawEverything(level, FXCanvas.getCanvas(), FXCanvas.getImageCanvas());
+                Renderer.drawLevelToCanvas(level, FXCanvas.getCanvas());
             }
         }
 

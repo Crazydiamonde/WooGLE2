@@ -11,36 +11,48 @@ import javafx.scene.paint.Paint;
 public class Camera extends EditorObject {
 
     public Camera(EditorObject _parent) {
-        super(_parent);
-        setRealName("camera");
+        super(_parent, "camera");
 
-        addAttribute("aspect", InputField.ANY)     .setDefaultValue("normal");
-        addAttribute("endpos", InputField.POSITION).setDefaultValue("0,0");
-        addAttribute("endzoom", InputField.NUMBER) .setDefaultValue("1");
+        addAttribute("aspect",  InputField.ANY)       .setDefaultValue("normal");
+        addAttribute("endpos",  InputField.POSITION)  .setDefaultValue("0,0");
+        addAttribute("endzoom", InputField.NUMBER)    .setDefaultValue("1");
 
         addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
             public double getX() {
-                return getPosition("endpos").getX();
+                return getAttribute("endpos").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("endpos", x + "," + -getY());
             }
             public double getY() {
-                return -getPosition("endpos").getY();
+                return -getAttribute("endpos").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("endpos", getX() + "," + -y);
             }
             public double getWidth() {
-                double screenWidth = (getAttribute("aspect").equals("widescreen")) ? 1007 : 800;
-                return screenWidth * getDouble("endzoom");
+
+                String aspect = getAttribute("aspect").stringValue();
+                double endzoom = getAttribute("endzoom").doubleValue();
+
+                double screenWidth = (aspect.equals("widescreen")) ? 1007 : 800;
+                return screenWidth * endzoom;
+
             }
             public void setWidth(double width) {
-                double screenWidth = (getAttribute("aspect").equals("widescreen")) ? 1007 : 800;
+
+                String aspect = getAttribute("aspect").stringValue();
+
+                double screenWidth = (aspect.equals("widescreen")) ? 1007 : 800;
                 setAttribute("endzoom", width / screenWidth);
+
             }
             public double getHeight() {
-                return 525 * getDouble("endzoom");
+
+                double endzoom = getAttribute("endzoom").doubleValue();
+
+                return 525 * endzoom;
+
             }
             public void setHeight(double height) {
                 setAttribute("endzoom", height / 525);
@@ -62,9 +74,14 @@ public class Camera extends EditorObject {
             }
         });
 
-        setNameAttribute(getAttribute2("aspect"));
         setMetaAttributes(MetaEditorAttribute.parse("aspect,endpos,endzoom,"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("aspect").stringValue();
     }
 
 

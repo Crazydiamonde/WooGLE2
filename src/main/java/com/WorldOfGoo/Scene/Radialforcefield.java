@@ -14,8 +14,7 @@ import javafx.scene.paint.Paint;
 public class Radialforcefield extends EditorObject {
 
     public Radialforcefield(EditorObject _parent) {
-        super(_parent);
-        setRealName("radialforcefield");
+        super(_parent, "radialforcefield");
 
         addAttribute("id",               InputField.ANY)                                    .assertRequired();
         addAttribute("type",             InputField.ANY)       .setDefaultValue("gravity")  .assertRequired();
@@ -32,19 +31,19 @@ public class Radialforcefield extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE_HOLLOW) {
             public double getX() {
-                return getPosition("center").getX();
+                return getAttribute("center").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("center", x + "," + getY());
             }
             public double getY() {
-                return -getPosition("center").getY();
+                return -getAttribute("center").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("center", getX() + "," + -y);
             }
             public double getRadius() {
-                return getDouble("radius");
+                return getAttribute("radius").doubleValue();
             }
             public void setRadius(double radius) {
                 setAttribute("radius", radius);
@@ -56,7 +55,7 @@ public class Radialforcefield extends EditorObject {
                 return new Color(1.0, 1.0, 0, 1.0);
             }
             public Paint getFillColor() {
-                return new Color(1.0, 1.0, 0, 0.1);
+                return new Color(1.0, 1.0, 0, 0.05);
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().isShowForcefields();
@@ -65,13 +64,13 @@ public class Radialforcefield extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
             public double getX() {
-                return getPosition("center").getX();
+                return getAttribute("center").positionValue().getX();
             }
             public double getY() {
-                return -getPosition("center").getY();
+                return -getAttribute("center").positionValue().getY();
             }
             public double getAnchorY() {
-                return -getDouble("forceatcenter") * 20;
+                return -getAttribute("forceatcenter").doubleValue() * 20;
             }
             public void setAnchor(double anchorX, double anchorY) {
                 setAttribute("forceatcenter", -anchorY / 20);
@@ -89,13 +88,13 @@ public class Radialforcefield extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
             public double getX() {
-                return getPosition("center").getX() + getDouble("radius");
+                return getAttribute("center").positionValue().getX() + getAttribute("radius").doubleValue();
             }
             public double getY() {
-                return -getPosition("center").getY();
+                return -getAttribute("center").positionValue().getY();
             }
             public double getAnchorY() {
-                return -getDouble("forceatedge") * 20;
+                return -getAttribute("forceatedge").doubleValue() * 20;
             }
             public void setAnchor(double anchorX, double anchorY) {
                 setAttribute("forceatedge", -anchorY / 20);
@@ -111,9 +110,14 @@ public class Radialforcefield extends EditorObject {
             }
         });
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,center,radius,forceatcenter,forceatedge,dampeningfactor,rotationaldampeningfactor,antigrav,"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
     }
 
 }

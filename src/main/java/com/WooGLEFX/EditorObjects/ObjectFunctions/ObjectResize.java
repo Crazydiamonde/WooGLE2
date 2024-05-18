@@ -1,6 +1,7 @@
 package com.WooGLEFX.EditorObjects.ObjectFunctions;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Structures.EditorObject;
 import javafx.geometry.Point2D;
@@ -22,8 +23,8 @@ public class ObjectResize {
 
             Point2D center = new Point2D((mouseX + resizeDragAnchorX) / 2, (mouseY + resizeDragAnchorY) / 2);
 
-            Point2D rotatedReal = EditorObject.rotate(new Point2D(mouseX, mouseY), -rotation, center);
-            Point2D rotatedAnchor = EditorObject.rotate(new Point2D(resizeDragAnchorX, resizeDragAnchorY), -rotation, center);
+            Point2D rotatedReal = ObjectUtil.rotate(new Point2D(mouseX, mouseY), -rotation, center);
+            Point2D rotatedAnchor = ObjectUtil.rotate(new Point2D(resizeDragAnchorX, resizeDragAnchorY), -rotation, center);
 
             double deltaX = rotatedReal.getX() - rotatedAnchor.getX();
             double deltaY = rotatedReal.getY() - rotatedAnchor.getY();

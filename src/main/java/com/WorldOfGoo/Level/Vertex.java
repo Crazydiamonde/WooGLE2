@@ -1,12 +1,12 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -19,20 +19,19 @@ public class Vertex extends EditorObject {
 
 
     public Vertex(EditorObject _parent) {
-        super(_parent);
-        setRealName("Vertex");
+        super(_parent, "Vertex");
 
         addAttribute("x", InputField.NUMBER).setDefaultValue("0").assertRequired();
         addAttribute("y", InputField.NUMBER).setDefaultValue("0").assertRequired();
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE) {
+        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
             public double getX() {
-                return getDouble("x");
+                return getAttribute("x").doubleValue();
             }
             public void setX(double x) {
 
                 if (previous != null) {
-                    double previousX = previous.getDouble("x");
+                    double previousX = previous.getAttribute("x").doubleValue();
 
                     // Make this vertex snap to 90-degree angles of the previous vertex
                     if (Math.abs(previousX - x) < 20) {
@@ -45,12 +44,12 @@ public class Vertex extends EditorObject {
 
             }
             public double getY() {
-                return -getDouble("y");
+                return -getAttribute("y").doubleValue();
             }
             public void setY(double y) {
 
                 if (previous != null) {
-                    double previousY = -previous.getDouble("y");
+                    double previousY = -previous.getAttribute("y").doubleValue();
 
                     // Make this vertex snap to 90-degree angles of the previous vertex
                     if (Math.abs(previousY - y) < 20) {
@@ -72,7 +71,10 @@ public class Vertex extends EditorObject {
                 return 15;
             }
             public double getEdgeSize() {
-                return 2;
+                return 4;
+            }
+            public double getDepth() {
+                return Renderer.GEOMETRY + 0.000001;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 0, 1.0, 1.0);
@@ -81,34 +83,20 @@ public class Vertex extends EditorObject {
                 return new Color(1.0, 0, 1.0, 0.1);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGeometry();
+                return LevelManager.getLevel().getShowGeometry() != 0;
             }
         });
 
-        setNameAttribute(getAttribute2("x"));
-        setNameAttribute2(getAttribute2("y"));
-        setChangeListener("y", (observableValue, s, t1) -> {
-            String bruh = getAttribute("x");
-            setAttribute("x", "AAAAA");
-            setAttribute("x", bruh);
-        });
         setMetaAttributes(MetaEditorAttribute.parse("x,y,"));
 
     }
 
 
-    public void drawTo(GraphicsContext graphicsContext, Vertex vertex, Paint color){
-        if (LevelManager.getLevel().isShowGeometry()) {
-            double screenX1 = Double.parseDouble(getAttribute("x")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
-            double screenY1 = -Double.parseDouble(getAttribute("y")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
-
-            double screenX2 = Double.parseDouble(vertex.getAttribute("x")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX();
-            double screenY2 = -Double.parseDouble(vertex.getAttribute("y")) * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY();
-
-            graphicsContext.setStroke(color);
-            graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 10);
-            graphicsContext.strokeLine(screenX1, screenY1, screenX2, screenY2);
-        }
+    @Override
+    public String getName() {
+        String x = getAttribute("x").stringValue();
+        String y = getAttribute("y").stringValue();
+        return x + ", " + y;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.WooGLEFX.Functions;
 
+import com.WooGLEFX.EditorObjects.ObjectCreator;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.Engine.Main;
@@ -9,6 +11,7 @@ import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.GUI.LevelSelector;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
 import com.WorldOfGoo.Level.Signpost;
@@ -32,48 +35,45 @@ public class LevelLoader {
     private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
 
-    public static void newLevel(double version) {
+    public static void newLevel(GameVersion version) {
         Alarms.askForLevelName("new", version);
     }
 
 
-    public static void openLevel(double version) {
+    public static void openLevel(GameVersion version) {
         new LevelSelector(version).start(new Stage());
     }
 
 
     /** Creates a new, default level. */
-    public static void newLevel(String name, double version) {
+    public static void newLevel(String name, GameVersion version) {
         logger.debug("New level");
 
         FXLevelSelectPane.getLevelSelectPane().setMinHeight(30);
         FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
 
         ArrayList<EditorObject> sceneList = new ArrayList<>();
-        sceneList.add(EditorObject.create("scene", null));
+        sceneList.add(ObjectCreator.create("scene", null));
         ArrayList<EditorObject> levelList = new ArrayList<>();
-        levelList.add(EditorObject.create("level", null));
+        levelList.add(ObjectCreator.create("level", null));
         ArrayList<EditorObject> resourcesList = new ArrayList<>();
-        resourcesList.add(EditorObject.create("ResourceManifest", null));
+        resourcesList.add(ObjectCreator.create("ResourceManifest", null));
         ArrayList<EditorObject> addinList = new ArrayList<>();
         addinList.add(BlankObjectGenerator.generateBlankAddinObject(name));
         ArrayList<EditorObject> textList = new ArrayList<>();
-        textList.add(EditorObject.create("strings", null));
+        textList.add(ObjectCreator.create("strings", null));
 
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
         LevelManager.setLevel(level);
         level.setLevelName(name);
         FXEditorButtons.enableAllButtons(false);
 
-        level.getSceneObject().setRealName("scene");
         level.getSceneObject().setTreeItem(new TreeItem<>(level.getSceneObject()));
         level.getSceneObject().setAttribute("backgroundcolor", "255,255,255");
-        level.getLevelObject().setRealName("level");
         level.getLevelObject().setTreeItem(new TreeItem<>(level.getLevelObject()));
-        level.getResourcesObject().setRealName("ResourceManifest");
         level.getResourcesObject().setTreeItem(new TreeItem<>(level.getResourcesObject()));
 
-        EditorObject resourcesThing = EditorObject.create("Resources", level.getResourcesObject());
+        EditorObject resourcesThing = ObjectCreator.create("Resources", level.getResourcesObject());
         resourcesThing.setTreeItem(new TreeItem<>(resourcesThing));
         resourcesThing.setAttribute("id", "scene_" + level.getLevelName());
         resourcesThing.getTreeItem().setExpanded(true);
@@ -96,7 +96,7 @@ public class LevelLoader {
         FXHierarchy.getHierarchy().setRoot(level.getSceneObject().getTreeItem());
 
         // Add items from the Scene to it
-        FXPropertiesView.getPropertiesView().setRoot(level.getSceneObject().getPropertiesTreeItem());
+        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
         Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
         FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
@@ -118,7 +118,7 @@ public class LevelLoader {
     public static final ArrayList<String> failedResources = new ArrayList<>();
 
 
-    public static void openLevel(String levelName, double version) {
+    public static void openLevel(String levelName, GameVersion version) {
         // Don't open a level if none selected
         if (levelName == null || levelName.equals("")) {
             return;
@@ -131,6 +131,8 @@ public class LevelLoader {
             }
         }
         failedResources.clear();
+
+        LevelManager.setVersion(version);
 
         WorldLevel level;
 
@@ -160,7 +162,7 @@ public class LevelLoader {
                 }
                 if (!alreadyIn) {
                     try {
-                        _Ball ball2 = FileManager.openBall(object.getAttribute("type"), version);
+                        _Ball ball2 = FileManager.openBall(object.getAttribute("type").stringValue(), version);
 
                         for (EditorObject resrc : FileManager.commonBallResrcData) {
                             GlobalResourceManager.addResource(resrc, version);
@@ -189,17 +191,14 @@ public class LevelLoader {
         }
 
         for (EditorObject object : level.getScene()) {
-            object.setLevel(level);
             object.update();
         }
 
         for (EditorObject object : level.getLevel()) {
-            object.setLevel(level);
             object.update();
         }
 
         for (EditorObject object : level.getResources()) {
-            object.setLevel(level);
             object.update();
         }
 
@@ -208,7 +207,7 @@ public class LevelLoader {
         FXHierarchy.getHierarchy().setRoot(level.getSceneObject().getTreeItem());
 
         // Add items from the Scene to it
-        FXPropertiesView.getPropertiesView().setRoot(level.getSceneObject().getPropertiesTreeItem());
+        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
         Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
         FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
@@ -233,7 +232,7 @@ public class LevelLoader {
     }
 
 
-    public static void cloneLevel(String name, double version) {
+    public static void cloneLevel(String name, GameVersion version) {
         FXLevelSelectPane.getLevelSelectPane().setMinHeight(30);
         FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
 
@@ -243,12 +242,12 @@ public class LevelLoader {
         ArrayList<EditorObject> addinList = new ArrayList<>();
         ArrayList<EditorObject> textList = new ArrayList<>();
 
-        FileManager.supremeAddToList(resourcesList, LevelManager.getLevel().getResourcesObject().deepClone(null));
-        FileManager.supremeAddToList(sceneList, LevelManager.getLevel().getSceneObject().deepClone(null));
-        FileManager.supremeAddToList(levelList, LevelManager.getLevel().getLevelObject().deepClone(null));
+        FileManager.supremeAddToList(resourcesList, ObjectUtil.deepClone(LevelManager.getLevel().getResourcesObject(), null));
+        FileManager.supremeAddToList(sceneList, ObjectUtil.deepClone(LevelManager.getLevel().getSceneObject(), null));
+        FileManager.supremeAddToList(levelList, ObjectUtil.deepClone(LevelManager.getLevel().getLevelObject(), null));
         // Generate new addin object. idk why cloning it doesn't work, but this is arguably better anyway
         FileManager.supremeAddToList(addinList, BlankObjectGenerator.generateBlankAddinObject(name));
-        FileManager.supremeAddToList(textList, LevelManager.getLevel().getTextObject().deepClone(null));
+        FileManager.supremeAddToList(textList, ObjectUtil.deepClone(LevelManager.getLevel().getTextObject(), null));
 
         String oldLevelName = LevelManager.getLevel().getLevelName();
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
@@ -261,28 +260,24 @@ public class LevelLoader {
             if (object instanceof Resources) {
                 object.setAttribute("id", "scene_" + name);
             } else if (object instanceof ResrcImage || object instanceof Sound) {
-                object.setAttribute("id", object.getAttribute("id").replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
-                object.setAttribute("REALid", object.getAttribute("REALid").replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
-                object.setNameAttribute(object.getAttribute2("id"));
+                object.setAttribute("id", object.getAttribute("id").stringValue().replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
+                object.setAttribute("REALid", object.getAttribute("REALid").stringValue().replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
             }
             GlobalResourceManager.addResource(object, version);
-            object.setLevel(level);
             object.update();
         }
 
         for (EditorObject object : level.getScene()) {
             if (object instanceof SceneLayer) {
-                object.setAttribute("image", object.getAttribute("image").replaceAll(oldLevelName, name));
+                object.setAttribute("image", object.getAttribute("image").stringValue().replaceAll(oldLevelName, name));
             }
-            object.setLevel(level);
             object.update();
         }
 
         for (EditorObject object : level.getLevel()) {
             if (object instanceof Signpost) {
-                object.setAttribute("image", object.getAttribute("image").replaceAll(oldLevelName, name));
+                object.setAttribute("image", object.getAttribute("image").stringValue().replaceAll(oldLevelName, name));
             }
-            object.setLevel(level);
             object.update();
         }
 
@@ -291,7 +286,7 @@ public class LevelLoader {
         FXHierarchy.getHierarchy().setRoot(level.getSceneObject().getTreeItem());
 
         // Add items from the Scene to it
-        FXPropertiesView.getPropertiesView().setRoot(level.getSceneObject().getPropertiesTreeItem());
+        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
         Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
         FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
@@ -311,7 +306,7 @@ public class LevelLoader {
 
 
     public static void cloneLevel() {
-        double version = LevelManager.getLevel().getVersion();
+        GameVersion version = LevelManager.getVersion();
         Alarms.askForLevelName("clone", version);
     }
 

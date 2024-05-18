@@ -1,6 +1,7 @@
 package com.WooGLEFX.EditorObjects.ObjectCollision;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import javafx.geometry.Point2D;
@@ -19,7 +20,7 @@ public class ImageCollider {
         double width = objectPosition.getWidth();
         double height = objectPosition.getHeight();
 
-        Point2D rotated = EditorObject.rotate(new Point2D(mouseX, mouseY), -rotation, new Point2D(x, y));
+        Point2D rotated = ObjectUtil.rotate(new Point2D(mouseX, mouseY), -rotation, new Point2D(x, y));
 
         double mX = rotated.getX();
         double mY = rotated.getY();

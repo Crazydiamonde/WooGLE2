@@ -15,7 +15,10 @@ public class VisibilityManager {
     }
 
     public static void showHideGeometry() {
-        LevelManager.getLevel().setShowGeometry(!LevelManager.getLevel().isShowGeometry());
+        LevelManager.getLevel().setShowGeometry(LevelManager.getLevel().getShowGeometry() - 1);
+        if (LevelManager.getLevel().getShowGeometry() < 0) {
+            LevelManager.getLevel().setShowGeometry(2);
+        }
     }
 
     public static void showHideGraphics() {

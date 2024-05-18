@@ -7,14 +7,18 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 public class Loopsound extends EditorObject {
 
     public Loopsound(EditorObject _parent) {
-        super(_parent);
-        setRealName("loopsound");
+        super(_parent, "loopsound");
 
         addAttribute("id", InputField.ANY).assertRequired();
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
     }
 
 }

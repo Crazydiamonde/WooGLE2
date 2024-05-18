@@ -1,6 +1,7 @@
 package com.WooGLEFX.EditorObjects.ObjectCollision;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -16,7 +17,7 @@ public class RectangleCollider {
         double width = objectPosition.getWidth() - edge;
         double height = objectPosition.getHeight() - edge;
 
-        Point2D rotated = EditorObject.rotate(new Point2D(mouseX, mouseY), -rotation, new Point2D(x, y));
+        Point2D rotated = ObjectUtil.rotate(new Point2D(mouseX, mouseY), -rotation, new Point2D(x, y));
 
         double mX = rotated.getX();
         double mY = rotated.getY();
@@ -26,7 +27,7 @@ public class RectangleCollider {
             mY < y - height / 2 ||
             mY > y + height / 2) return DragSettings.NULL;
 
-        DragSettings dragSettings = new DragSettings(DragSettings.MOVE);
+        DragSettings dragSettings = new DragSettings(objectPosition.isDraggable() ? DragSettings.MOVE : DragSettings.NONE);
         dragSettings.setInitialSourceX(mouseX - x);
         dragSettings.setInitialSourceY(mouseY - y);
         dragSettings.setObjectPosition(objectPosition);
@@ -46,24 +47,24 @@ public class RectangleCollider {
         Point2D center = new Point2D(x, y);
 
         Point2D right = new Point2D(x + width / 2, y);
-        right = EditorObject.rotate(right, rotation, center);
+        right = ObjectUtil.rotate(right, rotation, center);
         right = new Point2D(right.getX(), right.getY());
 
         Point2D left = new Point2D(x - width / 2, y);
-        left = EditorObject.rotate(left, rotation, center);
+        left = ObjectUtil.rotate(left, rotation, center);
         left = new Point2D(left.getX(), left.getY());
 
         Point2D topRight = new Point2D(x + width / 2, y + height / 2);
-        topRight = EditorObject.rotate(topRight, rotation, center);
+        topRight = ObjectUtil.rotate(topRight, rotation, center);
 
         Point2D topLeft = new Point2D(x - width / 2, y + height / 2);
-        topLeft = EditorObject.rotate(topLeft, rotation, center);
+        topLeft = ObjectUtil.rotate(topLeft, rotation, center);
 
         Point2D bottomLeft = new Point2D(x - width / 2, y - height / 2);
-        bottomLeft = EditorObject.rotate(bottomLeft, rotation, center);
+        bottomLeft = ObjectUtil.rotate(bottomLeft, rotation, center);
 
         Point2D bottomRight = new Point2D(x + width / 2, y - height / 2);
-        bottomRight = EditorObject.rotate(bottomRight, rotation, center);
+        bottomRight = ObjectUtil.rotate(bottomRight, rotation, center);
 
         double distance = 4 / LevelManager.getLevel().getZoom();
 
@@ -126,8 +127,8 @@ public class RectangleCollider {
         }
 
         if (resize) {
-            Point2D dragSourceRotated = EditorObject.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
-            Point2D dragAnchorRotated = EditorObject.rotate(new Point2D(dragAnchorX, dragAnchorY), rotation, new Point2D(x, y));
+            Point2D dragSourceRotated = ObjectUtil.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
+            Point2D dragAnchorRotated = ObjectUtil.rotate(new Point2D(dragAnchorX, dragAnchorY), rotation, new Point2D(x, y));
             resizeSettings.setInitialSourceX(dragSourceRotated.getX());
             resizeSettings.setInitialSourceY(dragSourceRotated.getY());
             resizeSettings.setAnchorX(dragAnchorRotated.getX());
@@ -136,7 +137,7 @@ public class RectangleCollider {
         }
 
         if (rotate) {
-            Point2D dragSourceRotated = EditorObject.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
+            Point2D dragSourceRotated = ObjectUtil.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
             rotateSettings.setInitialSourceX(dragSourceRotated.getX());
             rotateSettings.setInitialSourceY(dragSourceRotated.getY());
             rotateSettings.setRotateAngleOffset(rotateAngleOffset);

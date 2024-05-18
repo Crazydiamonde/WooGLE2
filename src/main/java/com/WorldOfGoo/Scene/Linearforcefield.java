@@ -14,8 +14,7 @@ import javafx.scene.paint.Paint;
 public class Linearforcefield extends EditorObject {
 
     public Linearforcefield(EditorObject _parent) {
-        super(_parent);
-        setRealName("linearforcefield");
+        super(_parent, "linearforcefield");
 
         addAttribute("id",               InputField.ANY)                                    .assertRequired();
         addAttribute("type",             InputField.ANY)       .setDefaultValue("gravity")  .assertRequired();
@@ -35,25 +34,25 @@ public class Linearforcefield extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
             public double getX() {
-                return getPosition("center").getX();
+                return getAttribute("center").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("center", x + "," + -getY());
             }
             public double getY() {
-                return -getPosition("center").getY();
+                return -getAttribute("center").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("center", getX() + "," + -y);
             }
             public double getWidth() {
-                return Math.abs(getDouble("width"));
+                return Math.abs(getAttribute("width").doubleValue());
             }
             public void setWidth(double width) {
                 setAttribute("width", width);
             }
             public double getHeight() {
-                return Math.abs(getDouble("height"));
+                return Math.abs(getAttribute("height").doubleValue());
             }
             public void setHeight(double height) {
                 setAttribute("height", height);
@@ -65,7 +64,7 @@ public class Linearforcefield extends EditorObject {
                 return new Color(1.0, 1.0, 0, 1.0);
             }
             public Paint getFillColor() {
-                return new Color(1.0, 1.0, 0, 0.1);
+                return new Color(1.0, 1.0, 0, 0.05);
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().isShowForcefields();
@@ -77,22 +76,22 @@ public class Linearforcefield extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
             public double getX() {
-                return getPosition("center").getX();
+                return getAttribute("center").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("center", x + "," + -getY());
             }
             public double getY() {
-                return -getPosition("center").getY();
+                return -getAttribute("center").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("center", getX() + "," + -y);
             }
             public double getAnchorX() {
-                return getPosition("force").getX() * 20;
+                return getAttribute("force").positionValue().getX() * 20;
             }
             public double getAnchorY() {
-                return -getPosition("force").getY() * 20;
+                return -getAttribute("force").positionValue().getY() * 20;
             }
             public void setAnchor(double anchorX, double anchorY) {
                 setAttribute("force", anchorX / 20 + "," + -anchorY / 20);
@@ -108,9 +107,14 @@ public class Linearforcefield extends EditorObject {
             }
         });
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,center,width,height,Force Field<type,force,dampeningfactor,rotationaldampeningfactor,antigrav,geomonly,enabled>Water<water,color,depth>"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
     }
 
 }

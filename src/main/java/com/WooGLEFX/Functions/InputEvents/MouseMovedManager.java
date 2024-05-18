@@ -4,6 +4,8 @@ import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersectingCorners;
 import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersection;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXContainers;
+import com.WooGLEFX.Engine.FX.FXScene;
+import com.WooGLEFX.Engine.FX.FXStage;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -31,12 +33,12 @@ public class MouseMovedManager {
             case DragSettings.RESIZE -> cursor = Cursor.NE_RESIZE;
             case DragSettings.ROTATE, DragSettings.SETANCHOR -> cursor = Cursor.OPEN_HAND;
         }
-        if (cursor != null) FXContainers.getStage().getScene().setCursor(cursor);
+        if (cursor != null) FXScene.getScene().setCursor(cursor);
         else {
             DragSettings intersectionSettings = MouseIntersection.mouseIntersection(level.getSelected(), x, y);
             if (intersectionSettings != DragSettings.NULL && intersectionSettings.getType() != DragSettings.NONE) {
-                FXContainers.getStage().getScene().setCursor(Cursor.MOVE);
-            } else FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
+                FXScene.getScene().setCursor(Cursor.MOVE);
+            } else FXScene.getScene().setCursor(Cursor.DEFAULT);
         }
 
     }

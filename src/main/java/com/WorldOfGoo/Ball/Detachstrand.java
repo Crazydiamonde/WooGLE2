@@ -6,9 +6,9 @@ import com.WooGLEFX.Structures.InputField;
 public class Detachstrand extends EditorObject {
 
     public Detachstrand(EditorObject _parent) {
-        super(_parent);
+        super(_parent, "detachstrand");
 
-        addAttribute("image", InputField.ANY);
+        addAttribute("image",  InputField.ANY);
         addAttribute("maxlen", InputField.ANY).assertRequired();
 
     }

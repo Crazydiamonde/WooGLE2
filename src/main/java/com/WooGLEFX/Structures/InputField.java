@@ -85,7 +85,7 @@ public class InputField {
                 }
             case IMAGE, IMAGE_REQUIRED:
                 for (EditorObject resrc : LevelManager.getLevel().getResources()) {
-                    if (resrc.attributeExists("id") && resrc.getAttribute("id").equals(potential)) {
+                    if (resrc.attributeExists("id") && resrc.getAttribute("id").stringValue().equals(potential)) {
                         return true;
                     }
                 }
@@ -102,7 +102,7 @@ public class InputField {
             case FLAG:
                 return potential.equals("true") || potential.equals("false");
             case BALL:
-                String path = LevelManager.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
+                String path = LevelManager.getVersion() == GameVersion.NEW ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
                 for (File ballFile : new File(path + "\\res\\balls").listFiles()) {
                     if (ballFile.getName().equals(potential)) {
                         return true;
@@ -113,7 +113,7 @@ public class InputField {
                 return true;
             case PARTICLES:
                 for (EditorObject particle : ParticleManager.getParticles()) {
-                    if ((particle instanceof Particleeffect || particle instanceof Ambientparticleeffect) && particle.getAttribute("name").equals(potential)) {
+                    if ((particle instanceof Particleeffect || particle instanceof Ambientparticleeffect) && particle.getAttribute("name").stringValue().equals(potential)) {
                         return true;
                     }
                 }
@@ -126,14 +126,14 @@ public class InputField {
                 return potential.equals("balls") || potential.equals("moves") || potential.equals("time");
             case GOOBALL_ID:
                 for (EditorObject editorObject : LevelManager.getLevel().getLevel()) {
-                    if (editorObject instanceof BallInstance && editorObject.getAttribute("id").equals(potential)) {
+                    if (editorObject instanceof BallInstance && editorObject.getAttribute("id").stringValue().equals(potential)) {
                         return true;
                     }
                 }
                 return false;
             case UNIQUE_GOOBALL_ID:
                 for (EditorObject editorObject : LevelManager.getLevel().getLevel()) {
-                    if (editorObject instanceof BallInstance && editorObject != object && editorObject.getAttribute("id").equals(potential)) {
+                    if (editorObject instanceof BallInstance && editorObject != object && editorObject.getAttribute("id").stringValue().equals(potential)) {
                         return false;
                     }
                 }
@@ -141,12 +141,14 @@ public class InputField {
             case GEOMETRY:
                 for (EditorObject editorObject : LevelManager.getLevel().getScene()) {
                     if (editorObject instanceof Rectangle || editorObject instanceof Circle || editorObject instanceof Compositegeom) {
-                        if (editorObject.getAttribute("id").equals(potential)) {
+                        if (editorObject.getAttribute("id").stringValue().equals(potential)) {
                             return true;
                         }
                     }
                 }
                 return false;
+            case CONTEXT:
+                return potential.equals("screen");
             default:
                 return false;
         }

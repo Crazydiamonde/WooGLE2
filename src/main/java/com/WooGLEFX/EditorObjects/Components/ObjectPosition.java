@@ -91,6 +91,11 @@ public class ObjectPosition {
     }
 
 
+    public double getDepth() {
+        return 0;
+    }
+
+
     public double getEdgeSize() {
         return 0;
     }

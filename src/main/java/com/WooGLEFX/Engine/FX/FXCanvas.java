@@ -6,24 +6,12 @@ import javafx.scene.canvas.Canvas;
 
 public class FXCanvas {
 
-    private static Canvas canvas;
+    private static final Canvas canvas = new Canvas();
     public static Canvas getCanvas() {
         return canvas;
     }
-    public static void setCanvas(Canvas canvas) {
-        FXCanvas.canvas = canvas;
-    }
 
 
-    private static Canvas imageCanvas;
-    public static Canvas getImageCanvas() {
-        return imageCanvas;
-    }
-
-
-    public static void setImageCanvas(Canvas imageCanvas) {
-        FXCanvas.imageCanvas = imageCanvas;
-    }
     public static Point2D getScreenCenter() {
         return new Point2D((FXContainers.getThingPane().getWidth() / 2 - LevelManager.getLevel().getOffsetX()) / LevelManager.getLevel().getZoom(),
                 (FXContainers.getThingPane().getHeight() / 2 - LevelManager.getLevel().getOffsetY()) / LevelManager.getLevel().getZoom());
@@ -31,6 +19,16 @@ public class FXCanvas {
 
     public static double getMouseYOffset() {
         return FXLevelSelectPane.getLevelSelectPane().getHeight() + FXContainers.getvBox().getChildren().get(4).getLayoutY();
+    }
+
+
+    public static void init() {
+
+        canvas.setWidth(FXStage.getStage().getWidth() * 0.7);
+        canvas.setHeight(FXStage.getStage().getHeight() - 100);
+        canvas.widthProperty().bind(FXStage.getStage().widthProperty());
+        canvas.heightProperty().bind(FXContainers.getSplitPane().heightProperty());
+
     }
 
 }

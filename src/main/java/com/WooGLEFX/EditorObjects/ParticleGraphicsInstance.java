@@ -82,10 +82,10 @@ public class ParticleGraphicsInstance {
         this.pos.setX(this.originalPos.getX() + (this.speed * Math.cos(angle) + 0.5 * this.acceleration.getX() * dt * 50) * dt * 50);
         this.pos.setY(this.originalPos.getY() + (this.speed * Math.sin(angle) + 0.5 * this.acceleration.getY() * dt * 50) * dt * 50);
         if (lifespan == -1) {
-            if (pos.getX() < LevelManager.getLevel().getSceneObject().getDouble("minx") ||
-                    pos.getY() < LevelManager.getLevel().getSceneObject().getDouble("miny") ||
-                    pos.getX() > LevelManager.getLevel().getSceneObject().getDouble("maxx") ||
-                    pos.getY() > LevelManager.getLevel().getSceneObject().getDouble("maxy")) {
+            if (pos.getX() < LevelManager.getLevel().getSceneObject().getAttribute("minx").doubleValue() ||
+                    pos.getY() < LevelManager.getLevel().getSceneObject().getAttribute("miny").doubleValue() ||
+                    pos.getX() > LevelManager.getLevel().getSceneObject().getAttribute("maxx").doubleValue() ||
+                    pos.getY() > LevelManager.getLevel().getSceneObject().getAttribute("maxy").doubleValue()) {
                 return true;
             }
         } else if (dt > this.lifespan) {

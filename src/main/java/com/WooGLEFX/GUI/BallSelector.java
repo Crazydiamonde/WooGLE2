@@ -3,6 +3,7 @@ package com.WooGLEFX.GUI;
 import com.WooGLEFX.File.BaseGameResources;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.BallManager;
+import com.WooGLEFX.Structures.GameVersion;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,10 +17,10 @@ import java.io.File;
 
 public class BallSelector extends Application {
 
-    private final double oldVersion;
-    private final double newVersion;
+    private final GameVersion oldVersion;
+    private final GameVersion newVersion;
 
-    public BallSelector(double oldVersion, double newVersion) {
+    public BallSelector(GameVersion oldVersion, GameVersion newVersion) {
         this.oldVersion = oldVersion;
         this.newVersion = newVersion;
     }
@@ -74,7 +75,7 @@ public class BallSelector extends Application {
 
         VBox allBallsBox = new VBox();
 
-        String dir = oldVersion == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String dir = oldVersion == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         ballDir = new File(dir + "\\res\\balls");
 
         ScrollPane realPane = new ScrollPane(allBallsBox);

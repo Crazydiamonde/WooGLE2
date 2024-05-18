@@ -8,6 +8,7 @@ import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.GameVersion;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -24,10 +25,9 @@ public class GameResourceManager {
 
 
     /** Reloads all the resources in a World of Goo version. */
-    public static void reloadWorldOfGoo(double version) {
+    public static void reloadWorldOfGoo(GameVersion version) {
 
-        FileManager.getPaletteBalls().clear();
-        FileManager.getPaletteVersions().clear();
+        PaletteManager.clear();
 
         try {
             FileManager.readWOGdirs();
@@ -39,10 +39,10 @@ public class GameResourceManager {
 
         LevelResourceManager.importGameResources(version);
 
-        for (int i = 0; i < FileManager.getPaletteBalls().size(); i++) {
+        for (int i = 0; i < PaletteManager.getPaletteBalls().size(); i++) {
 
-            String ballName = FileManager.getPaletteBalls().get(i);
-            double ballVersion = FileManager.getPaletteVersions().get(i);
+            String ballName = PaletteManager.getPaletteBalls().get(i);
+            GameVersion ballVersion = PaletteManager.getPaletteVersions().get(i);
 
             logger.debug(ballName + ", " + ballVersion);
 
@@ -69,7 +69,7 @@ public class GameResourceManager {
 
 
     /** Changes the location of a World of Goo version. */
-    public static boolean changeWorldOfGooDirectory(double version) {
+    public static boolean changeWorldOfGooDirectory(GameVersion version) {
         FileChooser findWorldOfGoo = new FileChooser();
         findWorldOfGoo.getExtensionFilters()
                 .add(new FileChooser.ExtensionFilter("World of Goo executable", "WorldOfGoo.exe"));
@@ -77,14 +77,14 @@ public class GameResourceManager {
         if (worldOfGoo == null) {
             return false;
         } else {
-            if (version == 1.3) {
+            if (version == GameVersion.OLD) {
                 FileManager.setOldWOGdir(worldOfGoo.getParent());
                 try {
                     FileManager.saveProperties();
                 } catch (IOException e) {
                     Alarms.errorMessage(e);
                 }
-                reloadWorldOfGoo(1.3);
+                reloadWorldOfGoo(GameVersion.OLD);
                 FXEditorButtons.buttonOpenOld.setDisable(false);
                 FXEditorButtons.buttonNewOld.setDisable(false);
                 FXMenu.newLevelOldItem.setDisable(false);
@@ -101,7 +101,7 @@ public class GameResourceManager {
                 } catch (IOException e) {
                     Alarms.errorMessage(e);
                 }
-                reloadWorldOfGoo(1.5);
+                reloadWorldOfGoo(GameVersion.NEW);
                 FXEditorButtons.buttonOpenNew.setDisable(false);
                 FXEditorButtons.buttonNewNew.setDisable(false);
                 FXMenu.newLevelNewItem.setDisable(false);

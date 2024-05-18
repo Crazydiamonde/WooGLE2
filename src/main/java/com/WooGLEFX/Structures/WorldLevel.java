@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.WooGLEFX.EditorObjects.ObjectCreator;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXEditorButtons;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
@@ -48,7 +50,7 @@ public class WorldLevel {
 
     private boolean showCameras = false;
     private boolean showForcefields = true;
-    private boolean showGeometry = true;
+    private int showGeometry = 2;
     private boolean showGraphics = true;
     private int showGoos = 2;
     private boolean showParticles = true;
@@ -177,9 +179,9 @@ public class WorldLevel {
         this.levelName = levelName;
     }
 
-    private final double version;
+    private final GameVersion version;
 
-    public double getVersion() {
+    public GameVersion getVersion() {
         return version;
     }
 
@@ -202,13 +204,17 @@ public class WorldLevel {
         FXEditorButtons.buttonShowHideForcefields.setGraphic(new ImageView(showForcefields ? showHideForcefields1 : showHideForcefields0));
     }
 
-    public boolean isShowGeometry() {
+    public int getShowGeometry() {
         return showGeometry;
     }
 
-    public void setShowGeometry(boolean showGeometry) {
+    public void setShowGeometry(int showGeometry) {
         this.showGeometry = showGeometry;
-        FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(showGeometry ? showHideGeometry1 : showHideGeometry0));
+        switch (showGeometry) {
+            case 0 -> FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(showHideGeometry0));
+            case 1 -> FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(showHideGeometry1));
+            case 2 -> FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(showHideImages1));
+        }
     }
 
     public boolean isShowGraphics() {
@@ -286,11 +292,11 @@ public class WorldLevel {
     public void setEditingStatus(int editingStatus, boolean shouldSelect) {
         this.editingStatus = editingStatus;
         if (editingStatus == NO_UNSAVED_CHANGES) {
-            currentStatusImage = version == 1.3 ? noChangesImageOld : noChangesImageNew;
+            currentStatusImage = version == GameVersion.OLD ? noChangesImageOld : noChangesImageNew;
         } else if (editingStatus == UNSAVED_CHANGES) {
-            currentStatusImage = version == 1.3 ? changesImageOld : changesImageNew;
+            currentStatusImage = version == GameVersion.OLD ? changesImageOld : changesImageNew;
         } else if (editingStatus == UNSAVED_CHANGES_UNMODIFIABLE) {
-            currentStatusImage = version == 1.3 ? changesUnmodifiableImageOld : changesUnmodifiableImageNew;
+            currentStatusImage = version == GameVersion.OLD ? changesUnmodifiableImageOld : changesUnmodifiableImageNew;
         }
 
         AnchorPane pane = new AnchorPane();
@@ -363,11 +369,11 @@ public class WorldLevel {
     }
 
     private void cameraToMiddleOfLevel() {
-        double sceneWidth = sceneObject.getDouble("maxx") - sceneObject.getDouble("minx");
-        double sceneHeight = sceneObject.getDouble("maxy") - sceneObject.getDouble("miny");
+        double sceneWidth = sceneObject.getAttribute("maxx").doubleValue() - sceneObject.getAttribute("minx").doubleValue();
+        double sceneHeight = sceneObject.getAttribute("maxy").doubleValue() - sceneObject.getAttribute("miny").doubleValue();
 
-        double middleX = (sceneObject.getDouble("minx") + sceneObject.getDouble("maxx")) / 2;
-        double middleY = (sceneObject.getDouble("miny") + sceneObject.getDouble("maxy")) / 2;
+        double middleX = (sceneObject.getAttribute("minx").doubleValue() + sceneObject.getAttribute("maxx").doubleValue()) / 2;
+        double middleY = (sceneObject.getAttribute("miny").doubleValue() + sceneObject.getAttribute("maxy").doubleValue()) / 2;
 
         double canvasWidth = FXContainers.getSplitPane().getDividers().get(0).getPosition() * FXContainers.getSplitPane().getWidth();
         double canvasHeight = FXContainers.getSplitPane().getHeight();
@@ -384,7 +390,12 @@ public class WorldLevel {
         offsetY = (offsetY - canvasHeight / 2) * zoom + canvasHeight / 2;
     }
 
-    public WorldLevel(ArrayList<EditorObject> _scene, ArrayList<EditorObject> _level, ArrayList<EditorObject> _resources, ArrayList<EditorObject> _addin, ArrayList<EditorObject> _text, double _version){
+    public WorldLevel(ArrayList<EditorObject> _scene,
+                      ArrayList<EditorObject> _level,
+                      ArrayList<EditorObject> _resources,
+                      ArrayList<EditorObject> _addin,
+                      ArrayList<EditorObject> _text,
+                      GameVersion _version) {
 
         scene = _scene;
         level = _level;
@@ -435,10 +446,10 @@ public class WorldLevel {
                     }
                     if (!alreadyInText) {
                         try {
-                            EditorObject myString = GlobalResourceManager.getText(label.getAttribute("text"), version).deepClone(textObject);
+                            EditorObject myString = ObjectUtil.deepClone(GlobalResourceManager.getText(label.getAttribute("text").stringValue(), version), textObject);
                             text.add(myString);
                         } catch (Exception e) {
-                            LevelLoader.failedResources.add(("Level text \"" + label.getAttribute("text") + "\" (version " + version + ")"));
+                            LevelLoader.failedResources.add(("Level text \"" + label.getAttribute("text").stringValue() + "\" (version " + version + ")"));
                         }
                     }
                 }
@@ -459,10 +470,10 @@ public class WorldLevel {
                     }
                     if (!alreadyInText) {
                         try {
-                            GlobalResourceManager.getText(signpost.getAttribute("text"), version).deepClone(textObject);
+                            //GlobalResourceManager.getText(signpost.getAttribute("text").stringValue(), version).deepClone(textObject);
                         } catch (Exception e) {
                             LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text") + "\" (version " + version + ")"));
-                            EditorObject string = EditorObject.create("string", textObject);
+                            EditorObject string = ObjectCreator.create("string", textObject);
                             string.setAttribute("id", signpost.getAttribute("text"));
                         }
                     }

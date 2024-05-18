@@ -11,7 +11,7 @@ public class CircleCollider {
 
         double x = objectPosition.getX();
         double y = objectPosition.getY();
-        double radius = objectPosition.getRadius() - edge;
+        double radius = objectPosition.getRadius() - 2 * edge;
 
         if (Math.hypot(mouseX - x, mouseY - y) < radius) {
             DragSettings dragSettings = new DragSettings(DragSettings.MOVE);
@@ -63,7 +63,22 @@ public class CircleCollider {
             resizeSettings.setAnchorY(0);
             return resizeSettings;
 
-        } else return DragSettings.NULL;
+        }
+
+        if (objectPosition.isRotatable() && (
+                rectangleIntersection(mouseX, mouseY, left, distance) ||
+                rectangleIntersection(mouseX, mouseY, right, distance)
+        )) {
+
+            DragSettings rotateSettings = new DragSettings(DragSettings.ROTATE);
+            rotateSettings.setObjectPosition(objectPosition);
+            rotateSettings.setInitialSourceX(0);
+            rotateSettings.setInitialSourceY(0);
+            return rotateSettings;
+
+        }
+
+        return DragSettings.NULL;
 
     }
 

@@ -1,5 +1,6 @@
 package com.WooGLEFX.Engine;
 
+import com.WooGLEFX.EditorObjects.ObjectCreator;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 
@@ -39,8 +40,7 @@ public class ClipboardHandler {
                     }
                     currentWord = "";
                 } else if (part == '<') {
-                    object = EditorObject.create(currentWord, null);
-                    object.setRealName(currentWord);
+                    object = ObjectCreator.create(currentWord, null);
                     currentWord = "";
                     settingAttribute = true;
                 } else {
@@ -57,14 +57,14 @@ public class ClipboardHandler {
 
         StringBuilder clipboard = new StringBuilder("WOGEditor:");
 
-        clipboard.append(object.getRealName());
+        clipboard.append(object.getType());
 
         clipboard.append("<");
 
         for (int i = 0; i < object.getAttributes().length; i++){
             EditorAttribute attribute = object.getAttributes()[i];
-            if (attribute.getValue() != null && !attribute.getValue().equals(attribute.getDefaultValue()) && !attribute.getValue().equals("")){
-                clipboard.append(attribute.getName()).append("=").append(attribute.getValue());
+            if (attribute.stringValue() != null && !attribute.stringValue().equals(attribute.getDefaultValue()) && !attribute.stringValue().isEmpty()){
+                clipboard.append(attribute.getName()).append("=").append(attribute.stringValue());
                 clipboard.append(";");
             }
         }

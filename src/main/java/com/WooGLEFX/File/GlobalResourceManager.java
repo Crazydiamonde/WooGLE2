@@ -1,5 +1,6 @@
 package com.WooGLEFX.File;
 
+import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.Resources.Resource;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.Resources.ImageResource;
@@ -14,14 +15,10 @@ import java.util.ArrayList;
 public class GlobalResourceManager {
 
     private static final ArrayList<Resource> oldResources = new ArrayList<>();
+
+
     private static final ArrayList<Resource> newResources = new ArrayList<>();
 
-    public static ArrayList<Resource> getOldResources() {
-        return oldResources;
-    }
-    public static ArrayList<Resource> getNewResources() {
-        return newResources;
-    }
 
     /**
      * @param id The id (all caps property) of the resource.
@@ -29,9 +26,9 @@ public class GlobalResourceManager {
      * @return The image associated with the resource.
      * @throws FileNotFoundException If there is no resource matching the id, or if the resource path does not lead to an image.
      */
-    public static Image getImage(String id, double version) throws FileNotFoundException {
+    public static Image getImage(String id, GameVersion version) throws FileNotFoundException {
 
-        if (version == 1.3) {
+        if (version == GameVersion.OLD) {
             for (Resource resource : oldResources) {
                 if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
 
@@ -42,7 +39,7 @@ public class GlobalResourceManager {
                     return imageResource.getImage();
                 }
             }
-        } else if (version == 1.5) {
+        } else if (version == GameVersion.NEW) {
             for (Resource resource : newResources) {
                 if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
 
@@ -59,14 +56,15 @@ public class GlobalResourceManager {
 
     }
 
-    public static void updateResource(String id, double version) throws FileNotFoundException {
-        if (version == 1.3) {
+
+    public static void updateResource(String id, GameVersion version) throws FileNotFoundException {
+        if (version == GameVersion.OLD) {
             for (Resource resource : oldResources) {
                 if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
                     imageResource.setImage(FileManager.openImageFromFilePath(FileManager.getOldWOGdir() + "\\" + ((ImageResource) resource).getPath() + ".png"));
                 }
             }
-        } else if (version == 1.5) {
+        } else if (version == GameVersion.NEW) {
             for (Resource resource : newResources) {
                 if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
                     imageResource.setImage(FileManager.openImageFromFilePath(FileManager.getNewWOGdir() + "\\" + ((ImageResource) resource).getPath() + ".png"));
@@ -75,15 +73,16 @@ public class GlobalResourceManager {
         }
     }
 
-    public static TextString getText(String id, double version) throws FileNotFoundException {
 
-        if (version == 1.3) {
+    public static TextString getText(String id, GameVersion version) throws FileNotFoundException {
+
+        if (version == GameVersion.OLD) {
             for (Resource resource : oldResources) {
                 if (resource instanceof TextResource textResource && resource.getId().equals(id)) {
                     return textResource.getText();
                 }
             }
-        } else if (version == 1.5) {
+        } else if (version == GameVersion.NEW) {
             for (Resource resource : newResources) {
                 if (resource instanceof TextResource textResource && resource.getId().equals(id)) {
                     return textResource.getText();
@@ -94,18 +93,19 @@ public class GlobalResourceManager {
         throw new FileNotFoundException("Invalid text resource ID: \"" + id + "\" (version " + version + ")");
     }
 
-    public static void addResource(EditorObject resource, double version) {
-        if (version == 1.3) {
+
+    public static void addResource(EditorObject resource, GameVersion version) {
+        if (version == GameVersion.OLD) {
             if (resource instanceof ResrcImage) {
-                oldResources.add(new ImageResource(resource.getAttribute("id"), resource.getAttribute("path"), null));
+                oldResources.add(new ImageResource(resource.getAttribute("id").stringValue(), resource.getAttribute("path").stringValue(), null));
             } else if (resource instanceof TextString textString) {
-                oldResources.add(new TextResource(resource.getAttribute("id"), textString));
+                oldResources.add(new TextResource(resource.getAttribute("id").stringValue(), textString));
             }
-        } else if (version == 1.5) {
+        } else if (version == GameVersion.NEW) {
             if (resource instanceof ResrcImage) {
-                newResources.add(new ImageResource(resource.getAttribute("id"), resource.getAttribute("path"), null));
+                newResources.add(new ImageResource(resource.getAttribute("id").stringValue(), resource.getAttribute("path").stringValue(), null));
             } else if (resource instanceof TextString textString) {
-                newResources.add(new TextResource(resource.getAttribute("id"), textString));
+                newResources.add(new TextResource(resource.getAttribute("id").stringValue(), textString));
             }
         }
     }

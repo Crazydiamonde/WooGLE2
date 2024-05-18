@@ -6,10 +6,10 @@ import com.WooGLEFX.Structures.InputField;
 public class BallParticles extends EditorObject {
 
     public BallParticles(EditorObject _parent) {
-        super(_parent);
+        super(_parent, "particles");
 
-        addAttribute("id", InputField.ANY).assertRequired();
-        addAttribute("states", InputField.ANY).assertRequired();
+        addAttribute("id",       InputField.ANY).assertRequired();
+        addAttribute("states",   InputField.ANY).assertRequired();
         addAttribute("overball", InputField.ANY).assertRequired();
 
     }

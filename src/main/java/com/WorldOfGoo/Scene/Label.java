@@ -9,8 +9,7 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 public class Label extends EditorObject {
 
     public Label(EditorObject _parent) {
-        super(_parent);
-        setRealName("label");
+        super(_parent, "label");
 
         addAttribute("id",          InputField.ANY)                             .assertRequired();
         addAttribute("depth",       InputField.NUMBER).setDefaultValue("10")    .assertRequired();
@@ -27,19 +26,19 @@ public class Label extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE) {
             public double getX() {
-                return getDouble("x");
+                return getAttribute("x").doubleValue();
             }
             public void setX(double x) {
                 setAttribute("x", x);
             }
             public double getY() {
-                return -getDouble("y");
+                return -getAttribute("y").doubleValue();
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
             public double getRotation() {
-                return getDouble("rotation");
+                return getAttribute("rotation").doubleValue();
             }
             public void setRotation(double rotation) {
                 setAttribute("rotation", rotation);
@@ -52,9 +51,14 @@ public class Label extends EditorObject {
 
         });
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation,scale,depth,colorize,overlay,screenspace,Text<text,font,align>"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
     }
 
 }

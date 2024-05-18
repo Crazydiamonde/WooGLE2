@@ -12,8 +12,7 @@ import javafx.scene.paint.Paint;
 public class Poi extends EditorObject {
 
     public Poi(EditorObject _parent) {
-        super(_parent);
-        setRealName("poi");
+        super(_parent, "poi");
 
         addAttribute("pos",        InputField.POSITION).setDefaultValue("0,0").assertRequired();
         addAttribute("traveltime", InputField.NUMBER)  .setDefaultValue("3")  .assertRequired();
@@ -22,27 +21,40 @@ public class Poi extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
             public double getX() {
-            return getPosition("pos").getX();
-        }
+                return getAttribute("pos").positionValue().getX();
+            }
             public void setX(double x) {
                 setAttribute("pos", x + "," + -getY());
             }
             public double getY() {
-                return -getPosition("pos").getY();
+                return -getAttribute("pos").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("pos", getX() + "," + -y);
             }
             public double getWidth() {
-                double screenWidth = (getParent().getAttribute("aspect").equals("widescreen")) ? 1007 : 800;
-                return screenWidth * getDouble("zoom");
+
+                String aspect = getParent().getAttribute("aspect").stringValue();
+                double zoom = getAttribute("zoom").doubleValue();
+
+                double screenWidth = aspect.equals("widescreen") ? 1007 : 800;
+                return screenWidth * zoom;
+
             }
             public void setWidth(double width) {
-                double screenWidth = (getParent().getAttribute("aspect").equals("widescreen")) ? 1007 : 800;
+
+                String aspect = getParent().getAttribute("aspect").stringValue();
+
+                double screenWidth = aspect.equals("widescreen") ? 1007 : 800;
                 setAttribute("zoom", width / screenWidth);
+
             }
             public double getHeight() {
-                return 525 * getDouble("zoom");
+
+                double zoom = getAttribute("zoom").doubleValue();
+
+                return 525 * zoom;
+
             }
             public void setHeight(double height) {
                 setAttribute("zoom", height / 525);
@@ -61,7 +73,6 @@ public class Poi extends EditorObject {
             }
         });
 
-        setNameAttribute(EditorAttribute.NULL);
         setMetaAttributes(MetaEditorAttribute.parse("pos,traveltime,pause,zoom,"));
 
     }

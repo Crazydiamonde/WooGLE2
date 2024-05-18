@@ -27,11 +27,11 @@ public class CircleDrawer {
 
         graphicsContext.setStroke(objectPosition.getBorderColor());
 
-        double woag = Math.min(Math.min(objectPosition.getEdgeSize(), Math.abs(radius) / 2), Math.abs(radius) / 2);
+        double woag = Math.min(objectPosition.getEdgeSize(), Math.abs(radius) / 2) / 2;
 
-        graphicsContext.setLineWidth(2 * woag * zoom);
-        graphicsContext.strokeOval(screenX + zoom / 2, screenY + zoom / 2,
-                (radius - 0.5) * 2 * zoom, (radius - 0.5) * 2 * zoom);
+        graphicsContext.setLineWidth(woag * 2 * zoom);
+        graphicsContext.strokeOval(screenX + woag * zoom, screenY + woag * zoom,
+                (radius - woag) * 2 * zoom, (radius - woag) * 2 * zoom);
 
         if (selected) {
 
@@ -52,6 +52,11 @@ public class CircleDrawer {
                 graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY + radius * 2 * zoom - 4, 8, 8);
                 graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY - 4, 8, 8);
                 graphicsContext.strokeRect(screenX + radius * 2 * zoom - 4, screenY + radius * zoom - 4, 8, 8);
+            }
+
+            if (objectPosition.isRotatable()) {
+                graphicsContext.strokeOval(screenX - 4, screenY + radius * zoom - 4, 8, 8);
+                graphicsContext.strokeOval(screenX + radius * 2 * zoom - 4, screenY + radius * zoom - 4, 8, 8);
             }
 
         }

@@ -1,131 +1,132 @@
 package com.WorldOfGoo.Level;
 
-import java.util.HexFormat;
-import java.util.Random;
-
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.BallManager;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
-import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import com.WooGLEFX.Structures.SimpleStructures.Position;
 import com.WorldOfGoo.Ball.BallStrand;
 
-import com.WorldOfGoo.Ball.Part;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.transform.Affine;
 
 public class Strand extends EditorObject {
 
     private BallStrand strand;
-    private Image strandImage;
-
-
-    private BallInstance goo1 = null;
-    private BallInstance goo2 = null;
-
-    public BallInstance getGoo1() {
-        return goo1;
-    }
-
-    public void setGoo1(BallInstance goo1) {
-        this.goo1 = goo1;
-    }
-
-    public BallInstance getGoo2() {
-        return goo2;
-    }
-
-    public void setGoo2(BallInstance goo2) {
-        this.goo2 = goo2;
-    }
-
     public void setStrand(BallStrand strand) {
         this.strand = strand;
     }
 
 
+    private Image strandImage;
+
+
+    private BallInstance goo1 = null;
+    public void setGoo1(BallInstance goo1) {
+        this.goo1 = goo1;
+    }
+
+
+    private BallInstance goo2 = null;
+    public void setGoo2(BallInstance goo2) {
+        this.goo2 = goo2;
+    }
+
+
     public Strand(EditorObject _parent) {
-        super(_parent);
-        setRealName("Strand");
+        super(_parent, "Strand");
 
         addAttribute("gb1", InputField.GOOBALL_ID).assertRequired();
         addAttribute("gb2", InputField.GOOBALL_ID).assertRequired();
 
-        setNameAttribute(getAttribute2("gb1"));
-        setNameAttribute2(getAttribute2("gb2"));
-        setChangeListener("gb2", (observableValue, s, t1) -> {
-            String bruh = getAttribute("gb1");
-            setAttribute("gb1", "AAAAA");
-            setAttribute("gb1", bruh);
-        });
         setMetaAttributes(MetaEditorAttribute.parse("gb1,gb2,"));
 
     }
 
 
     @Override
-    public void update() {
-        for (EditorObject object : LevelManager.getLevel().getLevel()) {
-            if (object instanceof BallInstance && object.getAttribute("id").equals(getAttribute("gb2"))) {
-                goo2 = (BallInstance)object;
-                ((BallInstance) object).getStrands().add(this);
-                for (_Ball ball2 : BallManager.getImportedBalls()) {
-                    if (ball2.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type"))) {
-                        for (EditorObject possiblyStrand : ball2.getObjects()) {
-                            if (possiblyStrand.getRealName().equals("strand")) {
-                                strand = (BallStrand) possiblyStrand;
-                            }
-                        }
-                    }
-                }
-            }
-            if (object instanceof BallInstance && object.getAttribute("id").equals(getAttribute("gb1"))) {
-                ((BallInstance) object).getStrands().add(this);
-            }
-        }
-        for (EditorObject object : LevelManager.getLevel().getLevel()) {
-            if (object instanceof BallInstance && object.getAttribute("id").equals(getAttribute("gb1"))) {
-                goo1 = (BallInstance)object;
-                if (strand == null) {
-                    for (_Ball ball2 : BallManager.getImportedBalls()) {
-                        if (ball2.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type"))) {
-                            for (EditorObject possiblyStrand : ball2.getObjects()) {
-                                if (possiblyStrand.getRealName().equals("strand")) {
-                                    strand = (BallStrand) possiblyStrand;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (strand != null) {
-            try {
-                strandImage = GlobalResourceManager.getImage(strand.getAttribute("image"), LevelManager.getLevel().getVersion());
-            } catch (Exception e) {
-                if (!LevelLoader.failedResources.contains("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                    LevelLoader.failedResources.add("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
-                }
-            }
-        }
-        addPartAsObjectPosition();
+    public String getName() {
+        String gb1 = getAttribute("gb1").stringValue();
+        String gb2 = getAttribute("gb2").stringValue();
+        return gb1 + ", " + gb2;
     }
 
-    // private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
-    //     double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
-    //     return new Point2D(x, m1 * (x - x1) + y1);
-    // }
+
+    private void setStrand(String type) {
+
+        for (_Ball ball : BallManager.getImportedBalls()) {
+            String ballType = ball.getObjects().get(0).getAttribute("name").stringValue();
+            if (ballType.equals(type)) {
+                for (EditorObject object : ball.getObjects()) if (object instanceof BallStrand strand2) {
+                    this.strand = strand2;
+                }
+            }
+        }
+
+    }
+
+
+    @Override
+    public void update() {
+
+        for (EditorObject obj : LevelManager.getLevel().getLevel()) if (obj instanceof BallInstance ballInstance) {
+
+            String id = ballInstance.getAttribute("id").stringValue();
+            String gb1 = getAttribute("gb1").stringValue();
+            String gb2 = getAttribute("gb2").stringValue();
+
+            if (id.equals(gb1)) {
+
+                goo1 = ballInstance;
+
+                if (strand == null) {
+
+                    String type = ballInstance.getAttribute("type").stringValue();
+                    setStrand(type);
+
+                }
+
+            }
+
+            else if (id.equals(gb2)) {
+
+                goo2 = ballInstance;
+
+                String type = ballInstance.getAttribute("type").stringValue();
+                setStrand(type);
+
+            }
+
+        }
+
+        if (strand != null) {
+            try {
+                strandImage = strand.getAttribute("image").imageValue(LevelManager.getVersion());
+            } catch (Exception e) {
+                // TODO make this cleaner
+                if (!LevelLoader.failedResources.contains("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")")) {
+                    LevelLoader.failedResources.add("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")");
+                }
+            }
+        }
+
+        if (strand != null) addPartAsObjectPosition();
+
+    }
+
+    private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
+        double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
+        return new Point2D(x, m1 * (x - x1) + y1);
+    }
+
 
     private static Point2D lineLineSegmentIntersection(double x1, double y1, double theta, double x2, double y2,
                                                       double x3, double y3) {
@@ -157,13 +158,13 @@ public class Strand extends EditorObject {
     private static Point2D lineBoxIntersection(double x1, double y1, double theta, double x2, double y2, double sizeX,
                                               double sizeY, double rotation) {
 
-        Point2D topLeft = EditorObject.rotate(new Point2D(x2 - sizeX / 2, y2 - sizeY / 2), -rotation,
+        Point2D topLeft = ObjectUtil.rotate(new Point2D(x2 - sizeX / 2, y2 - sizeY / 2), -rotation,
                 new Point2D(x2, y2));
-        Point2D topRight = EditorObject.rotate(new Point2D(x2 + sizeX / 2, y2 - sizeY / 2), -rotation,
+        Point2D topRight = ObjectUtil.rotate(new Point2D(x2 + sizeX / 2, y2 - sizeY / 2), -rotation,
                 new Point2D(x2, y2));
-        Point2D bottomLeft = EditorObject.rotate(new Point2D(x2 - sizeX / 2, y2 + sizeY / 2), -rotation,
+        Point2D bottomLeft = ObjectUtil.rotate(new Point2D(x2 - sizeX / 2, y2 + sizeY / 2), -rotation,
                 new Point2D(x2, y2));
-        Point2D bottomRight = EditorObject.rotate(new Point2D(x2 + sizeX / 2, y2 + sizeY / 2), -rotation,
+        Point2D bottomRight = ObjectUtil.rotate(new Point2D(x2 + sizeX / 2, y2 + sizeY / 2), -rotation,
                 new Point2D(x2, y2));
 
         Point2D top = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), topRight.getX(),
@@ -213,20 +214,39 @@ public class Strand extends EditorObject {
 
         if (strandImage != null) addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
-                return (goo1.getDouble("x") + goo2.getDouble("x")) / 2;
+                double x1 = goo1.getAttribute("x").doubleValue();
+                double x2 = goo2.getAttribute("x").doubleValue();
+                return (x1 + x2) / 2;
             }
             public double getY() {
-                return (-goo1.getDouble("y") - goo2.getDouble("y")) / 2;
+                double y1 = -goo1.getAttribute("y").doubleValue();
+                double y2 = -goo2.getAttribute("y").doubleValue();
+                return (y1 + y2) / 2;
             }
             public double getRotation() {
-                return Math.PI / 2 + Renderer.angleTo(new Point2D(goo1.getDouble("x"), -goo1.getDouble("y")),
-                        new Point2D(goo2.getDouble("x"), -goo2.getDouble("y")));
+
+                double x1 = goo1.getAttribute("x").doubleValue();
+                double y1 = -goo1.getAttribute("y").doubleValue();
+
+                double x2 = goo2.getAttribute("x").doubleValue();
+                double y2 = -goo2.getAttribute("y").doubleValue();
+
+                return Math.PI / 2 + Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
+
             }
             public double getWidth() {
-                return strand.getDouble("thickness");
+                return strand.getAttribute("thickness").doubleValue();
             }
             public double getHeight() {
-                return new Point2D(goo1.getDouble("x"), goo1.getDouble("y")).distance(new Point2D(goo2.getDouble("x"), goo2.getDouble("y")));
+
+                double x1 = goo1.getAttribute("x").doubleValue();
+                double y1 = -goo1.getAttribute("y").doubleValue();
+
+                double x2 = goo2.getAttribute("x").doubleValue();
+                double y2 = -goo2.getAttribute("y").doubleValue();
+
+                return Math.hypot(x2 - x1, y2 - y1);
+
             }
             public Image getImage(){
                 return strandImage;
@@ -245,10 +265,90 @@ public class Strand extends EditorObject {
             }
         });
 
+        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE) {
+
+            public double getX() {
+                double x1 = goo1.getAttribute("x").doubleValue();
+                double x2 = goo2.getAttribute("x").doubleValue();
+                return (x1 + x2) / 2;
+            }
+
+            public double getY() {
+                double y1 = -goo1.getAttribute("y").doubleValue();
+                double y2 = -goo2.getAttribute("y").doubleValue();
+                return (y1 + y2) / 2;
+            }
+
+            public double getRotation() {
+
+                double x1 = goo1.getAttribute("x").doubleValue();
+                double y1 = -goo1.getAttribute("y").doubleValue();
+
+                double x2 = goo2.getAttribute("x").doubleValue();
+                double y2 = -goo2.getAttribute("y").doubleValue();
+
+                return Math.PI / 2 + Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
+
+            }
+
+            public double getWidth() {
+                return 3;
+            }
+
+            public double getHeight() {
+
+                double x1 = goo1.getAttribute("x").doubleValue();
+                double y1 = -goo1.getAttribute("y").doubleValue();
+
+                double x2 = goo2.getAttribute("x").doubleValue();
+                double y2 = -goo2.getAttribute("y").doubleValue();
+
+                return Math.hypot(x2 - x1, y2 - y1);
+
+            }
+
+            public double getEdgeSize() {
+                return 3;
+            }
+
+            public double getDepth(){
+                return 0.00000001;
+            }
+
+            public Paint getBorderColor() {
+
+                double length = getHeight();
+
+                double minSize = strand.getAttribute("minlen").doubleValue();
+                double maxSize = strand.getAttribute("maxlen2").doubleValue();
+
+                if (length > maxSize) return new Color(1.0, 0.0, 0.0, 1.0);
+                if (length < minSize) return new Color(0.0, 0.0, 1.0, 1.0);
+                else return new Color(0.5, 0.5, 0.5, 1.0);
+
+            }
+
+            public boolean isVisible() {
+                return LevelManager.getLevel().getShowGoos() == 1;
+            }
+            public boolean isDraggable() {
+                return false;
+            }
+            public boolean isResizable() {
+                return false;
+            }
+            public boolean isRotatable() {
+                return false;
+            }
+
+        });
+
     }
 
 
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
+    public void draw(GraphicsContext graphicsContext) {
+
+        /*
         if (LevelManager.getLevel().getShowGoos() == 1) {
 
             if (goo1 != null && goo2 != null) {
@@ -310,6 +410,8 @@ public class Strand extends EditorObject {
                 graphicsContext.restore();
             }
         }
+
+         */
     }
 
 }

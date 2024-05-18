@@ -1,11 +1,7 @@
 package com.WorldOfGoo.Scene;
 
-import java.io.FileNotFoundException;
-
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
@@ -19,8 +15,7 @@ public class Compositegeom extends EditorObject {
 
 
     public Compositegeom(EditorObject _parent) {
-        super(_parent);
-        setRealName("compositegeom");
+        super(_parent, "compositegeom");
 
         addAttribute("id",               InputField.ANY)                             .assertRequired();
         addAttribute("x",                InputField.NUMBER)  .setDefaultValue("0")   .assertRequired();
@@ -34,26 +29,26 @@ public class Compositegeom extends EditorObject {
         addAttribute("image",            InputField.IMAGE);
         addAttribute("imagepos",         InputField.POSITION);
         addAttribute("imagerot",         InputField.NUMBER)  .setDefaultValue("0");
-        addAttribute("imagescale",       InputField.POSITION).setDefaultValue("1.1");
+        addAttribute("imagescale",       InputField.POSITION).setDefaultValue("1,1");
         addAttribute("rotspeed",         InputField.NUMBER)  .setDefaultValue("0");
         addAttribute("contacts",         InputField.FLAG);
         addAttribute("nogeomcollisions", InputField.FLAG);
 
         addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE_HOLLOW) {
             public double getX() {
-                return getDouble("x");
+                return getAttribute("x").doubleValue();
             }
             public void setX(double x) {
                 setAttribute("x", x);
             }
             public double getY() {
-                return -getDouble("y");
+                return -getAttribute("y").doubleValue();
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
             public double getRotation() {
-                return getDouble("rotation");
+                return getAttribute("rotation").doubleValue();
             }
             public void setRotation(double rotation) {
                 setAttribute("rotation", rotation);
@@ -71,48 +66,48 @@ public class Compositegeom extends EditorObject {
                 return new Color(0, 1.0, 0, 0.25);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGeometry();
+                return LevelManager.getLevel().getShowGeometry() != 0;
             }
         });
 
         addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
-                if (getAttribute("imagepos").isEmpty()) return getDouble("x");
-                else return getPosition("imagepos").getX();
+                if (getAttribute("imagepos").stringValue().isEmpty()) return getAttribute("x").doubleValue();
+                else return getAttribute("imagepos").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("imagepos", x + "," + -getY());
             }
             public double getY() {
-                if (getAttribute("imagepos").isEmpty()) return -getDouble("y");
-                else return -getPosition("imagepos").getY();
+                if (getAttribute("imagepos").stringValue().isEmpty()) return -getAttribute("y").doubleValue();
+                else return -getAttribute("imagepos").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("imagepos", getX() + "," + -y);
             }
             public double getRotation() {
-                return Math.toRadians(getDouble("imagerot"));
+                return Math.toRadians(getAttribute("imagerot").doubleValue());
             }
             public void setRotation(double rotation) {
                 setAttribute("imagerot", Math.toDegrees(rotation));
             }
             public double getWidth() {
-                return getImage().getWidth() * Math.abs(getPosition("imagescale").getX());
+                return getImage().getWidth() * Math.abs(getAttribute("imagescale").positionValue().getX());
             }
             public void setWidth(double width) {
-                setAttribute("imagescale", (width / getImage().getWidth()) + "," + getPosition("imagescale").getY());
+                setAttribute("imagescale", (width / getImage().getWidth()) + "," + getAttribute("imagescale").positionValue().getY());
             }
             public double getHeight() {
-                return getImage().getHeight() * Math.abs(getPosition("imagescale").getY());
+                return getImage().getHeight() * Math.abs(getAttribute("imagescale").positionValue().getY());
             }
             public void setHeight(double height) {
-                setAttribute("imagescale", getPosition("imagescale").getX() + "," + (height / getImage().getHeight()));
+                setAttribute("imagescale", getAttribute("imagescale").positionValue().getX() + "," + (height / getImage().getHeight()));
             }
             public Image getImage() {
                 return image;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGeometry();
+                return LevelManager.getLevel().getShowGeometry() != 0;
             }
             public boolean isResizable() {
                 return false;
@@ -122,32 +117,35 @@ public class Compositegeom extends EditorObject {
             }
         });
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation,Geometry<static,mass,material,tag,break,rotspeed,contacts,nogeomcollisions>?Image<image,imagepos,imagerot,imagescale>"));
+
+        getAttribute("image").addChangeListener((observable, oldValue, newValue) -> updateImage());
 
     }
 
 
     @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
+    }
+
+
+    @Override
     public void update() {
-        if (!getAttribute("image").equals("")) {
-            try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
-            } catch (FileNotFoundException e) {
-                Alarms.errorMessage(e);
-            }
+
+        updateImage();
+
+    }
+
+
+    private void updateImage() {
+
+        if (!getAttribute("image").stringValue().isEmpty()) {
+            image = getAttribute("image").imageValue(LevelManager.getVersion());
         }
 
-        setChangeListener("image", (observable, oldValue, newValue) -> {
-            if (!getAttribute("image").equals("")) {
-                try {
-                    image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
-                } catch (FileNotFoundException e) {
-                    Alarms.errorMessage(e);
-                }
-            }
-        });
     }
+
 
     @Override
     public String[] getPossibleChildren() {

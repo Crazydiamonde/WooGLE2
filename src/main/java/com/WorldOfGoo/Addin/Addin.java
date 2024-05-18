@@ -7,15 +7,19 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 public class Addin extends EditorObject {
 
     public Addin(EditorObject _parent) {
-        super(_parent);
-        setRealName("addin");
+        super(_parent, "addin");
 
         addAttribute("spec-version", InputField.NUMBER_POSITIVE).assertRequired();
         setAttribute("spec-version", "1.1");
 
-        setNameAttribute(getAttribute2("spec-version"));
         setMetaAttributes(MetaEditorAttribute.parse("spec-version,"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("spec-version").stringValue();
     }
 
 }

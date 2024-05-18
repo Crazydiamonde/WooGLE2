@@ -119,15 +119,20 @@ public class SelectionManager {
     }
 
     public static void goToSelectedInHierarchy() {
+
+        EditorObject absoluteParent = LevelManager.getLevel().getSelected();
+        if (absoluteParent == null) return;
+        while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+
         if (LevelManager.getLevel().getSelected() != null && LevelManager.getLevel().getSelected().getParent() != null) {
-            if (LevelManager.getLevel().getSelected().getAbsoluteParent() instanceof ResourceManifest) {
-                FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getSelected().getAbsoluteParent().getChildren().get(0).getTreeItem());
+            if (absoluteParent instanceof ResourceManifest) {
+                FXHierarchy.getHierarchy().setRoot(absoluteParent.getChildren().get(0).getTreeItem());
                 FXHierarchy.getHierarchy().setShowRoot(true);
-            } else if (LevelManager.getLevel().getSelected().getAbsoluteParent() instanceof TextStrings) {
-                FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getSelected().getAbsoluteParent().getTreeItem());
+            } else if (absoluteParent instanceof TextStrings) {
+                FXHierarchy.getHierarchy().setRoot(absoluteParent.getTreeItem());
                 FXHierarchy.getHierarchy().setShowRoot(true);
             } else {
-                FXHierarchy.getHierarchy().setRoot(LevelManager.getLevel().getSelected().getAbsoluteParent().getTreeItem());
+                FXHierarchy.getHierarchy().setRoot(absoluteParent.getTreeItem());
                 FXHierarchy.getHierarchy().setShowRoot(true);
             }
 

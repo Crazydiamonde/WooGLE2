@@ -1,6 +1,7 @@
 package com.WooGLEFX.EditorObjects.ObjectDrawing;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
@@ -11,7 +12,7 @@ import javafx.scene.transform.Affine;
 
 public class ImageDrawer {
 
-    public static void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext, ObjectPosition objectPosition, boolean selected) {
+    public static void draw(GraphicsContext graphicsContext, ObjectPosition objectPosition, boolean selected) {
 
         Image image = objectPosition.getImage();
         if (image == null) return;
@@ -26,30 +27,36 @@ public class ImageDrawer {
         double offsetY = LevelManager.getLevel().getOffsetY();
         double zoom = LevelManager.getLevel().getZoom();
 
-        Affine t = imageGraphicsContext.getTransform();
-        t.appendRotation(Math.toDegrees(rotation), x, y);
-        imageGraphicsContext.setTransform(t);
+        graphicsContext.save();
 
-        imageGraphicsContext.drawImage(image, x - width / 2.0, y - height / 2.0, width, height);
+        Affine t = graphicsContext.getTransform();
+        t.appendTranslation(offsetX, offsetY);
+        t.appendScale(zoom, zoom);
+        t.appendRotation(Math.toDegrees(rotation), x, y);
+        graphicsContext.setTransform(t);
+
+        graphicsContext.drawImage(image, x - width / 2.0, y - height / 2.0, width, height);
+
+        graphicsContext.restore();
 
         if (selected) {
 
-            Point2D topLeft = EditorObject.rotate(new Point2D(x - width / 2, y - height / 2), rotation, new Point2D(x, y));
+            Point2D topLeft = ObjectUtil.rotate(new Point2D(x - width / 2, y - height / 2), rotation, new Point2D(x, y));
             topLeft = topLeft.multiply(zoom).add(offsetX, offsetY);
 
-            Point2D bottomRight = EditorObject.rotate(new Point2D(x + width / 2, y + height / 2), rotation, new Point2D(x, y));
+            Point2D bottomRight = ObjectUtil.rotate(new Point2D(x + width / 2, y + height / 2), rotation, new Point2D(x, y));
             bottomRight = bottomRight.multiply(zoom).add(offsetX, offsetY);
 
-            Point2D left = EditorObject.rotate(new Point2D(x - width / 2, y), rotation, new Point2D(x, y));
+            Point2D left = ObjectUtil.rotate(new Point2D(x - width / 2, y), rotation, new Point2D(x, y));
             left = left.multiply(zoom).add(offsetX, offsetY);
 
-            Point2D right = EditorObject.rotate(new Point2D(x + width / 2, y), rotation, new Point2D(x, y));
+            Point2D right = ObjectUtil.rotate(new Point2D(x + width / 2, y), rotation, new Point2D(x, y));
             right = right.multiply(zoom).add(offsetX, offsetY);
 
-            Point2D bottomLeft = EditorObject.rotate(new Point2D(x - width / 2, y + height / 2), rotation, new Point2D(x, y));
+            Point2D bottomLeft = ObjectUtil.rotate(new Point2D(x - width / 2, y + height / 2), rotation, new Point2D(x, y));
             bottomLeft = bottomLeft.multiply(zoom).add(offsetX, offsetY);
 
-            Point2D topRight = EditorObject.rotate(new Point2D(x + width / 2, y - height / 2), rotation, new Point2D(x, y));
+            Point2D topRight = ObjectUtil.rotate(new Point2D(x + width / 2, y - height / 2), rotation, new Point2D(x, y));
             topRight = topRight.multiply(zoom).add(offsetX, offsetY);
 
             double screenX2 = x * zoom + offsetX;

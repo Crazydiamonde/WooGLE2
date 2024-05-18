@@ -1,22 +1,22 @@
 package com.WooGLEFX.EditorObjects;
 
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Structures.GameVersion;
 import com.WorldOfGoo.Ball.Part;
 
 import java.util.ArrayList;
 
 public class _Ball {
 
-    private double version;
+    private GameVersion version;
 
-    public double getVersion() {
+    public GameVersion getVersion() {
         return version;
     }
 
-    public void setVersion(double version) {
+    public void setVersion(GameVersion version) {
         this.version = version;
     }
 
@@ -91,7 +91,7 @@ public class _Ball {
         this.objects = _objects;
         this.resources = _resources;
 
-        String input2 = objects.get(0).getAttribute("shape");
+        String input2 = objects.get(0).getAttribute("shape").stringValue();
 
         setShapeType(input2.substring(0, input2.indexOf(",")));
 
@@ -118,12 +118,12 @@ public class _Ball {
         }
     }
 
-    public void makeImages(double version){
+    public void makeImages(GameVersion version){
         for (EditorObject obj : objects){
-            if (obj.getRealName().equals("part")){
+            if (obj.getType().equals("part")){
                 String word = "";
-                for (int i = 0; i < obj.getAttribute("image").length(); i++){
-                    String singleChar = obj.getAttribute("image").substring(i, i + 1);
+                for (int i = 0; i < obj.getAttribute("image").stringValue().length(); i++){
+                    String singleChar = obj.getAttribute("image").stringValue().substring(i, i + 1);
                     if (singleChar.equals(",")){
                         try {
                             ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
@@ -141,9 +141,9 @@ public class _Ball {
                     LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
                 }
 
-                if (!obj.getAttribute("pupil").equals("")){
+                if (!obj.getAttribute("pupil").stringValue().isEmpty()){
                     try {
-                        ((Part) obj).setPupilImage(GlobalResourceManager.getImage(obj.getAttribute("pupil"), version));
+                        ((Part) obj).setPupilImage(GlobalResourceManager.getImage(obj.getAttribute("pupil").stringValue(), version));
                     } catch (Exception e) {
                         LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + obj.getAttribute("pupil") + "\" (version " + version + ")"));
                     }

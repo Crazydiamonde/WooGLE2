@@ -1,12 +1,9 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import javafx.scene.image.Image;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -14,19 +11,13 @@ import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WorldOfGoo.Scene.SceneLayer;
 
-import javafx.beans.value.ChangeListener;
-
 public class Signpost extends EditorObject {
-
-    private static final Logger logger = LoggerFactory.getLogger(Signpost.class);
-
 
     private Image image;
 
 
     public Signpost(EditorObject _parent) {
-        super(_parent);
-        setRealName("signpost");
+        super(_parent, "signpost");
 
         addAttribute("name",      InputField.ANY)                                  .assertRequired();
         addAttribute("depth",     InputField.NUMBER).setDefaultValue("0")          .assertRequired();
@@ -44,34 +35,39 @@ public class Signpost extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
-                return getDouble("x");
+                return getAttribute("x").doubleValue();
             }
             public void setX(double x) {
                 setAttribute("x", x);
             }
             public double getY() {
-                return -getDouble("y");
+                return -getAttribute("y").doubleValue();
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
             public double getRotation() {
-                return -Math.toRadians(getDouble("rotation"));
+                return -Math.toRadians(getAttribute("rotation").doubleValue());
             }
             public void setRotation(double rotation) {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
             public double getWidth() {
-                return getImage().getWidth() * Math.abs(getDouble("scalex"));
+                double scalex = getAttribute("scalex").doubleValue();
+                return image.getWidth() * Math.abs(scalex);
             }
             public void setWidth(double width) {
-                setAttribute("scalex", width / getImage().getWidth());
+                setAttribute("scalex", width / image.getWidth());
             }
             public double getHeight() {
-                return getImage().getHeight() * Math.abs(getDouble("scaley"));
+                double scaley = getAttribute("scaley").doubleValue();
+                return image.getHeight() * Math.abs(scaley);
             }
             public void setHeight(double height) {
-                setAttribute("scaley", height / getImage().getHeight());
+                setAttribute("scaley", height / image.getHeight());
+            }
+            public double getDepth() {
+                return getAttribute("depth").doubleValue();
             }
             public Image getImage() {
                 return image;
@@ -81,42 +77,43 @@ public class Signpost extends EditorObject {
             }
         });
 
-        setNameAttribute(getAttribute2("name"));
         setMetaAttributes(MetaEditorAttribute.parse("name,text,particles,pulse,Image<x,y,scalex,scaley,image,rotation,depth,alpha,colorize>"));
+
+        getAttribute("image").addChangeListener((observable, oldValue, newValue) -> updateImage());
+        getAttribute("colorize").addChangeListener((observable, oldValue, newValue) -> updateImage());
 
     }
 
 
     @Override
+    public String getName() {
+        return getAttribute("name").stringValue();
+    }
+
+
+    @Override
     public void update() {
-        setNameAttribute(getAttribute2("name"));
+        updateImage();
+    }
+
+
+    private void updateImage() {
+
+        if (LevelManager.getLevel() == null) return;
+
         try {
-            image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
-            Color color = Color.parse(getAttribute("colorize"));
+            image = getAttribute("image").imageValue(LevelManager.getVersion());
+            if (image == null) return;
+            Color color = getAttribute("colorize").colorValue();
             image = SceneLayer.colorize(image, color);
         } catch (Exception e) {
-            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+            // TODO make this cleaner
+            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")")) {
+                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")");
             }
             image = null;
         }
 
-        ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            logger.trace("Image changed from " + oldValue + " to " + newValue);
-            try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
-                Color color = Color.parse(getAttribute("colorize"));
-                image = SceneLayer.colorize(image, color);
-            } catch (Exception e) {
-                if (!LevelLoader.failedResources.contains("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                    LevelLoader.failedResources.add("From signpost: \"" + getString("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
-                }
-                image = null;
-            }
-        };
-
-        setChangeListener("image", wizard);
-        setChangeListener("colorize", wizard);
     }
 
 }

@@ -7,14 +7,18 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 public class Endonmessage extends EditorObject {
 
     public Endonmessage(EditorObject _parent) {
-        super(_parent);
-        setRealName("endonmessage");
+        super(_parent, "endonmessage");
 
         addAttribute("id", InputField.ANY).assertRequired();
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
     }
 
 }

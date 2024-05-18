@@ -24,7 +24,7 @@ public class Part extends EditorObject {
 
 
     public Part(EditorObject _parent) {
-        super(_parent);
+        super(_parent, "part");
 
         addAttribute("name",       InputField.ANY)                        .assertRequired();
         addAttribute("layer",      InputField.NUMBER)                     .assertRequired();

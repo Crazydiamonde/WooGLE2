@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
@@ -11,8 +12,7 @@ import javafx.scene.paint.Paint;
 public class Hinge extends EditorObject {
 
     public Hinge(EditorObject _parent) {
-        super(_parent);
-        setRealName("hinge");
+        super(_parent, "hinge");
 
         addAttribute("body1", InputField.ANY)                             .assertRequired();
         addAttribute("body2", InputField.ANY);
@@ -25,13 +25,13 @@ public class Hinge extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
             public double getX() {
-                return getPosition("anchor").getX();
+                return getAttribute("anchor").positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("anchor", x + "," + -getY());
             }
             public double getY() {
-                return -getPosition("anchor").getY();
+                return -getAttribute("anchor").positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("anchor", getX() + "," + -y);
@@ -48,6 +48,9 @@ public class Hinge extends EditorObject {
             public double getEdgeSize() {
                 return 2;
             }
+            public double getDepth(){
+                return Renderer.GEOMETRY + 1;
+            }
             public Paint getBorderColor() {
                 return new Color(1.0, 1.0, 0, 1.0);
             }
@@ -55,7 +58,7 @@ public class Hinge extends EditorObject {
                 return new Color(1.0, 1.0, 0, 0.1);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGeometry();
+                return LevelManager.getLevel().getShowGeometry() != 0;
             }
             public boolean isResizable() {
                 return false;
@@ -65,15 +68,16 @@ public class Hinge extends EditorObject {
             }
         });
 
-        setNameAttribute(getAttribute2("body1"));
-        setNameAttribute2(getAttribute2("body2"));
-        setChangeListener("body2", (observableValue, s, t1) -> {
-            String bruh = getAttribute("body1");
-            setAttribute("body1", "AAAAA");
-            setAttribute("body1", bruh);
-        });
         setMetaAttributes(MetaEditorAttribute.parse("anchor,body1,body2,?Hinge<bounce,histop,lostop,stopcfm,stoperp>"));
 
+    }
+
+
+    @Override
+    public String getName() {
+        String body1 = getAttribute("body1").stringValue();
+        String body2 = getAttribute("body2").stringValue();
+        return body1 + ", " + body2;
     }
 
 }

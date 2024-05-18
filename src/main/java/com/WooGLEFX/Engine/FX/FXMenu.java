@@ -1,9 +1,9 @@
 package com.WooGLEFX.Engine.FX;
 
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.*;
 import com.WooGLEFX.GUI.PaletteReconfigurator;
+import com.WooGLEFX.Structures.GameVersion;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -16,6 +16,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class FXMenu {
+
+    private static final MenuBar menuBar = new MenuBar();
+    public static MenuBar getMenuBar() {
+        return menuBar;
+    }
 
     public static Menu fileMenu = new Menu("File");
 
@@ -60,105 +65,110 @@ public class FXMenu {
     public static MenuItem setLoopsoundItem = new MenuItem("Set Loop Sound...");
 
 
-    public static MenuBar createMenu() throws FileNotFoundException {
-        MenuBar bar = new MenuBar();
+    public static void init() {
 
-        reloadWorldOfGooOldItem
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
-        reloadWorldOfGooNewItem
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
-        changeWorldOfGooDirectoryOldItem.setGraphic(
-                new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
-        changeWorldOfGooDirectoryNewItem.setGraphic(
-                new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
-        saveOldBallToNewItem
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_new_version.png")));
-        saveNewBallToOldItem
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_old_version.png")));
-        quitItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\quit.png")));
+        try {
 
-        reloadWorldOfGooOldItem.setOnAction(e -> GameResourceManager.reloadWorldOfGoo(1.3));
-        reloadWorldOfGooNewItem.setOnAction(e -> GameResourceManager.reloadWorldOfGoo(1.5));
-        changeWorldOfGooDirectoryOldItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(1.3));
-        changeWorldOfGooDirectoryNewItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(1.5));
-        saveOldBallToNewItem.setOnAction(e -> BallManager.saveBallInVersion(1.3, 1.5));
-        saveNewBallToOldItem.setOnAction(e -> BallManager.saveBallInVersion(1.5, 1.3));
-        configurePaletteItem.setOnAction(e -> {
-            try {
-                new PaletteReconfigurator().start(new Stage());
-            } catch (ParserConfigurationException | SAXException | IOException e1) {
-                throw new RuntimeException(e1);
-            }
-        });
-        quitItem.setOnAction(e -> LevelCloser.resumeLevelClosing());
+            reloadWorldOfGooOldItem
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_old.png")));
+            reloadWorldOfGooNewItem
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\reload_world_of_goo_new.png")));
+            changeWorldOfGooDirectoryOldItem.setGraphic(
+                    new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_old.png")));
+            changeWorldOfGooDirectoryNewItem.setGraphic(
+                    new ImageView(FileManager.getIcon("ButtonIcons\\File\\change_world_of_goo_directory_new.png")));
+            saveOldBallToNewItem
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_new_version.png")));
+            saveNewBallToOldItem
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\move_ball_to_old_version.png")));
+            quitItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\File\\quit.png")));
 
-        fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem,
-                changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, configurePaletteItem, quitItem);
+            reloadWorldOfGooOldItem.setOnAction(e -> GameResourceManager.reloadWorldOfGoo(GameVersion.OLD));
+            reloadWorldOfGooNewItem.setOnAction(e -> GameResourceManager.reloadWorldOfGoo(GameVersion.NEW));
+            changeWorldOfGooDirectoryOldItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD));
+            changeWorldOfGooDirectoryNewItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(GameVersion.NEW));
+            saveOldBallToNewItem.setOnAction(e -> BallManager.saveBallInVersion(GameVersion.OLD, GameVersion.NEW));
+            saveNewBallToOldItem.setOnAction(e -> BallManager.saveBallInVersion(GameVersion.NEW, GameVersion.OLD));
+            configurePaletteItem.setOnAction(e -> {
+                try {
+                    new PaletteReconfigurator().start(new Stage());
+                } catch (ParserConfigurationException | SAXException | IOException e1) {
+                    throw new RuntimeException(e1);
+                }
+            });
+            quitItem.setOnAction(e -> LevelCloser.resumeLevelClosing());
 
-        newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
-        newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
-        openLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
-        openLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
-        cloneLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl.png")));
-        saveLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save.png")));
-        saveAllLevelsItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_all.png")));
-        saveAndPlayLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
-        renameLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\rename.png")));
-        deleteLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\delete.png")));
+            fileMenu.getItems().addAll(reloadWorldOfGooOldItem, reloadWorldOfGooNewItem, changeWorldOfGooDirectoryOldItem,
+                    changeWorldOfGooDirectoryNewItem, saveOldBallToNewItem, saveNewBallToOldItem, configurePaletteItem, quitItem);
 
-        newLevelOldItem.setOnAction(e -> LevelLoader.newLevel(1.3));
-        newLevelNewItem.setOnAction(e -> LevelLoader.newLevel(1.5));
-        openLevelOldItem.setOnAction(e -> LevelLoader.openLevel(1.3));
-        openLevelNewItem.setOnAction(e -> LevelLoader.openLevel(1.5));
-        cloneLevelItem.setOnAction(e -> LevelLoader.cloneLevel());
-        saveLevelItem.setOnAction(e -> LevelUpdater.saveLevel(LevelManager.getLevel()));
-        saveAllLevelsItem.setOnAction(e -> LevelUpdater.saveAll());
-        saveAndPlayLevelItem.setOnAction(e -> LevelUpdater.playLevel(LevelManager.getLevel()));
-        renameLevelItem.setOnAction(e -> LevelUpdater.renameLevel(LevelManager.getLevel()));
-        deleteLevelItem.setOnAction(e -> LevelUpdater.deleteLevel(LevelManager.getLevel()));
+            newLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
+            newLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
+            openLevelOldItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
+            openLevelNewItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
+            cloneLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl.png")));
+            saveLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save.png")));
+            saveAllLevelsItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_all.png")));
+            saveAndPlayLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
+            renameLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\rename.png")));
+            deleteLevelItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\delete.png")));
 
-        levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, newLevelNewItem, openLevelNewItem,
-                cloneLevelItem, saveLevelItem, saveAllLevelsItem,
-                saveAndPlayLevelItem, renameLevelItem, deleteLevelItem);
+            newLevelOldItem.setOnAction(e -> LevelLoader.newLevel(GameVersion.OLD));
+            newLevelNewItem.setOnAction(e -> LevelLoader.newLevel(GameVersion.NEW));
+            openLevelOldItem.setOnAction(e -> LevelLoader.openLevel(GameVersion.OLD));
+            openLevelNewItem.setOnAction(e -> LevelLoader.openLevel(GameVersion.NEW));
+            cloneLevelItem.setOnAction(e -> LevelLoader.cloneLevel());
+            saveLevelItem.setOnAction(e -> LevelUpdater.saveLevel(LevelManager.getLevel()));
+            saveAllLevelsItem.setOnAction(e -> LevelUpdater.saveAll());
+            saveAndPlayLevelItem.setOnAction(e -> LevelUpdater.playLevel(LevelManager.getLevel()));
+            renameLevelItem.setOnAction(e -> LevelUpdater.renameLevel(LevelManager.getLevel()));
+            deleteLevelItem.setOnAction(e -> LevelUpdater.deleteLevel(LevelManager.getLevel()));
 
-        undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
-        redoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
-        cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
-        copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
-        pasteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
-        deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
+            levelMenu.getItems().addAll(newLevelOldItem, openLevelOldItem, newLevelNewItem, openLevelNewItem,
+                    cloneLevelItem, saveLevelItem, saveAllLevelsItem,
+                    saveAndPlayLevelItem, renameLevelItem, deleteLevelItem);
 
-        undoItem.setOnAction(e -> UndoManager.undo());
-        redoItem.setOnAction(e -> UndoManager.redo());
-        cutItem.setOnAction(e -> ClipboardManager.cut());
-        copyItem.setOnAction(e -> ClipboardManager.copy());
-        pasteItem.setOnAction(e -> ClipboardManager.paste());
-        deleteItem.setOnAction(e -> ObjectManager.delete(LevelManager.getLevel()));
+            undoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
+            redoItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
+            cutItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
+            copyItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
+            pasteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
+            deleteItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
 
-        editMenu.getItems().addAll(undoItem, redoItem, cutItem, copyItem, pasteItem, deleteItem);
+            undoItem.setOnAction(e -> UndoManager.undo());
+            redoItem.setOnAction(e -> UndoManager.redo());
+            cutItem.setOnAction(e -> ClipboardManager.cut());
+            copyItem.setOnAction(e -> ClipboardManager.copy());
+            pasteItem.setOnAction(e -> ClipboardManager.paste());
+            deleteItem.setOnAction(e -> ObjectManager.delete(LevelManager.getLevel()));
 
-        updateLevelResourcesItem
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
-        importImageItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
-        newTextResourceItem
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
-        cleanLevelResourcesItem
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
-        setMusicItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
-        setLoopsoundItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
+            editMenu.getItems().addAll(undoItem, redoItem, cutItem, copyItem, pasteItem, deleteItem);
 
-        updateLevelResourcesItem.setOnAction(e -> LevelResourceManager.updateLevelResources(LevelManager.getLevel()));
-        importImageItem.setOnAction(e -> LevelResourceManager.importImages(LevelManager.getLevel()));
-        newTextResourceItem.setOnAction(e -> LevelResourceManager.newTextResource(LevelManager.getLevel()));
-        cleanLevelResourcesItem.setOnAction(e -> LevelResourceManager.cleanLevelResources(LevelManager.getLevel()));
-        setMusicItem.setOnAction(e -> LevelResourceManager.importMusic(LevelManager.getLevel()));
-        setLoopsoundItem.setOnAction(e -> LevelResourceManager.importLoopsound(LevelManager.getLevel()));
+            updateLevelResourcesItem
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
+            importImageItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
+            newTextResourceItem
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
+            cleanLevelResourcesItem
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
+            setMusicItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
+            setLoopsoundItem.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
 
-        resourcesMenu.getItems().addAll(updateLevelResourcesItem, importImageItem, newTextResourceItem,
-                cleanLevelResourcesItem, setMusicItem, setLoopsoundItem);
+            updateLevelResourcesItem.setOnAction(e -> LevelResourceManager.updateLevelResources(LevelManager.getLevel()));
+            importImageItem.setOnAction(e -> LevelResourceManager.importImages(LevelManager.getLevel()));
+            newTextResourceItem.setOnAction(e -> LevelResourceManager.newTextResource(LevelManager.getLevel()));
+            cleanLevelResourcesItem.setOnAction(e -> LevelResourceManager.cleanLevelResources(LevelManager.getLevel()));
+            setMusicItem.setOnAction(e -> LevelResourceManager.importMusic(LevelManager.getLevel()));
+            setLoopsoundItem.setOnAction(e -> LevelResourceManager.importLoopsound(LevelManager.getLevel()));
 
-        bar.getMenus().addAll(fileMenu, levelMenu, editMenu, resourcesMenu);
-        return bar;
+            resourcesMenu.getItems().addAll(updateLevelResourcesItem, importImageItem, newTextResourceItem,
+                    cleanLevelResourcesItem, setMusicItem, setLoopsoundItem);
+
+            menuBar.getMenus().addAll(fileMenu, levelMenu, editMenu, resourcesMenu);
+
+        } catch (FileNotFoundException ignored) {
+
+        }
+
     }
 
 }

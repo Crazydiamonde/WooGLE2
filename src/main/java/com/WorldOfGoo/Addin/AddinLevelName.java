@@ -7,11 +7,9 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 public class AddinLevelName extends EditorObject {
 
     public AddinLevelName(EditorObject _parent) {
-        super(_parent);
-        setRealName("name");
+        super(_parent, "name");
 
         addAttribute("text", InputField.ANY).assertRequired();
-        setNameAttribute(getAttribute2("text"));
         addAttribute("ad", InputField.ANY);
         addAttribute("ae", InputField.ANY);
         addAttribute("af", InputField.ANY);
@@ -249,7 +247,15 @@ public class AddinLevelName extends EditorObject {
         addAttribute("za", InputField.ANY);
         addAttribute("zm", InputField.ANY);
         addAttribute("zw", InputField.ANY);
+
         setMetaAttributes(MetaEditorAttribute.parse("text,?Translations<ad,ae,af,ag,ai,al,am,an,ao,ar,as,at,au,aw,ax,az,ba,bb,bd,be,bf,bg,bh,bi,bj,bm,bn,bo,br,bs,by,bv,bw,by,bz,ca,cc,cd,cf,cg,ch,ci,ck,cl,cm,cn,co,cr,cu,cv,cx,cy,cz,de,dj,dk,dm,do,ec,ee,eg,eh,er,es,et,eu,fi,fj,fk,fm,fo,fr,ga,gb,gd,ge,gf,gg,gh,gi,gl,gm,gn,gp,gq,gr,gs,gt,gu,gw,gy,hk,hn,hr,ht,hu,ie,il,im,in,io,iq,ir,is,it,je,jm,jo,jp,ke,kg,kh,ki,km,kn,kp,kr,kw,ky,la,lb,lc,li,lk,lr,ls,lt,lu,lv,ly,ma,mc,md,mh,mk,ml,mm,mn,mo,mp,mq,mr,ms,mt,mu,mv,mw,mx,my,mz,na,nc,ne,nf,ng,ni,nl,no,np,nr,nu,nz,om,pa,pe,pf,pg,ph,pk,pl,pm,pn,pr,ps,pt,pw,py,qa,re,ro,ru,rw,sa,sb,sc,sd,se,sg,sh,si,sj,sk,sl,sm,sn,so,sr,st,sv,sy,sz,tc,td,tf,tg,th,tj,tk,tl,tm,tn,to,tr,tt,tv,tw,tz,ua,ug,um,us,uy,uz,va,vc,ve,vg,vi,vn,vu,wf,ws,ye,yt,za,zm,zw>"));
+
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("text").stringValue();
     }
 
 }

@@ -2,10 +2,10 @@ package com.WorldOfGoo.Particle;
 
 import java.util.ArrayList;
 
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.InputField;
 
 import javafx.scene.image.Image;
@@ -24,14 +24,14 @@ public class _Particle extends EditorObject {
     private ArrayList<Axialsinoffset> axialsinoffsets = new ArrayList<>();
 
 
-    private double version;
-    public double getVersion() {
+    private GameVersion version;
+    public GameVersion getVersion() {
         return version;
     }
 
 
     public _Particle(EditorObject _parent) {
-        super(_parent);
+        super(_parent, "particle");
 
         addAttribute("image",        InputField.ANY)                              .assertRequired();
         addAttribute("rotspeed",     InputField.RANGE)   .setDefaultValue("0")    .assertRequired();
@@ -42,6 +42,7 @@ public class _Particle extends EditorObject {
         addAttribute("fade",         InputField.FLAG)    .setDefaultValue("false").assertRequired();
         addAttribute("additive",     InputField.FLAG)    .setDefaultValue("false").assertRequired();
         addAttribute("lifespan",     InputField.RANGE)   .setDefaultValue("1")    .assertRequired();
+        addAttribute("dampening",    InputField.NUMBER)  .setDefaultValue("0")    .assertRequired();
         addAttribute("speed",        InputField.RANGE)   .setDefaultValue("0")    .assertRequired();
         addAttribute("movedir",      InputField.NUMBER)  .setDefaultValue("0")    .assertRequired();
         addAttribute("movedirvar",   InputField.NUMBER)  .setDefaultValue("0")    .assertRequired();
@@ -50,14 +51,14 @@ public class _Particle extends EditorObject {
     }
 
 
-    public void update(double version) throws Exception {
+    public void update(GameVersion version) throws Exception {
         this.version = version;
         for (EditorObject thing : ParticleManager.getParticles()) {
             if (thing instanceof Axialsinoffset && thing.getParent() == this) {
                 axialsinoffsets.add((Axialsinoffset)thing);
             }
         }
-        String mogus = getString("image");
+        String mogus = getAttribute("image").stringValue();
         while (mogus.contains(",")) {
             images.add(GlobalResourceManager.getImage(mogus.substring(0, mogus.indexOf(",")), version));
             mogus = mogus.substring(mogus.indexOf(",") + 1);

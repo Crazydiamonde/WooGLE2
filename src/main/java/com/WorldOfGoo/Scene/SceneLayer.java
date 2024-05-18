@@ -3,6 +3,7 @@ package com.WorldOfGoo.Scene;
 import java.io.FileNotFoundException;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.*;
@@ -35,8 +36,7 @@ public class SceneLayer extends EditorObject {
 
 
     public SceneLayer(EditorObject _parent) {
-        super(_parent);
-        setRealName("SceneLayer");
+        super(_parent, "SceneLayer");
 
         addAttribute("id",         InputField.ANY);
         addAttribute("name",       InputField.ANY);
@@ -62,34 +62,37 @@ public class SceneLayer extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
-                return getDouble("x") + animx;
+                return getAttribute("x").doubleValue() + animx;
             }
             public void setX(double x) {
                 setAttribute("x", x);
             }
             public double getY() {
-                return -getDouble("y") - animy;
+                return -getAttribute("y").doubleValue() - animy;
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
             public double getRotation() {
-                return -Math.toRadians(getDouble("rotation") - animrotation);
+                return -Math.toRadians(getAttribute("rotation").doubleValue() - animrotation);
             }
             public void setRotation(double rotation) {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
             public double getWidth() {
-                return getImage().getWidth() * Math.abs(getDouble("scalex") * animscalex);
+                return getImage().getWidth() * Math.abs(getAttribute("scalex").doubleValue() * animscalex);
             }
             public void setWidth(double width) {
                 setAttribute("scalex", width / getImage().getWidth());
             }
             public double getHeight() {
-                return getImage().getHeight() * Math.abs(getDouble("scaley") * animscaley);
+                return getImage().getHeight() * Math.abs(getAttribute("scaley").doubleValue() * animscaley);
             }
             public void setHeight(double height) {
                 setAttribute("scaley", height / getImage().getHeight());
+            }
+            public double getDepth() {
+                return getAttribute("depth").doubleValue();
             }
             public Image getImage() {
                 return image;
@@ -99,12 +102,20 @@ public class SceneLayer extends EditorObject {
             }
         });
 
-        setNameAttribute(getAttribute2("name"));
         String meta1 = "id,name,x,y,scalex,scaley,rotation,";
         String meta2 = "Image<image,depth,tilex,tiley,tilecountx,tilecounty,alpha,colorize,anchor,context>";
         String meta3 = "?Anim<anim,animspeed,animdelay,animloop>";
         setMetaAttributes(MetaEditorAttribute.parse(meta1 + meta2 + meta3));
 
+        getAttribute("image").addChangeListener((observable, oldValue, newValue) -> updateImage());
+        getAttribute("colorize").addChangeListener((observable, oldValue, newValue) -> updateImage());
+
+    }
+
+
+    @Override
+    public String getName() {
+        return getAttribute("name").stringValue();
     }
 
 
@@ -148,49 +159,26 @@ public class SceneLayer extends EditorObject {
         return writableImage;
     }
 
-    @Override
-    public void update() {
-        if (!getAttribute("image").equals("")) {
-            try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
-                Color color = Color.parse(getAttribute("colorize"));
-                image = colorize(image, color);
-            } catch (FileNotFoundException e) {
-                image = null;
-                if (!LevelLoader.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                    LevelLoader.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
-                }
-            }
-        }
-
-        ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            logger.trace("Image changed from " + oldValue + " to " + newValue);
-            try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), getLevel().getVersion());
-                Color color = Color.parse(getAttribute("colorize"));
-                image = colorize(image, color);
-
-            } catch (FileNotFoundException e) {
-                image = null;
-                if (!LevelLoader.failedResources.contains("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")")) {
-                    LevelLoader.failedResources.add("From SceneLayer: \"" + getAttribute("image") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
-                }
-            }
-        };
-
-        setChangeListener("image", wizard);
-        setChangeListener("colorize", wizard);
-    }
-
 
     private static double lerp(double a, double b, double c) {
         return a + (b - a) * c;
     }
 
 
+    private static float reverseInterpolate(float a, float b, float c) {
+        if (b > a) {
+            return (c - a) / (b - a);
+        } else if (b == a) {
+            return a;
+        } else {
+            return (c - b) / (a - b);
+        }
+    }
+
+
     public void updateWithAnimation(WoGAnimation animation, float timer){
-        double animspeed = getDouble("animspeed");
-        double animdelay = getDouble("animdelay");
+        double animspeed = getAttribute("animspeed").doubleValue();
+        double animdelay = getAttribute("animdelay").doubleValue();
         double goodTimer = (timer * animspeed - animdelay);
         if (goodTimer >= 0) {
             goodTimer %= animation.getFrameTimes()[animation.getFrameTimes().length - 1];
@@ -229,6 +217,23 @@ public class SceneLayer extends EditorObject {
                 animy = lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
             }
         }
+    }
+
+
+    @Override
+    public void update() {
+
+        updateImage();
+
+    }
+
+
+    private void updateImage() {
+
+        if (!getAttribute("image").stringValue().isEmpty()) {
+            image = getAttribute("image").imageValue(LevelManager.getVersion());
+        }
+
     }
 
 }

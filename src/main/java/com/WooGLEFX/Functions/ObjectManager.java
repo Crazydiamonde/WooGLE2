@@ -38,10 +38,13 @@ public class ObjectManager {
             }
         }
 
-        if (object.getAbsoluteParent() instanceof Scene) {
+        EditorObject absoluteParent = LevelManager.getLevel().getSelected();
+        while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+
+        if (absoluteParent instanceof Scene) {
             level.getScene().add(object);
         }
-        if (object.getAbsoluteParent() instanceof Level) {
+        if (absoluteParent instanceof Level) {
             level.getLevel().add(object);
         }
 
@@ -62,23 +65,20 @@ public class ObjectManager {
 
     public static void deleteItem(WorldLevel level, EditorObject item, boolean parentDeleted) {
 
-        if (item instanceof Strand) {
-            for (EditorObject ball : level.getLevel()) {
-                if (ball instanceof BallInstance) {
-                    ((BallInstance) ball).getStrands().remove(item);
-                }
-            }
-        }
+        if (item instanceof BallInstance ballInstance) {
 
-        if (item instanceof BallInstance) {
-            for (Strand strand : ((BallInstance) item).getStrands()) {
-                if (strand.getGoo1() == item) {
-                    strand.setGoo1(null);
-                }
-                if (strand.getGoo2() == item) {
-                    strand.setGoo2(null);
-                }
+            String id = ballInstance.getAttribute("id").stringValue();
+
+            for (EditorObject editorObject : level.getLevel()) if (editorObject instanceof Strand strand) {
+
+                String gb1 = strand.getAttribute("gb1").stringValue();
+                if (gb1.equals(id)) strand.setGoo1(null);
+
+                String gb2 = strand.getAttribute("gb2").stringValue();
+                if (gb2.equals(id)) strand.setGoo2(null);
+
             }
+
         }
 
         for (EditorObject child : item.getChildren().toArray(new EditorObject[0])) {

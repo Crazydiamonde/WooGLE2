@@ -8,6 +8,7 @@ import com.WooGLEFX.Functions.ParticleManager;
 import com.WooGLEFX.Functions.UndoManager;
 import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
@@ -25,16 +26,13 @@ import java.io.File;
 
 public class FXPropertiesView {
 
-    private static TreeTableView<EditorAttribute> propertiesView;
+    private static final TreeTableView<EditorAttribute> propertiesView = new TreeTableView<>();
     public static TreeTableView<EditorAttribute> getPropertiesView() {
         return propertiesView;
     }
 
 
     public static void init() {
-        
-        // Create the properties view.
-        propertiesView = new TreeTableView<>();
 
         propertiesView.setPlaceholder(new Label());
 
@@ -99,7 +97,7 @@ public class FXPropertiesView {
 
                     if (getTableRow().getTreeItem() != null) {
                         EditorAttribute editorAttribute = getTableRow().getTreeItem().getValue();
-                        if (InputField.verify(SelectionManager.getSelected(), editorAttribute.getType(), editorAttribute.getValue())) {
+                        if (InputField.verify(SelectionManager.getSelected(), editorAttribute.getType(), editorAttribute.stringValue())) {
                             setStyle("-fx-text-fill: #000000ff");
                         } else {
                             setStyle("-fx-text-fill: #ff0000ff");
@@ -152,7 +150,7 @@ public class FXPropertiesView {
                             double x = bounds.getMinX();
                             double y = bounds.getMinY() + 18;
 
-                            possibleAttributeValues(this).show(FXContainers.getStage(), x, y);
+                            possibleAttributeValues(this).show(FXStage.getStage(), x, y);
                         }
                     }
 
@@ -174,7 +172,7 @@ public class FXPropertiesView {
                 cell.setOnMousePressed(event -> {
 
                     cell.setContextMenu(possibleAttributeValues(cell));
-                    cell.getContextMenu().show(propertiesView, FXContainers.getStage().getX()
+                    cell.getContextMenu().show(propertiesView, FXStage.getStage().getX()
                                     + FXContainers.getSplitPane().getDividers().get(0).getPosition() * FXContainers.getSplitPane().getWidth(),
                             100);
                     propertiesView.getSelectionModel().selectedItemProperty()
@@ -186,7 +184,7 @@ public class FXPropertiesView {
 
                     if (cell.getContextMenu() != null) {
                         cell.getContextMenu().show(propertiesView,
-                                FXContainers.getStage().getX() + FXContainers.getSplitPane().getDividers().get(0).getPosition()
+                                FXStage.getStage().getX() + FXContainers.getSplitPane().getDividers().get(0).getPosition()
                                         * FXContainers.getSplitPane().getWidth(),
                                 100);
                     }
@@ -206,24 +204,21 @@ public class FXPropertiesView {
 
             // Change the actual attribute to reflect the edit.
             EditorAttribute attribute = propertiesView.getTreeItem(e.getTreeTablePosition().getRow()).getValue();
-            String oldValue = attribute.getValue();
+            String oldValue = attribute.stringValue();
             if (InputField.verify(SelectionManager.getSelected(), attribute.getType(), e.getNewValue())) {
                 attribute.setValue(e.getNewValue());
             }
 
             // If the edit was actually valid:
-            if (e.getNewValue().equals("") || InputField.verify(SelectionManager.getSelected(), attribute.getType(), e.getNewValue())) {
+            if (e.getNewValue().isEmpty() || InputField.verify(SelectionManager.getSelected(), attribute.getType(), e.getNewValue())) {
 
                 // Push an attribute change to the undo buffer.
                 UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(), oldValue,
-                        attribute.getValue()));
+                        attribute.stringValue()));
                 UndoManager.clearRedoActions();
 
                 // If we have edited the name or ID of the object, change the object's "Name or
                 // ID" value.
-                if (attribute.getName().equals("name") || attribute.getName().equals("id")) {
-                    SelectionManager.getSelected().setNameAttribute(attribute);
-                }
 
             } else {
                 // Reset the attribute.
@@ -246,6 +241,10 @@ public class FXPropertiesView {
 
         // Set the "value" column to extend to the very edge of the TreeTableView.
         value.prefWidthProperty().bind(propertiesView.widthProperty().subtract(name.widthProperty()));
+
+        propertiesView.prefWidthProperty().bind(FXHierarchy.getHierarchy().widthProperty());
+        propertiesView.setRoot(new TreeItem<>(EditorAttribute.NULL));
+
     }
 
 
@@ -261,7 +260,7 @@ public class FXPropertiesView {
             // (sharing the same name).
             EditorAttribute attribute;
             if (object.attributeExists(metaEditorAttribute.getName())) {
-                attribute = object.getAttribute2(metaEditorAttribute.getName());
+                attribute = object.getAttribute(metaEditorAttribute.getName());
             } else {
                 // If no such attribute exists, this attribute is instead the name of a category
                 // of attributes.
@@ -278,7 +277,7 @@ public class FXPropertiesView {
             // If this attribute represents a category of attributes, it will have children.
             // Add the children's TreeItems as children of the category's TreeItem.
             for (MetaEditorAttribute childAttribute : metaEditorAttribute.getChildren()) {
-                thisAttribute.getChildren().add(new TreeItem<>(object.getAttribute2(childAttribute.getName())));
+                thisAttribute.getChildren().add(new TreeItem<>(object.getAttribute(childAttribute.getName())));
             }
 
             // Add the attribute's TreeItem as a child of the root's TreeItem.
@@ -301,7 +300,7 @@ public class FXPropertiesView {
                     if (resource instanceof ResrcImage) {
                         MenuItem setImageItem = new MenuItem();
 
-                        Label label = new Label(resource.getAttribute("id"));
+                        Label label = new Label(resource.getAttribute("id").stringValue());
                         label.setMaxHeight(17);
                         label.setMinHeight(17);
                         label.setPrefHeight(17);
@@ -310,7 +309,7 @@ public class FXPropertiesView {
 
                         // Add thumbnail of the image to the menu item
                         try {
-                            ImageView graphic = new ImageView(GlobalResourceManager.getImage(resource.getAttribute("id"), LevelManager.getLevel().getVersion()));
+                            ImageView graphic = new ImageView(GlobalResourceManager.getImage(resource.getAttribute("id").stringValue(), LevelManager.getVersion()));
                             graphic.setFitHeight(17);
                             // Set width depending on height
                             graphic.setFitWidth(graphic.getImage().getWidth() * 17 / graphic.getImage().getHeight());
@@ -323,11 +322,11 @@ public class FXPropertiesView {
 
                         setImageItem.setOnAction(event -> {
                             UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
-                                    attribute.getValue(), resource.getAttribute("id")));
+                                    attribute.stringValue(), resource.getAttribute("id").stringValue()));
                             UndoManager.clearRedoActions();
-                            attribute.setValue(resource.getAttribute("REALid"));
+                            attribute.setValue(resource.getAttribute("REALid").stringValue());
                             if (contextMenu.isFocused()) {
-                                cell.commitEdit(attribute.getValue());
+                                cell.commitEdit(attribute.stringValue());
                             }
                         });
 
@@ -336,7 +335,7 @@ public class FXPropertiesView {
                 }
             }
             case InputField.BALL -> {
-                String path = LevelManager.getLevel().getVersion() == 1.5 ? FileManager.getNewWOGdir()
+                String path = LevelManager.getVersion() == GameVersion.NEW ? FileManager.getNewWOGdir()
                         : FileManager.getOldWOGdir();
                 File[] ballFiles = new File(path + "\\res\\balls").listFiles();
                 if (ballFiles != null) {
@@ -345,11 +344,11 @@ public class FXPropertiesView {
 
                         setImageItem.setOnAction(event -> {
                             UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
-                                    attribute.getValue(), ballFile.getName()));
+                                    attribute.stringValue(), ballFile.getName()));
                             UndoManager.clearRedoActions();
                             attribute.setValue(ballFile.getName());
                             if (contextMenu.isFocused()) {
-                                cell.commitEdit(attribute.getValue());
+                                cell.commitEdit(attribute.stringValue());
                             }
                         });
 
@@ -363,11 +362,11 @@ public class FXPropertiesView {
 
                     setImageItem.setOnAction(event -> {
                         UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
-                                attribute.getValue(), particleType));
+                                attribute.stringValue(), particleType));
                         UndoManager.clearRedoActions();
                         attribute.setValue(particleType);
                         if (contextMenu.isFocused()) {
-                            cell.commitEdit(attribute.getValue());
+                            cell.commitEdit(attribute.stringValue());
                         }
                     });
 
@@ -384,7 +383,7 @@ public class FXPropertiesView {
         if (obj == null) {
             FXPropertiesView.getPropertiesView().setRoot(null);
         } else {
-            FXPropertiesView.getPropertiesView().setRoot(obj.getPropertiesTreeItem());
+            FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(obj));
         }
     }
 

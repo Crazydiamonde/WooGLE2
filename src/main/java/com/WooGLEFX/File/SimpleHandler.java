@@ -1,4 +1,6 @@
 package com.WooGLEFX.File;
+import com.WooGLEFX.Functions.PaletteManager;
+import com.WooGLEFX.Structures.GameVersion;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -27,8 +29,8 @@ public class SimpleHandler extends DefaultHandler {
                 }
             }
             case "Ball" -> {
-                FileManager.getPaletteBalls().add(attributes.getValue(attributes.getIndex("ball")));
-                FileManager.getPaletteVersions().add(Double.valueOf(attributes.getValue(attributes.getIndex("version"))));
+                PaletteManager.getPaletteBalls().add(attributes.getValue(attributes.getIndex("ball")));
+                PaletteManager.getPaletteVersions().add(attributes.getValue(attributes.getIndex("version")).equals("1.3") ? GameVersion.OLD : GameVersion.NEW);
             }
         }
     }

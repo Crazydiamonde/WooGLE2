@@ -35,7 +35,6 @@ public class MouseIntersectingCorners {
                 return DragSettings.NULL;
             }
             case ObjectPosition.RECTANGLE, ObjectPosition.RECTANGLE_HOLLOW -> {
-                boolean canRotate = (objectPosition.getId() == ObjectPosition.RECTANGLE);
                 return RectangleCollider.mouseIntersectingCorners(objectPosition, mouseX, mouseY);
             }
             case ObjectPosition.CIRCLE, ObjectPosition.CIRCLE_HOLLOW -> {

@@ -1,6 +1,5 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
@@ -8,8 +7,7 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 public class Level extends EditorObject {
 
     public Level(EditorObject _parent) {
-        super(_parent);
-        setRealName("level");
+        super(_parent, "level");
 
         addAttribute("ballsrequired",      InputField.NUMBER)                               .assertRequired();
         addAttribute("letterboxed",        InputField.FLAG)  .setDefaultValue("false")      .assertRequired();
@@ -27,7 +25,6 @@ public class Level extends EditorObject {
         addAttribute("retrytime",          InputField.NUMBER);
         addAttribute("zoomoutlimit",       InputField.NUMBER);
 
-        setNameAttribute(EditorAttribute.NULL);
         setMetaAttributes(MetaEditorAttribute.parse("ballsrequired,timebugprobability,textcolor,retrytime,zoomoutlimit,?Flags<letterboxed,visualdebug,autobounds,strandgeom,allowskip,texteffects>?Cursor Colors<cursor1color,cursor2color,cursor3color,cursor4color>"));
 
     }

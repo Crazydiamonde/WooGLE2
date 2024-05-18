@@ -1,17 +1,16 @@
 package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
+import com.WooGLEFX.Structures.SimpleStructures.Position;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-
-import java.io.FileNotFoundException;
 
 public class Circle extends EditorObject {
 
@@ -19,8 +18,7 @@ public class Circle extends EditorObject {
 
 
     public Circle(EditorObject _parent) {
-        super(_parent);
-        setRealName("circle");
+        super(_parent, "circle");
 
         addAttribute("id",               InputField.ANY)                                   .assertRequired();
         addAttribute("mass",             InputField.NUMBER)     .setDefaultValue("0");
@@ -44,19 +42,22 @@ public class Circle extends EditorObject {
 
                 if (getParent() instanceof Compositegeom compositegeom) {
 
-                    double compGeomX = compositegeom.getDouble("x");
-                    double compGeomY = -compositegeom.getDouble("y");
-                    double compGeomRotation = compositegeom.getDouble("rotation");
+                    double compGeomX = compositegeom.getAttribute("x").doubleValue();
+                    double compGeomY = -compositegeom.getAttribute("y").doubleValue();
+                    double compGeomRotation = compositegeom.getAttribute("rotation").doubleValue();
 
-                    Point2D position = new Point2D(getDouble("x"), -getDouble("y"));
-                    position = EditorObject.rotate(position, compGeomRotation, new Point2D(0, 0));
+                    double x = getAttribute("x").doubleValue();
+                    double y = -getAttribute("y").doubleValue();
+
+                    Point2D position = new Point2D(x, y);
+                    position = ObjectUtil.rotate(position, compGeomRotation, new Point2D(0, 0));
                     position = position.add(compGeomX, compGeomY);
 
                     return position.getX();
 
                 } else {
 
-                    return getDouble("x");
+                    return getAttribute("x").doubleValue();
 
                 }
 
@@ -65,13 +66,13 @@ public class Circle extends EditorObject {
 
                 if (getParent() instanceof Compositegeom compositegeom) {
 
-                    double compGeomX = compositegeom.getDouble("x");
-                    double compGeomY = -compositegeom.getDouble("y");
-                    double compGeomRotation = compositegeom.getDouble("rotation");
+                    double compGeomX = compositegeom.getAttribute("x").doubleValue();
+                    double compGeomY = -compositegeom.getAttribute("y").doubleValue();
+                    double compGeomRotation = compositegeom.getAttribute("rotation").doubleValue();
 
                     Point2D position = new Point2D(x, getY());
                     position = position.subtract(compGeomX, compGeomY);
-                    position = EditorObject.rotate(position, -compGeomRotation, new Point2D(0, 0));
+                    position = ObjectUtil.rotate(position, -compGeomRotation, new Point2D(0, 0));
 
                     setAttribute("x", position.getX());
                     setAttribute("y", -position.getY());
@@ -87,19 +88,22 @@ public class Circle extends EditorObject {
 
                 if (getParent() instanceof Compositegeom compositegeom) {
 
-                    double compGeomX = compositegeom.getDouble("x");
-                    double compGeomY = -compositegeom.getDouble("y");
-                    double compGeomRotation = -compositegeom.getDouble("rotation");
+                    double compGeomX = compositegeom.getAttribute("x").doubleValue();
+                    double compGeomY = -compositegeom.getAttribute("y").doubleValue();
+                    double compGeomRotation = compositegeom.getAttribute("rotation").doubleValue();
 
-                    Point2D position = new Point2D(getDouble("x"), -getDouble("y"));
-                    position = EditorObject.rotate(position, compGeomRotation, new Point2D(0, 0));
+                    double x = getAttribute("x").doubleValue();
+                    double y = -getAttribute("y").doubleValue();
+
+                    Point2D position = new Point2D(x, y);
+                    position = ObjectUtil.rotate(position, compGeomRotation, new Point2D(0, 0));
                     position = position.add(compGeomX, compGeomY);
 
                     return position.getY();
 
                 } else {
 
-                    return -getDouble("y");
+                    return -getAttribute("y").doubleValue();
 
                 }
 
@@ -108,13 +112,13 @@ public class Circle extends EditorObject {
 
                 if (getParent() instanceof Compositegeom compositegeom) {
 
-                    double compGeomX = compositegeom.getDouble("x");
-                    double compGeomY = -compositegeom.getDouble("y");
-                    double compGeomRotation = -compositegeom.getDouble("rotation");
+                    double compGeomX = compositegeom.getAttribute("x").doubleValue();
+                    double compGeomY = -compositegeom.getAttribute("y").doubleValue();
+                    double compGeomRotation = compositegeom.getAttribute("rotation").doubleValue();
 
                     Point2D position = new Point2D(getX(), y);
                     position = position.subtract(compGeomX, compGeomY);
-                    position = EditorObject.rotate(position, -compGeomRotation, new Point2D(0, 0));
+                    position = ObjectUtil.rotate(position, -compGeomRotation, new Point2D(0, 0));
 
                     setAttribute("x", position.getX());
                     setAttribute("y", -position.getY());
@@ -127,57 +131,67 @@ public class Circle extends EditorObject {
 
             }
             public double getRadius() {
-                return getDouble("radius");
+                return getAttribute("radius").doubleValue();
             }
             public void setRadius(double radius) {
                 setAttribute("radius", radius);
             }
             public double getEdgeSize() {
-                return 0.5;
+                return 2;
+            }
+            public double getDepth() {
+                return Renderer.GEOMETRY;
             }
             public Paint getBorderColor() {
-                return new Color(0, 0.25, 1.0, 1.0);
+                return Rectangle.geometryColor(getAttribute("tag").listValue(), getParent());
             }
             public Paint getFillColor() {
-                return new Color(0, 0.5, 1.0, 0.25);
+                Color color = Rectangle.geometryColor(getAttribute("tag").listValue(), getParent());
+                return new Color(color.getRed(), color.getGreen(), color.getBlue(), 0.25);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGeometry();
+                return LevelManager.getLevel().getShowGeometry() != 0;
             }
         });
 
         addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
-                if (getAttribute("imagepos").isEmpty()) return getDouble("x");
-                else return getPosition("imagepos").getX();
+                EditorAttribute imagepos = getAttribute("imagepos");
+                if (imagepos.stringValue().isEmpty()) return getAttribute("x").doubleValue();
+                else return imagepos.positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("imagepos", x + "," + -getY());
             }
             public double getY() {
-                if (getAttribute("imagepos").isEmpty()) return -getDouble("y");
-                else return -getPosition("imagepos").getY();
+                EditorAttribute imagepos = getAttribute("imagepos");
+                if (imagepos.stringValue().isEmpty()) return -getAttribute("y").doubleValue();
+                else return -imagepos.positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("imagepos", getX() + "," + -y);
             }
             public double getRotation() {
-                return Math.toRadians(getDouble("imagerot"));
+                return Math.toRadians(getAttribute("imagerot").doubleValue());
             }
             public void setRotation(double rotation) {
                 setAttribute("imagerot", Math.toDegrees(rotation));
             }
             public double getWidth() {
-                return getImage().getWidth() * Math.abs(getPosition("imagescale").getX());
+                Position scale = getAttribute("imagescale").positionValue();
+                return getImage().getWidth() * Math.abs(scale.getX());
             }
             public void setWidth(double width) {
-                setAttribute("imagescale", (width / getImage().getWidth()) + "," + getPosition("imagescale").getY());
+                Position scale = getAttribute("imagescale").positionValue();
+                setAttribute("imagescale", (width / getImage().getWidth()) + "," + scale.getY());
             }
             public double getHeight() {
-                return getImage().getHeight() * Math.abs(getPosition("imagescale").getY());
+                Position scale = getAttribute("imagescale").positionValue();
+                return getImage().getHeight() * Math.abs(scale.getY());
             }
             public void setHeight(double height) {
-                setAttribute("imagescale", getPosition("imagescale").getX() + "," + (height / getImage().getHeight()));
+                Position scale = getAttribute("imagescale").positionValue();
+                setAttribute("imagescale", scale.getX() + "," + (height / getImage().getHeight()));
             }
             public Image getImage() {
                 return image;
@@ -187,33 +201,30 @@ public class Circle extends EditorObject {
             }
         });
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,radius,Geometry<static,mass,material,tag,break,rotspeed,contacts,nogeomcollisions>?Image<image,imagepos,imagerot,imagescale>"));
+
+        getAttribute("image").addChangeListener((observable, oldValue, newValue) -> updateImage());
 
     }
 
 
     @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
+    }
+
+
+    @Override
     public void update() {
+        updateImage();
+    }
 
-        if (!getAttribute("image").equals("")) {
-            try {
-                image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
-            } catch (FileNotFoundException e) {
-                Alarms.errorMessage(e);
-            }
+
+    private void updateImage() {
+
+        if (!getAttribute("image").stringValue().isEmpty()) {
+            image = getAttribute("image").imageValue(LevelManager.getVersion());
         }
-
-
-        setChangeListener("image", (observable, oldValue, newValue) -> {
-            if (!getAttribute("image").equals("")) {
-                try {
-                    image = GlobalResourceManager.getImage(getAttribute("image"), LevelManager.getLevel().getVersion());
-                } catch (FileNotFoundException e) {
-                    Alarms.errorMessage(e);
-                }
-            }
-        });
 
     }
 

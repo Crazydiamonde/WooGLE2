@@ -6,7 +6,7 @@ import com.WooGLEFX.Structures.InputField;
 public class BallStrand extends EditorObject {
 
     public BallStrand(EditorObject _parent) {
-        super(_parent);
+        super(_parent, "strand");
 
         addAttribute("type",           InputField.ANY)                     .assertRequired();
         addAttribute("image",          InputField.IMAGE)                   .assertRequired();

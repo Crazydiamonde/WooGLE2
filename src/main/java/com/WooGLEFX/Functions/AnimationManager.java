@@ -20,7 +20,7 @@ public class AnimationManager {
         if (LevelManager.getLevel() != null) {
             for (EditorObject object : LevelManager.getLevel().getScene()) {
                 if (object instanceof SceneLayer sceneLayer) {
-                    String anim = object.getAttribute("anim");
+                    String anim = object.getAttribute("anim").stringValue();
                     if (!anim.equals("")) {
                         for (WoGAnimation animation : animations) {
                             if (animation.getName().equals(anim + ".anim.binuni")

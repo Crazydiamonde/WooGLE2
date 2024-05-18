@@ -1,8 +1,14 @@
 package com.WooGLEFX.Structures;
 
+import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.Structures.SimpleStructures.Color;
+import com.WooGLEFX.Structures.SimpleStructures.Position;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.image.Image;
+
+import java.io.FileNotFoundException;
 
 public class EditorAttribute {
 
@@ -22,13 +28,54 @@ public class EditorAttribute {
     public StringProperty getValueProperty() {
         return value;
     }
-    public String getValue() {
+
+    public String actualValue() {
         return value.getValue();
     }
+
+    public String stringValue() {
+        if (value.getValue().isEmpty()) return defaultValue;
+        else return value.getValue();
+    }
+
+    public double doubleValue() {
+        return Double.parseDouble(stringValue());
+    }
+
+    public int intValue() {
+        return Integer.parseInt(stringValue());
+    }
+
+    public boolean booleanValue() {
+        return (stringValue().equals("true"));
+    }
+
+    public Position positionValue() {
+        return Position.parse(stringValue());
+    }
+
+    public Color colorValue() {
+        return Color.parse(stringValue());
+    }
+
+    public Image imageValue(GameVersion version) {
+        try {
+            return GlobalResourceManager.getImage(stringValue(), version);
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+    }
+
+    public String[] listValue() {
+        return stringValue().split(",");
+    }
+
     public void setValue(String value) {
         this.value.setValue(value);
     }
-    public void setChangeListener(ChangeListener<String> changeListener) {
+
+
+    public void addChangeListener(ChangeListener<String> changeListener) {
         this.value.addListener(changeListener);
     }
 
@@ -53,8 +100,9 @@ public class EditorAttribute {
     public boolean getRequiredInFile() {
         return requiredInFile;
     }
-    public void assertRequired() {
+    public EditorAttribute assertRequired() {
         requiredInFile = true;
+        return this;
     }
 
 

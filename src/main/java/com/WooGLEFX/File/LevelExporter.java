@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.WooGLEFX.Structures.GameVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,28 +74,19 @@ public class LevelExporter {
     }
 
     public static String recursiveXMLexport(String export, EditorObject object, int spaces, boolean children, String defaultsPath, String defaultsPrefix) {
-        export += "\t".repeat(spaces) + "<" + object.getRealName() + " ";
+        export += "\t".repeat(spaces) + "<" + object.getType() + " ";
         StringBuilder exportBuilder = new StringBuilder(export);
+
         for (EditorAttribute attribute : object.getAttributes()) {
             String attributeName = attribute.getName();
-            if (object instanceof Sound || object instanceof ResrcImage) {
-                if (attributeName.equals("id") || attributeName.equals("path")) {
-                    continue;
-                }
-                if (attributeName.equals("REALid")) {
-                    attributeName = "id";
-                }
-                if (attributeName.equals("REALpath")) {
-                    attributeName = "path";
-                }
-            }
-            if (!attribute.getValue().equals("") || attribute.getRequiredInFile()) {
+
+            if (!attribute.stringValue().isEmpty() || attribute.getRequiredInFile()) {
                 if (ding && (attributeName.equals("up") || attributeName.equals("over") || attributeName.equals("disabled"))) {
                     exportBuilder.append(attributeName).append("=\"\" ");
                 } else {
                     if (object instanceof Sound || object instanceof ResrcImage) {
                         // Remove prefixes from id and path on save
-                        String attributeValue = attribute.getValue();
+                        String attributeValue = attribute.stringValue();
                         if (attributeName.equals("id")) {
                             // Remove defaultsPrefix from id
                             if (attributeValue.startsWith(defaultsPrefix)) {
@@ -109,10 +101,10 @@ public class LevelExporter {
                         }
                         exportBuilder.append(attributeName).append("=\"").append(attributeValue).append("\" ");
                     } else {
-                        if (attribute.getValue().equals("") && attribute.getRequiredInFile()) {
+                        if (attribute.stringValue().isEmpty() && attribute.getRequiredInFile()) {
                             exportBuilder.append(attributeName).append("=\"").append(attribute.getDefaultValue()).append("\" ");
                         } else {
-                            exportBuilder.append(attributeName).append("=\"").append(attribute.getValue()).append("\" ");
+                            exportBuilder.append(attributeName).append("=\"").append(attribute.stringValue()).append("\" ");
                         }
                     }
                 }
@@ -128,12 +120,12 @@ public class LevelExporter {
                     String curDefaultsPath = "";
                     String curDefaultsPrefix = "";
                     if(child instanceof SetDefaults) {
-                        curDefaultsPath = child.getAttribute("path");
-                        curDefaultsPrefix = child.getAttribute("idprefix");
+                        curDefaultsPath = child.getAttribute("path").stringValue();
+                        curDefaultsPrefix = child.getAttribute("idprefix").stringValue();
                     }
                     export = recursiveXMLexport(export, child, spaces + 1, true, curDefaultsPath, curDefaultsPrefix) + "\n";
                 }
-                export += "\t".repeat(spaces) + "</" + object.getRealName() + ">";
+                export += "\t".repeat(spaces) + "</" + object.getType() + ">";
             }
         } else {
             export += " />";
@@ -149,20 +141,20 @@ public class LevelExporter {
                 export += "\t".repeat(spaces) + "<ocd>" + object.getAttribute("type") + "," + object.getAttribute("value") + "</ocd>";
             }
         } else if (object.getAttributes().length == 1 && object.getChildren().size() == 0) {
-            if (object.getAttributes()[0].getValue().equals("")) {
-                export += "\t".repeat(spaces) + "<" + object.getRealName() + " />";
+            if (object.getAttributes()[0].stringValue().equals("")) {
+                export += "\t".repeat(spaces) + "<" + object.getType() + " />";
             } else {
-                export += "\t".repeat(spaces) + "<" + object.getRealName() + ">" + object.getAttributes()[0].getValue() + "</" + object.getRealName() + ">";
+                export += "\t".repeat(spaces) + "<" + object.getType() + ">" + object.getAttributes()[0].stringValue() + "</" + object.getType() + ">";
             }
         } else {
-            export += "\t".repeat(spaces) + "<" + object.getRealName() + " ";
+            export += "\t".repeat(spaces) + "<" + object.getType() + " ";
             StringBuilder exportBuilder = new StringBuilder(export);
             for (EditorAttribute attribute : object.getAttributes()) {
-                if (!attribute.getValue().equals("") || attribute.getRequiredInFile()) {
+                if (!attribute.stringValue().equals("") || attribute.getRequiredInFile()) {
                     if (ding && (attribute.getName().equals("up") || attribute.getName().equals("over") || attribute.getName().equals("disabled"))) {
                         exportBuilder.append(attribute.getName()).append("=\"\" ");
                     } else {
-                        exportBuilder.append(attribute.getName()).append("=\"").append(attribute.getValue()).append("\" ");
+                        exportBuilder.append(attribute.getName()).append("=\"").append(attribute.stringValue()).append("\" ");
                     }
                 }
             }
@@ -174,7 +166,7 @@ public class LevelExporter {
                 for (EditorObject child : object.getChildren()) {
                     export = fullAddinXMLExport(export, child, spaces + 1) + "\n";
                 }
-                export += "\t".repeat(spaces) + "</" + object.getRealName() + ">";
+                export += "\t".repeat(spaces) + "</" + object.getType() + ">";
             } else {
                 export += " />";
             }
@@ -182,7 +174,7 @@ public class LevelExporter {
         return export;
     }
 
-    public static void saveAsXML(WorldLevel worldLevel, String outputPathString, double version, boolean chumbusMode, boolean includeAddinInfo) throws IOException {
+    public static void saveAsXML(WorldLevel worldLevel, String outputPathString, GameVersion version, boolean chumbusMode, boolean includeAddinInfo) throws IOException {
 
         /*
             - ForceFields
@@ -357,7 +349,7 @@ public class LevelExporter {
             scenePathText += ".xml";
             levelPathText += ".xml";
             resrcPathText += ".xml";
-        } else if (version == 1.3) {
+        } else if (version == GameVersion.OLD) {
             //If not exporting and on the older version, add .xml.bin to the end of each path.
             scenePathText += ".bin";
             levelPathText += ".bin";
@@ -371,7 +363,7 @@ public class LevelExporter {
             addinPathText = outputPathString + "\\" + levelName + "." + addinPathText;
             textPathText = outputPathString + "\\" + levelName + "." + textPathText;
         } else {
-            String WoGDir = version == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+            String WoGDir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
             String initialPath = WoGDir + "\\res\\levels\\" + levelName + "\\goomod";
             addinPathText = initialPath + "\\" + addinPathText;
             textPathText = initialPath + "\\" + textPathText;
@@ -402,7 +394,7 @@ public class LevelExporter {
         if (!Files.exists(textPath)) {
             Files.createFile(textPath);
         }
-        if (version == 1.3) {
+        if (version == GameVersion.OLD) {
             AESBinFormat.encodeFile(new File(scenePathText), scene.getBytes());
             AESBinFormat.encodeFile(new File(levelPathText), level.getBytes());
             AESBinFormat.encodeFile(new File(resrcPathText), recursiveXMLexport("", worldLevel.getResourcesObject(), 0, true).getBytes());
@@ -422,7 +414,7 @@ public class LevelExporter {
                 }
             }
         }
-        if (version == 1.5) {
+        if (version == GameVersion.NEW) {
             Files.write(scenePath, Collections.singleton(scene), StandardCharsets.UTF_8);
             Files.write(levelPath, Collections.singleton(level), StandardCharsets.UTF_8);
             Files.write(resrcPath, Collections.singleton(recursiveXMLexport("", worldLevel.getResourcesObject(), 0, true)), StandardCharsets.UTF_8);
@@ -448,7 +440,7 @@ public class LevelExporter {
         Files.write(textPath, Collections.singleton(text), StandardCharsets.UTF_8);
     }
 
-    public static void exportBallAsXML(_Ball ball, String outputPathString, double version, boolean goomod) throws IOException {
+    public static void exportBallAsXML(_Ball ball, String outputPathString, GameVersion version, boolean goomod) throws IOException {
         /* General Parts */
         /* Walking Animations */
         /* Attached Animations */
@@ -465,12 +457,12 @@ public class LevelExporter {
         String resrcXML = recursiveXMLexport("", ball.resources.get(0), 0, true);
         logger.trace(resrcXML);
 
-        String name = ball.objects.get(0).getAttribute("name");
+        String name = ball.objects.get(0).getAttribute("name").stringValue();
 
         String ballsPathText = outputPathString + "\\balls.xml";
         String resourcesPathText = outputPathString + "\\resources.xml";
 
-        if (!goomod && version == 1.3) {
+        if (!goomod && version == GameVersion.OLD) {
             ballsPathText += ".bin";
             resourcesPathText += ".bin";
         }
@@ -494,7 +486,7 @@ public class LevelExporter {
             Files.createFile(resourcesPath);
         }
 
-        if (version == 1.3) {
+        if (version == GameVersion.OLD) {
             AESBinFormat.encodeFile(new File(ballsPathText), ballXML.getBytes());
             AESBinFormat.encodeFile(new File(resourcesPathText), resrcXML.getBytes());
             if (!goomod) {
@@ -512,7 +504,7 @@ public class LevelExporter {
                 }
             }
         }
-        if (version == 1.5) {
+        if (version == GameVersion.NEW) {
             Files.write(ballsPath, Collections.singleton(ballXML), StandardCharsets.UTF_8);
             Files.write(resourcesPath, Collections.singleton(resrcXML), StandardCharsets.UTF_8);
             if (!goomod) {
@@ -533,7 +525,7 @@ public class LevelExporter {
     }
 
     public static void exportGoomod(File file, WorldLevel level, ArrayList<_Ball> balls, boolean includeAddinInfo) {
-        String start = level.getVersion() == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String start = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         // First things first, delete the goomod folder if it exists
         if (Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod"))) {
             try {
@@ -559,12 +551,12 @@ public class LevelExporter {
             Alarms.errorMessage(e);
         }
         for (EditorObject resource : level.getResources()) {
-            String resourceNameStripped = resource.getAttribute("REALpath");
+            String resourceNameStripped = resource.getAttribute("REALpath").stringValue();
             if (resourceNameStripped != null && resourceNameStripped.contains("/")) {
                 resourceNameStripped = resourceNameStripped.substring(0, resourceNameStripped.lastIndexOf("/"));
             }
             if (resource instanceof ResrcImage) {
-                if (BaseGameResources.containsImage(resource.getAttribute("path"))) {
+                if (BaseGameResources.containsImage(resource.getAttribute("path").stringValue())) {
                     // Skip if base game image
                     continue;
                 }
@@ -576,14 +568,14 @@ public class LevelExporter {
                     }
                 }
                 try {
-                    BufferedImage oldImage = SwingFXUtils.fromFXImage(GlobalResourceManager.getImage(resource.getAttribute("REALid"), level.getVersion()), null);
+                    BufferedImage oldImage = SwingFXUtils.fromFXImage(resource.getAttribute("REALid").imageValue(level.getVersion()), null);
                     File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("REALpath") + ".png");
                     ImageIO.write(oldImage, "png", newImageFile);
                 } catch (Exception e) {
                     Alarms.errorMessage(e);
                 }
             } else if (resource instanceof Sound) {
-                if (BaseGameResources.containsSound(resource.getAttribute("path"))) {
+                if (BaseGameResources.containsSound(resource.getAttribute("path").stringValue())) {
                     // Skip if base game sound
                     continue;
                 }
@@ -610,7 +602,7 @@ public class LevelExporter {
         HashSet<String> exportedBalls = new HashSet<>();
         for (_Ball ball : balls) {
             try {
-                String ballName = ball.getObjects().get(0).getAttribute("name");
+                String ballName = ball.getObjects().get(0).getAttribute("name").stringValue();
                 if (exportedBalls.contains(ballName)) {
                     // Skip if already exported
                     continue;
@@ -622,7 +614,7 @@ public class LevelExporter {
                 exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ballName, level.getVersion(), true);
                 for (EditorObject resource : ball.getResources()) {
                     if (resource instanceof ResrcImage) {
-                        String realpath = resource.getAttribute("path");
+                        String realpath = resource.getAttribute("path").stringValue();
                         if (BaseGameResources.containsImage(realpath)) {
                             // Skip if base game image
                             continue;
@@ -635,7 +627,7 @@ public class LevelExporter {
                         if (!Files.exists(subfolder)) {
                             Files.createDirectories(subfolder);
                         }
-                        BufferedImage oldImage = SwingFXUtils.fromFXImage(GlobalResourceManager.getImage(resource.getAttribute("id"), level.getVersion()), null);
+                        BufferedImage oldImage = SwingFXUtils.fromFXImage(resource.getAttribute("id").imageValue(level.getVersion()), null);
                         File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".png");
                         ImageIO.write(oldImage, "png", newImageFile);
                     }

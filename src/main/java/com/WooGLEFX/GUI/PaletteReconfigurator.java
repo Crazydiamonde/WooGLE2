@@ -5,7 +5,9 @@ import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.BallManager;
+import com.WooGLEFX.Functions.PaletteManager;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.GameVersion;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -25,15 +27,15 @@ import java.util.ArrayList;
 
 public class PaletteReconfigurator extends Application {
 
-    private HBox getBallHBox(String ballNameString, double version) {
+    private HBox getBallHBox(String ballNameString, GameVersion version) {
         HBox ballHBox = new HBox();
         CheckBox enableBox = new CheckBox();
         Label ballName = new Label(ballNameString);
         ballName.setId(String.valueOf(version));
 
         int i = 0;
-        for (String name2 : FileManager.getPaletteBalls()) {
-            if (name2.equals(ballNameString) && version == FileManager.getPaletteVersions().get(i)) {
+        for (String name2 : PaletteManager.getPaletteBalls()) {
+            if (name2.equals(ballNameString) && version == PaletteManager.getPaletteVersions().get(i)) {
                 enableBox.setSelected(true);
             }
             i++;
@@ -57,7 +59,7 @@ public class PaletteReconfigurator extends Application {
             File[] balls = new File(FileManager.getOldWOGdir() + "\\res\\balls").listFiles();
             if (balls != null) {
                 for (File ballFile : balls) {
-                    oldVBox.getChildren().add(getBallHBox(ballFile.getName(), 1.3));
+                    oldVBox.getChildren().add(getBallHBox(ballFile.getName(), GameVersion.OLD));
                 }
             }
         }
@@ -68,7 +70,7 @@ public class PaletteReconfigurator extends Application {
             File[] balls = new File(FileManager.getNewWOGdir() + "\\res\\balls").listFiles();
             if (balls != null) {
                 for (File ballFile : balls) {
-                    newVBox.getChildren().add(getBallHBox(ballFile.getName(), 1.5));
+                    newVBox.getChildren().add(getBallHBox(ballFile.getName(), GameVersion.NEW));
                 }
             }
         }
@@ -80,7 +82,7 @@ public class PaletteReconfigurator extends Application {
 
         applyButton.setOnAction(actionEvent -> {
             ArrayList<String> paletteBalls = new ArrayList<>();
-            ArrayList<Double> paletteVersions = new ArrayList<>();
+            ArrayList<GameVersion> paletteVersions = new ArrayList<>();
 
             ArrayList<Node> nodeList = new ArrayList<>();
 
@@ -92,11 +94,11 @@ public class PaletteReconfigurator extends Application {
                 Label label = (Label)((HBox)ballHBox).getChildren().get(1);
                 CheckBox checkBox = (CheckBox)((HBox)ballHBox).getChildren().get(0);
                 if (checkBox.isSelected()) {
-                    paletteBalls.add(label.getText());
-                    paletteVersions.add(Double.parseDouble(label.getId()));
-
                     String ballName = label.getText();
-                    double ballVersion = Double.parseDouble(label.getId());
+                    GameVersion ballVersion = label.getId().equals("1.3") ? GameVersion.OLD : GameVersion.NEW;
+
+                    PaletteManager.addPaletteBall(label.getText());
+                    PaletteManager.addPaletteVersion(ballVersion);
 
                     boolean alreadyHasBall = false;
                     for (_Ball ball : BallManager.getImportedBalls()) {
@@ -126,9 +128,6 @@ public class PaletteReconfigurator extends Application {
                     }
                 }
             }
-
-            FileManager.setPaletteBalls(paletteBalls);
-            FileManager.setPaletteVersions(paletteVersions);
 
             FXEditorButtons.getOldGooballsToolbar().getItems().clear();
             FXEditorButtons.getNewGooballsToolbar().getItems().clear();

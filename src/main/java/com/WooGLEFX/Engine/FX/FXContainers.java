@@ -1,55 +1,68 @@
 package com.WooGLEFX.Engine.FX;
 
-import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Engine.SelectionManager;
+import javafx.scene.Cursor;
+import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class FXContainers {
 
-    private static SplitPane splitPane;
+    private static final SplitPane splitPane = new SplitPane();
     public static SplitPane getSplitPane() {
         return splitPane;
     }
-    public static void setSplitPane(SplitPane splitPane) {
-        FXContainers.splitPane = splitPane;
-    }
 
 
-    private static Stage stage;
-    public static Stage getStage() {
-        return stage;
-    }
-    public static void setStage(Stage stage) {
-        FXContainers.stage = stage;
-    }
-
-
-    private static Pane thingPane;
+    private static final Pane thingPane = new Pane();
     public static Pane getThingPane() {
         return thingPane;
     }
-    public static void setThingPane(Pane thingPane) {
-        FXContainers.thingPane = thingPane;
-    }
 
 
-    private static VBox vBox;
+    private static final VBox vBox = new VBox();
     public static VBox getvBox() {
         return vBox;
     }
-    public static void setvBox(VBox vBox) {
-        FXContainers.vBox = vBox;
-    }
 
 
-    public static VBox viewPane;
+    public static final VBox viewPane = new VBox();
     public static VBox getViewPane() {
         return viewPane;
     }
-    public static void setViewPane(VBox viewPane) {
-        FXContainers.viewPane = viewPane;
+
+
+    public static void init() {
+
+        splitPane.maxHeightProperty().bind(FXStage.getStage().heightProperty());
+        splitPane.prefHeightProperty().bind(FXStage.getStage().heightProperty());
+
+        vBox.getChildren().addAll(FXMenu.getMenuBar(), splitPane);
+
+        StackPane pane = new StackPane(thingPane, new Pane(FXCanvas.getCanvas()));
+        Separator separator = new Separator();
+        viewPane.getChildren().addAll(FXHierarchy.getHierarchy(), separator, FXHierarchy.getHierarchySwitcherButtons(), FXPropertiesView.getPropertiesView());
+        separator.hoverProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (t1) {
+                FXScene.getScene().setCursor(Cursor.N_RESIZE);
+            } else {
+                FXScene.getScene().setCursor(Cursor.DEFAULT);
+            }
+        });
+
+        separator.setOnMouseDragged(event -> {
+            double height = SelectionManager.getMouseY() + FXCanvas.getMouseYOffset() - FXContainers.getvBox().getChildren().get(4).getLayoutY() - 2;
+            FXHierarchy.getHierarchy().setMinHeight(height);
+            FXHierarchy.getHierarchy().setMaxHeight(height);
+            FXHierarchy.getHierarchy().setPrefHeight(height);
+        });
+
+        splitPane.getItems().addAll(new VBox(FXLevelSelectPane.getLevelSelectPane(), pane), viewPane);
+
+        splitPane.getDividers().get(0).setPosition(0.7);
+
     }
 
 }

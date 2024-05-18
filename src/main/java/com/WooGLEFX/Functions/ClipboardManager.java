@@ -40,14 +40,13 @@ public class ClipboardManager {
             if (clipboard != null) {
                 EditorObject object = ClipboardHandler.importFromClipboardString(clipboard);
                 if (object != null) {
-                    object.setLevel(level);
 
                     boolean okayToBeChild = level.getSelected() != null && level.getSelected().getParent() != null;
 
                     if (okayToBeChild) {
                         okayToBeChild = false;
                         for (String possibleChild : level.getSelected().getParent().getPossibleChildren()) {
-                            if (possibleChild.equals(object.getRealName())) {
+                            if (possibleChild.equals(object.getType())) {
                                 okayToBeChild = true;
                                 break;
                             }

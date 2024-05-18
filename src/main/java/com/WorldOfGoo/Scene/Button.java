@@ -1,14 +1,10 @@
 package com.WorldOfGoo.Scene;
 
-import java.io.FileNotFoundException;
-
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
@@ -21,11 +17,12 @@ public class Button extends EditorObject {
 
     private static final Logger logger = LoggerFactory.getLogger(Button.class);
 
+
     private Image image;
 
+
     public Button(EditorObject _parent) {
-        super(_parent);
-        setRealName("button");
+        super(_parent, "button");
 
         addAttribute("id",                    InputField.ANY)                                  .assertRequired();
         addAttribute("depth",                 InputField.NUMBER).assertRequired();
@@ -66,71 +63,87 @@ public class Button extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
-                return getDouble("x");
+                return getAttribute("x").doubleValue();
             }
             public void setX(double x) {
                 setAttribute("x", x);
             }
             public double getY() {
-                return -getDouble("y");
+                return -getAttribute("y").doubleValue();
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
             public double getRotation() {
-                return Math.toRadians(getDouble("rotation"));
+                return -Math.toRadians(getAttribute("rotation").doubleValue());
             }
             public void setRotation(double rotation) {
-                setAttribute("rotation", Math.toDegrees(rotation));
+                setAttribute("rotation", -Math.toDegrees(rotation));
             }
             public double getWidth() {
-                return image.getWidth() * Math.abs(getDouble("scalex"));
+                double scalex = getAttribute("scalex").doubleValue();
+                return image.getWidth() * Math.abs(scalex);
             }
             public void setWidth(double width) {
                 setAttribute("scalex", width / image.getWidth());
             }
             public double getHeight() {
-                return image.getHeight() * Math.abs(getDouble("scaley"));
+                double scaley = getAttribute("scaley").doubleValue();
+                return image.getHeight() * Math.abs(scaley);
             }
             public void setHeight(double height) {
                 setAttribute("scaley", height / image.getHeight());
+            }
+            public double getDepth() {
+                return getAttribute("depth").doubleValue();
+            }
+            public Image getImage() {
+                return image;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().isShowGraphics();
             }
         });
 
-        setNameAttribute(getAttribute2("id"));
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,anchor,depth,alpha,rotation,scalex,scaley,colorize,?Graphics<up,over,down,downover,armed,downarmed,disabled,downdisabled>latch,?Events<onclick,onmouseenter,onmouseexit>?Text<font,text,tooltip,textcolorup,textcolorupover,textcoloruparmed,textcolorupdisabled,textcolordown,textcolordownover,textcolordownarmed,textcolordowndisabled>overlay,screenspace,context,"));
 
     }
 
 
     @Override
+    public String getName() {
+        return getAttribute("id").stringValue();
+    }
+
+
+    @Override
     public void update() {
 
-        try {
-            image = GlobalResourceManager.getImage(getAttribute("up"), getLevel().getVersion());
-            Color color = Color.parse(getAttribute("colorize"));
-            image = SceneLayer.colorize(image, color);
-        } catch (FileNotFoundException e) {
-            LevelLoader.failedResources.add("From Button: image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
-        }
+        //try {
+        colorize();
+        //} catch (FileNotFoundException e) {
+        //    LevelLoader.failedResources.add("From Button: image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+        //}
 
         ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
             logger.trace("Image changed from " + oldValue + " to " + newValue);
-            try {
-                image = GlobalResourceManager.getImage(getAttribute("up"), LevelManager.getLevel().getVersion());
-                Color color = Color.parse(getAttribute("colorize"));
-                image = SceneLayer.colorize(image, color);
-            } catch (FileNotFoundException e) {
-                LevelLoader.failedResources.add("From Button: Image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
-            }
+            //try {
+            colorize();
+            //} catch (FileNotFoundException e) {
+            //    LevelLoader.failedResources.add("From Button: Image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
+            //}
         };
 
-        setChangeListener("up", wizard);
-        setChangeListener("colorize", wizard);
+        //addChangeListener("up", wizard);
+        //addChangeListener("colorize", wizard);
 
+    }
+
+
+    private void colorize() {
+        image = getAttribute("up").imageValue(LevelManager.getVersion());
+        Color color = getAttribute("colorize").colorValue();
+        image = SceneLayer.colorize(image, color);
     }
 
 }

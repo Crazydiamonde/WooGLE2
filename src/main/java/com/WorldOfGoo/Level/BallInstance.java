@@ -1,22 +1,25 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Functions.BallManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WorldOfGoo.Ball.Part;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class BallInstance extends EditorObject {
@@ -27,129 +30,174 @@ public class BallInstance extends EditorObject {
     }
 
 
-    private final ArrayList<Strand> strands = new ArrayList<>();
-    public ArrayList<Strand> getStrands() {
-        return strands;
-    }
-
-
-    private final int randomSeed;
+    private final long randomSeed;
 
 
     public BallInstance(EditorObject _parent) {
-        super(_parent);
-        setRealName("BallInstance");
+        super(_parent, "BallInstance");
 
-        addAttribute("type",       InputField.BALL)                                  .assertRequired();
-        addAttribute("x",          InputField.NUMBER)                                .assertRequired();
-        addAttribute("y",          InputField.NUMBER)                                .assertRequired();
-        addAttribute("id",         InputField.UNIQUE_GOOBALL_ID)                     .assertRequired();
-        addAttribute("discovered", InputField.FLAG);
-        addAttribute("angle",      InputField.NUMBER)           .setDefaultValue("0").assertRequired();
+        addAttribute("type",       InputField.BALL)                                         .assertRequired();
+        addAttribute("x",          InputField.NUMBER)                                       .assertRequired();
+        addAttribute("y",          InputField.NUMBER)                                       .assertRequired();
+        addAttribute("id",         InputField.UNIQUE_GOOBALL_ID)                            .assertRequired();
+        addAttribute("discovered", InputField.FLAG)               .setDefaultValue("true");
+        addAttribute("angle",      InputField.NUMBER)             .setDefaultValue("0")     .assertRequired();
 
-        randomSeed = (int)(Math.random() * 10000000);
-        setNameAttribute(getAttribute2("id"));
-        setNameAttribute2(getAttribute2("type"));
+        randomSeed = (long)(Math.random() * 10000000);
+
         setMetaAttributes(MetaEditorAttribute.parse("id,type,x,y,angle,discovered,"));
+
+        getAttribute("type").addChangeListener((observable, oldValue, newValue) -> setType(newValue));
+        getAttribute("id").addChangeListener((observable, oldValue, newValue) -> updateStrands());
+        getAttribute("discovered").addChangeListener((observable, oldValue, newValue) -> refreshObjectPositions());
+
+    }
+
+
+    @Override
+    public String getName() {
+        String id = getAttribute("id").stringValue();
+        String type = getAttribute("type").stringValue();
+        return id + ", " + type;
+    }
+
+
+    private void updateStrands() {
+
+        if (LevelManager.getLevel() == null) return;
+
+        for (EditorObject object : LevelManager.getLevel().getLevel()) if (object instanceof Strand strand) {
+
+            String id = getAttribute("id").stringValue();
+            String gb1 = strand.getAttribute("gb1").stringValue();
+            String gb2 = strand.getAttribute("gb2").stringValue();
+
+            if (id.equals(gb1)) strand.setGoo1(this);
+
+            if (id.equals(gb2)) strand.setGoo2(this);
+
+        }
+
+        refreshObjectPositions();
+
+    }
+
+
+    private static _Ball getBall(String type) {
+
+        GameVersion version = LevelManager.getVersion();
+
+        for (_Ball ball : BallManager.getImportedBalls()) {
+            String name = ball.getObjects().get(0).getAttribute("name").stringValue();
+            if (ball.getVersion() == version && name.equals(type)) {
+                return ball;
+            }
+        }
+
+        _Ball ball;
+        try {
+            ball = FileManager.openBall(type, version);
+            if (ball == null) return null;
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            return null;
+        }
+
+        for (EditorObject resrc : FileManager.commonBallResrcData) {
+            GlobalResourceManager.addResource(resrc, version);
+        }
+
+        ball.makeImages(version);
+        ball.setVersion(version);
+
+        BallManager.getImportedBalls().add(ball);
+
+        return ball;
+
+    }
+
+
+    private void setType(String type) {
+
+        if (LevelManager.getLevel() == null) return;
+
+        this.ball = getBall(type);
+
+        String id = getAttribute("id").stringValue();
+        for (EditorObject object : LevelManager.getLevel().getLevel()) if (object instanceof Strand strand) {
+            String gb2 = strand.getAttribute("gb2").stringValue();
+            if (gb2.equals(id)) {
+                strand.setStrand(null);
+                strand.update();
+            }
+        }
+
+        refreshObjectPositions();
 
     }
 
 
     @Override
     public void update() {
-        setNameAttribute(getAttribute2("id"));
-        for (_Ball ball2 : BallManager.getImportedBalls()) {
-            if (ball2.getVersion() == getLevel().getVersion() && ball2.getObjects().get(0).getAttribute("name").equals(getAttribute("type"))) {
-                ball = ball2;
-            }
-        }
-        setChangeListener("type", ((observable, oldValue, newValue) -> {
-            boolean found = false;
-            for (_Ball ball2 : BallManager.getImportedBalls()) {
-                if (ball2.getVersion() == getLevel().getVersion() && ball2.getObjects().get(0).getAttribute("name").equals(getAttribute("type"))) {
-                    found = true;
-                    ball = ball2;
-                    break;
-                }
-            }
-            if (!found) {
-                _Ball ball2;
-                try {
-                    ball2 = FileManager.openBall(getAttribute("type"), LevelManager.getLevel().getVersion());
-                } catch (ParserConfigurationException | SAXException | IOException e) {
-                    throw new RuntimeException(e);
-                }
-                if (ball2 == null) return;
 
-                for (EditorObject resrc : FileManager.commonBallResrcData){
-                    GlobalResourceManager.addResource(resrc, LevelManager.getLevel().getVersion());
-                }
+        setType(getAttribute("type").stringValue());
 
-                ball2.makeImages(LevelManager.getLevel().getVersion());
-                ball2.setVersion(LevelManager.getLevel().getVersion());
+        updateStrands();
 
-                BallManager.getImportedBalls().add(ball2);
-                ball = ball2;
-            }
-            for (EditorObject strand : LevelManager.getLevel().getLevel()) {
-                if (strand instanceof Strand) {
-                    if (strand.getAttribute("gb2").equals(getAttribute("id"))) {
-                        ((Strand) strand).setStrand(null);
-                        strand.update();
-                    }
-                }
-            }
-            refreshObjectPositions();
-        }));
-
-        BallInstance thisBall = this;
-
-        //TODO possibly make it so that when you make two gooballs have the same ID strands don't permanently break
-        strands.clear();
-        for (EditorObject obj : LevelManager.getLevel().getLevel()) {
-            if (obj instanceof Strand) {
-                if (obj.getAttribute("gb1").equals(getAttribute("id"))) {
-                    strands.add((Strand)obj);
-                    ((Strand) obj).setGoo1(thisBall);
-                }
-                if (obj.getAttribute("gb2").equals(getAttribute("id"))) {
-                    strands.add((Strand)obj);
-                    ((Strand) obj).setGoo2(thisBall);
-                }
-            }
-        }
-        setChangeListener("id", (observable, oldValue, newValue) -> {
-            strands.clear();
-            for (EditorObject obj : LevelManager.getLevel().getLevel()) {
-                if (obj instanceof Strand) {
-                    if (obj.getAttribute("gb1").equals(getAttribute("id"))) {
-                        strands.add((Strand)obj);
-                        ((Strand) obj).setGoo1(thisBall);
-                    }
-                    if (obj.getAttribute("gb2").equals(getAttribute("id"))) {
-                        strands.add((Strand)obj);
-                        ((Strand) obj).setGoo2(thisBall);
-                    }
-                }
-            }
-            refreshObjectPositions();
-        });
-        refreshObjectPositions();
     }
 
 
     public void refreshObjectPositions() {
 
+        if (ball == null) return;
+
         clearObjectPositions();
 
         int i = 0;
 
-        for (EditorObject editorObject : ball.getObjects()) {
-            if (editorObject instanceof Part part) {
-                addPartAsObjectPosition(part, (long)randomSeed * i);
-                i++;
-            }
+        for (EditorObject editorObject : ball.getObjects()) if (editorObject instanceof Part part) {
+            addPartAsObjectPosition(part, randomSeed * i);
+            i++;
         }
+
+        addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE_HOLLOW) {
+            public double getX() {
+                return getAttribute("x").doubleValue();
+            }
+            public void setX(double x) {
+                setAttribute("x", x);
+            }
+            public double getY() {
+                return -getAttribute("y").doubleValue();
+            }
+            public void setY(double y) {
+                setAttribute("y", -y);
+            }
+            public double getRotation() {
+                return -Math.toRadians(getAttribute("angle").doubleValue());
+            }
+            public void setRotation(double rotation) {
+                setAttribute("angle", -Math.toDegrees(rotation));
+            }
+            public double getRadius() {
+                //return ball.getObjects().get(0).getAttribute("shape").stringValue();
+                return 10;
+            }
+            public double getEdgeSize() {
+                return 3;
+            }
+            public Paint getBorderColor() {
+                return new Color(0.5 ,0.5, 0.5, 1);
+            }
+            public Paint getFillColor() {
+                return new Color(0, 0, 0, 0);
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().getShowGoos() == 1;
+            }
+            public boolean isResizable() {
+                return false;
+            }
+        });
 
     }
 
@@ -158,25 +206,31 @@ public class BallInstance extends EditorObject {
 
         String state = "standing";
 
-        if (getAttribute("discovered").equals("false")) {
+        if (!getAttribute("discovered").booleanValue()) {
             state = "sleeping";
         } else {
             for (EditorObject obj : LevelManager.getLevel().getLevel()) {
-                if (obj instanceof Strand) {
-                    if (obj.getAttribute("gb1").equals(getAttribute("id")) || obj.getAttribute("gb2").equals(getAttribute("id"))) {
+                if (obj instanceof Strand strand) {
+
+                    String id = getAttribute("id").stringValue();
+                    String gb1 = strand.getAttribute("gb1").stringValue();
+                    String gb2 = strand.getAttribute("gb2").stringValue();
+
+                    if (id.equals(gb1) || id.equals(gb2)) {
                         state = "attached";
                         break;
                     }
+
                 }
             }
         }
 
         boolean ok = false;
 
-        if (part.getAttribute("state").equals("")) {
+        if (part.getAttribute("state").stringValue().isEmpty()) {
             ok = true;
         } else {
-            String word = part.getAttribute("state");
+            String word = part.getAttribute("state").stringValue();
             while (word.contains(",")) {
                 if (word.substring(0, word.indexOf(",")).equals(state)) {
                     ok = true;
@@ -201,10 +255,10 @@ public class BallInstance extends EditorObject {
         Random machine = new Random(randomSeed);
         machine.nextDouble();
 
-        double partX = InputField.getRange(part.getAttribute("x"), machine.nextDouble());
-        double partY = -InputField.getRange(part.getAttribute("y"), machine.nextDouble());
+        double partX = InputField.getRange(part.getAttribute("x").stringValue(), machine.nextDouble());
+        double partY = -InputField.getRange(part.getAttribute("y").stringValue(), machine.nextDouble());
 
-        double scale = part.getDouble("scale");
+        double scale = part.getAttribute("scale").doubleValue();
 
         // TODO build hitbox based on entire bounds of parts
 
@@ -212,9 +266,13 @@ public class BallInstance extends EditorObject {
         if (img != null) addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
 
+                double x = getAttribute("x").doubleValue();
+                double y = -getAttribute("y").doubleValue();
+                double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+
                 Point2D position = new Point2D(partX, partY);
-                position = EditorObject.rotate(position, -Math.toRadians(getDouble("angle")), new Point2D(0, 0));
-                position = position.add(getDouble("x"), -getDouble("y"));
+                position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
+                position = position.add(x, y);
 
                 return position.getX();
 
@@ -224,19 +282,22 @@ public class BallInstance extends EditorObject {
             }
             public double getY() {
 
+                double x = getAttribute("x").doubleValue();
+                double y = -getAttribute("y").doubleValue();
+                double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+
                 Point2D position = new Point2D(partX, partY);
-                position = EditorObject.rotate(position, -Math.toRadians(getDouble("angle")), new Point2D(0, 0));
-                position = position.add(getDouble("x"), -getDouble("y"));
+                position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
+                position = position.add(x, y);
 
                 return position.getY();
 
             }
             public void setY(double y) {
                 setAttribute("y", -y + partY);
-
             }
             public double getRotation() {
-                return -Math.toRadians(getDouble("angle"));
+                return -Math.toRadians(getAttribute("angle").doubleValue());
             }
             public void setRotation(double rotation) {
                 setAttribute("angle", -Math.toDegrees(rotation));
@@ -247,6 +308,9 @@ public class BallInstance extends EditorObject {
             public double getHeight() {
                 return img.getHeight() * scale;
             }
+            public double getDepth() {
+                return part.getAttribute("layer").doubleValue() + 0.000001;
+            }
             public Image getImage() {
                 return img;
             }
@@ -254,13 +318,15 @@ public class BallInstance extends EditorObject {
                 return LevelManager.getLevel().getShowGoos() == 2;
             }
             public boolean isSelectable() {
-                return part.getString("name").equals("body");
+                String partName = part.getAttribute("name").stringValue();
+                return partName.equals("body");
             }
             public boolean isResizable() {
                 return false;
             }
             public boolean isRotatable() {
-                return part.getString("name").equals("body");
+                String partName = part.getAttribute("name").stringValue();
+                return partName.equals("body");
             }
         });
 
@@ -268,9 +334,13 @@ public class BallInstance extends EditorObject {
         if (pupilImg != null) addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
 
+                double x = getAttribute("x").doubleValue();
+                double y = -getAttribute("y").doubleValue();
+                double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+
                 Point2D position = new Point2D(partX, partY);
-                position = EditorObject.rotate(position, -Math.toRadians(getDouble("angle")), new Point2D(0, 0));
-                position = position.add(getDouble("x"), -getDouble("y"));
+                position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
+                position = position.add(x, y);
 
                 return position.getX();
 
@@ -280,9 +350,13 @@ public class BallInstance extends EditorObject {
             }
             public double getY() {
 
+                double x = getAttribute("x").doubleValue();
+                double y = -getAttribute("y").doubleValue();
+                double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+
                 Point2D position = new Point2D(partX, partY);
-                position = EditorObject.rotate(position, -Math.toRadians(getDouble("angle")), new Point2D(0, 0));
-                position = position.add(getDouble("x"), -getDouble("y"));
+                position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
+                position = position.add(x, y);
 
                 return position.getY();
 
@@ -299,6 +373,9 @@ public class BallInstance extends EditorObject {
             }
             public double getHeight() {
                 return pupilImg.getHeight() * scale;
+            }
+            public double getDepth() {
+                return part.getAttribute("layer").doubleValue() + 0.000002;
             }
             public Image getImage() {
                 return pupilImg;

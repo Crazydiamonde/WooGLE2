@@ -7,6 +7,7 @@ import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.*;
 import com.WooGLEFX.GUI.PaletteReconfigurator;
 import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Ball.Part;
 import javafx.embed.swing.SwingFXUtils;
@@ -25,6 +26,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class FXEditorButtons {
@@ -110,10 +112,10 @@ public class FXEditorButtons {
 
                 boolean ok = false;
 
-                if (part.getAttribute("state").equals("")) {
+                if (part.getAttribute("state").stringValue().isEmpty()) {
                     ok = true;
                 } else {
-                    String word = part.getAttribute("state");
+                    String word = part.getAttribute("state").stringValue();
                     while (word.contains(",")) {
                         if (word.substring(0, word.indexOf(",")).equals(state)) {
                             ok = true;
@@ -131,10 +133,10 @@ public class FXEditorButtons {
                     double lowY;
                     double highY;
 
-                    String x = part.getAttribute("x");
-                    String y = part.getAttribute("y");
+                    String x = part.getAttribute("x").stringValue();
+                    String y = part.getAttribute("y").stringValue();
 
-                    double scale = Double.parseDouble(part.getAttribute("scale"));
+                    double scale = Double.parseDouble(part.getAttribute("scale").stringValue());
 
                     if (x.contains(",")) {
                         lowX = Double.parseDouble(x.substring(0, x.indexOf(",")));
@@ -154,7 +156,7 @@ public class FXEditorButtons {
                     double myX = 0.5 * (highX - lowX) + lowX;
                     double myY = 0.5 * (highY - lowY) + lowY;
 
-                    if (((Part) part).getImages().size() > 0) {
+                    if (((Part) part).getImages().isEmpty()) {
                         Image img = ((Part) part).getImages().get(0);
                         if (img != null) {
                             BufferedImage image = SwingFXUtils.fromFXImage(img, null);
@@ -188,18 +190,18 @@ public class FXEditorButtons {
             BufferedImage toWriteOn = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
             Graphics writeGraphics = toWriteOn.getGraphics();
 
-            for (EditorObject part : ball.getObjects()) {
+            for (EditorObject editorObject : ball.getObjects()) {
 
                 String state = "standing";
 
-                if (part instanceof Part) {
+                if (editorObject instanceof Part part) {
 
                     boolean ok = false;
 
-                    if (part.getAttribute("state").equals("")) {
+                    if (part.getAttribute("state").stringValue().isEmpty()) {
                         ok = true;
                     } else {
-                        String word = part.getAttribute("state");
+                        String word = part.getAttribute("state").stringValue();
                         while (word.contains(",")) {
                             if (word.substring(0, word.indexOf(",")).equals(state)) {
                                 ok = true;
@@ -212,18 +214,18 @@ public class FXEditorButtons {
                         }
                     }
 
-                    if (ok && ((Part) part).getImages().size() > 0) {
-                        Image img = ((Part) part).getImages().get(0);
+                    if (ok && !part.getImages().isEmpty()) {
+                        Image img = part.getImages().get(0);
 
-                        double scale = Double.parseDouble(part.getAttribute("scale"));
+                        double scale = part.getAttribute("scale").doubleValue();
 
                         double lowX;
                         double highX;
                         double lowY;
                         double highY;
 
-                        String x = part.getAttribute("x");
-                        String y = part.getAttribute("y");
+                        String x = part.getAttribute("x").stringValue();
+                        String y = part.getAttribute("y").stringValue();
 
                         if (x.contains(",")) {
                             lowX = Double.parseDouble(x.substring(0, x.indexOf(",")));
@@ -255,8 +257,8 @@ public class FXEditorButtons {
                             writeGraphics.drawImage(SwingFXUtils.fromFXImage(img, null), (int) screenX, (int) screenY,
                                     (int) (img.getWidth() * scale), (int) (img.getHeight() * scale), null);
 
-                            if (((Part) part).getPupilImage() != null) {
-                                Image pupilImage = ((Part) part).getPupilImage();
+                            if (part.getPupilImage() != null) {
+                                Image pupilImage = part.getPupilImage();
 
                                 double screenX2 = myX + toWriteOn.getWidth() / 2.0 - pupilImage.getWidth() * scale / 2;
                                 double screenY2 = -myY + toWriteOn.getHeight() / 2.0
@@ -285,13 +287,13 @@ public class FXEditorButtons {
 
             idk.setGraphic(new ImageView(SwingFXUtils.toFXImage(dimg, null)));
             idk.setOnAction(
-                    e -> ObjectAdder.addBall(LevelManager.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
+                    e -> ObjectAdder.addBall(LevelManager.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name").stringValue()));
             return idk;
         } else {
             Button idk = new Button();
             idk.setPrefSize(size, size);
             idk.setOnAction(
-                    e -> ObjectAdder.addBall(LevelManager.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name")));
+                    e -> ObjectAdder.addBall(LevelManager.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name").stringValue()));
             return idk;
         }
     }
@@ -299,13 +301,13 @@ public class FXEditorButtons {
     public static void addBallsTo() {
         int size = 18;
         int i = 0;
-        for (String paletteBall : FileManager.getPaletteBalls()) {
+        for (String paletteBall : PaletteManager.getPaletteBalls()) {
             for (_Ball ball : BallManager.getImportedBalls()) {
                 if (ball.getObjects().get(0).getAttribute("name").equals(paletteBall)
-                        && ball.getVersion() == FileManager.getPaletteVersions().get(i)) {
+                        && ball.getVersion() == PaletteManager.getPaletteVersions().get(i)) {
                     Button button = createTemplateForBall(size, ball);
                     button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name")));
-                    if (ball.getVersion() == 1.3) {
+                    if (ball.getVersion() == GameVersion.OLD) {
                         oldGooballsToolbar.getItems().add(button);
                     } else {
                         newGooballsToolbar.getItems().add(button);
@@ -317,59 +319,66 @@ public class FXEditorButtons {
     }
 
 
-    public static void buttons(VBox vBox) throws IOException {
+    public static void init() {
+
+        VBox vBox = FXContainers.getvBox();
 
         ToolBar functionsToolbar = new ToolBar();
 
-        buttonNewOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
-        buttonNewNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
-        buttonOpenOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
-        buttonOpenNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
-        buttonClone.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl.png")));
-        buttonSave.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save.png")));
-        buttonSaveAll.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_all.png")));
-        buttonSaveAndPlay.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
-        buttonExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_goomod.png")));
-        buttonDummyExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_dummy_goomod.png")));
-        buttonUndo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
-        buttonRedo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
-        buttonCut.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
-        buttonCopy.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
-        buttonPaste.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
-        buttonDelete.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
-        buttonUpdateLevelResources
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
-        buttonImportImages.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
-        buttonAddTextResource
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
-        buttonCleanResources
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
-        buttonSetMusic.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
-        buttonSetLoopsound
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
-        buttonSelectMoveAndResize
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\selection_mode.png")));
-        buttonStrandMode.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\strand_mode.png")));
-        buttonShowHideCamera.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png")));
-        buttonShowHideForcefields
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png")));
-        buttonShowHideGeometry
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png")));
-        buttonShowHideGraphics
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png")));
-        buttonShowHideGoos.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png")));
-        buttonShowHideParticles
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png")));
-        buttonShowHideLabels
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png")));
-        buttonShowHideAnim.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png")));
-        buttonShowHideSceneBGColor
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png")));
+        try {
 
-        buttonNewOld.setOnAction(e -> LevelLoader.newLevel(1.3));
-        buttonNewNew.setOnAction(e -> LevelLoader.newLevel(1.5));
-        buttonOpenOld.setOnAction(e -> LevelLoader.openLevel(1.3));
-        buttonOpenNew.setOnAction(e -> LevelLoader.openLevel(1.5));
+            buttonNewOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_old.png")));
+            buttonNewNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\new_lvl_new.png")));
+            buttonOpenOld.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_old.png")));
+            buttonOpenNew.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\open_lvl_new.png")));
+            buttonClone.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\clone_lvl.png")));
+            buttonSave.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save.png")));
+            buttonSaveAll.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\save_all.png")));
+            buttonSaveAndPlay.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\play.png")));
+            buttonExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_goomod.png")));
+            buttonDummyExport.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Level\\make_dummy_goomod.png")));
+            buttonUndo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\undo.png")));
+            buttonRedo.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\redo.png")));
+            buttonCut.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\cut.png")));
+            buttonCopy.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\copy.png")));
+            buttonPaste.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\paste.png")));
+            buttonDelete.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\delete.png")));
+            buttonUpdateLevelResources
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\update_level_resources.png")));
+            buttonImportImages.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_img.png")));
+            buttonAddTextResource
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\add_text_resource.png")));
+            buttonCleanResources
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\clean_level_resources.png")));
+            buttonSetMusic.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_music.png")));
+            buttonSetLoopsound
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Resources\\import_soundloop.png")));
+            buttonSelectMoveAndResize
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\selection_mode.png")));
+            buttonStrandMode.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\Edit\\strand_mode.png")));
+            buttonShowHideCamera.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png")));
+            buttonShowHideForcefields
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png")));
+            buttonShowHideGeometry
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png")));
+            buttonShowHideGraphics
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png")));
+            buttonShowHideGoos.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png")));
+            buttonShowHideParticles
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png")));
+            buttonShowHideLabels
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png")));
+            buttonShowHideAnim.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png")));
+            buttonShowHideSceneBGColor
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png")));
+        } catch (FileNotFoundException ignored) {
+
+        }
+
+        buttonNewOld.setOnAction(e -> LevelLoader.newLevel(GameVersion.OLD));
+        buttonNewNew.setOnAction(e -> LevelLoader.newLevel(GameVersion.NEW));
+        buttonOpenOld.setOnAction(e -> LevelLoader.openLevel(GameVersion.OLD));
+        buttonOpenNew.setOnAction(e -> LevelLoader.openLevel(GameVersion.NEW));
         buttonClone.setOnAction(e -> LevelLoader.cloneLevel());
         buttonSave.setOnAction(e -> LevelUpdater.saveLevel(LevelManager.getLevel()));
         buttonSaveAll.setOnAction(e -> LevelUpdater.saveAll());
@@ -456,7 +465,7 @@ public class FXEditorButtons {
             node.setDisable(true);
         }
 
-        vBox.getChildren().add(functionsToolbar);
+        vBox.getChildren().add(1, functionsToolbar);
 
         oldGooballsToolbar = new ToolBar();
         newGooballsToolbar = new ToolBar();
@@ -474,23 +483,27 @@ public class FXEditorButtons {
 
         ToolBar addObjectsToolbar = new ToolBar();
 
-        addLineButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\line.png")));
-        addRectangleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\rectangle.png")));
-        addCircleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\circle.png")));
-        addSceneLayerButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\SceneLayer.png")));
-        addCompositegeomButton
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\compositegeom.png")));
-        addHingeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\hinge.png")));
-        autoPipeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\pipe.png")));
-        addVertexButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\Vertex.png")));
-        addFireButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\fire.png")));
-        addLinearforcefieldButton
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\linearforcefield.png")));
-        addRadialforcefieldButton
-                .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\radialforcefield.png")));
-        addParticlesButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\particles.png")));
-        addSignpostButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\signpost.png")));
-        addLabelButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\label.png")));
+        try {
+            addLineButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\line.png")));
+            addRectangleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\rectangle.png")));
+            addCircleButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\circle.png")));
+            addSceneLayerButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\SceneLayer.png")));
+            addCompositegeomButton
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\compositegeom.png")));
+            addHingeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\hinge.png")));
+            autoPipeButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\pipe.png")));
+            addVertexButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\Vertex.png")));
+            addFireButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\fire.png")));
+            addLinearforcefieldButton
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\linearforcefield.png")));
+            addRadialforcefieldButton
+                    .setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\radialforcefield.png")));
+            addParticlesButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\particles.png")));
+            addSignpostButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\signpost.png")));
+            addLabelButton.setGraphic(new ImageView(FileManager.getIcon("ButtonIcons\\AddObject\\label.png")));
+        } catch (FileNotFoundException ignored) {
+
+        }
 
         addLineButton.setOnAction(e -> ObjectAdder.addLine(LevelManager.getLevel().getSceneObject()));
         addRectangleButton.setOnAction(e -> ObjectAdder.addRectangle(LevelManager.getLevel().getSceneObject()));
@@ -533,7 +546,8 @@ public class FXEditorButtons {
             node.setDisable(true);
         }
 
-        vBox.getChildren().addAll(nullGooballsToolbar, addObjectsToolbar);
+        vBox.getChildren().add(2, nullGooballsToolbar);
+        vBox.getChildren().add(3, addObjectsToolbar);
 
         functionsToolbar.setId("thing");
         nullGooballsToolbar.setId("thing");
@@ -597,14 +611,14 @@ public class FXEditorButtons {
             buttonSaveAndPlay.setDisable(false);
             FXMenu.saveAndPlayLevelItem.setDisable(false);
         }
-        if (LevelManager.getLevel() != null && LevelManager.getLevel().undoActions.size() > 0) {
+        if (LevelManager.getLevel() != null && !LevelManager.getLevel().undoActions.isEmpty()) {
             FXMenu.undoItem.setDisable(disable);
             buttonUndo.setDisable(disable);
         } else {
             FXMenu.undoItem.setDisable(true);
             buttonUndo.setDisable(true);
         }
-        if (LevelManager.getLevel() != null && LevelManager.getLevel().redoActions.size() > 0) {
+        if (LevelManager.getLevel() != null && !LevelManager.getLevel().redoActions.isEmpty()) {
             FXMenu.redoItem.setDisable(disable);
             buttonRedo.setDisable(disable);
         } else {
@@ -645,8 +659,13 @@ public class FXEditorButtons {
         Image ffImage = level.isShowForcefields() ? WorldLevel.showHideForcefields1 : WorldLevel.showHideForcefields0;
         buttonShowHideForcefields.setGraphic(new ImageView(ffImage));
 
-        Image geomImage = level.isShowGeometry() ? WorldLevel.showHideGeometry1 : WorldLevel.showHideGeometry0;
-        buttonShowHideGeometry.setGraphic(new ImageView(geomImage));
+        Image geometryImage = null;
+        switch (level.getShowGoos()) {
+            case 0 -> geometryImage = WorldLevel.showHideGeometry0;
+            case 1 -> geometryImage = WorldLevel.showHideGeometry1;
+            case 2 -> geometryImage = WorldLevel.showHideImages1;
+        }
+        buttonShowHideGeometry.setGraphic(new ImageView(geometryImage));
 
         Image gooImage = null;
         switch (level.getShowGoos()) {
@@ -654,7 +673,7 @@ public class FXEditorButtons {
             case 1 -> gooImage = WorldLevel.showHideGoobs1;
             case 2 -> gooImage = WorldLevel.showHideGoobs2;
         }
-        FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(gooImage));
+        buttonShowHideGoos.setGraphic(new ImageView(gooImage));
 
         Image imagesImage = level.isShowGraphics() ? WorldLevel.showHideImages1 : WorldLevel.showHideImages0;
         buttonShowHideGraphics.setGraphic(new ImageView(imagesImage));

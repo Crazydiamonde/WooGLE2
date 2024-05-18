@@ -1,6 +1,7 @@
 package com.WooGLEFX.EditorObjects.ObjectCollision;
 
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.EditorObject;
@@ -20,7 +21,7 @@ public class AnchorCollider {
 
         double angle = Renderer.angleTo(new Point2D(0, 0), new Point2D(anchorX, anchorY));
 
-        Point2D rotatedMouse = EditorObject.rotate(new Point2D(mouseX, mouseY), -angle, new Point2D(x, y));
+        Point2D rotatedMouse = ObjectUtil.rotate(new Point2D(mouseX, mouseY), -angle, new Point2D(x, y));
 
         double forceScale = 20;
 
@@ -52,7 +53,7 @@ public class AnchorCollider {
 
         Point2D right = new Point2D(x + forceMagnitude, y);
 
-        Point2D rotated = EditorObject.rotate(new Point2D(mouseX, mouseY), -angle, new Point2D(x, y));
+        Point2D rotated = ObjectUtil.rotate(new Point2D(mouseX, mouseY), -angle, new Point2D(x, y));
         if (forceMagnitude != 0 && rotated.getX() > right.getX() - 4 / LevelManager.getLevel().getZoom() &&
                 rotated.getX() < right.getX() + 4 / LevelManager.getLevel().getZoom() &&
                 rotated.getY() > right.getY() - 4 / LevelManager.getLevel().getZoom() &&

@@ -39,7 +39,7 @@ public class UndoManager {
                 } else if (change instanceof ObjectDestructionAction) {
                     ObjectManager.create(level, change.getObject(), ((ObjectDestructionAction) change).getPosition());
                 } else if (change instanceof ImportResourceAction) {
-                    LevelResourceManager.deleteResource(level, change.getObject().getAttribute("path"));
+                    LevelResourceManager.deleteResource(level, change.getObject().getAttribute("path").stringValue());
                     ObjectManager.deleteItem(level, change.getObject(), false);
                 } else if (change instanceof HierarchyDragAction) {
                     HierarchyDragAction dragAction = (HierarchyDragAction) change;

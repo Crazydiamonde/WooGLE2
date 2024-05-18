@@ -1,6 +1,7 @@
 package com.WooGLEFX.File;
 import java.util.ArrayList;
 
+import com.WooGLEFX.EditorObjects.ObjectCreator;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -54,14 +55,9 @@ public class BallFileOpener extends DefaultHandler {
             if (qName.equals("particles") || qName.equals("sound")) {
                 qName = "ball_" + qName;
             }
-            EditorObject obj = EditorObject.create(qName, parent);
-            for (int i = 0; i < attributes.getLength(); i++){
+            EditorObject obj = ObjectCreator.create(qName, parent);
+            for (int i = 0; i < attributes.getLength(); i++) {
                 obj.setAttribute(attributes.getQName(i), attributes.getValue(i));
-            }
-            if (qName.equals("ball_particles") || qName.equals("ball_sound")) {
-                obj.setRealName(qName.substring(5));
-            } else {
-                obj.setRealName(qName);
             }
             if (mode == 0) {
                 FileManager.commonBallData.add(obj);
@@ -69,8 +65,8 @@ public class BallFileOpener extends DefaultHandler {
                 if (impossible != null && (obj instanceof ResrcImage || obj instanceof Sound)) {
                     obj.setAttribute("REALid", obj.getAttribute("id"));
                     obj.setAttribute("REALpath", obj.getAttribute("path"));
-                    obj.setAttribute("id", impossible.getAttribute("idprefix") + obj.getAttribute("id"));
-                    obj.setAttribute("path", impossible.getAttribute("path") + obj.getAttribute("path"));
+                    obj.setAttribute("id", impossible.getAttribute("idprefix").stringValue() + obj.getAttribute("id").stringValue());
+                    obj.setAttribute("path", impossible.getAttribute("path").stringValue() + obj.getAttribute("path").stringValue());
                 }
                 if (obj instanceof SetDefaults) {
                     impossible = (SetDefaults) obj;

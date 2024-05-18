@@ -3,12 +3,10 @@ package com.WooGLEFX.GUI;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.WooGLEFX.Engine.FX.FXContainers;
-import com.WooGLEFX.Engine.FX.FXHierarchy;
-import com.WooGLEFX.Engine.FX.FXLevelSelectPane;
-import com.WooGLEFX.Engine.FX.FXPropertiesView;
+import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.Engine.Initializer;
 import com.WooGLEFX.Functions.*;
+import com.WooGLEFX.Structures.GameVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +75,7 @@ public class Alarms {
         alert.setHeaderText("Resources could not be loaded");
         alert.setContentText(error);
 
-        alert.initOwner(FXContainers.getStage());
+        alert.initOwner(FXStage.getStage());
 
         alert.show();
     }
@@ -145,7 +143,7 @@ public class Alarms {
         });
     }
 
-    public static void askForLevelName(String purpose, double version) {
+    public static void askForLevelName(String purpose, GameVersion version) {
 
         String titleText = "";
 
@@ -237,7 +235,7 @@ public class Alarms {
             case "changename" -> {
                 stage.setTitle("Change Level Name");
                 okButton.setOnAction(event -> {
-                    String start = version == 1.3 ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+                    String start = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
                     for (File levelFile : new File(start + "\\res\\levels").listFiles()) {
                         if (levelFile.getName().equals(enterNameHere.getText())) {
                             //TODO Display a message saying it's already taken
@@ -274,17 +272,17 @@ public class Alarms {
         Stage stage = new Stage();
 
         selectOldButton.setOnAction(actionEvent -> {
-            if (GameResourceManager.changeWorldOfGooDirectory(1.3)) {
+            if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD)) {
                 FileManager.setHasOldWOG(true);
-                Initializer.startWithWorldOfGooVersion();
+                Initializer.startWithWorldOfGooVersion(stage);
                 stage.close();
             }
         });
 
         selectNewButton.setOnAction(actionEvent -> {
-            if (GameResourceManager.changeWorldOfGooDirectory(1.5)) {
+            if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD)) {
                 FileManager.setHasNewWOG(true);
-                Initializer.startWithWorldOfGooVersion();
+                Initializer.startWithWorldOfGooVersion(stage);
                 stage.close();
             }
         });

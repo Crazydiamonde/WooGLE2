@@ -1,20 +1,26 @@
 package com.WooGLEFX.Functions.InputEvents;
 
+import com.WooGLEFX.EditorObjects.ObjectCreator;
 import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersection;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXContainers;
+import com.WooGLEFX.Engine.FX.FXScene;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.ObjectAdder;
 import com.WooGLEFX.Functions.UndoManager;
+import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
+import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
 import com.WooGLEFX.Structures.UserActions.UserAction;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
+import java.util.ArrayList;
 
 public class MouseReleasedManager {
 
@@ -29,15 +35,23 @@ public class MouseReleasedManager {
             // Record the changes made to the selected object.
             // Clear all possible redos if changes have been made.
             if (level.getSelected() != null && level.getSelected() == SelectionManager.getOldSelected() && SelectionManager.getOldAttributes() != null) {
-                UserAction[] changes = level.getSelected().getUserActions(SelectionManager.getOldAttributes());
-                if (changes.length > 0) {
-                    UndoManager.registerChange(changes);
-                    level.redoActions.clear();
+
+                EditorObject selected = level.getSelected();
+
+                ArrayList<AttributeChangeAction> changes = new ArrayList<>();
+                for (EditorAttribute attribute : selected.getAttributes()) {
+                    for (EditorAttribute oldAttribute : SelectionManager.getOldAttributes()) {
+                        if (attribute.getName().equals(oldAttribute.getName()) && !attribute.stringValue().equals(oldAttribute.stringValue())) {
+                            UndoManager.registerChange(new AttributeChangeAction(selected, attribute.getName(), oldAttribute.stringValue(), attribute.stringValue()));
+                            level.redoActions.clear();
+                        }
+                    }
                 }
+
             }
 
             // Reset the cursor's appearance.
-            FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
+            FXScene.getScene().setCursor(Cursor.DEFAULT);
 
             // Clear all drag settings now that the mouse has been released.
             SelectionManager.setDragSettings(DragSettings.NULL);
@@ -52,12 +66,10 @@ public class MouseReleasedManager {
 
                             if (MouseIntersection.mouseIntersection(ballInstance, mouseX, mouseY) != DragSettings.NULL) {
 
-                                EditorObject strand = EditorObject.create("Strand", level.getLevelObject());
+                                EditorObject strand = ObjectCreator.create("Strand", level.getLevelObject());
 
-                                strand.setAttribute("gb1", SelectionManager.getStrand1Gooball().getAttribute("id"));
-                                strand.setAttribute("gb2", ball.getAttribute("id"));
-
-                                strand.setRealName("Strand");
+                                strand.setAttribute("gb1", SelectionManager.getStrand1Gooball().getAttribute("id").stringValue());
+                                strand.setAttribute("gb2", ball.getAttribute("id").stringValue());
 
                                 level.getLevel().add(strand);
                                 ObjectAdder.addAnything(strand, level.getLevelObject());
@@ -70,7 +82,7 @@ public class MouseReleasedManager {
                 SelectionManager.setStrand1Gooball(null);
             }
         } else if (event.getButton() == MouseButton.SECONDARY) {
-            FXContainers.getStage().getScene().setCursor(Cursor.DEFAULT);
+            FXScene.getScene().setCursor(Cursor.DEFAULT);
         }
     }
 
