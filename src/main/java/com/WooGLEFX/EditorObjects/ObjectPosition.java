@@ -16,7 +16,7 @@ public class ObjectPosition {
 
 
     private final int id;
-    public int getId() {
+    public final int getId() {
         return id;
     }
     public ObjectPosition(int id) {
@@ -80,6 +80,16 @@ public class ObjectPosition {
     }
     public void setRadius(double radius) {
 
+    }
+
+
+    public double getAlpha() {
+        return 1;
+    }
+
+
+    public boolean isAdditive() {
+        return false;
     }
 
 

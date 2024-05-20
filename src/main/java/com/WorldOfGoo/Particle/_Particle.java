@@ -12,22 +12,13 @@ import javafx.scene.image.Image;
 
 public class _Particle extends EditorObject {
 
-    private ArrayList<Image> images = new ArrayList<>();
+    private final ArrayList<Image> images = new ArrayList<>();
     public ArrayList<Image> getImages() {
         return images;
     }
-    public void setImages(ArrayList<Image> images) {
-        this.images = images;
-    }
 
 
-    private ArrayList<Axialsinoffset> axialsinoffsets = new ArrayList<>();
-
-
-    private GameVersion version;
-    public GameVersion getVersion() {
-        return version;
-    }
+    private final ArrayList<Axialsinoffset> axialsinoffsets = new ArrayList<>();
 
 
     public _Particle(EditorObject _parent) {
@@ -52,12 +43,13 @@ public class _Particle extends EditorObject {
 
 
     public void update(GameVersion version) throws Exception {
-        this.version = version;
+        axialsinoffsets.clear();
         for (EditorObject thing : ParticleManager.getParticles()) {
             if (thing instanceof Axialsinoffset && thing.getParent() == this) {
                 axialsinoffsets.add((Axialsinoffset)thing);
             }
         }
+        images.clear();
         String mogus = getAttribute("image").stringValue();
         while (mogus.contains(",")) {
             images.add(GlobalResourceManager.getImage(mogus.substring(0, mogus.indexOf(",")), version));
@@ -65,4 +57,5 @@ public class _Particle extends EditorObject {
         }
         images.add(GlobalResourceManager.getImage(mogus, version));
     }
+
 }

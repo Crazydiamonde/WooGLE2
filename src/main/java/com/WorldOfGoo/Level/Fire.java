@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.File.ResourceManagers.ParticleManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -10,9 +11,20 @@ import com.WorldOfGoo.Scene.Particles;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.util.ArrayList;
+
 public class Fire extends EditorObject {
 
-    private Particles particleEffect;
+    private final ArrayList<ArrayList<ParticleGraphicsInstance>> drawing = new ArrayList<>();
+    public ArrayList<ArrayList<ParticleGraphicsInstance>> getDrawing() {
+        return drawing;
+    }
+
+
+    private final ArrayList<Integer> counts = new ArrayList<>();
+    public ArrayList<Integer> getCounts() {
+        return counts;
+    }
 
 
     public Fire(EditorObject _parent) {
@@ -59,56 +71,12 @@ public class Fire extends EditorObject {
 
         setMetaAttributes(MetaEditorAttribute.parse("x,y,radius,particles,depth,"));
 
-        getAttribute("particles").addChangeListener((observableValue, s, t1) -> particleEffect = findParticleFx());
-        getAttribute("x").addChangeListener((observableValue, s, t1) -> adjustParticleEffectPosition());
-        getAttribute("y").addChangeListener((observableValue, s, t1) -> adjustParticleEffectPosition());
-
     }
 
 
     @Override
     public String getName() {
         return getAttribute("particles").stringValue();
-    }
-
-
-    private void adjustParticleEffectPosition() {
-        double x = getAttribute("x").doubleValue();
-        double y = getAttribute("y").doubleValue();
-        if (particleEffect != null) particleEffect.setAttribute("pos", x + "," + y);
-    }
-
-
-    private Particles findParticleFx() {
-
-        String particles = getAttribute("particles").stringValue();
-
-        for (EditorObject object : ParticleManager.getParticles()) if (object instanceof Particles particle) {
-
-            String name = particle.getAttribute("name").stringValue();
-            if (!name.equals(particles)) continue;
-
-            Particles particleEffect = new Particles(this);
-            getChildren().remove(particleEffect);
-
-            double x = getAttribute("x").doubleValue();
-            double y = getAttribute("y").doubleValue();
-            particleEffect.setAttribute("pos", x + "," + y);
-            particleEffect.setAttribute("depth", getAttribute("depth").doubleValue());
-            particleEffect.setAttribute("effect", particles);
-            particleEffect.update();
-            return particleEffect;
-
-        }
-
-        return null;
-
-    }
-
-
-    @Override
-    public void update() {
-        particleEffect = findParticleFx();
     }
 
 }

@@ -22,14 +22,6 @@ public class ParticleGraphicsInstance {
     private final boolean additive;
     private final boolean directed;
 
-    public boolean getAdditive() {
-        return additive;
-    }
-
-    public double getAlpha() {
-        return alpha;
-    }
-
 
     private final ObjectPosition objectPosition;
     public ObjectPosition getObjectPosition() {
@@ -103,6 +95,19 @@ public class ParticleGraphicsInstance {
             }
             public Image getImage() {
                 return image;
+            }
+            public double getAlpha() {
+                if (lifespan != -1 && fade) {
+                    double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
+                    double thing = dt / lifespan;
+                    //this.scale = this.initialScale * (1 - thing) + this.finalscale * thing;
+                    return 1 - thing;
+                } else {
+                    return 1.0;
+                }
+            }
+            public boolean isAdditive() {
+                return additive;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowParticles();

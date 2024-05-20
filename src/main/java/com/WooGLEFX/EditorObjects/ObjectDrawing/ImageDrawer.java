@@ -6,6 +6,7 @@ import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
 
@@ -34,6 +35,8 @@ public class ImageDrawer {
         t.appendRotation(Math.toDegrees(rotation), x, y);
         graphicsContext.setTransform(t);
 
+        graphicsContext.setGlobalAlpha(objectPosition.getAlpha());
+        if (objectPosition.isAdditive()) graphicsContext.setGlobalBlendMode(BlendMode.ADD);
         graphicsContext.drawImage(image, x - width / 2.0, y - height / 2.0, width, height);
 
         graphicsContext.restore();
