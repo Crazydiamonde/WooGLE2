@@ -1,10 +1,10 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 import javafx.scene.paint.Color;
@@ -19,7 +19,7 @@ public class Vertex extends EditorObject {
 
 
     public Vertex(EditorObject _parent) {
-        super(_parent, "Vertex");
+        super(_parent, "Vertex", "level\\vertex");
 
         addAttribute("x", InputField.NUMBER).setDefaultValue("0").assertRequired();
         addAttribute("y", InputField.NUMBER).setDefaultValue("0").assertRequired();

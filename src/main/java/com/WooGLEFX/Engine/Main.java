@@ -1,6 +1,6 @@
 package com.WooGLEFX.Engine;
 
-import com.WooGLEFX.GUI.Alarms;
+import com.WooGLEFX.Engine.GUI.Alarms;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

@@ -1,7 +1,7 @@
 package com.WorldOfGoo.Ball;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;

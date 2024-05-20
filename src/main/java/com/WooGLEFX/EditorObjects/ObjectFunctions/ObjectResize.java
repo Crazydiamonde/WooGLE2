@@ -1,9 +1,8 @@
 package com.WooGLEFX.EditorObjects.ObjectFunctions;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.SelectionManager;
-import com.WooGLEFX.Structures.EditorObject;
 import javafx.geometry.Point2D;
 
 public class ObjectResize {

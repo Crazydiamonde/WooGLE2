@@ -1,15 +1,15 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.File.ResourceManagers.GlobalResourceManager;
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Functions.BallManager;
+import com.WooGLEFX.File.ResourceManagers.BallManager;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.GameVersion;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WorldOfGoo.Ball.Part;
 import javafx.geometry.Point2D;
@@ -34,7 +34,7 @@ public class BallInstance extends EditorObject {
 
 
     public BallInstance(EditorObject _parent) {
-        super(_parent, "BallInstance");
+        super(_parent, "BallInstance", "level\\BallInstance");
 
         addAttribute("type",       InputField.BALL)                                         .assertRequired();
         addAttribute("x",          InputField.NUMBER)                                       .assertRequired();

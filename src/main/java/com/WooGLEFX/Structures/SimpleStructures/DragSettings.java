@@ -1,6 +1,6 @@
 package com.WooGLEFX.Structures.SimpleStructures;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 
 public class DragSettings {
 

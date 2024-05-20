@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Particle;
 
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.EditorObject;
 
 public class Effects extends EditorObject {
 

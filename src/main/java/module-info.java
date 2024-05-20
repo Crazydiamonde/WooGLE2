@@ -16,17 +16,19 @@ module com.example.WOGAnniversaryEditor {
   exports com.WorldOfGoo.Ball;
   exports com.WorldOfGoo.Particle;
   exports com.WorldOfGoo.Text;
-  exports com.WooGLEFX.GUI;
+  exports com.WooGLEFX.Engine.GUI;
   exports com.WooGLEFX.Structures;
   exports com.WooGLEFX.File;
   exports com.WooGLEFX.EditorObjects;
-  exports com.WooGLEFX.Structures.UserActions;
+  exports com.WooGLEFX.Functions.UndoHandling.UserActions;
   exports com.WooGLEFX.Structures.SimpleStructures;
-  exports com.WooGLEFX.Structures.Resources;
+  exports com.WooGLEFX.File.ResourceManagers.Resources;
   exports com.WooGLEFX.Engine;
   exports com.WooGLEFX.Engine.FX;
-  exports com.WooGLEFX.EditorObjects.Components;
-    exports com.WooGLEFX.EditorObjects.ObjectCollision;
-    exports com.WooGLEFX.File.export;
+  exports com.WooGLEFX.EditorObjects.ObjectCollision;
+    exports com.WooGLEFX.File.fileexport;
+  exports com.WooGLEFX.EditorObjects.ObjectCreators;
+  exports com.WooGLEFX.File.fileimport;
+  exports com.WooGLEFX.File.ResourceManagers;
 
 }

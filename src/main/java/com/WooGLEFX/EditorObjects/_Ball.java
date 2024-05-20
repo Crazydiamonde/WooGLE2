@@ -1,8 +1,7 @@
 package com.WooGLEFX.EditorObjects;
 
 import com.WooGLEFX.Functions.LevelLoader;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.File.ResourceManagers.GlobalResourceManager;
 import com.WooGLEFX.Structures.GameVersion;
 import com.WorldOfGoo.Ball.Part;
 

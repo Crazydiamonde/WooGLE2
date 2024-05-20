@@ -1,12 +1,12 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import javafx.scene.image.Image;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WorldOfGoo.Scene.SceneLayer;
@@ -17,7 +17,7 @@ public class Signpost extends EditorObject {
 
 
     public Signpost(EditorObject _parent) {
-        super(_parent, "signpost");
+        super(_parent, "signpost", "level\\signpost");
 
         addAttribute("name",      InputField.ANY)                                  .assertRequired();
         addAttribute("depth",     InputField.NUMBER).setDefaultValue("0")          .assertRequired();

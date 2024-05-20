@@ -1,17 +1,17 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Paint;
 
 public class Pipe extends EditorObject {
 
     public Pipe(EditorObject _parent) {
-        super(_parent, "pipe");
+        super(_parent, "pipe", "level\\pipe");
 
         addAttribute("type", InputField.ANY);
         addAttribute("id", InputField.ANY)                        .assertRequired();

@@ -1,21 +1,14 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.Engine.SelectionManager;
-import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
-import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import com.WooGLEFX.Structures.SimpleStructures.Position;
-
-import javafx.scene.canvas.GraphicsContext;
 
 public class Slider extends EditorObject {
 
     public Slider(EditorObject _parent) {
-        super(_parent, "slider");
+        super(_parent, "slider", "scene\\slider");
 
         addAttribute("body1", InputField.ANY).assertRequired();
         addAttribute("body2", InputField.ANY).assertRequired();

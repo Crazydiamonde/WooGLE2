@@ -1,12 +1,14 @@
 package com.WooGLEFX.Engine.FX;
 
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Engine.DelayedTooltip;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.*;
-import com.WooGLEFX.GUI.PaletteReconfigurator;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectAdder;
+import com.WooGLEFX.File.ResourceManagers.BallManager;
+import com.WooGLEFX.Functions.UndoHandling.UndoManager;
+import com.WooGLEFX.Engine.GUI.PaletteReconfigurator;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.GameVersion;
 import com.WorldOfGoo.Ball.Part;
 import javafx.embed.swing.SwingFXUtils;
@@ -29,6 +31,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class FXEditorButtons {
+
+    private static class DelayedTooltip extends Tooltip {
+        // Tooltip with a shorter delay than the default
+        public DelayedTooltip(String text) {
+            super(text);
+            setShowDelay(javafx.util.Duration.millis(150));
+        }
+    }
+
 
     private static ToolBar functionsToolbar;
 

@@ -1,6 +1,7 @@
 package com.WooGLEFX.Functions.InputEvents;
 
 import com.WooGLEFX.Functions.*;
+import com.WooGLEFX.Functions.UndoHandling.UndoManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 

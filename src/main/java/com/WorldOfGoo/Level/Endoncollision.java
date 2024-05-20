@@ -1,13 +1,13 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class Endoncollision extends EditorObject {
 
     public Endoncollision(EditorObject _parent) {
-        super(_parent, "endoncollision");
+        super(_parent, "endoncollision", "level\\endoncollision");
 
         addAttribute("id1", InputField.GEOMETRY).assertRequired();
         addAttribute("id2", InputField.GEOMETRY).assertRequired();

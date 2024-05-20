@@ -1,10 +1,9 @@
 package com.WooGLEFX.EditorObjects.ObjectDrawing;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -68,10 +67,12 @@ public class RectangleDrawer {
         graphicsContext.setStroke(objectPosition.getBorderColor());
 
         graphicsContext.setLineWidth(2 * woag * zoom);
-        graphicsContext.strokeLine(topRight.getX(), topRight.getY(), topLeft.getX(), topLeft.getY());
-        graphicsContext.strokeLine(bottomLeft.getX(), bottomLeft.getY(), bottomRight.getX(), bottomRight.getY());
-        graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
-        graphicsContext.strokeLine(bottomRight.getX(), bottomRight.getY(), topRight.getX(), topRight.getY());
+        if (objectPosition.getEdgeSize() != 0) {
+            graphicsContext.strokeLine(topRight.getX(), topRight.getY(), topLeft.getX(), topLeft.getY());
+            graphicsContext.strokeLine(bottomLeft.getX(), bottomLeft.getY(), bottomRight.getX(), bottomRight.getY());
+            graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
+            graphicsContext.strokeLine(bottomRight.getX(), bottomRight.getY(), topRight.getX(), topRight.getY());
+        }
 
         if (selected) {
 

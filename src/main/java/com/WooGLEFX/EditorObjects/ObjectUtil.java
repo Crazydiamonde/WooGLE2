@@ -1,7 +1,6 @@
 package com.WooGLEFX.EditorObjects;
 
-import com.WooGLEFX.Structures.EditorAttribute;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectCreator;
 import javafx.geometry.Point2D;
 
 import java.util.Arrays;

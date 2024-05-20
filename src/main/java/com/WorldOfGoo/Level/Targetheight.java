@@ -1,10 +1,10 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -12,7 +12,7 @@ import javafx.scene.paint.Paint;
 public class Targetheight extends EditorObject {
 
     public Targetheight(EditorObject _parent) {
-        super(_parent, "targetheight");
+        super(_parent, "targetheight", "level\\targetheight");
 
         addAttribute("y", InputField.NUMBER).setDefaultValue("1000").assertRequired();
 

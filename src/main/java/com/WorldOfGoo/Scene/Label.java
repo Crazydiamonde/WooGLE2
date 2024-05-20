@@ -1,15 +1,15 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class Label extends EditorObject {
 
     public Label(EditorObject _parent) {
-        super(_parent, "label");
+        super(_parent, "label", "scene\\label");
 
         addAttribute("id",          InputField.ANY)                             .assertRequired();
         addAttribute("depth",       InputField.NUMBER).setDefaultValue("10")    .assertRequired();

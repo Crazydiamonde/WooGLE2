@@ -15,7 +15,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import com.WooGLEFX.Functions.BlankObjectGenerator;
+import com.WooGLEFX.EditorObjects.ObjectCreators.BlankObjectGenerator;
+import com.WooGLEFX.File.fileimport.BallFileOpener;
+import com.WooGLEFX.File.fileimport.ObjectXMLParser;
+import com.WooGLEFX.File.fileimport.SimpleHandler;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.PaletteManager;
 import com.WooGLEFX.Structures.GameVersion;
@@ -25,7 +28,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.WorldLevel;
 
 import javafx.scene.image.Image;
@@ -83,9 +86,7 @@ public class FileManager {
 
 
     // Editor location should be the current folder
-    public static final String editorLocation = System.getProperty("user.dir") + "\\";
-
-
+    private static final String editorLocation = System.getProperty("user.dir") + "\\";
 
 
     public static void readWOGdirs() throws ParserConfigurationException, SAXException, IOException {
@@ -109,74 +110,6 @@ public class FileManager {
 
     public static Image getIcon(String imagePath) throws FileNotFoundException {
         return new Image(new FileInputStream(editorLocation + imagePath));
-    }
-
-    public static Image getObjectIcon(String imageName) throws FileNotFoundException {
-        switch (imageName.toLowerCase()) {
-
-            case "addin" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinauthor" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addindependencies" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addindepends" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addindescription" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinid" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinlevel" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinleveldir" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinlevelname" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinlevelocd" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinlevels" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinlevelsubtitle" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinname" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinthumbnail" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addintype" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-            case "addinversion" -> { return getIcon("ObjectIcons\\addin\\addin.png"); }
-
-            case "ballinstance" -> { return getIcon("ObjectIcons\\level\\BallInstance.png"); }
-            case "camera" -> { return getIcon("ObjectIcons\\level\\camera.png"); }
-            case "endoncollision" -> { return getIcon("ObjectIcons\\level\\endoncollision.png"); }
-            case "endonmessage" -> { return getIcon("ObjectIcons\\level\\endonmessage.png"); }
-            case "endonnogeom" -> { return getIcon("ObjectIcons\\level\\endonnogeom.png"); }
-            case "fire" -> { return getIcon("ObjectIcons\\level\\fire.png"); }
-            case "level" -> { return getIcon("ObjectIcons\\level\\level.png"); }
-            case "levelexit" -> { return getIcon("ObjectIcons\\level\\levelexit.png"); }
-            case "loopsound" -> { return getIcon("ObjectIcons\\level\\loopsound.png"); }
-            case "music" -> { return getIcon("ObjectIcons\\level\\music.png"); }
-            case "pipe" -> { return getIcon("ObjectIcons\\level\\pipe.png"); }
-            case "poi" -> { return getIcon("ObjectIcons\\level\\poi.png"); }
-            case "signpost" -> { return getIcon("ObjectIcons\\level\\signpost.png"); }
-            case "strand" -> { return getIcon("ObjectIcons\\level\\strand.png"); }
-            case "targetheight" -> { return getIcon("ObjectIcons\\level\\targetheight.png"); }
-            case "vertex" -> { return getIcon("ObjectIcons\\level\\vertex.png"); }
-
-            case "resourcemanifest" -> { return getIcon("ObjectIcons\\resrc\\resourcemanifest.png"); }
-            case "resources" -> { return getIcon("ObjectIcons\\resrc\\resources.png"); }
-            case "resrcimage" -> { return getIcon("ObjectIcons\\resrc\\resrcimage.png"); }
-            case "setdefaults" -> { return getIcon("ObjectIcons\\resrc\\setdefaults.png"); }
-            case "sound" -> { return getIcon("ObjectIcons\\resrc\\sound.png"); }
-
-            case "button" -> { return getIcon("ObjectIcons\\scene\\button.png"); }
-            case "buttongroup" -> { return getIcon("ObjectIcons\\scene\\buttongroup.png"); }
-            case "circle" -> { return getIcon("ObjectIcons\\scene\\circle.png"); }
-            case "compositegeom" -> { return getIcon("ObjectIcons\\scene\\compositegeom.png"); }
-            case "hinge" -> { return getIcon("ObjectIcons\\scene\\hinge.png"); }
-            case "label" -> { return getIcon("ObjectIcons\\scene\\label.png"); }
-            case "line" -> { return getIcon("ObjectIcons\\scene\\line.png"); }
-            case "linearforcefield" -> { return getIcon("ObjectIcons\\scene\\linearforcefield.png"); }
-            case "motor" -> { return getIcon("ObjectIcons\\scene\\motor.png"); }
-            case "particles" -> { return getIcon("ObjectIcons\\scene\\particles.png"); }
-            case "radialforcefield" -> { return getIcon("ObjectIcons\\scene\\radialforcefield.png"); }
-            case "rectangle" -> { return getIcon("ObjectIcons\\scene\\rectangle.png"); }
-            case "scene" -> { return getIcon("ObjectIcons\\scene\\scene.png"); }
-            case "scenelayer" -> { return getIcon("ObjectIcons\\scene\\SceneLayer.png"); }
-            case "slider" -> { return getIcon("ObjectIcons\\scene\\slider.png"); }
-
-            case "textstring" -> { return getIcon("ObjectIcons\\text\\textstring.png"); }
-            case "textstrings" -> { return getIcon("ObjectIcons\\text\\textstrings.png"); }
-
-        }
-
-        throw new FileNotFoundException("What is " + imageName + "???");
-
     }
 
     private static String bytesToString(byte[] input) {

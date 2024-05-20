@@ -1,8 +1,7 @@
 package com.WooGLEFX.EditorObjects.ObjectFunctions;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.SelectionManager;
-import com.WooGLEFX.Structures.EditorObject;
 
 public class ObjectDrag {
 

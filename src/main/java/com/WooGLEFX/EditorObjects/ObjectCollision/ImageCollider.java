@@ -1,8 +1,7 @@
 package com.WooGLEFX.EditorObjects.ObjectCollision;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
-import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;

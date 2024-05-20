@@ -2,10 +2,10 @@ package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.Engine.FX.FXHierarchy;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Engine.SelectionManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.UserActions.ObjectDestructionAction;
+import com.WooGLEFX.Functions.UndoHandling.UndoManager;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.Functions.UndoHandling.UserActions.ObjectDestructionAction;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
 import com.WorldOfGoo.Level.Level;

@@ -1,8 +1,8 @@
 package com.WooGLEFX.Engine;
 
-import com.WooGLEFX.EditorObjects.ObjectCreator;
-import com.WooGLEFX.Structures.EditorAttribute;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectCreator;
+import com.WooGLEFX.EditorObjects.EditorAttribute;
+import com.WooGLEFX.EditorObjects.EditorObject;
 
 public class ClipboardHandler {
 

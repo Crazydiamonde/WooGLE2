@@ -1,13 +1,13 @@
 package com.WorldOfGoo.Addin;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class AddinVersion extends EditorObject {
 
     public AddinVersion(EditorObject _parent) {
-        super(_parent, "version");
+        super(_parent, "version", "addin\\addin");
 
         addAttribute("value", InputField.NUMBER_POSITIVE).assertRequired();
 

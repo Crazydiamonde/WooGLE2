@@ -1,13 +1,13 @@
 package com.WorldOfGoo.Resrc;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class SetDefaults extends EditorObject {
 
     public SetDefaults(EditorObject _parent) {
-        super(_parent, "SetDefaults");
+        super(_parent, "SetDefaults", "resources\\setdefaults");
 
         addAttribute("path", InputField.ANY).setDefaultValue("./").assertRequired();
         addAttribute("idprefix", InputField.ANY)                  .assertRequired();

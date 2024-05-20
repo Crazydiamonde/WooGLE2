@@ -1,20 +1,16 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Paint;
+import javafx.scene.paint.*;
 
 public class Radialforcefield extends EditorObject {
 
     public Radialforcefield(EditorObject _parent) {
-        super(_parent, "radialforcefield");
+        super(_parent, "radialforcefield", "scene\\radialforcefield");
 
         addAttribute("id",               InputField.ANY)                                    .assertRequired();
         addAttribute("type",             InputField.ANY)       .setDefaultValue("gravity")  .assertRequired();
@@ -79,7 +75,8 @@ public class Radialforcefield extends EditorObject {
                 return 3;
             }
             public Paint getBorderColor() {
-                return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, Renderer.stops);
+                return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
+                        new Stop(0, Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")));
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowForcefields();
@@ -103,7 +100,8 @@ public class Radialforcefield extends EditorObject {
                 return 3;
             }
             public Paint getBorderColor() {
-                return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, Renderer.stops);
+                return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
+                        new Stop(0, Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")));
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowForcefields();

@@ -2,28 +2,21 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
-import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.Functions.LevelLoader;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.WooGLEFX.File.GlobalResourceManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 
-import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
 public class SceneLayer extends EditorObject {
-
-    private static final Logger logger = LoggerFactory.getLogger(SceneLayer.class);
-
 
     private Image image;
 
@@ -36,7 +29,7 @@ public class SceneLayer extends EditorObject {
 
 
     public SceneLayer(EditorObject _parent) {
-        super(_parent, "SceneLayer");
+        super(_parent, "SceneLayer", "scene\\SceneLayer");
 
         addAttribute("id",         InputField.ANY);
         addAttribute("name",       InputField.ANY);

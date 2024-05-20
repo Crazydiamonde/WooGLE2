@@ -1,10 +1,10 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -12,7 +12,7 @@ import javafx.scene.paint.Paint;
 public class Levelexit extends EditorObject {
 
     public Levelexit(EditorObject _parent) {
-        super(_parent, "levelexit");
+        super(_parent, "levelexit", "level\\levelexit");
 
         addAttribute("id",     InputField.ANY)     .setDefaultValue("theExit").assertRequired();
         addAttribute("pos",    InputField.POSITION).setDefaultValue("0,0")    .assertRequired();

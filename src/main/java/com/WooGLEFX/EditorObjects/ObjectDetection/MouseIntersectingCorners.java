@@ -1,13 +1,12 @@
 package com.WooGLEFX.EditorObjects.ObjectDetection;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectCollision.AnchorCollider;
 import com.WooGLEFX.EditorObjects.ObjectCollision.CircleCollider;
 import com.WooGLEFX.EditorObjects.ObjectCollision.ImageCollider;
 import com.WooGLEFX.EditorObjects.ObjectCollision.RectangleCollider;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
-import javafx.scene.image.Image;
 
 public class MouseIntersectingCorners {
 

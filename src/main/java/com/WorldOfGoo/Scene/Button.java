@@ -1,12 +1,12 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
@@ -24,7 +24,7 @@ public class Button extends EditorObject {
 
 
     public Button(EditorObject _parent) {
-        super(_parent, "button");
+        super(_parent, "button", "scene\\button");
 
         addAttribute("id",                    InputField.ANY)                                  .assertRequired();
         addAttribute("depth",                 InputField.NUMBER).assertRequired();

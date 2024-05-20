@@ -1,8 +1,8 @@
 package com.WorldOfGoo.Particle;
 
-import com.WooGLEFX.Functions.ParticleManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.File.ResourceManagers.ParticleManager;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 import java.util.ArrayList;

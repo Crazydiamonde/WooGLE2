@@ -1,20 +1,17 @@
 package com.WooGLEFX.EditorObjects;
 
 import com.WooGLEFX.Engine.EditorWindow;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
+import javafx.scene.image.Image;
 
 public class ParticleGraphicsInstance {
 
     private final Position originalPos;
-    private Position pos;
-    private double scale;
     private final double initialScale;
     private final double finalscale;
     private final Position acceleration;
     private final double rotation;
-    private double displayRotation;
     private final double initialDisplayRotation;
     private final double rotspeed;
     private final double speed;
@@ -23,43 +20,25 @@ public class ParticleGraphicsInstance {
     private double alpha;
     private final double creationTimestamp;
     private final boolean additive;
+    private final boolean directed;
 
     public boolean getAdditive() {
         return additive;
-    }
-
-    public Position getPos() {
-        return pos;
-    }
-
-    public void setPos(Position pos) {
-        this.pos = pos;
-    }
-
-    public double getScale() {
-        return scale;
-    }
-
-    public void setScale(double scale) {
-        this.scale = scale;
-    }
-
-    public double getDisplayRotation() {
-        return displayRotation;
-    }
-
-    public void setDisplayRotation(double displayRotation) {
-        this.displayRotation = displayRotation;
     }
 
     public double getAlpha() {
         return alpha;
     }
 
-    public ParticleGraphicsInstance(Position pos, double scale, double finalscale, double visualrotation, double rotation, double rotspeed, double speed, Position acceleration, double lifespan, boolean fade, boolean additive) {
+
+    private final ObjectPosition objectPosition;
+    public ObjectPosition getObjectPosition() {
+        return objectPosition;
+    }
+
+
+    public ParticleGraphicsInstance(Position pos, double scale, double finalscale, double visualrotation, double rotation, double rotspeed, double speed, Position acceleration, double lifespan, boolean fade, boolean additive, Image image, boolean directed, double depth) {
         this.originalPos = new Position(pos.getX(), pos.getY());
-        this.pos = pos;
-        this.scale = scale;
         this.initialScale = scale;
         this.finalscale = finalscale;
         this.rotation = rotation;
@@ -71,30 +50,99 @@ public class ParticleGraphicsInstance {
         this.fade = fade;
         this.additive = additive;
         this.alpha = 1;
+        this.directed = directed;
         this.creationTimestamp = EditorWindow.getTimeElapsed();
+
+        this.objectPosition = new ObjectPosition(ObjectPosition.IMAGE) {
+            public double getX() {
+                double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
+                double initialX = originalPos.getX();
+                double initialVelocityX = speed * Math.cos(Math.toRadians(-rotation));
+                double accelerationX = acceleration.getX();
+                return initialX + (initialVelocityX + 0.5 * accelerationX * dt * 50) * dt * 50;
+            }
+            public double getY() {
+                double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
+                double initialY = -originalPos.getY();
+                double initialVelocityY = speed * Math.sin(Math.toRadians(-rotation));
+                double accelerationY = -acceleration.getY();
+                return initialY + (initialVelocityY + 0.5 * accelerationY * dt * 50) * dt * 50;
+            }
+            public double getRotation() {
+                if (directed) {
+                    double initialVelocityX = speed * Math.cos(Math.toRadians(-rotation));
+                    double initialVelocityY = speed * Math.sin(Math.toRadians(-rotation));
+                    double accelerationX = acceleration.getX();
+                    double accelerationY = -acceleration.getY();
+                    double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
+                    double velocityX = initialVelocityX + accelerationX * dt * 50;
+                    double velocityY = initialVelocityY + accelerationY * dt * 50;
+                    return Math.atan2(velocityY, velocityX) - 90;
+                } else {
+                    double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
+                    return Math.toRadians(-initialDisplayRotation) - rotspeed * dt;
+                }
+            }
+            public double getWidth() {
+                if (lifespan != -1) {
+                    double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
+                    double amtElapsed = dt / lifespan;
+                    return image.getWidth() * (initialScale * (1 - amtElapsed) + finalscale * amtElapsed);
+                } else {
+                    return image.getWidth() * initialScale;
+                }
+            }
+            public double getHeight() {
+                if (lifespan != -1) {
+                    double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
+                    double amtElapsed = dt / lifespan;
+                    return image.getHeight() * (initialScale * (1 - amtElapsed) + finalscale * amtElapsed);
+                } else {
+                    return image.getHeight() * initialScale;
+                }
+            }
+            public Image getImage() {
+                return image;
+            }
+            public boolean isVisible() {
+                return LevelManager.getLevel().getVisibilitySettings().isShowParticles();
+            }
+            public boolean isSelectable() {
+                return false;
+            }
+            public boolean isDraggable() {
+                return false;
+            }
+            public boolean isResizable() {
+                return false;
+            }
+            public boolean isRotatable() {
+                return false;
+            }
+        };
+
     }
 
-    public boolean update(){
+    public boolean update() {
         double angle = Math.toRadians(this.rotation);
 
         double dt = EditorWindow.getTimeElapsed() - this.creationTimestamp;
 
-        this.pos.setX(this.originalPos.getX() + (this.speed * Math.cos(angle) + 0.5 * this.acceleration.getX() * dt * 50) * dt * 50);
-        this.pos.setY(this.originalPos.getY() + (this.speed * Math.sin(angle) + 0.5 * this.acceleration.getY() * dt * 50) * dt * 50);
+        double x = this.originalPos.getX() + (this.speed * Math.cos(angle) + 0.5 * this.acceleration.getX() * dt * 50) * dt * 50;
+        double y = this.originalPos.getY() + (this.speed * Math.sin(angle) + 0.5 * this.acceleration.getY() * dt * 50) * dt * 50;
         if (lifespan == -1) {
-            if (pos.getX() < LevelManager.getLevel().getSceneObject().getAttribute("minx").doubleValue() ||
-                    pos.getY() < LevelManager.getLevel().getSceneObject().getAttribute("miny").doubleValue() ||
-                    pos.getX() > LevelManager.getLevel().getSceneObject().getAttribute("maxx").doubleValue() ||
-                    pos.getY() > LevelManager.getLevel().getSceneObject().getAttribute("maxy").doubleValue()) {
+            if (x < LevelManager.getLevel().getSceneObject().getAttribute("minx").doubleValue() ||
+                    y < LevelManager.getLevel().getSceneObject().getAttribute("miny").doubleValue() ||
+                    x > LevelManager.getLevel().getSceneObject().getAttribute("maxx").doubleValue() ||
+                    y > LevelManager.getLevel().getSceneObject().getAttribute("maxy").doubleValue()) {
                 return true;
             }
         } else if (dt > this.lifespan) {
             return true;
         }
-        this.displayRotation = this.initialDisplayRotation + Math.toDegrees(rotspeed * dt);
         if (lifespan != -1) {
             double thing = dt / this.lifespan;
-            this.scale = this.initialScale * (1 - thing) + this.finalscale * thing;
+            //this.scale = this.initialScale * (1 - thing) + this.finalscale * thing;
             if (fade) {
                 this.alpha = 1 - thing;
             }

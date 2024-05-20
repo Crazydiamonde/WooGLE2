@@ -1,18 +1,20 @@
 package com.WooGLEFX.Engine.FX;
 
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectCreator;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Functions.ObjectAdder;
-import com.WooGLEFX.Functions.UndoManager;
-import com.WooGLEFX.Structures.EditorAttribute;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
-import com.WooGLEFX.Structures.UserActions.HierarchyDragAction;
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectAdder;
+import com.WooGLEFX.Functions.UndoHandling.UndoManager;
+import com.WooGLEFX.EditorObjects.EditorAttribute;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
+import com.WooGLEFX.Functions.UndoHandling.UserActions.HierarchyDragAction;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -32,6 +34,15 @@ public class FXHierarchy {
 
     private static EditorObject moving;
     private static int oldDropIndex;
+
+
+    private static Image getObjectIcon(EditorObject editorObject) {
+        try {
+            return FileManager.getIcon("ObjectIcons\\" + editorObject.getIcon() + ".png");
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+    }
 
 
     public static void init() {
@@ -71,12 +82,7 @@ public class FXHierarchy {
                     if (getTableRow().getItem() != null) {
                         ImageView imageView;
 
-                        try {
-                            imageView = new ImageView(
-                                    FileManager.getObjectIcon(getTableRow().getItem().getClass().getSimpleName()));
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
+                        imageView = new ImageView(getObjectIcon(getTableRow().getItem()));
 
                         // If the cell's EditorObject is invalid, display its graphic with a warning
                         // symbol.
@@ -187,13 +193,13 @@ public class FXHierarchy {
                         int dropIndex = row.getIndex();
                         int curIndex = oldDropIndex;
                         if (dropIndex > curIndex) {
-                            // Dragged the item downwards; shift all of the items up
+                            // Dragged the item downwards; shift all the items up
                             while (curIndex < dropIndex) {
                                 hierarchy.getTreeItem(curIndex).setValue(hierarchy.getTreeItem(curIndex + 1).getValue());
                                 curIndex++;
                             }
                         } else {
-                            // Dragged the item upwards; shift all of the items down
+                            // Dragged the item upwards; shift all the items down
                             while (curIndex > dropIndex) {
                                 hierarchy.getTreeItem(curIndex).setValue(hierarchy.getTreeItem(curIndex - 1).getValue());
                                 curIndex--;
@@ -302,7 +308,7 @@ public class FXHierarchy {
             MenuItem addItemItem = new MenuItem("Add " + childToAdd);
 
             // Attempt to set graphics for this menu item.
-            addItemItem.setGraphic(new ImageView(FileManager.getObjectIcon(childToAdd)));
+            addItemItem.setGraphic(new ImageView(getObjectIcon(ObjectCreator.create(childToAdd, null))));
 
             // Set the item's action to creating the child, with the object as its parent.
             addItemItem.setOnAction(event -> {

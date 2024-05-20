@@ -1,13 +1,13 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class Level extends EditorObject {
 
     public Level(EditorObject _parent) {
-        super(_parent, "level");
+        super(_parent, "level", "level\\level");
 
         addAttribute("ballsrequired",      InputField.NUMBER)                               .assertRequired();
         addAttribute("letterboxed",        InputField.FLAG)  .setDefaultValue("false")      .assertRequired();

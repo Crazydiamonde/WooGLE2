@@ -1,18 +1,20 @@
 package com.WooGLEFX.Functions.InputEvents;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersectingCorners;
 import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersection;
 import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorAttribute;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.EditorAttribute;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
 import javafx.scene.Cursor;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
@@ -43,25 +45,11 @@ public class MousePressedManager {
 
     }
 
+
     /** Called whenever the mouse is pressed. */
     public static void eventMousePressed(MouseEvent event) {
-
-        if (event.getButton().equals(MouseButton.PRIMARY)) {
-
-            primaryMouseButton(event);
-
-        } else if (event.getButton() == MouseButton.SECONDARY) {
-
-            double editorViewWidth = FXContainers.getSplitPane().getDividerPositions()[0] * FXContainers.getSplitPane().getWidth();
-
-            // Mouse pan with right-click
-            if (event.getX() < editorViewWidth && event.getY() > FXCanvas.getMouseYOffset()) {
-                FXScene.getScene().setCursor(Cursor.CLOSED_HAND);
-                SelectionManager.setMouseStartX(event.getScreenX());
-                SelectionManager.setMouseStartY(event.getScreenY());
-            }
-
-        }
+        if (event.getButton() == MouseButton.PRIMARY) primaryMouseButton(event);
+        else if (event.getButton() == MouseButton.SECONDARY) secondaryMouseButton(event);
     }
 
 
@@ -70,19 +58,70 @@ public class MousePressedManager {
         WorldLevel level = LevelManager.getLevel();
         if (level == null) return;
 
-        if (level.getSelected() != null) {
+        if (level.getSelected() != null) ifSelectedAlreadyExists(level);
 
-            if (FXPropertiesView.getPropertiesView().getEditingCell() == null
-                    || FXPropertiesView.getPropertiesView().getFocusModel().focusedIndexProperty().get() == -1) {
-                FXPropertiesView.getPropertiesView().edit(-1, null);
-            }
+        if (SelectionManager.getMode() == SelectionManager.SELECTION) manageSelection(event, level);
+        else if (SelectionManager.getMode() == SelectionManager.STRAND) tryToPlaceStrand(event, level);
 
-            updateOldAttributes(level);
+    }
 
+
+    private static void secondaryMouseButton(MouseEvent event) {
+
+        SplitPane splitPane = FXContainers.getSplitPane();
+        double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth();
+
+        // Mouse pan with right-click
+        if (event.getX() < editorViewWidth && event.getY() > FXCanvas.getMouseYOffset()) {
+            FXScene.getScene().setCursor(Cursor.CLOSED_HAND);
+            SelectionManager.setMouseStartX(event.getScreenX());
+            SelectionManager.setMouseStartY(event.getScreenY());
         }
 
-        if (SelectionManager.getMode() == SelectionManager.SELECTION) tryToSelectSomething(event, level);
-        else if (SelectionManager.getMode() == SelectionManager.STRAND) tryToPlaceStrand(event, level);
+    }
+
+
+    private static void ifSelectedAlreadyExists(WorldLevel level) {
+
+        TreeTableView<EditorAttribute> propertiesView = FXPropertiesView.getPropertiesView();
+
+        if (propertiesView.getEditingCell() == null
+                || propertiesView.getFocusModel().focusedIndexProperty().get() == -1) {
+            propertiesView.edit(-1, null);
+        }
+
+        updateOldAttributes(level);
+
+    }
+
+
+    private static void manageSelection(MouseEvent event, WorldLevel level) {
+
+        DragSettings dragSettings = tryToSelectSomething(event, level);
+        if (dragSettings == DragSettings.NULL) {
+            SelectionManager.setSelected(null);
+            return;
+        }
+
+        if (level.getSelected() != null &&
+                level.getSelected().containsObjectPosition(dragSettings.getObjectPosition())) {
+
+            if (dragSettings.getType() == DragSettings.MOVE) FXScene.getScene().setCursor(Cursor.MOVE);
+            SelectionManager.setDragSettings(dragSettings);
+
+        } else {
+
+            EditorObject selected = getEditorObjectThatHasThis(dragSettings.getObjectPosition(), level);
+            assert selected != null;
+
+            SelectionManager.setSelected(selected);
+            FXPropertiesView.changeTableView(selected);
+            selected.getParent().getTreeItem().setExpanded(true);
+            FXHierarchy.getHierarchy().getSelectionModel().select(selected.getTreeItem());
+            // Scroll to this position in the selection model
+            FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()));
+
+        }
 
     }
 
@@ -92,13 +131,11 @@ public class MousePressedManager {
         double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
-        for (EditorObject editorObject : level.getLevel().toArray(new EditorObject[0])) {
-            if (editorObject instanceof BallInstance ballInstance) {
-                if (MouseIntersection.mouseIntersection(ballInstance, mouseX, mouseY) != DragSettings.NULL) {
-                    if (SelectionManager.getStrand1Gooball() == null) {
-                        SelectionManager.setStrand1Gooball(ballInstance);
-                        return;
-                    }
+        for (EditorObject editorObject : level.getLevel()) if (editorObject instanceof BallInstance ballInstance) {
+            if (MouseIntersection.mouseIntersection(ballInstance, mouseX, mouseY) != DragSettings.NULL) {
+                if (SelectionManager.getStrand1Gooball() == null) {
+                    SelectionManager.setStrand1Gooball(ballInstance);
+                    return;
                 }
             }
         }
@@ -127,46 +164,30 @@ public class MousePressedManager {
     }
 
 
-    private static void tryToSelectSomething(MouseEvent event, WorldLevel level) {
+    public static DragSettings tryToSelectSomething(MouseEvent event, WorldLevel level) {
 
-        double editorViewWidth = FXContainers.getSplitPane().getDividerPositions()[0] * FXContainers.getSplitPane().getWidth();
+        SplitPane splitPane = FXContainers.getSplitPane();
+        double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth();
 
-        if (event.getX() > editorViewWidth || event.getY() < FXCanvas.getMouseYOffset()) return;
+        if (event.getX() > editorViewWidth || event.getY() < FXCanvas.getMouseYOffset()) return DragSettings.NULL;
 
         double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
         if (level.getSelected() != null) {
-            SelectionManager.setDragSettings(MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), mouseX, mouseY));
-            if (SelectionManager.getDragSettings() != DragSettings.NULL) return;
+            DragSettings dragSettings =
+                    MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), mouseX, mouseY);
+            if (dragSettings != DragSettings.NULL) return dragSettings;
         }
 
-        EditorObject prevSelected = level.getSelected();
-        SelectionManager.setSelected(null);
         ArrayList<ObjectPosition> byDepth = Renderer.orderObjectPositionsByDepth(level);
         for (int i = byDepth.size() - 1; i >= 0; i--) {
             ObjectPosition object = byDepth.get(i);
-            if (MouseIntersection.forPosition(object, mouseX, mouseY) != DragSettings.NULL) {
-
-                EditorObject selected = getEditorObjectThatHasThis(object, level);
-                assert selected != null;
-
-                SelectionManager.setSelected(selected);
-                FXPropertiesView.changeTableView(selected);
-                selected.getParent().getTreeItem().setExpanded(true);
-                FXHierarchy.getHierarchy().getSelectionModel().select(selected.getTreeItem());
-                // Scroll to this position in the selection model
-                FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()));
-                break;
-            }
+            DragSettings dragSettings = MouseIntersection.forPosition(object, mouseX, mouseY);
+            if (dragSettings != DragSettings.NULL) return dragSettings;
         }
-        if (level.getSelected() != null && level.getSelected() == prevSelected) {
-            DragSettings thisSettings = MouseIntersection.mouseIntersection(level.getSelected(), mouseX, mouseY);
-            if (thisSettings != DragSettings.NULL && thisSettings.getType() != DragSettings.NONE) {
-                FXStage.getStage().getScene().setCursor(Cursor.MOVE);
-                SelectionManager.setDragSettings(thisSettings);
-            }
-        }
+
+        return DragSettings.NULL;
 
     }
 

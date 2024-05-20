@@ -1,6 +1,6 @@
 package com.WooGLEFX.EditorObjects.ObjectFunctions;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Engine.SelectionManager;
 import javafx.geometry.Point2D;

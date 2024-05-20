@@ -1,14 +1,16 @@
 package com.WooGLEFX.Functions;
 
-import com.WooGLEFX.EditorObjects.ObjectCreator;
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectCreator;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.GlobalResourceManager;
-import com.WooGLEFX.GUI.Alarms;
-import com.WooGLEFX.GUI.LevelSelector;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.File.ResourceManagers.GlobalResourceManager;
+import com.WooGLEFX.EditorObjects.ObjectCreators.BlankObjectGenerator;
+import com.WooGLEFX.File.ResourceManagers.BallManager;
+import com.WooGLEFX.Engine.GUI.Alarms;
+import com.WooGLEFX.Engine.GUI.LevelSelector;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.WorldLevel;
@@ -120,7 +122,7 @@ public class LevelLoader {
 
     public static void openLevel(String levelName, GameVersion version) {
         // Don't open a level if none selected
-        if (levelName == null || levelName.equals("")) {
+        if (levelName == null || levelName.isEmpty()) {
             return;
         }
         // Don't open a level if it's already open
@@ -218,12 +220,12 @@ public class LevelLoader {
         FXLevelSelectPane.getLevelSelectPane().setTabMaxWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
         FXLevelSelectPane.getLevelSelectPane().setTabMinWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
 
-        if (failedResources.size() > 0) {
+        if (!failedResources.isEmpty()) {
             StringBuilder fullError = new StringBuilder();
             for (String resource : failedResources) {
                 fullError.append("\n").append(resource);
             }
-            Alarms.loadingResourcesError(fullError.toString().substring(1));
+            Alarms.loadingResourcesError(fullError.substring(1));
         }
 
         level.setLevelTab(levelSelectButton);

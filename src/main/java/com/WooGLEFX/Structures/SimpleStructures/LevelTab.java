@@ -2,7 +2,7 @@ package com.WooGLEFX.Structures.SimpleStructures;
 
 import com.WooGLEFX.Engine.FX.FXHierarchy;
 import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.GameVersion;
 import com.WooGLEFX.Structures.WorldLevel;
 import javafx.geometry.Pos;

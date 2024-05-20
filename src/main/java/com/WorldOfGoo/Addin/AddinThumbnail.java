@@ -1,13 +1,13 @@
 package com.WorldOfGoo.Addin;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class AddinThumbnail extends EditorObject {
 
     public AddinThumbnail(EditorObject _parent) {
-        super(_parent, "thumbnail");
+        super(_parent, "thumbnail", "addin\\addin");
 
         addAttribute("value", InputField.ANY).assertRequired();
         addAttribute("type", InputField.IMAGE_TYPE).assertRequired();

@@ -2,15 +2,15 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Scene extends EditorObject {
 
     public Scene(EditorObject _parent) {
-        super(_parent, "scene");
+        super(_parent, "scene", "scene\\scene");
 
         addAttribute("minx", InputField.NUMBER)          .setDefaultValue("-500");
         addAttribute("miny", InputField.NUMBER)          .setDefaultValue("0");

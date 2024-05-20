@@ -1,10 +1,10 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Functions.ParticleManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.File.ResourceManagers.ParticleManager;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WorldOfGoo.Scene.Particles;
 import javafx.scene.paint.Color;
@@ -16,7 +16,7 @@ public class Fire extends EditorObject {
 
 
     public Fire(EditorObject _parent) {
-        super(_parent, "fire");
+        super(_parent, "fire", "level\\fire");
 
         addAttribute("depth",     InputField.NUMBER)   .setDefaultValue("0") .assertRequired();
         addAttribute("particles", InputField.PARTICLES)                      .assertRequired();

@@ -1,10 +1,10 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -12,7 +12,7 @@ import javafx.scene.paint.Paint;
 public class Hinge extends EditorObject {
 
     public Hinge(EditorObject _parent) {
-        super(_parent, "hinge");
+        super(_parent, "hinge", "scene\\hinge");
 
         addAttribute("body1", InputField.ANY)                             .assertRequired();
         addAttribute("body2", InputField.ANY);

@@ -1,9 +1,10 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorAttribute;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -17,7 +18,7 @@ public class Compositegeom extends EditorObject {
 
 
     public Compositegeom(EditorObject _parent) {
-        super(_parent, "compositegeom");
+        super(_parent, "compositegeom", "scene\\compositegeom");
 
         addAttribute("id",               InputField.ANY)                             .assertRequired();
         addAttribute("x",                InputField.NUMBER)  .setDefaultValue("0")   .assertRequired();
@@ -74,15 +75,17 @@ public class Compositegeom extends EditorObject {
 
         addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
-                if (getAttribute("imagepos").stringValue().isEmpty()) return getAttribute("x").doubleValue();
-                else return getAttribute("imagepos").positionValue().getX();
+                EditorAttribute imagepos = getAttribute("imagepos");
+                if (imagepos.stringValue().isEmpty()) return getAttribute("x").doubleValue();
+                else return imagepos.positionValue().getX();
             }
             public void setX(double x) {
                 setAttribute("imagepos", x + "," + -getY());
             }
             public double getY() {
-                if (getAttribute("imagepos").stringValue().isEmpty()) return -getAttribute("y").doubleValue();
-                else return -getAttribute("imagepos").positionValue().getY();
+                EditorAttribute imagepos = getAttribute("imagepos");
+                if (imagepos.stringValue().isEmpty()) return -getAttribute("y").doubleValue();
+                else return -imagepos.positionValue().getY();
             }
             public void setY(double y) {
                 setAttribute("imagepos", getX() + "," + -y);
@@ -97,13 +100,15 @@ public class Compositegeom extends EditorObject {
                 return getImage().getWidth() * Math.abs(getAttribute("imagescale").positionValue().getX());
             }
             public void setWidth(double width) {
-                setAttribute("imagescale", (width / getImage().getWidth()) + "," + getAttribute("imagescale").positionValue().getY());
+                double scaleY = getAttribute("imagescale").positionValue().getY();
+                setAttribute("imagescale", (width / getImage().getWidth()) + "," + scaleY);
             }
             public double getHeight() {
                 return getImage().getHeight() * Math.abs(getAttribute("imagescale").positionValue().getY());
             }
             public void setHeight(double height) {
-                setAttribute("imagescale", getAttribute("imagescale").positionValue().getX() + "," + (height / getImage().getHeight()));
+                double scaleX = getAttribute("imagescale").positionValue().getX();
+                setAttribute("imagescale", scaleX + "," + (height / getImage().getHeight()));
             }
             public Image getImage() {
                 return image;
@@ -119,7 +124,9 @@ public class Compositegeom extends EditorObject {
             }
         });
 
-        setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation,Geometry<static,mass,material,tag,break,rotspeed,contacts,nogeomcollisions>?Image<image,imagepos,imagerot,imagescale>"));
+        String geometry = "Geometry<static,mass,material,tag,break,rotspeed,contacts,nogeomcollisions>";
+        String image = "?Image<image,imagepos,imagerot,imagescale>";
+        setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation," + geometry + image));
 
         getAttribute("image").addChangeListener((observable, oldValue, newValue) -> updateImage());
 
@@ -134,20 +141,18 @@ public class Compositegeom extends EditorObject {
 
     @Override
     public void update() {
-
         updateImage();
-
     }
 
 
     private void updateImage() {
 
-        try {
-            if (!getAttribute("image").stringValue().isEmpty()) {
-                image = getAttribute("image").imageValue(LevelManager.getVersion());
-            }
-        } catch (FileNotFoundException ignored) {
+        if (getAttribute("image").stringValue().isEmpty()) return;
 
+        try {
+            image = getAttribute("image").imageValue(LevelManager.getVersion());
+        } catch (FileNotFoundException ignored) {
+            image = null;
         }
 
     }
@@ -155,7 +160,7 @@ public class Compositegeom extends EditorObject {
 
     @Override
     public String[] getPossibleChildren() {
-        return new String[]{ "Circle", "Rectangle" };
+        return new String[]{"Circle", "Rectangle"};
     }
 
 }

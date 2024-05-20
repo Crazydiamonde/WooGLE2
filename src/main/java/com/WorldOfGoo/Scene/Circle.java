@@ -1,10 +1,12 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.EditorAttribute;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 import javafx.geometry.Point2D;
@@ -20,14 +22,14 @@ public class Circle extends EditorObject {
 
 
     public Circle(EditorObject _parent) {
-        super(_parent, "circle");
+        super(_parent, "circle", "scene\\circle");
 
         addAttribute("id",               InputField.ANY)                                   .assertRequired();
         addAttribute("mass",             InputField.NUMBER)     .setDefaultValue("0");
         addAttribute("static",           InputField.FLAG)       .setDefaultValue("true");
         addAttribute("tag",              InputField.TAG);
         addAttribute("material",         InputField.MATERIAL);
-        addAttribute("contacts",         InputField.FLAG);
+        addAttribute("contacts",         InputField.FLAG)       .setDefaultValue("true");
         addAttribute("x",                InputField.NUMBER)     .setDefaultValue("0")      .assertRequired();
         addAttribute("y",                InputField.NUMBER)     .setDefaultValue("0")      .assertRequired();
         addAttribute("radius",           InputField.NUMBER)     .setDefaultValue("75")     .assertRequired();
@@ -139,7 +141,8 @@ public class Circle extends EditorObject {
                 setAttribute("radius", radius);
             }
             public double getEdgeSize() {
-                return 4;
+                boolean contacts = getAttribute("contacts").booleanValue();
+                return (contacts || LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 2) ? 4 : 0;
             }
             public double getDepth() {
                 return Renderer.GEOMETRY;

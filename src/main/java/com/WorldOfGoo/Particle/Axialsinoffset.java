@@ -1,7 +1,7 @@
 package com.WorldOfGoo.Particle;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 
 public class Axialsinoffset extends EditorObject {
 

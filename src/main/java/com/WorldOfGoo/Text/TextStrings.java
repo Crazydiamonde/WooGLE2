@@ -1,11 +1,11 @@
 package com.WorldOfGoo.Text;
 
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.EditorObject;
 
 public class TextStrings extends EditorObject {
 
     public TextStrings(EditorObject _parent) {
-        super(_parent, "strings");
+        super(_parent, "strings", "text\\textstrings");
     }
 
 

@@ -2,12 +2,12 @@ package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.Engine.FX.FXEditorButtons;
 import com.WooGLEFX.Engine.FX.FXMenu;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.GlobalResourceManager;
-import com.WooGLEFX.GUI.Alarms;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.File.ResourceManagers.GlobalResourceManager;
+import com.WooGLEFX.File.ResourceManagers.BallManager;
+import com.WooGLEFX.Engine.GUI.Alarms;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.GameVersion;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;

@@ -1,10 +1,11 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.*;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -12,7 +13,7 @@ import javafx.scene.paint.Paint;
 public class Line extends EditorObject {
 
     public Line(EditorObject _parent) {
-        super(_parent, "line");
+        super(_parent, "line", "scene\\line");
 
         addAttribute("id",       InputField.ANY)     .assertRequired();
         addAttribute("static",   InputField.FLAG)    .setDefaultValue("true").assertRequired();

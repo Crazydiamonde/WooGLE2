@@ -1,13 +1,13 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 public class Buttongroup extends EditorObject {
     
     public Buttongroup(EditorObject _parent) {
-        super(_parent, "buttongroup");
+        super(_parent, "buttongroup", "scene\\buttongroup");
 
         addAttribute("id", InputField.ANY)      .setDefaultValue("levelMarkerGroup").assertRequired();
         addAttribute("osx", InputField.POSITION).setDefaultValue("150,1.08")        .assertRequired();

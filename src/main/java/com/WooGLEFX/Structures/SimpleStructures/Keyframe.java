@@ -1,6 +1,6 @@
 package com.WooGLEFX.Structures.SimpleStructures;
 
-import com.WooGLEFX.File.AnimationReader;
+import com.WooGLEFX.File.fileimport.AnimationReader;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

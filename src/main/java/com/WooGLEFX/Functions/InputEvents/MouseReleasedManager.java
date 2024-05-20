@@ -1,19 +1,18 @@
 package com.WooGLEFX.Functions.InputEvents;
 
-import com.WooGLEFX.EditorObjects.ObjectCreator;
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectCreator;
 import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersection;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXScene;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Functions.ObjectAdder;
-import com.WooGLEFX.Functions.UndoManager;
-import com.WooGLEFX.Structures.EditorAttribute;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectAdder;
+import com.WooGLEFX.Functions.UndoHandling.UndoManager;
+import com.WooGLEFX.EditorObjects.EditorAttribute;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
-import com.WooGLEFX.Structures.UserActions.AttributeChangeAction;
-import com.WooGLEFX.Structures.UserActions.UserAction;
+import com.WooGLEFX.Functions.UndoHandling.UserActions.AttributeChangeAction;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
 import javafx.scene.Cursor;
@@ -51,7 +50,7 @@ public class MouseReleasedManager {
             }
 
             // Reset the cursor's appearance.
-            FXScene.getScene().setCursor(Cursor.DEFAULT);
+            //FXScene.getScene().setCursor(Cursor.DEFAULT);
 
             // Clear all drag settings now that the mouse has been released.
             SelectionManager.setDragSettings(DragSettings.NULL);

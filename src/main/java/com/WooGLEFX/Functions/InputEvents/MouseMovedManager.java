@@ -3,9 +3,7 @@ package com.WooGLEFX.Functions.InputEvents;
 import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersectingCorners;
 import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersection;
 import com.WooGLEFX.Engine.FX.FXCanvas;
-import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXScene;
-import com.WooGLEFX.Engine.FX.FXStage;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
@@ -26,7 +24,9 @@ public class MouseMovedManager {
 
         double x = (event.getX() - level.getOffsetX()) / level.getZoom();
         double y = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
+
         DragSettings hit = MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), x, y);
+
         Cursor cursor = null;
         switch (hit.getType()) {
             case DragSettings.NONE -> cursor = Cursor.DEFAULT;
@@ -35,6 +35,12 @@ public class MouseMovedManager {
         }
         if (cursor != null) FXScene.getScene().setCursor(cursor);
         else {
+            DragSettings dragSettings = MousePressedManager.tryToSelectSomething(event, level);
+            if (dragSettings != DragSettings.NULL &&
+                    !level.getSelected().containsObjectPosition(dragSettings.getObjectPosition())) {
+                FXScene.getScene().setCursor(Cursor.DEFAULT);
+                return;
+            }
             DragSettings intersectionSettings = MouseIntersection.mouseIntersection(level.getSelected(), x, y);
             if (intersectionSettings != DragSettings.NULL && intersectionSettings.getType() != DragSettings.NONE) {
                 FXScene.getScene().setCursor(Cursor.MOVE);

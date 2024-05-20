@@ -1,8 +1,8 @@
 package com.WooGLEFX.EditorObjects.ObjectDetection;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectCollision.*;
-import com.WooGLEFX.Structures.EditorObject;
+import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 
 public class MouseIntersection {

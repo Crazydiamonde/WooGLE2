@@ -2,9 +2,8 @@ package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.Engine.FX.FXLevelSelectPane;
 import com.WooGLEFX.Engine.FX.FXStage;
-import com.WooGLEFX.GUI.Alarms;
+import com.WooGLEFX.Engine.GUI.Alarms;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
-import com.WooGLEFX.Structures.WorldLevel;
 import javafx.scene.control.TabPane;
 
 public class LevelCloser {

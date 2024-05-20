@@ -1,14 +1,11 @@
 package com.WooGLEFX.EditorObjects.ObjectDrawing;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
 
 public class AnchorDrawer {
 

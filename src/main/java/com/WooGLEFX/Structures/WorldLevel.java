@@ -3,14 +3,15 @@ package com.WooGLEFX.Structures;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import com.WooGLEFX.EditorObjects.ObjectCreator;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectCreator;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.FX.FXContainers;
-import com.WooGLEFX.File.GlobalResourceManager;
+import com.WooGLEFX.File.ResourceManagers.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.SimpleStructures.VisibilitySettings;
-import com.WooGLEFX.Structures.UserActions.UserAction;
+import com.WooGLEFX.Functions.UndoHandling.UserActions.UserAction;
 import com.WorldOfGoo.Level.Signpost;
 import com.WorldOfGoo.Scene.Label;
 import com.WorldOfGoo.Text.TextString;

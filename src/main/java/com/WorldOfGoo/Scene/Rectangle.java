@@ -1,11 +1,11 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 import javafx.geometry.Point2D;
@@ -21,7 +21,7 @@ public class Rectangle extends EditorObject {
 
 
     public Rectangle(EditorObject _parent) {
-        super(_parent, "rectangle");
+        super(_parent, "rectangle", "scene\\rectangle");
 
         addAttribute("id",               InputField.ANY)                                   .assertRequired();
         addAttribute("mass",             InputField.NUMBER)     .setDefaultValue("0");
@@ -32,7 +32,7 @@ public class Rectangle extends EditorObject {
         addAttribute("imagepos",         InputField.POSITION);
         addAttribute("imagerot",         InputField.NUMBER)     .setDefaultValue("0");
         addAttribute("imagescale",       InputField.POSITION)   .setDefaultValue("1,1");
-        addAttribute("contacts",         InputField.FLAG);
+        addAttribute("contacts",         InputField.FLAG)       .setDefaultValue("true");
         addAttribute("x",                InputField.NUMBER)     .setDefaultValue("0")      .assertRequired();
         addAttribute("y",                InputField.NUMBER)     .setDefaultValue("0")      .assertRequired();
         addAttribute("width",            InputField.NUMBER)     .setDefaultValue("100")    .assertRequired();
@@ -176,7 +176,8 @@ public class Rectangle extends EditorObject {
                 setAttribute("height", height);
             }
             public double getEdgeSize() {
-                return 4;
+                boolean contacts = getAttribute("contacts").booleanValue();
+                return (contacts || LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 2) ? 4 : 0;
             }
             public double getDepth() {
                 return Renderer.GEOMETRY;

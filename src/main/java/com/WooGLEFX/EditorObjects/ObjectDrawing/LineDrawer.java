@@ -1,6 +1,6 @@
 package com.WooGLEFX.EditorObjects.ObjectDrawing;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import javafx.scene.canvas.GraphicsContext;

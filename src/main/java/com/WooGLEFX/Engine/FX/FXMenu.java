@@ -2,7 +2,9 @@ package com.WooGLEFX.Engine.FX;
 
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.*;
-import com.WooGLEFX.GUI.PaletteReconfigurator;
+import com.WooGLEFX.File.ResourceManagers.BallManager;
+import com.WooGLEFX.Functions.UndoHandling.UndoManager;
+import com.WooGLEFX.Engine.GUI.PaletteReconfigurator;
 import com.WooGLEFX.Structures.GameVersion;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;

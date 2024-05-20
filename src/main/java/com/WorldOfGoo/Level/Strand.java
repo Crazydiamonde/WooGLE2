@@ -1,14 +1,14 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.Renderer;
-import com.WooGLEFX.Functions.BallManager;
+import com.WooGLEFX.File.ResourceManagers.BallManager;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
-import com.WooGLEFX.Structures.InputField;
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import com.WorldOfGoo.Ball.BallStrand;
 
@@ -42,7 +42,7 @@ public class Strand extends EditorObject {
 
 
     public Strand(EditorObject _parent) {
-        super(_parent, "Strand");
+        super(_parent, "Strand", "level\\strand");
 
         addAttribute("gb1", InputField.GOOBALL_ID).assertRequired();
         addAttribute("gb2", InputField.GOOBALL_ID).assertRequired();

@@ -1,8 +1,7 @@
 package com.WooGLEFX.Engine.FX;
 
-import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.GUI.Alarms;
+import com.WooGLEFX.Engine.GUI.Alarms;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.WorldLevel;
 import javafx.scene.control.TabPane;

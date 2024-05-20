@@ -1,6 +1,6 @@
 package com.WooGLEFX.EditorObjects.ObjectDrawing;
 
-import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
+import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,8 +30,9 @@ public class CircleDrawer {
         double woag = Math.min(objectPosition.getEdgeSize(), Math.abs(radius) / 2) / 2;
 
         graphicsContext.setLineWidth(woag * 2 * zoom);
-        graphicsContext.strokeOval(screenX + woag * zoom, screenY + woag * zoom,
-                (radius - woag) * 2 * zoom, (radius - woag) * 2 * zoom);
+        if (objectPosition.getEdgeSize() != 0)
+            graphicsContext.strokeOval(screenX + woag * zoom, screenY + woag * zoom,
+                    (radius - woag) * 2 * zoom, (radius - woag) * 2 * zoom);
 
         if (selected) {
 
