@@ -16,7 +16,7 @@ public class LevelCloser {
         } else {
             try {
                 LevelTab levelTab = (LevelTab) levelSelectPane.getTabs().get(levelSelectPane.getTabs().size() - 1);
-                if (levelTab.getLevel().getEditingStatus() == WorldLevel.UNSAVED_CHANGES) {
+                if (levelTab.getLevel().getEditingStatus() == LevelTab.UNSAVED_CHANGES) {
                     Alarms.closeTabMessage2(levelTab, levelTab.getLevel());
                 } else {
                     levelTab.getTabPane().getTabs().remove(levelTab);

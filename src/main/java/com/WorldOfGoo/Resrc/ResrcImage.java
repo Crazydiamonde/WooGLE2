@@ -9,10 +9,8 @@ public class ResrcImage extends EditorObject {
     public ResrcImage(EditorObject _parent) {
         super(_parent, "Image");
 
-        addAttribute("id", InputField.ANY)      .assertRequired();
-        addAttribute("path", InputField.ANY)    .assertRequired();
-        addAttribute("REALid", InputField.ANY)  .assertRequired();
-        addAttribute("REALpath", InputField.ANY).assertRequired();
+        addAttribute("id",   InputField.ANY).assertRequired();
+        addAttribute("path", InputField.ANY).assertRequired();
 
         setMetaAttributes(MetaEditorAttribute.parse("id,path,"));
 

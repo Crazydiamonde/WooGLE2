@@ -42,7 +42,7 @@ public class Line extends EditorObject {
                 return 3;
             }
             public Paint getBorderColor() {
-                if (LevelManager.getLevel().getShowGeometry() != 2) return new Color(0.0, 0.25, 1.0, 1.0);
+                if (LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 2) return new Color(0.0, 0.25, 1.0, 1.0);
 
                 if (ObjectUtil.attributeContainsTag(getAttribute("tag").listValue(), "deadly")) {
                     return new Color(1.0, 0.25, 0, 1.0);
@@ -60,7 +60,7 @@ public class Line extends EditorObject {
 
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGeometry() != 0;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
         });
 
@@ -97,7 +97,7 @@ public class Line extends EditorObject {
                 return Rectangle.geometryColor(getAttribute("tag").listValue(), getParent());
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGeometry() != 0;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
         });
 

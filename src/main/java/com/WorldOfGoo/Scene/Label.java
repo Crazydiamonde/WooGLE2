@@ -44,7 +44,7 @@ public class Label extends EditorObject {
                 setAttribute("rotation", rotation);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowLabels();
+                return LevelManager.getLevel().getVisibilitySettings().isShowLabels();
             }
 
             // TODO label width and height

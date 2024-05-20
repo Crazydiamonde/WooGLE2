@@ -27,5 +27,6 @@ module com.example.WOGAnniversaryEditor {
   exports com.WooGLEFX.Engine.FX;
   exports com.WooGLEFX.EditorObjects.Components;
     exports com.WooGLEFX.EditorObjects.ObjectCollision;
+    exports com.WooGLEFX.File.export;
 
 }

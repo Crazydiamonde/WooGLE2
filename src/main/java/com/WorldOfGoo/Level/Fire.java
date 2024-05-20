@@ -53,7 +53,7 @@ public class Fire extends EditorObject {
                 return new Color(1.0, 0.25, 0.0, 0.1);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGeometry() != 0;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
         });
 

@@ -67,7 +67,7 @@ public class Linearforcefield extends EditorObject {
                 return new Color(1.0, 1.0, 0, 0.05);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowForcefields();
+                return LevelManager.getLevel().getVisibilitySettings().isShowForcefields();
             }
             public boolean isRotatable() {
                 return false;
@@ -103,7 +103,7 @@ public class Linearforcefield extends EditorObject {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, Renderer.stops);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowForcefields();
+                return LevelManager.getLevel().getVisibilitySettings().isShowForcefields();
             }
         });
 

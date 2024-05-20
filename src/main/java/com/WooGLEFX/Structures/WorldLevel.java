@@ -1,35 +1,19 @@
 package com.WooGLEFX.Structures;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Stack;
 
 import com.WooGLEFX.EditorObjects.ObjectCreator;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.FX.FXContainers;
-import com.WooGLEFX.Engine.FX.FXEditorButtons;
-import com.WooGLEFX.Engine.FX.FXHierarchy;
-import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.Functions.LevelLoader;
+import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
+import com.WooGLEFX.Structures.SimpleStructures.VisibilitySettings;
 import com.WooGLEFX.Structures.UserActions.UserAction;
-import com.WorldOfGoo.Addin.Addin;
-import com.WorldOfGoo.Level.Level;
 import com.WorldOfGoo.Level.Signpost;
-import com.WorldOfGoo.Resrc.ResourceManifest;
-import com.WorldOfGoo.Scene.Scene;
+import com.WorldOfGoo.Scene.Label;
 import com.WorldOfGoo.Text.TextString;
-import com.WorldOfGoo.Text.TextStrings;
-
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 
 public class WorldLevel {
 
@@ -37,338 +21,138 @@ public class WorldLevel {
     public final Stack<UserAction[]> undoActions = new Stack<>();
 
     private final ArrayList<EditorObject> scene;
-    private final ArrayList<EditorObject> level;
-    private final ArrayList<EditorObject> resources;
-    private final ArrayList<EditorObject> addin;
-    private final ArrayList<EditorObject> text;
-
-    private EditorObject levelObject;
-    private EditorObject sceneObject;
-    private EditorObject resourcesObject;
-    private EditorObject addinObject;
-    private EditorObject textObject;
-
-    private boolean showCameras = false;
-    private boolean showForcefields = true;
-    private int showGeometry = 2;
-    private boolean showGraphics = true;
-    private int showGoos = 2;
-    private boolean showParticles = true;
-    private boolean showLabels = true;
-    private boolean showAnimations = true;
-    private boolean showSceneBGColor = false;
-
-    public static Image showHideAnim0;
-    public static Image showHideAnim;
-    public static Image showHideCam0;
-    public static Image showHideCam1;
-    public static Image showHideForcefields0;
-    public static Image showHideForcefields1;
-    public static Image showHideGeometry0;
-    public static Image showHideGeometry1;
-    public static Image showHideGoobs0;
-    public static Image showHideGoobs1;
-    public static Image showHideGoobs2;
-    public static Image showHideImages0;
-    public static Image showHideImages1;
-    public static Image showHideLabels0;
-    public static Image showHideLabels1;
-    public static Image showHideParticles0;
-    public static Image showHideParticles1;
-    public static Image showHideBGColor0;
-    public static Image showHideBGColor1;
-
-    public static final int NO_UNSAVED_CHANGES = 0;
-    public static final int UNSAVED_CHANGES = 1;
-    public static final int UNSAVED_CHANGES_UNMODIFIABLE = 2;
-
-    private static final Image noChangesImageOld;
-    private static final Image changesImageOld;
-    private static final Image changesUnmodifiableImageOld;
-
-    private static final Image noChangesImageNew;
-    private static final Image changesImageNew;
-    private static final Image changesUnmodifiableImageNew;
-
-    private Image currentStatusImage;
-    private Tab levelTab;
-
-    private double offsetX = 0;
-    private double offsetY = 0;
-    private double zoom = 1;
-
-    static {
-        try {
-            showHideAnim0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim_disabled.png");
-            showHideAnim = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png");
-            showHideCam0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam_disabled.png");
-            showHideCam1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png");
-            showHideForcefields0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields_disabled.png");
-            showHideForcefields1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png");
-            showHideGeometry0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry_disabled.png");
-            showHideGeometry1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png");
-            showHideGoobs0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_disabled.png");
-            showHideGoobs1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_wireframe.png");
-            showHideGoobs2 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png");
-            showHideImages0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images_disabled.png");
-            showHideImages1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png");
-            showHideLabels0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels_disabled.png");
-            showHideLabels1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png");
-            showHideParticles0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles_disabled.png");
-            showHideParticles1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png");
-            showHideBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
-            showHideBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
-            noChangesImageOld = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_old.png");
-            changesImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_old.png");
-            changesUnmodifiableImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_old.png");
-            noChangesImageNew = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_new.png");
-            changesImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_new.png");
-            changesUnmodifiableImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_new.png");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public ArrayList<EditorObject> getScene() {
         return scene;
     }
+    public EditorObject getSceneObject() {
+        return scene.get(0);
+    }
 
+    private final ArrayList<EditorObject> level;
     public ArrayList<EditorObject> getLevel() {
         return level;
     }
+    public EditorObject getLevelObject() {
+        return level.get(0);
+    }
 
+    private final ArrayList<EditorObject> resources;
     public ArrayList<EditorObject> getResources() {
         return resources;
     }
+    public EditorObject getResourcesObject() {
+        return resources.get(0);
+    }
 
+    private final ArrayList<EditorObject> addin;
     public ArrayList<EditorObject> getAddin() {
         return addin;
     }
+    public EditorObject getAddinObject() {
+        return addin.get(0);
+    }
 
+    private final ArrayList<EditorObject> text;
     public ArrayList<EditorObject> getText() {
         return text;
     }
-
-    public EditorObject getLevelObject() {
-        return levelObject;
-    }
-
-    public EditorObject getSceneObject() {
-        return sceneObject;
-    }
-
-    public EditorObject getResourcesObject() {
-        return resourcesObject;
-    }
-
-    public EditorObject getAddinObject() {
-        return addinObject;
-    }
-
     public EditorObject getTextObject() {
-        return textObject;
+        return text.get(0);
     }
 
-    private String levelName;
 
-    public String getLevelName() {
-        return levelName;
-    }
-
-    public void setLevelName(String levelName) {
-        this.levelName = levelName;
-    }
-
-    private final GameVersion version;
-
-    public GameVersion getVersion() {
-        return version;
-    }
-
-    public boolean isShowCameras() {
-        return showCameras;
-    }
-
-    public void setShowCameras(boolean showCameras) {
-        this.showCameras = showCameras;
-        FXEditorButtons.buttonShowHideCamera.setGraphic(new ImageView(showCameras ? showHideCam1 : showHideCam0));
-        FXEditorButtons.buttonShowHideParticles.setGraphic(new ImageView(showParticles ? showHideParticles1 : showHideParticles0));
-    }
-
-    public boolean isShowForcefields() {
-        return showForcefields;
-    }
-
-    public void setShowForcefields(boolean showForcefields) {
-        this.showForcefields = showForcefields;
-        FXEditorButtons.buttonShowHideForcefields.setGraphic(new ImageView(showForcefields ? showHideForcefields1 : showHideForcefields0));
-    }
-
-    public int getShowGeometry() {
-        return showGeometry;
-    }
-
-    public void setShowGeometry(int showGeometry) {
-        this.showGeometry = showGeometry;
-        switch (showGeometry) {
-            case 0 -> FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(showHideGeometry0));
-            case 1 -> FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(showHideGeometry1));
-            case 2 -> FXEditorButtons.buttonShowHideGeometry.setGraphic(new ImageView(showHideImages1));
-        }
-    }
-
-    public boolean isShowGraphics() {
-        return showGraphics;
-    }
-
-    public void setShowGraphics(boolean showGraphics) {
-        this.showGraphics = showGraphics;
-        FXEditorButtons.buttonShowHideGraphics.setGraphic(new ImageView(showGraphics ? showHideImages1 : showHideImages0));
-    }
-
-    public int getShowGoos() {
-        return showGoos;
-    }
-
-    public void setShowGoos(int showGoos) {
-        this.showGoos = showGoos;
-        switch (showGoos) {
-            case 0 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs0));
-            case 1 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs1));
-            case 2 -> FXEditorButtons.buttonShowHideGoos.setGraphic(new ImageView(showHideGoobs2));
-        }
-    }
-
-    public boolean isShowParticles() {
-        return showParticles;
-    }
-
-    public void setShowParticles(boolean showParticles) {
-        this.showParticles = showParticles;
-        FXEditorButtons.buttonShowHideParticles.setGraphic(new ImageView(showParticles ? showHideParticles1 : showHideParticles0));
-    }
-
-    public boolean isShowLabels() {
-        return showLabels;
-    }
-
-    public void setShowLabels(boolean showLabels) {
-        this.showLabels = showLabels;
-        FXEditorButtons.buttonShowHideLabels.setGraphic(new ImageView(showLabels ? showHideLabels1 : showHideLabels0));
-    }
-
-    public boolean isShowAnimations() {
-        return showAnimations;
-    }
-
-    public void setShowAnimations(boolean showAnimations) {
-        this.showAnimations = showAnimations;
-        FXEditorButtons.buttonShowHideAnim.setGraphic(new ImageView(showAnimations ? showHideAnim : showHideAnim0));
-    }
-
-    public boolean isShowSceneBGColor() {
-        return showSceneBGColor;
-    }
-
-    public void setShowSceneBGColor(boolean showSceneBGColor) {
-        this.showSceneBGColor = showSceneBGColor;
-        FXEditorButtons.buttonShowHideSceneBGColor.setGraphic(new ImageView(showSceneBGColor ? showHideBGColor1 : showHideBGColor0));
-    }
-
-    public Tab getLevelTab() {
+    private LevelTab levelTab;
+    public LevelTab getLevelTab() {
         return levelTab;
     }
-
-    public void setLevelTab(Tab levelTab) {
+    public void setLevelTab(LevelTab levelTab) {
         this.levelTab = levelTab;
     }
 
-    private int editingStatus;
 
-    public int getEditingStatus() {
-        return editingStatus;
-    }
-
-    public void setEditingStatus(int editingStatus, boolean shouldSelect) {
-        this.editingStatus = editingStatus;
-        if (editingStatus == NO_UNSAVED_CHANGES) {
-            currentStatusImage = version == GameVersion.OLD ? noChangesImageOld : noChangesImageNew;
-        } else if (editingStatus == UNSAVED_CHANGES) {
-            currentStatusImage = version == GameVersion.OLD ? changesImageOld : changesImageNew;
-        } else if (editingStatus == UNSAVED_CHANGES_UNMODIFIABLE) {
-            currentStatusImage = version == GameVersion.OLD ? changesUnmodifiableImageOld : changesUnmodifiableImageNew;
-        }
-
-        AnchorPane pane = new AnchorPane();
-
-        pane.getChildren().add(new ImageView(currentStatusImage));
-
-        TreeItem<EditorObject> root = FXHierarchy.getHierarchy().getRoot();
-
-        //ChatGPT
-        StackPane graphicContainer = new StackPane();
-        graphicContainer.prefWidthProperty().bind(levelTab.getTabPane().tabMaxWidthProperty());
-        StackPane.setAlignment(pane, Pos.CENTER_LEFT);
-        graphicContainer.getChildren().addAll(pane, new Label(getLevelName()));
-        levelTab.setGraphic(graphicContainer);
-        //End ChatGPT
-        TabPane god = levelTab.getTabPane();
-        if (shouldSelect) {
-            god.getSelectionModel().select(levelTab);
-            FXHierarchy.getHierarchy().setRoot(root);
-        }
-    }
-
-
-    private EditorObject selected = null;
-
-    public EditorObject getSelected() {
-        return selected;
-    }
-
-    public void setSelected(EditorObject selected) {
-        this.selected = selected;
-    }
-
-    public boolean isSelected(EditorObject editorObject) {
-        return editorObject == selected;
-    }
-
-    private String currentlySelectedSection = "Scene";
-
-    public String getCurrentlySelectedSection() {
-        return currentlySelectedSection;
-    }
-
-    public void setCurrentlySelectedSection(String currentlySelectedSection) {
-        this.currentlySelectedSection = currentlySelectedSection;
-    }
-
+    private double offsetX = 0;
     public double getOffsetX() {
         return offsetX;
     }
-
     public void setOffsetX(double offsetX) {
         this.offsetX = offsetX;
     }
 
+
+    private double offsetY = 0;
     public double getOffsetY() {
         return offsetY;
     }
-
     public void setOffsetY(double offsetY) {
         this.offsetY = offsetY;
     }
 
+
+    private double zoom = 1;
     public double getZoom() {
         return zoom;
     }
-
     public void setZoom(double zoom) {
         this.zoom = zoom;
     }
 
+
+    private final VisibilitySettings visibilitySettings = new VisibilitySettings();
+    public VisibilitySettings getVisibilitySettings() {
+        return visibilitySettings;
+    }
+
+
+    private String levelName;
+    public String getLevelName() {
+        return levelName;
+    }
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
+    }
+
+
+    private final GameVersion version;
+    public GameVersion getVersion() {
+        return version;
+    }
+
+
+    private int editingStatus;
+    public int getEditingStatus() {
+        return editingStatus;
+    }
+    public void setEditingStatus(int editingStatus, boolean shouldSelect) {
+        this.editingStatus = editingStatus;
+        this.levelTab.update(editingStatus, shouldSelect);
+    }
+
+
+    private EditorObject selected = null;
+    public EditorObject getSelected() {
+        return selected;
+    }
+    public void setSelected(EditorObject selected) {
+        this.selected = selected;
+    }
+    public boolean isSelected(EditorObject editorObject) {
+        return editorObject == selected;
+    }
+
+
+    private String currentlySelectedSection = "Scene";
+    public String getCurrentlySelectedSection() {
+        return currentlySelectedSection;
+    }
+    public void setCurrentlySelectedSection(String currentlySelectedSection) {
+        this.currentlySelectedSection = currentlySelectedSection;
+    }
+
+
     private void cameraToMiddleOfLevel() {
+
+        EditorObject sceneObject = scene.get(0);
+
         double sceneWidth = sceneObject.getAttribute("maxx").doubleValue() - sceneObject.getAttribute("minx").doubleValue();
         double sceneHeight = sceneObject.getAttribute("maxy").doubleValue() - sceneObject.getAttribute("miny").doubleValue();
 
@@ -390,67 +174,41 @@ public class WorldLevel {
         offsetY = (offsetY - canvasHeight / 2) * zoom + canvasHeight / 2;
     }
 
-    public WorldLevel(ArrayList<EditorObject> _scene,
-                      ArrayList<EditorObject> _level,
-                      ArrayList<EditorObject> _resources,
-                      ArrayList<EditorObject> _addin,
-                      ArrayList<EditorObject> _text,
-                      GameVersion _version) {
 
-        scene = _scene;
-        level = _level;
-        resources = _resources;
-        addin = _addin;
-        text = _text;
-        version = _version;
+    public WorldLevel(ArrayList<EditorObject> scene,
+                      ArrayList<EditorObject> level,
+                      ArrayList<EditorObject> resources,
+                      ArrayList<EditorObject> addin,
+                      ArrayList<EditorObject> text,
+                      GameVersion version) {
 
-        for (EditorObject object : scene) {
-            if (object instanceof Scene) {
-                sceneObject = object;
-            }
-        }
-        for (EditorObject object : level) {
-            if (object instanceof Level) {
-                levelObject = object;
-            }
-        }
-        for (EditorObject object : resources) {
-            if (object instanceof ResourceManifest) {
-                resourcesObject = object;
-            }
-        }
-        for (EditorObject object : addin) {
-            object.getTreeItem().setExpanded(true);
-            if (object instanceof Addin) {
-                addinObject = object;
-            }
-        }
-        for (EditorObject object : text) {
-            object.getTreeItem().setExpanded(true);
-            if (object instanceof TextStrings) {
-                textObject = object;
-            }
-        }
+        this.scene = scene;
+        this.level = level;
+        this.resources = resources;
+        this.addin = addin;
+        this.text = text;
+        this.version = version;
+
+        for (EditorObject object : addin) object.getTreeItem().setExpanded(true);
+        for (EditorObject object : text) object.getTreeItem().setExpanded(true);
 
         for (EditorObject sceneObject : scene) {
-            if (sceneObject instanceof com.WorldOfGoo.Scene.Label label) {
-                if (label.getAttribute("text") != null) {
-                    boolean alreadyInText = false;
-                    for (EditorObject textObject : text) {
-                        if (textObject instanceof TextString string) {
-                            if (string.getAttribute("id").equals(label.getAttribute("text"))) {
-                                alreadyInText = true;
-                                break;
-                            }
+            if (sceneObject instanceof Label label) {
+                boolean alreadyInText = false;
+                for (EditorObject textObject : text) {
+                    if (textObject instanceof TextString string) {
+                        if (string.getAttribute("id").stringValue().equals(label.getAttribute("text").stringValue())) {
+                            alreadyInText = true;
+                            break;
                         }
                     }
-                    if (!alreadyInText) {
-                        try {
-                            EditorObject myString = ObjectUtil.deepClone(GlobalResourceManager.getText(label.getAttribute("text").stringValue(), version), textObject);
-                            text.add(myString);
-                        } catch (Exception e) {
-                            LevelLoader.failedResources.add(("Level text \"" + label.getAttribute("text").stringValue() + "\" (version " + version + ")"));
-                        }
+                }
+                if (!alreadyInText) {
+                    try {
+                        EditorObject myString = ObjectUtil.deepClone(GlobalResourceManager.getText(label.getAttribute("text").stringValue(), version), text.get(0));
+                        text.add(myString);
+                    } catch (Exception e) {
+                        LevelLoader.failedResources.add(("Level text \"" + label.getAttribute("text").stringValue() + "\" (version " + version + ")"));
                     }
                 }
             }
@@ -458,24 +216,22 @@ public class WorldLevel {
 
         for (EditorObject levelObject : level) {
             if (levelObject instanceof Signpost signpost) {
-                if (signpost.getAttribute("text") != null) {
-                    boolean alreadyInText = false;
-                    for (EditorObject textObject : text) {
-                        if (textObject instanceof TextString string) {
-                            if (string.getAttribute("id").equals(signpost.getAttribute("text"))) {
-                                alreadyInText = true;
-                                break;
-                            }
+                boolean alreadyInText = false;
+                for (EditorObject textObject : text) {
+                    if (textObject instanceof TextString string) {
+                        if (string.getAttribute("id").equals(signpost.getAttribute("text"))) {
+                            alreadyInText = true;
+                            break;
                         }
                     }
-                    if (!alreadyInText) {
-                        try {
-                            //GlobalResourceManager.getText(signpost.getAttribute("text").stringValue(), version).deepClone(textObject);
-                        } catch (Exception e) {
-                            LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text") + "\" (version " + version + ")"));
-                            EditorObject string = ObjectCreator.create("string", textObject);
-                            string.setAttribute("id", signpost.getAttribute("text"));
-                        }
+                }
+                if (!alreadyInText) {
+                    try {
+                        ObjectUtil.deepClone(GlobalResourceManager.getText(signpost.getAttribute("text").stringValue(), version), text.get(0));
+                    } catch (Exception e) {
+                        LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text") + "\" (version " + version + ")"));
+                        EditorObject string = ObjectCreator.create("string", text.get(0));
+                        string.setAttribute("id", signpost.getAttribute("text"));
                     }
                 }
             }
@@ -483,4 +239,5 @@ public class WorldLevel {
 
         cameraToMiddleOfLevel();
     }
+
 }

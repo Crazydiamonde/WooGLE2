@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.io.FileNotFoundException;
+
 public class Circle extends EditorObject {
 
     private Image image;
@@ -137,7 +139,7 @@ public class Circle extends EditorObject {
                 setAttribute("radius", radius);
             }
             public double getEdgeSize() {
-                return 2;
+                return 4;
             }
             public double getDepth() {
                 return Renderer.GEOMETRY;
@@ -150,7 +152,7 @@ public class Circle extends EditorObject {
                 return new Color(color.getRed(), color.getGreen(), color.getBlue(), 0.25);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGeometry() != 0;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
         });
 
@@ -197,7 +199,7 @@ public class Circle extends EditorObject {
                 return image;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGraphics();
+                return LevelManager.getLevel().getVisibilitySettings().isShowGraphics();
             }
         });
 
@@ -222,8 +224,12 @@ public class Circle extends EditorObject {
 
     private void updateImage() {
 
-        if (!getAttribute("image").stringValue().isEmpty()) {
-            image = getAttribute("image").imageValue(LevelManager.getVersion());
+        try {
+            if (!getAttribute("image").stringValue().isEmpty()) {
+                image = getAttribute("image").imageValue(LevelManager.getVersion());
+            }
+        } catch (FileNotFoundException ignored) {
+
         }
 
     }

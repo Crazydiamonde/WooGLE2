@@ -7,11 +7,15 @@ import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.Functions.AnimationManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.ParticleManager;
+import com.WooGLEFX.Structures.Resources.ImageResource;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
 import com.WorldOfGoo.Level.BallInstance;
+import com.WorldOfGoo.Level.Level;
 import com.WorldOfGoo.Particle.Ambientparticleeffect;
 import com.WorldOfGoo.Particle.Particleeffect;
+import com.WorldOfGoo.Resrc.ResrcImage;
+import com.WorldOfGoo.Resrc.SetDefaults;
 import com.WorldOfGoo.Scene.Circle;
 import com.WorldOfGoo.Scene.Compositegeom;
 import com.WorldOfGoo.Scene.Rectangle;
@@ -84,9 +88,28 @@ public class InputField {
                     return false;
                 }
             case IMAGE, IMAGE_REQUIRED:
+
+                EditorObject resourceManifest = LevelManager.getLevel().getResourcesObject();
+
                 for (EditorObject resrc : LevelManager.getLevel().getResources()) {
-                    if (resrc.attributeExists("id") && resrc.getAttribute("id").stringValue().equals(potential)) {
-                        return true;
+
+                    if (resrc instanceof ResrcImage resrcImage) {
+
+                        int resrcIndex = resourceManifest.getChildren().indexOf(resrcImage);
+
+                        String idprefix = "";
+                        for (int i = resrcIndex - 1; i >= 0; i--) {
+                            EditorObject editorObject = resourceManifest.getChildren().get(i);
+                            if (editorObject instanceof SetDefaults setDefaults) {
+                                idprefix = setDefaults.getAttribute("idprefix").stringValue();
+                                break;
+                            }
+                        }
+
+                        if (resrcImage.getAttribute("id").stringValue().equals(idprefix + potential)) {
+                            return true;
+                        }
+
                     }
                 }
                 return false;

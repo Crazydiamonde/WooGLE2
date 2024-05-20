@@ -24,7 +24,7 @@ public class FXLevelSelectPane {
         tab.setOnCloseRequest(event -> {
             event.consume();
             // If the level has unsaved changes:
-            if (level.getEditingStatus() == WorldLevel.UNSAVED_CHANGES) {
+            if (level.getEditingStatus() == LevelTab.UNSAVED_CHANGES) {
                 // Show a dialogue asking the user if they want to close the level without
                 // saving changes first.
                 Alarms.closeTabMessage(tab, level);
@@ -83,19 +83,8 @@ public class FXLevelSelectPane {
             if (t1 == null) {
                 LevelManager.setLevel(null);
                 LevelManager.onSetLevel(null);
-                FXEditorButtons.enableAllButtons(true);
-                if (FileManager.isHasOldWOG()) {
-                    FXEditorButtons.buttonNewOld.setDisable(false);
-                    FXEditorButtons.buttonOpenOld.setDisable(false);
-                    FXMenu.newLevelOldItem.setDisable(false);
-                    FXMenu.openLevelOldItem.setDisable(false);
-                }
-                if (FileManager.isHasNewWOG()) {
-                    FXEditorButtons.buttonNewNew.setDisable(false);
-                    FXEditorButtons.buttonOpenNew.setDisable(false);
-                    FXMenu.newLevelNewItem.setDisable(false);
-                    FXMenu.openLevelNewItem.setDisable(false);
-                }
+                FXEditorButtons.updateAllButtons();
+                FXMenu.updateAllButtons();
             }
         });
 

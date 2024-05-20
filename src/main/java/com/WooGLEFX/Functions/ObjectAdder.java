@@ -311,8 +311,6 @@ public class ObjectAdder {
         ResrcImage obj = (ResrcImage) ObjectCreator.create("Image", parent);
         obj.setAttribute("id", "IMAGE_SCENE_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_IMG0");
         obj.setAttribute("path", "");
-        obj.setAttribute("REALid", "IMAGE_SCENE_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_IMG0");
-        obj.setAttribute("REALpath", "");
         LevelManager.getLevel().getResources().add(obj);
         addAnything(obj, parent);
     }
@@ -321,8 +319,6 @@ public class ObjectAdder {
         Sound obj = (Sound) ObjectCreator.create("Sound", parent);
         obj.setAttribute("id", "SOUND_LEVEL_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_SND0");
         obj.setAttribute("path", "");
-        obj.setAttribute("REALid", "SOUND_LEVEL_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_SND0");
-        obj.setAttribute("REALpath", "");
         LevelManager.getLevel().getResources().add(obj);
         addAnything(obj, parent);
     }

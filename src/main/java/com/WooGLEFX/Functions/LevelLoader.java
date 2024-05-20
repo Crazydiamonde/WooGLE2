@@ -4,14 +4,13 @@ import com.WooGLEFX.EditorObjects.ObjectCreator;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.FX.*;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.GlobalResourceManager;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.GUI.LevelSelector;
-import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.GameVersion;
+import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
 import com.WorldOfGoo.Level.Signpost;
@@ -66,7 +65,8 @@ public class LevelLoader {
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
         LevelManager.setLevel(level);
         level.setLevelName(name);
-        FXEditorButtons.enableAllButtons(false);
+        FXEditorButtons.updateAllButtons();
+        FXMenu.updateAllButtons();
 
         level.getSceneObject().setTreeItem(new TreeItem<>(level.getSceneObject()));
         level.getSceneObject().setAttribute("backgroundcolor", "255,255,255");
@@ -98,7 +98,7 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
-        Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
+        LevelTab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
         FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
 
         int numTabs = FXLevelSelectPane.getLevelSelectPane().getTabs().size();
@@ -109,7 +109,7 @@ public class LevelLoader {
         LevelUpdater.saveLevel(level);
 
         level.setLevelTab(levelSelectButton);
-        level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+        level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
         FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
         LevelManager.onSetLevel(level);
     }
@@ -145,7 +145,8 @@ public class LevelLoader {
         }
 
         level.setLevelName(levelName);
-        FXEditorButtons.enableAllButtons(false);
+        FXEditorButtons.updateAllButtons();
+        FXMenu.updateAllButtons();
 
         FXLevelSelectPane.getLevelSelectPane().setMinHeight(30);
         FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
@@ -176,8 +177,8 @@ public class LevelLoader {
                         }
                     } catch (ParserConfigurationException | SAXException | IOException e) {
                         if (!failedResources
-                                .contains("Ball: " + object.getAttribute("type") + " (version " + version + ")")) {
-                            failedResources.add("Ball: " + object.getAttribute("type") + " (version " + version + ")");
+                                .contains("Ball: " + object.getAttribute("type").stringValue() + " (version " + (version == GameVersion.OLD ? 1.3 : 1.5) + ")")) {
+                            failedResources.add("Ball: " + object.getAttribute("type").stringValue() + " (version " + (version == GameVersion.OLD ? 1.3 : 1.5) + ")");
                         }
                     }
                 }
@@ -209,7 +210,7 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
-        Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
+        LevelTab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
         FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
 
         int numTabs = FXLevelSelectPane.getLevelSelectPane().getTabs().size();
@@ -226,7 +227,7 @@ public class LevelLoader {
         }
 
         level.setLevelTab(levelSelectButton);
-        level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+        level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
         FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
         LevelManager.onSetLevel(level);
     }
@@ -254,14 +255,14 @@ public class LevelLoader {
         LevelManager.setLevel(level);
 
         level.setLevelName(name);
-        FXEditorButtons.enableAllButtons(false);
+        FXEditorButtons.updateAllButtons();
+        FXMenu.updateAllButtons();
 
         for (EditorObject object : level.getResources()) {
             if (object instanceof Resources) {
                 object.setAttribute("id", "scene_" + name);
             } else if (object instanceof ResrcImage || object instanceof Sound) {
                 object.setAttribute("id", object.getAttribute("id").stringValue().replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
-                object.setAttribute("REALid", object.getAttribute("REALid").stringValue().replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
             }
             GlobalResourceManager.addResource(object, version);
             object.update();
@@ -288,7 +289,7 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
-        Tab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
+        LevelTab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
         FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
 
         int numTabs = FXLevelSelectPane.getLevelSelectPane().getTabs().size();
@@ -299,7 +300,7 @@ public class LevelLoader {
         LevelUpdater.saveLevel(level);
 
         level.setLevelTab(levelSelectButton);
-        level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+        level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
         FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
         LevelManager.onSetLevel(level);
     }

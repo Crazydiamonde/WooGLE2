@@ -13,6 +13,8 @@ import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 
+import java.io.FileNotFoundException;
+
 public class Button extends EditorObject {
 
     private static final Logger logger = LoggerFactory.getLogger(Button.class);
@@ -101,7 +103,7 @@ public class Button extends EditorObject {
                 return image;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGraphics();
+                return LevelManager.getLevel().getVisibilitySettings().isShowGraphics();
             }
         });
 
@@ -141,9 +143,13 @@ public class Button extends EditorObject {
 
 
     private void colorize() {
-        image = getAttribute("up").imageValue(LevelManager.getVersion());
-        Color color = getAttribute("colorize").colorValue();
-        image = SceneLayer.colorize(image, color);
+        try {
+            image = getAttribute("up").imageValue(LevelManager.getVersion());
+            Color color = getAttribute("colorize").colorValue();
+            image = SceneLayer.colorize(image, color);
+        } catch (FileNotFoundException ignored) {
+
+        }
     }
 
 }

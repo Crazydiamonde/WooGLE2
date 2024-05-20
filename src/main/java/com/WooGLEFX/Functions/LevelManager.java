@@ -16,7 +16,8 @@ public class LevelManager {
     }
     public static void setLevel(WorldLevel _level) {
         level = _level;
-        FXEditorButtons.enableAllButtons(false);
+        FXEditorButtons.updateAllButtons();
+        FXMenu.updateAllButtons();
 
         if (level != null) {
 
@@ -52,7 +53,7 @@ public class LevelManager {
         String levelName = level.getLevelName() + " (version " + level.getVersion() + ")";
         FXStage.getStage().setTitle(levelName + " — World of Goo Anniversary Editor");
 
-        FXEditorButtons.updateButtons();
+        level.getVisibilitySettings().updateButtons();
 
         FXPropertiesView.changeTableView(level.getSelected());
         SelectionManager.goToSelectedInHierarchy();

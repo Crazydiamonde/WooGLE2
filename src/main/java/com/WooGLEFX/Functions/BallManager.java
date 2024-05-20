@@ -2,7 +2,7 @@ package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.LevelExporter;
+import com.WooGLEFX.File.export.BallWriter;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.GUI.BallSelector;
 import com.WooGLEFX.Structures.GameVersion;
@@ -18,10 +18,10 @@ public class BallManager {
     }
 
 
-
     public static void saveBallInVersion(GameVersion oldVersion, GameVersion newVersion) {
         new BallSelector(oldVersion, newVersion).start(new Stage());
     }
+
 
     public static void saveBallInVersion(String ball, GameVersion oldVersion, GameVersion newVersion) {
 
@@ -32,7 +32,7 @@ public class BallManager {
 
             String dir = newVersion == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
 
-            LevelExporter.exportBallAsXML(_ball, dir + "\\res\\balls\\" + ball, newVersion, false);
+            BallWriter.exportBallAsXML(_ball, dir + "\\res\\balls\\" + ball, newVersion, false);
 
         } catch (Exception e) {
             Alarms.errorMessage(e);

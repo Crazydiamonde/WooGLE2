@@ -1,51 +1,56 @@
 package com.WooGLEFX.Functions;
 
-import com.WooGLEFX.Engine.Main;
-import com.WooGLEFX.GUI.BallSelector;
-import javafx.stage.Stage;
-
 public class VisibilityManager {
 
     public static void showHideCameras() {
-        LevelManager.getLevel().setShowCameras(!LevelManager.getLevel().isShowCameras());
+        LevelManager.getLevel().getVisibilitySettings().setShowCameras(
+                !LevelManager.getLevel().getVisibilitySettings().isShowCameras());
     }
 
     public static void showHideForcefields() {
-        LevelManager.getLevel().setShowForcefields(!LevelManager.getLevel().isShowForcefields());
+        LevelManager.getLevel().getVisibilitySettings().setShowForcefields(
+                !LevelManager.getLevel().getVisibilitySettings().isShowForcefields());
     }
 
     public static void showHideGeometry() {
-        LevelManager.getLevel().setShowGeometry(LevelManager.getLevel().getShowGeometry() - 1);
-        if (LevelManager.getLevel().getShowGeometry() < 0) {
-            LevelManager.getLevel().setShowGeometry(2);
+        LevelManager.getLevel().getVisibilitySettings().setShowGeometry(
+                LevelManager.getLevel().getVisibilitySettings().getShowGeometry() - 1);
+        if (LevelManager.getLevel().getVisibilitySettings().getShowGeometry() < 0) {
+            LevelManager.getLevel().getVisibilitySettings().setShowGeometry(2);
         }
     }
 
     public static void showHideGraphics() {
-        LevelManager.getLevel().setShowGraphics(!LevelManager.getLevel().isShowGraphics());
+        LevelManager.getLevel().getVisibilitySettings().setShowGraphics(
+                !LevelManager.getLevel().getVisibilitySettings().isShowGraphics());
     }
 
     public static void showHideGoos() {
-        LevelManager.getLevel().setShowGoos(LevelManager.getLevel().getShowGoos() - 1);
-        if (LevelManager.getLevel().getShowGoos() < 0) {
-            LevelManager.getLevel().setShowGoos(2);
+        LevelManager.getLevel().getVisibilitySettings().setShowGoos(
+                LevelManager.getLevel().getVisibilitySettings().getShowGoos() - 1);
+        if (LevelManager.getLevel().getVisibilitySettings().getShowGoos() < 0) {
+            LevelManager.getLevel().getVisibilitySettings().setShowGoos(2);
         }
     }
 
     public static void showHideParticles() {
-        LevelManager.getLevel().setShowParticles(!LevelManager.getLevel().isShowParticles());
+        LevelManager.getLevel().getVisibilitySettings().setShowParticles(
+                !LevelManager.getLevel().getVisibilitySettings().isShowParticles());
     }
 
     public static void showHideLabels() {
-        LevelManager.getLevel().setShowLabels(!LevelManager.getLevel().isShowLabels());
+        LevelManager.getLevel().getVisibilitySettings().setShowLabels(
+                !LevelManager.getLevel().getVisibilitySettings().isShowLabels());
     }
 
     public static void showHideAnim() {
-        LevelManager.getLevel().setShowAnimations(!LevelManager.getLevel().isShowAnimations());
+        LevelManager.getLevel().getVisibilitySettings().setShowAnimations(
+                !LevelManager.getLevel().getVisibilitySettings().isShowAnimations());
     }
 
     public static void showHideSceneBGColor() {
-        LevelManager.getLevel().setShowSceneBGColor(!LevelManager.getLevel().isShowSceneBGColor());
+        LevelManager.getLevel().getVisibilitySettings().setShowSceneBGColor(
+                !LevelManager.getLevel().getVisibilitySettings().isShowSceneBGColor());
     }
 
 }

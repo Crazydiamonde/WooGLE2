@@ -72,9 +72,9 @@ public class LevelResourceManager {
                  * level file
                  */
                 try {
-                    GlobalResourceManager.updateResource(editorObject.getAttribute("REALid").stringValue(), level.getVersion());
+                    GlobalResourceManager.updateResource(editorObject.getAttribute("id").stringValue(), level.getVersion());
                 } catch (FileNotFoundException e) {
-                    failedToLoad.append(editorObject.getAttribute("REALid")).append("\n");
+                    failedToLoad.append(editorObject.getAttribute("id")).append("\n");
                     logger.error("", e);
                 }
             }
@@ -181,15 +181,7 @@ public class LevelResourceManager {
             EditorObject imageResourceObject = ObjectCreator.create("Image", null);
 
             imageResourceObject.setAttribute("id", imageResourceName);
-            imageResourceObject.setAttribute(
-                    "path",
-                    resourcePath
-            );
-            imageResourceObject.setAttribute("REALid", imageResourceName);
-            imageResourceObject.setAttribute(
-                    "REALpath",
-                    resourcePath
-            );
+            imageResourceObject.setAttribute("path", resourcePath);
 
             int whereToPlaceResource = 0;
             int count = 0;
@@ -336,8 +328,6 @@ public class LevelResourceManager {
 
         soundResourceObject.setAttribute("id", soundResourceName);
         soundResourceObject.setAttribute("path", soundPath);
-        soundResourceObject.setAttribute("REALid", soundResourceName);
-        soundResourceObject.setAttribute("REALpath", soundPath);
 
         int whereToPlaceResource = 0;
         int count = 0;
@@ -436,8 +426,6 @@ public class LevelResourceManager {
 
         soundResourceObject.setAttribute("id", soundResourceName);
         soundResourceObject.setAttribute("path", soundPath);
-        soundResourceObject.setAttribute("REALid", soundResourceName);
-        soundResourceObject.setAttribute("REALpath", soundPath);
 
         int whereToPlaceResource = 0;
         int count = 0;
@@ -482,7 +470,7 @@ public class LevelResourceManager {
 
         // Open resources.xml for 1.3
         // This takes forever to finish
-        if (version == GameVersion.OLD && FileManager.isHasOldWOG()) {
+        if (version == GameVersion.OLD && FileManager.hasOldWOG()) {
             try {
                 ArrayList<EditorObject> resources = FileManager.openResources(GameVersion.OLD);
                 if (resources != null) {
@@ -499,7 +487,7 @@ public class LevelResourceManager {
 
         // Open resources.xml for 1.5
         // This happens instantly
-        if (version == GameVersion.NEW && FileManager.isHasNewWOG()) {
+        if (version == GameVersion.NEW && FileManager.hasNewWOG()) {
             try {
                 ArrayList<EditorObject> resources = FileManager.openResources(GameVersion.NEW);
                 if (resources != null) {
@@ -514,7 +502,7 @@ public class LevelResourceManager {
             }
         }
 
-        if (version == GameVersion.OLD && FileManager.isHasOldWOG()) {
+        if (version == GameVersion.OLD && FileManager.hasOldWOG()) {
             try {
                 FileManager.openParticles(GameVersion.OLD);
                 ArrayList<EditorObject> particles2 = FileManager.commonBallData;
@@ -536,7 +524,7 @@ public class LevelResourceManager {
             }
         }
 
-        if (version == GameVersion.NEW && FileManager.isHasNewWOG()) {
+        if (version == GameVersion.NEW && FileManager.hasNewWOG()) {
             try {
                 FileManager.openParticles(GameVersion.NEW);
                 ArrayList<EditorObject> particles2 = FileManager.commonBallData;
@@ -569,7 +557,7 @@ public class LevelResourceManager {
 
         // Load all animations from the game files
         try {
-            if (version == GameVersion.OLD && FileManager.isHasOldWOG()) {
+            if (version == GameVersion.OLD && FileManager.hasOldWOG()) {
                 File bruh1 = new File(FileManager.getOldWOGdir() + "\\res\\anim");
                 File[] animationsArray = bruh1.listFiles();
                 if (animationsArray != null) {
@@ -585,7 +573,7 @@ public class LevelResourceManager {
                     }
                 }
             }
-            if (version == GameVersion.NEW && FileManager.isHasNewWOG()) {
+            if (version == GameVersion.NEW && FileManager.hasNewWOG()) {
                 File bruh2 = new File(FileManager.getNewWOGdir() + "\\res\\anim");
                 File[] animationsArray = bruh2.listFiles();
                 if (animationsArray != null) {
@@ -603,7 +591,7 @@ public class LevelResourceManager {
             Alarms.errorMessage(e);
         }
 
-        if (version == GameVersion.OLD && FileManager.isHasOldWOG()) {
+        if (version == GameVersion.OLD && FileManager.hasOldWOG()) {
             try {
                 ArrayList<EditorObject> textList = FileManager.openText(GameVersion.OLD);
                 if (textList != null) {
@@ -617,7 +605,7 @@ public class LevelResourceManager {
                 Alarms.errorMessage(e);
             }
         }
-        if (version == GameVersion.NEW && FileManager.isHasNewWOG()) {
+        if (version == GameVersion.NEW && FileManager.hasNewWOG()) {
             try {
                 ArrayList<EditorObject> textList = FileManager.openText(GameVersion.NEW);
                 if (textList != null) {

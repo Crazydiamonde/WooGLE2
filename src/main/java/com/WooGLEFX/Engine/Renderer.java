@@ -52,17 +52,16 @@ public class Renderer {
         Canvas canvas = FXCanvas.getCanvas();
 
         if (level != null) {
-            if (level.isShowSceneBGColor()) {
-                canvas.getGraphicsContext2D()
-                        .setFill(Paint.valueOf(level.getSceneObject().getAttribute("backgroundcolor").colorValue().toHexRGBA()));
+            if (level.getVisibilitySettings().isShowSceneBGColor()) {
+                canvas.getGraphicsContext2D().setFill(Paint.valueOf(level.getSceneObject().getAttribute("backgroundcolor").colorValue().toHexRGBA()));
                 canvas.getGraphicsContext2D().fillRect(-5000000, -5000000, 10000000, 10000000);
             } else {
                 canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
             }
             canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
-            Renderer.drawLevelToCanvas(level, canvas);
+            drawLevelToCanvas(level, canvas);
         } else {
-            Renderer.clear(canvas);
+            clear(canvas);
         }
 
     }
@@ -81,21 +80,41 @@ public class Renderer {
     }
 
 
+    private static void recursiveGetAllObjectsInList(ArrayList<EditorObject> editorObjects,
+                                                     EditorObject editorObject) {
+
+        editorObjects.add(editorObject);
+
+        for (EditorObject child : editorObject.getChildren()) {
+            recursiveGetAllObjectsInList(editorObjects, child);
+        }
+
+    }
+
+
     private static void addAllObjectPositionsToList(ArrayList<ObjectPosition> objectPositions,
                                                     EditorObject editorObject) {
 
-        for (ObjectPosition objectPosition : editorObject.getObjectPositions()) {
-            addObjectPositionToListByDepth(objectPositions, objectPosition);
+        ArrayList<EditorObject> allObjects = new ArrayList<>();
+        recursiveGetAllObjectsInList(allObjects, editorObject);
+
+        ArrayList<EditorObject> reversed = new ArrayList<>();
+        for (int i = allObjects.size() - 1; i >= 0; i--) {
+            reversed.add(allObjects.get(i));
         }
 
-        for (EditorObject child : editorObject.getChildren()) {
-            addAllObjectPositionsToList(objectPositions, child);
+        for (EditorObject object : reversed) {
+            for (ObjectPosition objectPosition : object.getObjectPositions()) {
+                addObjectPositionToListByDepth(objectPositions, objectPosition);
+            }
         }
 
     }
 
 
     public static ArrayList<ObjectPosition> orderObjectPositionsByDepth(WorldLevel worldLevel) {
+
+        // TODO fix rendering order when undoing / pasting
 
         ArrayList<ObjectPosition> objectPositions = new ArrayList<>();
 

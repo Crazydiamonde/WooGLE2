@@ -49,6 +49,9 @@ public class Strand extends EditorObject {
 
         setMetaAttributes(MetaEditorAttribute.parse("gb1,gb2,"));
 
+        getAttribute("gb1").addChangeListener(((observable, oldValue, newValue) -> addPartAsObjectPosition()));
+        getAttribute("gb2").addChangeListener(((observable, oldValue, newValue) -> addPartAsObjectPosition()));
+
     }
 
 
@@ -118,7 +121,7 @@ public class Strand extends EditorObject {
             }
         }
 
-        if (strand != null) addPartAsObjectPosition();
+        if (strandImage != null) addPartAsObjectPosition();
 
     }
 
@@ -235,6 +238,7 @@ public class Strand extends EditorObject {
 
             }
             public double getWidth() {
+                if (strand == null) return 0;
                 return strand.getAttribute("thickness").doubleValue();
             }
             public double getHeight() {
@@ -252,7 +256,7 @@ public class Strand extends EditorObject {
                 return strandImage;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGoos() == 2;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 2;
             }
             public boolean isDraggable() {
                 return false;
@@ -329,7 +333,7 @@ public class Strand extends EditorObject {
             }
 
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGoos() == 1;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 1;
             }
             public boolean isDraggable() {
                 return false;

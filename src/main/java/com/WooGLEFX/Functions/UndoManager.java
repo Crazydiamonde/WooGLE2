@@ -2,6 +2,7 @@ package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.Engine.Main;
+import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
 import com.WooGLEFX.Structures.UserActions.*;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Resrc.ResrcImage;
@@ -13,8 +14,8 @@ public class UndoManager {
 
     public static void registerChange(UserAction... actions) {
         LevelManager.getLevel().undoActions.add(actions);
-        if (LevelManager.getLevel().getEditingStatus() == WorldLevel.NO_UNSAVED_CHANGES) {
-            LevelManager.getLevel().setEditingStatus(WorldLevel.UNSAVED_CHANGES, true);
+        if (LevelManager.getLevel().getEditingStatus() == LevelTab.NO_UNSAVED_CHANGES) {
+            LevelManager.getLevel().setEditingStatus(LevelTab.UNSAVED_CHANGES, true);
         }
         FXMenu.undoItem.setDisable(false);
         FXEditorButtons.buttonUndo.setDisable(false);
@@ -67,7 +68,7 @@ public class UndoManager {
         }
         // TODO Undo stack should track if there are any unsaved changes, this isn't always true
         if (level.undoActions.size() == 0) {
-            level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+            level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
             FXMenu.undoItem.setDisable(true);
             FXEditorButtons.buttonUndo.setDisable(true);
         }

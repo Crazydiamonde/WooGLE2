@@ -3,7 +3,6 @@ package com.WooGLEFX.EditorObjects.ObjectCollision;
 import com.WooGLEFX.EditorObjects.Components.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Functions.LevelManager;
-import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import javafx.geometry.Point2D;
 
@@ -27,7 +26,8 @@ public class RectangleCollider {
             mY < y - height / 2 ||
             mY > y + height / 2) return DragSettings.NULL;
 
-        DragSettings dragSettings = new DragSettings(objectPosition.isDraggable() ? DragSettings.MOVE : DragSettings.NONE);
+        DragSettings dragSettings = new DragSettings(
+                objectPosition.isDraggable() ? DragSettings.MOVE : DragSettings.NONE);
         dragSettings.setInitialSourceX(mouseX - x);
         dragSettings.setInitialSourceY(mouseY - y);
         dragSettings.setObjectPosition(objectPosition);

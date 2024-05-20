@@ -16,6 +16,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import com.WooGLEFX.Functions.BlankObjectGenerator;
+import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Functions.PaletteManager;
 import com.WooGLEFX.Structures.GameVersion;
 import org.slf4j.Logger;
@@ -36,48 +37,56 @@ public class FileManager {
 
 
     private static String oldWOGdir = "";
-    private static boolean hasOldWOG = false;
-    private static String newWOGdir = "";
-    private static boolean hasNewWOG = false;
-
-    public static boolean isHasOldWOG() {
-        return hasOldWOG;
+    public static String getOldWOGdir() {
+        return oldWOGdir;
+    }
+    public static void setOldWOGdir(String oldWOGdir) {
+        logger.debug("setting to " + oldWOGdir);
+        FileManager.oldWOGdir = oldWOGdir;
     }
 
+
+    private static boolean hasOldWOG = false;
+    public static boolean hasOldWOG() {
+        return hasOldWOG;
+    }
     public static void setHasOldWOG(boolean hasOldWOG) {
         FileManager.hasOldWOG = hasOldWOG;
     }
 
-    public static boolean isHasNewWOG() {
-        return hasNewWOG;
+
+    private static String newWOGdir = "";
+    public static String getNewWOGdir() {
+        return newWOGdir;
+    }
+    public static void setNewWOGdir(String newWOGdir) {
+        FileManager.newWOGdir = newWOGdir;
     }
 
+
+    private static boolean hasNewWOG = false;
+    public static boolean hasNewWOG() {
+        return hasNewWOG;
+    }
     public static void setHasNewWOG(boolean hasNewWOG) {
         FileManager.hasNewWOG = hasNewWOG;
     }
 
+
     private static Image failedImage;
-
-    // Editor location should be the current folder
-    public static final String editorLocation = System.getProperty("user.dir") + "\\";
-
     public static Image getFailedImage() {
         return failedImage;
     }
-
     public static void openFailedImage() throws FileNotFoundException {
         failedImage = openImageFromFilePath(editorLocation + "ObjectIcons\\failed.png");
     }
 
 
-    public static String getOldWOGdir() {
-        return oldWOGdir;
-    }
+    // Editor location should be the current folder
+    public static final String editorLocation = System.getProperty("user.dir") + "\\";
 
-    public static void setOldWOGdir(String oldWOGdir) {
-        logger.debug("setting to " + oldWOGdir);
-        FileManager.oldWOGdir = oldWOGdir;
-    }
+
+
 
     public static void readWOGdirs() throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -92,14 +101,6 @@ public class FileManager {
             return;
         }
         saxParser.parse(properties, defaultHandler);
-    }
-
-    public static String getNewWOGdir() {
-        return newWOGdir;
-    }
-
-    public static void setNewWOGdir(String newWOGdir) {
-        FileManager.newWOGdir = newWOGdir;
     }
 
     public static Image openImageFromFilePath(String file_path) throws FileNotFoundException {
@@ -196,6 +197,8 @@ public class FileManager {
 
     public static WorldLevel openLevel(String levelName, GameVersion version) throws ParserConfigurationException, SAXException, IOException {
 
+        LevelManager.setLevel(null);
+
         ArrayList<EditorObject> scene = new ArrayList<>();
         ArrayList<EditorObject> level = new ArrayList<>();
         ArrayList<EditorObject> resrc = new ArrayList<>();
@@ -269,21 +272,17 @@ public class FileManager {
         if (version == GameVersion.OLD) {
             File ballFile = new File(oldWOGdir + "\\res\\balls\\" + ballName + "\\balls.xml.bin");
             File ballFileR = new File(oldWOGdir + "\\res\\balls\\" + ballName + "\\resources.xml.bin");
-            BallFileOpener.impossible = null;
             BallFileOpener.mode = 0;
             saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
             BallFileOpener.mode = 1;
-            BallFileOpener.impossible = null;
             saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFileR)))), defaultHandler);
             return new _Ball(commonBallData, commonBallResrcData);
         } else if (version == GameVersion.NEW) {
             File ballFile = new File(newWOGdir + "\\res\\balls\\" + ballName + "\\balls.xml");
             File ballFileR = new File(newWOGdir + "\\res\\balls\\" + ballName + "\\resources.xml");
-            BallFileOpener.impossible = null;
             BallFileOpener.mode = 0;
             saxParser.parse(ballFile, defaultHandler);
             BallFileOpener.mode = 1;
-            BallFileOpener.impossible = null;
             saxParser.parse(ballFileR, defaultHandler);
             return new _Ball(commonBallData, commonBallResrcData);
         } else {
@@ -296,7 +295,6 @@ public class FileManager {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         BallFileOpener defaultHandler = new BallFileOpener();
-        BallFileOpener.impossible = null;
         BallFileOpener.mode = 1;
         File ballFile;
         String dir;
@@ -318,7 +316,6 @@ public class FileManager {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         BallFileOpener defaultHandler = new BallFileOpener();
-        BallFileOpener.impossible = null;
         BallFileOpener.mode = 0;
         if (version == GameVersion.OLD && hasOldWOG) {
             File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\fx.xml.bin");
@@ -334,13 +331,12 @@ public class FileManager {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         BallFileOpener defaultHandler = new BallFileOpener();
-        BallFileOpener.impossible = null;
         BallFileOpener.mode = 0;
         if (version == GameVersion.OLD && hasOldWOG) {
             File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\text.xml.bin");
             byte[] bytes = AESBinFormat.decodeFile(ballFile);
             // If the file starts with EF BB BF, strip these three bytes (not sure why it does this)
-            if (bytes[0] == -17 && bytes[1] == -69 && bytes[2] == -65) {
+            if (bytes[0] == (byte)0xEF && bytes[1] == (byte)0xBB && bytes[2] == (byte)0xBF) {
                 byte[] newBytes = new byte[bytes.length - 3];
                 System.arraycopy(bytes, 3, newBytes, 0, bytes.length - 3);
                 bytes = newBytes;
@@ -357,7 +353,7 @@ public class FileManager {
     public static void saveProperties() throws IOException {
         StringBuilder export = new StringBuilder("<properties>\n\n<oldWOG filepath=\"" + oldWOGdir + "\"/>\n<newWOG filepath=\"" + newWOGdir + "\"/>\n<gooBallPalette>\n");
         for (int i = 0; i < PaletteManager.getPaletteBalls().size(); i++) {
-            export.append("\t<Ball ball=\"").append(PaletteManager.getPaletteBalls().get(i)).append("\" version=\"").append(PaletteManager.getPaletteVersions().get(i) == GameVersion.OLD ? 1.3 : 1.5).append("\"/>\n");
+            export.append("\t<Ball ball=\"").append(PaletteManager.getPaletteBalls().get(i)).append("\" version=\"").append(PaletteManager.getPaletteVersions().get(i) == GameVersion.OLD ? "1.3" : "1.5").append("\"/>\n");
         }
         export.append("</gooBallPalette>\n</properties>");
 

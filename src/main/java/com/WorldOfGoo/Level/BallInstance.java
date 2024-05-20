@@ -102,7 +102,10 @@ public class BallInstance extends EditorObject {
             return null;
         }
 
+        System.out.println("\n" + type);
         for (EditorObject resrc : FileManager.commonBallResrcData) {
+            System.out.println(resrc.getAttribute("id"));
+            System.out.println(resrc.getAttribute("path"));
             GlobalResourceManager.addResource(resrc, version);
         }
 
@@ -124,8 +127,9 @@ public class BallInstance extends EditorObject {
 
         String id = getAttribute("id").stringValue();
         for (EditorObject object : LevelManager.getLevel().getLevel()) if (object instanceof Strand strand) {
+            String gb1 = strand.getAttribute("gb1").stringValue();
             String gb2 = strand.getAttribute("gb2").stringValue();
-            if (gb2.equals(id)) {
+            if (gb1.equals(id) || gb2.equals(id)) {
                 strand.setStrand(null);
                 strand.update();
             }
@@ -192,7 +196,7 @@ public class BallInstance extends EditorObject {
                 return new Color(0, 0, 0, 0);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGoos() == 1;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 1;
             }
             public boolean isResizable() {
                 return false;
@@ -262,6 +266,8 @@ public class BallInstance extends EditorObject {
 
         // TODO build hitbox based on entire bounds of parts
 
+        if (part.getImages().size() == 0) return;
+
         Image img = part.getImages().get((int)(part.getImages().size() * machine.nextDouble()));
         if (img != null) addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
             public double getX() {
@@ -315,7 +321,7 @@ public class BallInstance extends EditorObject {
                 return img;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGoos() == 2;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 2;
             }
             public boolean isSelectable() {
                 String partName = part.getAttribute("name").stringValue();
@@ -381,7 +387,7 @@ public class BallInstance extends EditorObject {
                 return pupilImg;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGoos() == 2;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 2;
             }
             public boolean isSelectable() {
                 return false;

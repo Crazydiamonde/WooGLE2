@@ -52,7 +52,7 @@ public class PaletteReconfigurator extends Application {
 
         stage.setTitle("Configure Goo Ball Palette");
 
-        if (FileManager.isHasOldWOG()) {
+        if (FileManager.hasOldWOG()) {
             Label oldLabel = new Label("Version 1.3 Goo Balls");
             oldLabel.setStyle("-fx-font-weight: bold");
             oldVBox.getChildren().add(oldLabel);
@@ -63,7 +63,7 @@ public class PaletteReconfigurator extends Application {
                 }
             }
         }
-        if (FileManager.isHasNewWOG()) {
+        if (FileManager.hasNewWOG()) {
             Label label = new Label("Version 1.5 Goo Balls");
             label.setStyle("-fx-font-weight: bold");
             newVBox.getChildren().add(label);

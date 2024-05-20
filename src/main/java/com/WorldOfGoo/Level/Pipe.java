@@ -88,7 +88,7 @@ public class Pipe extends EditorObject {
             }
 
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGeometry() != 0;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
             public boolean isDraggable() {
                 return false;

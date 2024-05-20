@@ -69,7 +69,7 @@ public class Poi extends EditorObject {
                 return new Color(0.25, 0.8, 0.8, 0.1);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowCameras();
+                return LevelManager.getLevel().getVisibilitySettings().isShowCameras();
             }
         });
 

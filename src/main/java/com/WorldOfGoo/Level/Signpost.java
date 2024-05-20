@@ -73,7 +73,7 @@ public class Signpost extends EditorObject {
                 return image;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGraphics();
+                return LevelManager.getLevel().getVisibilitySettings().isShowGraphics();
             }
         });
 

@@ -111,20 +111,8 @@ public class Initializer {
 
         }
 
-        FXEditorButtons.enableAllButtons(true);
-
-        if (FileManager.isHasOldWOG()) {
-            FXEditorButtons.buttonNewOld.setDisable(false);
-            FXEditorButtons.buttonOpenOld.setDisable(false);
-            FXMenu.newLevelOldItem.setDisable(false);
-            FXMenu.openLevelOldItem.setDisable(false);
-        }
-        if (FileManager.isHasNewWOG()) {
-            FXEditorButtons.buttonNewNew.setDisable(false);
-            FXEditorButtons.buttonOpenNew.setDisable(false);
-            FXMenu.newLevelNewItem.setDisable(false);
-            FXMenu.openLevelNewItem.setDisable(false);
-        }
+        FXEditorButtons.updateAllButtons();
+        FXMenu.updateAllButtons();
 
         EditorWindow editorWindow = new EditorWindow();
         editorWindow.start();
@@ -133,7 +121,7 @@ public class Initializer {
 
         if (launchArguments.length > 0) {
             logger.info("Opening level " + launchArguments[0]);
-            if (FileManager.isHasNewWOG()) {
+            if (FileManager.hasNewWOG()) {
                 LevelLoader.openLevel(launchArguments[0], GameVersion.NEW);
             } else {
                 LevelLoader.openLevel(launchArguments[0], GameVersion.OLD);

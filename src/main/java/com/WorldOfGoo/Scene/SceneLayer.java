@@ -98,7 +98,7 @@ public class SceneLayer extends EditorObject {
                 return image;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGraphics();
+                return LevelManager.getLevel().getVisibilitySettings().isShowGraphics();
             }
         });
 
@@ -230,8 +230,12 @@ public class SceneLayer extends EditorObject {
 
     private void updateImage() {
 
-        if (!getAttribute("image").stringValue().isEmpty()) {
-            image = getAttribute("image").imageValue(LevelManager.getVersion());
+        try {
+            if (!getAttribute("image").stringValue().isEmpty()) {
+                image = getAttribute("image").imageValue(LevelManager.getVersion());
+            }
+        } catch (FileNotFoundException ignored) {
+
         }
 
     }

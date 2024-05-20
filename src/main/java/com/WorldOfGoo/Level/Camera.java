@@ -67,7 +67,7 @@ public class Camera extends EditorObject {
                 return new Color(0.0, 0.5, 0.5, 0.1);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowCameras();
+                return LevelManager.getLevel().getVisibilitySettings().isShowCameras();
             }
             public boolean isRotatable() {
                 return false;

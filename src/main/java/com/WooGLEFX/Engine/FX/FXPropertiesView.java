@@ -324,7 +324,7 @@ public class FXPropertiesView {
                             UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
                                     attribute.stringValue(), resource.getAttribute("id").stringValue()));
                             UndoManager.clearRedoActions();
-                            attribute.setValue(resource.getAttribute("REALid").stringValue());
+                            attribute.setValue(resource.getAttribute("id").stringValue());
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.stringValue());
                             }

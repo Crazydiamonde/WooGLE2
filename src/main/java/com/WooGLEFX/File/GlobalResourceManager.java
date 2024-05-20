@@ -5,7 +5,9 @@ import com.WooGLEFX.Structures.Resources.Resource;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.Resources.ImageResource;
 import com.WooGLEFX.Structures.Resources.TextResource;
+import com.WorldOfGoo.Resrc.Resources;
 import com.WorldOfGoo.Resrc.ResrcImage;
+import com.WorldOfGoo.Resrc.SetDefaults;
 import com.WorldOfGoo.Text.TextString;
 import javafx.scene.image.Image;
 
@@ -95,17 +97,36 @@ public class GlobalResourceManager {
 
 
     public static void addResource(EditorObject resource, GameVersion version) {
+
+        EditorObject resourceManifest = resource;
+        while (!(resourceManifest instanceof Resources) && resourceManifest.getParent() != null) {
+            resourceManifest = resourceManifest.getParent();
+        }
+
+        int resrcIndex = resourceManifest.getChildren().indexOf(resource);
+
+        String idprefix = "";
+        String pathprefix = "";
+        for (int i = resrcIndex - 1; i >= 0; i--) {
+            EditorObject editorObject = resourceManifest.getChildren().get(i);
+            if (editorObject instanceof SetDefaults setDefaults) {
+                idprefix = setDefaults.getAttribute("idprefix").stringValue();
+                pathprefix = setDefaults.getAttribute("path").stringValue();
+                break;
+            }
+        }
+
         if (version == GameVersion.OLD) {
             if (resource instanceof ResrcImage) {
-                oldResources.add(new ImageResource(resource.getAttribute("id").stringValue(), resource.getAttribute("path").stringValue(), null));
+                oldResources.add(new ImageResource(idprefix + resource.getAttribute("id").stringValue(), pathprefix + resource.getAttribute("path").stringValue(), null));
             } else if (resource instanceof TextString textString) {
-                oldResources.add(new TextResource(resource.getAttribute("id").stringValue(), textString));
+                oldResources.add(new TextResource(idprefix + resource.getAttribute("id").stringValue(), textString));
             }
         } else if (version == GameVersion.NEW) {
             if (resource instanceof ResrcImage) {
-                newResources.add(new ImageResource(resource.getAttribute("id").stringValue(), resource.getAttribute("path").stringValue(), null));
+                newResources.add(new ImageResource(idprefix + resource.getAttribute("id").stringValue(), pathprefix + resource.getAttribute("path").stringValue(), null));
             } else if (resource instanceof TextString textString) {
-                newResources.add(new TextResource(resource.getAttribute("id").stringValue(), textString));
+                newResources.add(new TextResource(idprefix + resource.getAttribute("id").stringValue(), textString));
             }
         }
     }

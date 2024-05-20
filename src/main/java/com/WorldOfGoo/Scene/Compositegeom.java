@@ -9,6 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.io.FileNotFoundException;
+
 public class Compositegeom extends EditorObject {
 
     private Image image;
@@ -66,7 +68,7 @@ public class Compositegeom extends EditorObject {
                 return new Color(0, 1.0, 0, 0.25);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGeometry() != 0;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
         });
 
@@ -107,7 +109,7 @@ public class Compositegeom extends EditorObject {
                 return image;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGeometry() != 0;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
             public boolean isResizable() {
                 return false;
@@ -140,8 +142,12 @@ public class Compositegeom extends EditorObject {
 
     private void updateImage() {
 
-        if (!getAttribute("image").stringValue().isEmpty()) {
-            image = getAttribute("image").imageValue(LevelManager.getVersion());
+        try {
+            if (!getAttribute("image").stringValue().isEmpty()) {
+                image = getAttribute("image").imageValue(LevelManager.getVersion());
+            }
+        } catch (FileNotFoundException ignored) {
+
         }
 
     }

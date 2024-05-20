@@ -85,15 +85,6 @@ public class GameResourceManager {
                     Alarms.errorMessage(e);
                 }
                 reloadWorldOfGoo(GameVersion.OLD);
-                FXEditorButtons.buttonOpenOld.setDisable(false);
-                FXEditorButtons.buttonNewOld.setDisable(false);
-                FXMenu.newLevelOldItem.setDisable(false);
-                FXMenu.openLevelOldItem.setDisable(false);
-                if (LevelManager.getLevel() != null) {
-                    FXEditorButtons.buttonSave.setDisable(false);
-                    FXMenu.cloneLevelItem.setDisable(false);
-                    FXMenu.saveLevelItem.setDisable(false);
-                }
             } else {
                 FileManager.setNewWOGdir(worldOfGoo.getParent() + "\\game");
                 try {
@@ -102,16 +93,6 @@ public class GameResourceManager {
                     Alarms.errorMessage(e);
                 }
                 reloadWorldOfGoo(GameVersion.NEW);
-                FXEditorButtons.buttonOpenNew.setDisable(false);
-                FXEditorButtons.buttonNewNew.setDisable(false);
-                FXMenu.newLevelNewItem.setDisable(false);
-                FXMenu.openLevelNewItem.setDisable(false);
-                if (LevelManager.getLevel() != null) {
-                    FXEditorButtons.buttonClone.setDisable(false);
-                    FXEditorButtons.buttonSave.setDisable(false);
-                    FXMenu.cloneLevelItem.setDisable(false);
-                    FXMenu.saveLevelItem.setDisable(false);
-                }
             }
             if(FXEditorButtons.getOldGooballsToolbar() != null) {
                 FXEditorButtons.getOldGooballsToolbar().getItems().clear();
@@ -120,6 +101,8 @@ public class GameResourceManager {
                 FXEditorButtons.getNewGooballsToolbar().getItems().clear();
             }
             FXEditorButtons.addBallsTo();
+            FXEditorButtons.updateAllButtons();
+            FXMenu.updateAllButtons();
             return true;
         }
     }

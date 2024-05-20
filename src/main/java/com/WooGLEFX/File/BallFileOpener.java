@@ -5,18 +5,12 @@ import com.WooGLEFX.EditorObjects.ObjectCreator;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.WooGLEFX.Structures.EditorAttribute;
 import com.WooGLEFX.Structures.EditorObject;
-import com.WorldOfGoo.Resrc.ResrcImage;
-import com.WorldOfGoo.Resrc.SetDefaults;
-import com.WorldOfGoo.Resrc.Sound;
 
 public class BallFileOpener extends DefaultHandler {
     public static EditorObject parent = null;
 
     public static int mode = 0;
-
-    public static SetDefaults impossible = null;
 
     public static boolean bruhmode = false;
 
@@ -62,15 +56,6 @@ public class BallFileOpener extends DefaultHandler {
             if (mode == 0) {
                 FileManager.commonBallData.add(obj);
             } else if (mode == 1) {
-                if (impossible != null && (obj instanceof ResrcImage || obj instanceof Sound)) {
-                    obj.setAttribute("REALid", obj.getAttribute("id"));
-                    obj.setAttribute("REALpath", obj.getAttribute("path"));
-                    obj.setAttribute("id", impossible.getAttribute("idprefix").stringValue() + obj.getAttribute("id").stringValue());
-                    obj.setAttribute("path", impossible.getAttribute("path").stringValue() + obj.getAttribute("path").stringValue());
-                }
-                if (obj instanceof SetDefaults) {
-                    impossible = (SetDefaults) obj;
-                }
                 FileManager.commonBallResrcData.add(obj);
             }
             parent = obj;

@@ -1,6 +1,5 @@
 package com.WooGLEFX.Functions.InputEvents;
 
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.Functions.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;

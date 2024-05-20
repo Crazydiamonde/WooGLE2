@@ -1,12 +1,11 @@
 package com.WooGLEFX.Functions;
 
 import com.WooGLEFX.EditorObjects._Ball;
-import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXLevelSelectPane;
 import com.WooGLEFX.Engine.FX.FXStage;
-import com.WooGLEFX.Engine.Main;
 import com.WooGLEFX.File.FileManager;
-import com.WooGLEFX.File.LevelExporter;
+import com.WooGLEFX.File.export.GoomodExporter;
+import com.WooGLEFX.File.export.LevelWriter;
 import com.WooGLEFX.GUI.Alarms;
 import com.WooGLEFX.Structures.EditorObject;
 import com.WooGLEFX.Structures.GameVersion;
@@ -31,21 +30,23 @@ public class LevelUpdater {
 
     private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
+
     public static void saveLevel(WorldLevel level) {
         GameVersion version = level.getVersion();
         saveSpecificLevel(level, version);
-        if (level.getEditingStatus() != WorldLevel.NO_UNSAVED_CHANGES) {
-            level.setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, true);
+        if (level.getEditingStatus() != LevelTab.NO_UNSAVED_CHANGES) {
+            level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
         }
     }
+
 
     public static void saveSpecificLevel(WorldLevel level, GameVersion version) {
         try {
             if (version == GameVersion.OLD) {
-                LevelExporter.saveAsXML(level, FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName(),
+                LevelWriter.saveAsXML(level, FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName(),
                         version, false, true);
             } else {
-                LevelExporter.saveAsXML(level, FileManager.getNewWOGdir() + "\\res\\levels\\" + level.getLevelName(),
+                LevelWriter.saveAsXML(level, FileManager.getNewWOGdir() + "\\res\\levels\\" + level.getLevelName(),
                         version, false, true);
             }
         } catch (IOException e) {
@@ -53,13 +54,14 @@ public class LevelUpdater {
         }
     }
 
+
     public static void saveAll() {
         int selectedIndex = FXLevelSelectPane.getLevelSelectPane().getSelectionModel().getSelectedIndex();
         for (Tab tab : FXLevelSelectPane.getLevelSelectPane().getTabs().toArray(new Tab[0])) {
             LevelTab levelTab = (LevelTab) tab;
-            if (levelTab.getLevel().getEditingStatus() == WorldLevel.UNSAVED_CHANGES) {
+            if (levelTab.getLevel().getEditingStatus() == LevelTab.UNSAVED_CHANGES) {
                 saveSpecificLevel(levelTab.getLevel(), levelTab.getLevel().getVersion());
-                levelTab.getLevel().setEditingStatus(WorldLevel.NO_UNSAVED_CHANGES, false);
+                levelTab.getLevel().setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, false);
             }
         }
         FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(selectedIndex);
@@ -187,7 +189,7 @@ public class LevelUpdater {
             }
         }
         if (export != null) {
-            LevelExporter.exportGoomod(export, level, balls, includeAddinInfo);
+            GoomodExporter.exportGoomod(export, level, balls, includeAddinInfo);
         }
     }
 

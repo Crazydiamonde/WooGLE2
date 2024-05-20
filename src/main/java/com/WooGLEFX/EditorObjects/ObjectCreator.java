@@ -20,9 +20,6 @@ public class ObjectCreator {
     private static final Logger logger = LoggerFactory.getLogger(ObjectCreator.class);
 
 
-    private static Vertex lastVertex = null;
-
-
     public static EditorObject create(String _name, EditorObject _parent) {
         EditorObject toAdd = null;
         switch (_name) {
@@ -103,10 +100,6 @@ public class ObjectCreator {
             }
         }
         toAdd.setTreeItem(new TreeItem<>(toAdd));
-        if (toAdd instanceof Vertex vertex){
-            vertex.setPrevious(lastVertex);
-            lastVertex = vertex;
-        }
         // Automatically add to parent
         if (toAdd.getParent() != null) {
             toAdd.getParent().getTreeItem().getChildren().add(toAdd.getTreeItem());

@@ -13,6 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.io.FileNotFoundException;
+
 public class Rectangle extends EditorObject {
 
     private Image image;
@@ -174,7 +176,7 @@ public class Rectangle extends EditorObject {
                 setAttribute("height", height);
             }
             public double getEdgeSize() {
-                return 2;
+                return 4;
             }
             public double getDepth() {
                 return Renderer.GEOMETRY;
@@ -187,7 +189,7 @@ public class Rectangle extends EditorObject {
                 return new Color(color.getRed(), color.getGreen(), color.getBlue(), 0.25);
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getShowGeometry() != 0;
+                return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
         });
 
@@ -232,7 +234,7 @@ public class Rectangle extends EditorObject {
                 return image;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().isShowGraphics();
+                return LevelManager.getLevel().getVisibilitySettings().isShowGraphics();
             }
         });
 
@@ -245,7 +247,9 @@ public class Rectangle extends EditorObject {
 
     public static Color geometryColor(String[] tags, EditorObject parent) {
 
-        if (LevelManager.getLevel().getShowGeometry() != 2) return new Color(0.0, 0.25, 1.0, 1.0);
+        if (LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 2) {
+            return new Color(0.0, 0.25, 1.0, 1.0);
+        }
 
         if (ObjectUtil.attributeContainsTag(tags, "deadly")) {
             return new Color(1.0, 0.25, 0, 1.0);
@@ -288,8 +292,12 @@ public class Rectangle extends EditorObject {
 
     private void updateImage() {
 
-        if (!getAttribute("image").stringValue().isEmpty()) {
-            image = getAttribute("image").imageValue(LevelManager.getVersion());
+        try {
+            if (!getAttribute("image").stringValue().isEmpty()) {
+                image = getAttribute("image").imageValue(LevelManager.getVersion());
+            }
+        } catch (FileNotFoundException ignored) {
+
         }
 
     }

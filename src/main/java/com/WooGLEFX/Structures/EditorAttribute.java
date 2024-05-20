@@ -58,12 +58,8 @@ public class EditorAttribute {
         return Color.parse(stringValue());
     }
 
-    public Image imageValue(GameVersion version) {
-        try {
-            return GlobalResourceManager.getImage(stringValue(), version);
-        } catch (FileNotFoundException e) {
-            return null;
-        }
+    public Image imageValue(GameVersion version) throws FileNotFoundException {
+        return GlobalResourceManager.getImage(stringValue(), version);
     }
 
     public String[] listValue() {

@@ -60,26 +60,31 @@ public class ObjectManager {
                 }
             }
         }
-    }
 
-
-    public static void deleteItem(WorldLevel level, EditorObject item, boolean parentDeleted) {
-
-        if (item instanceof BallInstance ballInstance) {
+        if (object instanceof BallInstance ballInstance) {
 
             String id = ballInstance.getAttribute("id").stringValue();
 
             for (EditorObject editorObject : level.getLevel()) if (editorObject instanceof Strand strand) {
 
                 String gb1 = strand.getAttribute("gb1").stringValue();
-                if (gb1.equals(id)) strand.setGoo1(null);
+                if (gb1.equals(id)) {
+                    strand.update();
+                }
 
                 String gb2 = strand.getAttribute("gb2").stringValue();
-                if (gb2.equals(id)) strand.setGoo2(null);
+                if (gb2.equals(id)) {
+                    strand.update();
+                }
 
             }
 
         }
+
+    }
+
+
+    public static void deleteItem(WorldLevel level, EditorObject item, boolean parentDeleted) {
 
         for (EditorObject child : item.getChildren().toArray(new EditorObject[0])) {
             deleteItem(level, child, true);
@@ -94,6 +99,28 @@ public class ObjectManager {
         item.getParent().getTreeItem().getChildren().remove(item.getTreeItem());
         if (!parentDeleted) {
             item.getParent().getChildren().remove(item);
+        }
+
+        if (item instanceof BallInstance ballInstance) {
+
+            String id = ballInstance.getAttribute("id").stringValue();
+
+            for (EditorObject editorObject : level.getLevel()) if (editorObject instanceof Strand strand) {
+
+                String gb1 = strand.getAttribute("gb1").stringValue();
+                if (gb1.equals(id)) {
+                    strand.setGoo1(null);
+                    strand.update();
+                }
+
+                String gb2 = strand.getAttribute("gb2").stringValue();
+                if (gb2.equals(id)) {
+                    strand.setGoo2(null);
+                    strand.update();
+                }
+
+            }
+
         }
 
     }

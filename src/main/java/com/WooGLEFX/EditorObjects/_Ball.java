@@ -128,7 +128,7 @@ public class _Ball {
                         try {
                             ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
                         } catch (Exception e) {
-                            LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
+                            LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name").stringValue() + "\": Image \"" + word + "\" (version " + (version == GameVersion.OLD ? "1.3" : "1.5") + ")"));
                         }
                         word = "";
                     } else {
@@ -138,14 +138,14 @@ public class _Ball {
                 try {
                     ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
                 } catch (Exception e) {
-                    LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + word + "\" (version " + version + ")"));
+                    LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name").stringValue() + "\": Image \"" + word + "\" (version " + (version == GameVersion.OLD ? "1.3" : "1.5") + ")"));
                 }
 
                 if (!obj.getAttribute("pupil").stringValue().isEmpty()){
                     try {
                         ((Part) obj).setPupilImage(GlobalResourceManager.getImage(obj.getAttribute("pupil").stringValue(), version));
                     } catch (Exception e) {
-                        LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name") + "\": Image \"" + obj.getAttribute("pupil") + "\" (version " + version + ")"));
+                        LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name").stringValue() + "\": Image \"" + obj.getAttribute("pupil").stringValue() + "\" (version " + (version == GameVersion.OLD ? "1.3" : "1.5") + ")"));
                     }
                 }
             }
