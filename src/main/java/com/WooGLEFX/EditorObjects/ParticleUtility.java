@@ -169,7 +169,7 @@ public class ParticleUtility {
             drawing.get(i).remove(0);
         }
 
-        particleObject.addObjectPosition(particleGraphicsInstance.getObjectPosition());
+        particleObject.addObjectComponent(particleGraphicsInstance.getObjectPosition());
 
     }
 

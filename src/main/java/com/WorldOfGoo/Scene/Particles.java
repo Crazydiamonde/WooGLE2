@@ -24,7 +24,15 @@ public class Particles extends EditorObject {
 
 
     private final ArrayList<ArrayList<ParticleGraphicsInstance>> drawing = new ArrayList<>();
+    public ArrayList<ArrayList<ParticleGraphicsInstance>> getDrawing() {
+        return drawing;
+    }
+
+
     private final ArrayList<Integer> counts = new ArrayList<>();
+    public ArrayList<Integer> getCounts() {
+        return counts;
+    }
 
 
     public Particles(EditorObject _parent) {
