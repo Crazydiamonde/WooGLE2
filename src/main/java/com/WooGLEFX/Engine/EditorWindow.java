@@ -1,6 +1,7 @@
 package com.WooGLEFX.Engine;
 
 import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.EditorObjects.ParticleUtility;
 import com.WooGLEFX.File.ResourceManagers.AnimationManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WorldOfGoo.Level.Fire;
@@ -26,15 +27,15 @@ public class EditorWindow extends AnimationTimer {
 
         AnimationManager.updateAnimations(timeElapsed);
 
-        if (LevelManager.getLevel() != null) for (EditorObject editorObject : LevelManager.getLevel().getScene()) {
-            if (editorObject instanceof Particles particles) {
-                particles.frameUpdate();
+        if (LevelManager.getLevel() != null) {
+            for (EditorObject editorObject : LevelManager.getLevel().getScene()) {
+                if (editorObject instanceof Particles particles) {
+                    ParticleUtility.frameUpdate(particles, particles.getCounts(), particles.getDrawing());
+                }
             }
-            if (editorObject instanceof Fire fire) {
-                for (EditorObject child : fire.getChildren()) {
-                    if (child instanceof Particles particles) {
-                        particles.frameUpdate();
-                    }
+            for (EditorObject editorObject : LevelManager.getLevel().getLevel()) {
+                if (editorObject instanceof Fire fire) {
+                    ParticleUtility.frameUpdate(fire, fire.getCounts(), fire.getDrawing());
                 }
             }
         }
