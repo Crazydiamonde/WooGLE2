@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.ResourceManagers.GlobalResourceManager;
@@ -102,10 +103,7 @@ public class BallInstance extends EditorObject {
             return null;
         }
 
-        System.out.println("\n" + type);
         for (EditorObject resrc : FileManager.commonBallResrcData) {
-            System.out.println(resrc.getAttribute("id"));
-            System.out.println(resrc.getAttribute("path"));
             GlobalResourceManager.addResource(resrc, version);
         }
 
@@ -163,7 +161,7 @@ public class BallInstance extends EditorObject {
             i++;
         }
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE_HOLLOW) {
+        addObjectComponent(new CircleComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
@@ -189,11 +187,17 @@ public class BallInstance extends EditorObject {
             public double getEdgeSize() {
                 return 3;
             }
+            public boolean isEdgeOnly() {
+                return true;
+            }
             public Paint getBorderColor() {
                 return new Color(0.5 ,0.5, 0.5, 1);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(0, 0, 0, 0);
+            }
+            public double getDepth() {
+                return 0.000001;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 1;
@@ -266,10 +270,10 @@ public class BallInstance extends EditorObject {
 
         // TODO build hitbox based on entire bounds of parts
 
-        if (part.getImages().size() == 0) return;
+        if (part.getImages().isEmpty()) return;
 
         Image img = part.getImages().get((int)(part.getImages().size() * machine.nextDouble()));
-        if (img != null) addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        if (img != null) addObjectComponent(new ImageComponent() {
             public double getX() {
 
                 double x = getAttribute("x").doubleValue();
@@ -308,11 +312,11 @@ public class BallInstance extends EditorObject {
             public void setRotation(double rotation) {
                 setAttribute("angle", -Math.toDegrees(rotation));
             }
-            public double getWidth() {
-                return img.getWidth() * scale;
+            public double getScaleX() {
+                return scale;
             }
-            public double getHeight() {
-                return img.getHeight() * scale;
+            public double getScaleY() {
+                return scale;
             }
             public double getDepth() {
                 return part.getAttribute("layer").doubleValue() + 0.000001;
@@ -337,7 +341,7 @@ public class BallInstance extends EditorObject {
         });
 
         Image pupilImg = part.getPupilImage();
-        if (pupilImg != null) addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        if (pupilImg != null) addObjectComponent(new ImageComponent() {
             public double getX() {
 
                 double x = getAttribute("x").doubleValue();
@@ -374,11 +378,11 @@ public class BallInstance extends EditorObject {
             public double getRotation() {
                 return 0; // ???
             }
-            public double getWidth() {
-                return pupilImg.getWidth() * scale;
+            public double getScaleX() {
+                return scale;
             }
-            public double getHeight() {
-                return pupilImg.getHeight() * scale;
+            public double getScaleY() {
+                return scale;
             }
             public double getDepth() {
                 return part.getAttribute("layer").doubleValue() + 0.000002;

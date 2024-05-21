@@ -1,16 +1,16 @@
 package com.WooGLEFX.EditorObjects.ObjectFunctions;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Engine.SelectionManager;
 
 public class ObjectDrag {
 
     public static void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY) {
 
-        ObjectPosition objectPosition = SelectionManager.getDragSettings().getObjectPosition();
+        ObjectComponent objectComponent = SelectionManager.getDragSettings().getObjectComponent();
 
-        objectPosition.setX(mouseX - dragSourceX);
-        objectPosition.setY(mouseY - dragSourceY);
+        objectComponent.setX(mouseX - dragSourceX);
+        objectComponent.setY(mouseY - dragSourceY);
 
     }
 

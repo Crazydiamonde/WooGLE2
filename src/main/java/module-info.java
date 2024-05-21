@@ -25,10 +25,10 @@ module com.example.WOGAnniversaryEditor {
   exports com.WooGLEFX.File.ResourceManagers.Resources;
   exports com.WooGLEFX.Engine;
   exports com.WooGLEFX.Engine.FX;
-  exports com.WooGLEFX.EditorObjects.ObjectCollision;
     exports com.WooGLEFX.File.fileexport;
   exports com.WooGLEFX.EditorObjects.ObjectCreators;
   exports com.WooGLEFX.File.fileimport;
   exports com.WooGLEFX.File.ResourceManagers;
+    exports com.WooGLEFX.EditorObjects.objectcomponents;
 
 }

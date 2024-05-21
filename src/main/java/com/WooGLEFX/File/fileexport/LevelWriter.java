@@ -18,7 +18,12 @@ import java.util.Collections;
 
 public class LevelWriter {
 
-    public static void saveAsXML(WorldLevel worldLevel, String outputPathString, GameVersion version, boolean chumbusMode, boolean includeAddinInfo) throws IOException {
+    private record LevelInformation(String scene, String level, String resrc, String addin, String text) {
+
+    }
+
+
+    private static String getScene(WorldLevel worldLevel) {
 
         /*
             - ForceFields
@@ -29,17 +34,6 @@ public class LevelWriter {
             - Static Geometry
             - Dynamic Geometry
             - Geometry Constraints
-         */
-
-        /*
-            - Camera
-            - Music
-            - Fire
-            - Signposts
-            - Pipes
-            - Balls
-            - Arms
-            - Level Exit
          */
 
         ArrayList<EditorObject> forceFields = new ArrayList<>();
@@ -62,7 +56,10 @@ public class LevelWriter {
                 buttons.add(object);
             } else if (object instanceof Label) {
                 labels.add(object);
-            } else if (object instanceof Rectangle || object instanceof Circle || object instanceof Compositegeom || object instanceof Line) {
+            } else if (object instanceof Rectangle ||
+                    object instanceof Circle ||
+                    object instanceof Compositegeom ||
+                    object instanceof Line) {
                 if (!(object instanceof Line) && !object.getAttribute("static").booleanValue()) {
                     dynamicGeometry.add(object);
                 } else {
@@ -108,6 +105,24 @@ public class LevelWriter {
         }
         scene += "</scene>";
 
+        return scene;
+
+    }
+
+
+    private static LevelInformation getAllLevelInformation(WorldLevel worldLevel) {
+
+        /*
+            - Camera
+            - Music
+            - Fire
+            - Signposts
+            - Pipes
+            - Balls
+            - Arms
+            - Level Exit
+         */
+
         ArrayList<EditorObject> camera = new ArrayList<>();
         ArrayList<EditorObject> music = new ArrayList<>();
         ArrayList<EditorObject> loopsound = new ArrayList<>();
@@ -119,7 +134,8 @@ public class LevelWriter {
         ArrayList<EditorObject> levelExit = new ArrayList<>();
 
         for (EditorObject object : worldLevel.getLevelObject().getChildren()) {
-            if (object instanceof Camera || object instanceof Poi) {
+            if (object instanceof Camera ||
+                    object instanceof Poi) {
                 camera.add(object);
             } else if (object instanceof Music) {
                 music.add(object);
@@ -129,13 +145,18 @@ public class LevelWriter {
                 fire.add(object);
             } else if (object instanceof Signpost) {
                 signposts.add(object);
-            } else if (object instanceof Pipe || object instanceof Vertex) {
+            } else if (object instanceof Pipe ||
+                    object instanceof Vertex) {
                 pipes.add(object);
             } else if (object instanceof BallInstance) {
                 balls.add(object);
             } else if (object instanceof Strand) {
                 arms.add(object);
-            } else if (object instanceof Levelexit || object instanceof Endoncollision || object instanceof Endonnogeom || object instanceof Endonmessage || object instanceof Targetheight) {
+            } else if (object instanceof Levelexit ||
+                    object instanceof Endoncollision ||
+                    object instanceof Endonnogeom ||
+                    object instanceof Endonmessage ||
+                    object instanceof Targetheight) {
                 levelExit.add(object);
             }
         }
@@ -149,7 +170,7 @@ public class LevelWriter {
         for (EditorObject object : music) {
             level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
         }
-        if (loopsound.size() > 0) {
+        if (!loopsound.isEmpty()) {
             level += "\n\t<!-- Loop Sound -->\n";
             for (EditorObject object : loopsound) {
                 level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
@@ -181,20 +202,43 @@ public class LevelWriter {
         }
         level += "\n</level>";
 
-        String text = XMLUtility.recursiveXMLexport("", worldLevel.getTextObject(), 0, true);
+        String scene = getScene(worldLevel);
+
+        EditorObject addinObject = worldLevel.getAddinObject();
+        String addin = XMLUtility.fullAddinXMLExport("", addinObject, 0);
+
+        EditorObject textObject = worldLevel.getTextObject();
+        String text = XMLUtility.recursiveXMLexport("", textObject, 0, true);
+
+        EditorObject resourcesObject = worldLevel.getResourcesObject();
+        String resrc = XMLUtility.recursiveXMLexport("", resourcesObject, 0, true);
+
+
+        return new LevelInformation(scene, level, resrc, addin, text);
+
+
+    }
+
+
+    public static void saveAsXML(WorldLevel worldLevel, String outputPathString, GameVersion version,
+                                 boolean exportingGoomod, boolean includeAddinInfo) throws IOException {
+
+
+        LevelInformation levelInformation = getAllLevelInformation(worldLevel);
+
         String levelName = outputPathString.substring(outputPathString.lastIndexOf("\\") + 1);
 
         String scenePathText = outputPathString + "\\" + levelName + ".scene";
         String levelPathText = outputPathString + "\\" + levelName + ".level";
         String resrcPathText = outputPathString + "\\" + levelName + ".resrc";
 
-        if (chumbusMode) {
+        if (exportingGoomod) {
             //If exporting to goomod, add .xml to the end of each path.
             scenePathText += ".xml";
             levelPathText += ".xml";
             resrcPathText += ".xml";
         } else if (version == GameVersion.OLD) {
-            //If not exporting and on the older version, add .xml.bin to the end of each path.
+            //If not exporting and on the older version, add .bin to the end of each path.
             scenePathText += ".bin";
             levelPathText += ".bin";
             resrcPathText += ".bin";
@@ -203,7 +247,7 @@ public class LevelWriter {
         String addinPathText = "addin.xml";
         String textPathText = "text.xml";
 
-        if (!chumbusMode) {
+        if (!exportingGoomod) {
             addinPathText = outputPathString + "\\" + levelName + "." + addinPathText;
             textPathText = outputPathString + "\\" + levelName + "." + textPathText;
         } else {
@@ -229,50 +273,39 @@ public class LevelWriter {
         if (!Files.exists(addinPath)) Files.createFile(addinPath);
         if (!Files.exists(textPath)) Files.createFile(textPath);
 
+        String otherDir;
+
         if (version == GameVersion.OLD) {
-            AESBinFormat.encodeFile(new File(scenePathText), scene.getBytes());
-            AESBinFormat.encodeFile(new File(levelPathText), level.getBytes());
-            AESBinFormat.encodeFile(new File(resrcPathText), XMLUtility.recursiveXMLexport("", worldLevel.getResourcesObject(), 0, true).getBytes());
-            if (!chumbusMode && Files.exists(Path.of(FileManager.getNewWOGdir() + "\\res\\levels\\" + levelName))) {
-                File[] images = new File(FileManager.getNewWOGdir() + "\\res\\levels\\" + levelName).listFiles();
-                if (images != null) {
-                    for (File imageFile : images) {
-                        /* Make sure that we're not saving a "goomod" folder or something */
-                        if (imageFile.getName().contains(".png") || imageFile.getName().contains(".ogg")) {
-                            if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
-                                if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
-                                    Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
-                                }
-                            }
+            otherDir = FileManager.getNewWOGdir();
+            AESBinFormat.encodeFile(new File(scenePathText), levelInformation.scene.getBytes());
+            AESBinFormat.encodeFile(new File(levelPathText), levelInformation.level.getBytes());
+            AESBinFormat.encodeFile(new File(resrcPathText), levelInformation.resrc.getBytes());
+        } else {
+            otherDir = FileManager.getOldWOGdir();
+            Files.write(scenePath, Collections.singleton(levelInformation.scene), StandardCharsets.UTF_8);
+            Files.write(levelPath, Collections.singleton(levelInformation.level), StandardCharsets.UTF_8);
+            Files.write(resrcPath, Collections.singleton(levelInformation.resrc), StandardCharsets.UTF_8);
+        }
+
+        if (!exportingGoomod && Files.exists(Path.of(otherDir + "\\res\\levels\\" + levelName))) {
+            File[] images = new File(otherDir + "\\res\\levels\\" + levelName).listFiles();
+            if (images != null) for (File imageFile : images) {
+                /* Make sure that we're not saving a "goomod" folder or something */
+                if (imageFile.getName().contains(".png") || imageFile.getName().contains(".ogg")) {
+                    if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") ||
+                            imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
+                        if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
+                            Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
                         }
                     }
                 }
             }
         }
-        if (version == GameVersion.NEW) {
-            Files.write(scenePath, Collections.singleton(scene), StandardCharsets.UTF_8);
-            Files.write(levelPath, Collections.singleton(level), StandardCharsets.UTF_8);
-            Files.write(resrcPath, Collections.singleton(XMLUtility.recursiveXMLexport("", worldLevel.getResourcesObject(), 0, true)), StandardCharsets.UTF_8);
-            if (!chumbusMode && Files.exists(Path.of(FileManager.getOldWOGdir() + "\\res\\levels\\" + levelName))) {
-                File[] images = new File(FileManager.getOldWOGdir() + "\\res\\levels\\" + levelName).listFiles();
-                if (images != null) {
-                    for (File imageFile : images) {
-                        /* Make sure that we're not saving a "goomod" folder or something */
-                        if (imageFile.getName().contains(".png") || imageFile.getName().contains(".ogg")) {
-                            if (imageFile.getPath().lastIndexOf(".") != -1 && (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg"))) {
-                                if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
-                                    Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+
         if (includeAddinInfo) {
-            Files.write(addinPath, Collections.singleton(XMLUtility.fullAddinXMLExport("", worldLevel.getAddinObject(), 0)), StandardCharsets.UTF_8);
+            Files.write(addinPath, Collections.singleton(levelInformation.addin), StandardCharsets.UTF_8);
         }
-        Files.write(textPath, Collections.singleton(text), StandardCharsets.UTF_8);
+        Files.write(textPath, Collections.singleton(levelInformation.text), StandardCharsets.UTF_8);
     }
 
 }

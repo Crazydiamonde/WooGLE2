@@ -1,5 +1,7 @@
 package com.WooGLEFX.EditorObjects;
 
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Engine.EditorWindow;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.Position;
@@ -31,9 +33,9 @@ public class ParticleGraphicsInstance {
     }
 
 
-    private final ObjectPosition objectPosition;
-    public ObjectPosition getObjectPosition() {
-        return objectPosition;
+    private final ObjectComponent objectComponent;
+    public ObjectComponent getObjectPosition() {
+        return objectComponent;
     }
 
 
@@ -53,7 +55,7 @@ public class ParticleGraphicsInstance {
         this.directed = directed;
         this.creationTimestamp = EditorWindow.getTimeElapsed();
 
-        this.objectPosition = new ObjectPosition(ObjectPosition.IMAGE) {
+        this.objectComponent = new ImageComponent() {
             public double getX() {
                 double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
                 double initialX = originalPos.getX();
@@ -83,26 +85,29 @@ public class ParticleGraphicsInstance {
                     return Math.toRadians(-initialDisplayRotation) - rotspeed * dt;
                 }
             }
-            public double getWidth() {
+            public double getScaleX() {
                 if (lifespan != -1) {
                     double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
                     double amtElapsed = dt / lifespan;
-                    return image.getWidth() * (initialScale * (1 - amtElapsed) + finalscale * amtElapsed);
+                    return initialScale * (1 - amtElapsed) + finalscale * amtElapsed;
                 } else {
-                    return image.getWidth() * initialScale;
+                    return initialScale;
                 }
             }
-            public double getHeight() {
+            public double getScaleY() {
                 if (lifespan != -1) {
                     double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
                     double amtElapsed = dt / lifespan;
-                    return image.getHeight() * (initialScale * (1 - amtElapsed) + finalscale * amtElapsed);
+                    return initialScale * (1 - amtElapsed) + finalscale * amtElapsed;
                 } else {
-                    return image.getHeight() * initialScale;
+                    return initialScale;
                 }
             }
             public Image getImage() {
                 return image;
+            }
+            public double getDepth() {
+                return depth;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowParticles();

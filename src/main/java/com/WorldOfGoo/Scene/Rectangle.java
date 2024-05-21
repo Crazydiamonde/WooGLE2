@@ -1,7 +1,8 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -44,7 +45,7 @@ public class Rectangle extends EditorObject {
         addAttribute("nogeomcollisions", InputField.FLAG);
 
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE) {
+        addObjectComponent(new RectangleComponent() {
             public double getX() {
 
                 if (getParent() instanceof Compositegeom compositegeom) {
@@ -179,13 +180,16 @@ public class Rectangle extends EditorObject {
                 boolean contacts = getAttribute("contacts").booleanValue();
                 return (contacts || LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 2) ? 4 : 0;
             }
+            public boolean isEdgeOnly() {
+                return false;
+            }
             public double getDepth() {
                 return Renderer.GEOMETRY;
             }
             public Paint getBorderColor() {
                 return geometryColor(getAttribute("tag").listValue(), getParent());
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 Color color = geometryColor(getAttribute("tag").listValue(), getParent());
                 return new Color(color.getRed(), color.getGreen(), color.getBlue(), 0.25);
             }
@@ -194,7 +198,7 @@ public class Rectangle extends EditorObject {
             }
         });
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        addObjectComponent(new ImageComponent() {
             public double getX() {
                 if (getAttribute("imagepos").stringValue().isEmpty()) return getAttribute("x").doubleValue();
                 else return getAttribute("imagepos").positionValue().getX();
@@ -210,29 +214,30 @@ public class Rectangle extends EditorObject {
                 setAttribute("imagepos", getX() + "," + -y);
             }
             public double getRotation() {
-                return Math.toRadians(getAttribute("imagerot").doubleValue());
+                return -getAttribute("imagerot").doubleValue();
             }
             public void setRotation(double rotation) {
-                setAttribute("imagerot", Math.toDegrees(rotation));
+                setAttribute("imagerot", -rotation);
             }
-            public double getWidth() {
-                Position scale = getAttribute("imagescale").positionValue();
-                return getImage().getWidth() * Math.abs(scale.getX());
+            public double getScaleX() {
+                return getAttribute("imagescale").positionValue().getX();
             }
-            public void setWidth(double width) {
+            public void setScaleX(double scaleX) {
                 Position scale = getAttribute("imagescale").positionValue();
-                setAttribute("imagescale", (width / getImage().getWidth()) + "," + scale.getY());
+                setAttribute("imagescale", scaleX + "," + scale.getY());
             }
-            public double getHeight() {
-                Position scale = getAttribute("imagescale").positionValue();
-                return getImage().getHeight() * Math.abs(scale.getY());
+            public double getScaleY() {
+                return getAttribute("imagescale").positionValue().getY();
             }
-            public void setHeight(double height) {
+            public void setScaleY(double scaleY) {
                 Position scale = getAttribute("imagescale").positionValue();
-                setAttribute("imagescale", scale.getX() + "," + (height / getImage().getHeight()));
+                setAttribute("imagescale", scale.getX() + "," + scaleY);
             }
             public Image getImage() {
                 return image;
+            }
+            public double getDepth() {
+                return 0;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowGraphics();

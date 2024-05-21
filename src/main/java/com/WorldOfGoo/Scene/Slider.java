@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
@@ -19,23 +19,7 @@ public class Slider extends EditorObject {
         addAttribute("stopcfm", InputField.NUMBER);
         addAttribute("stoperp", InputField.NUMBER);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.POINT) {
-            public double getX() {
-                return getAttribute("anchor").positionValue().getX();
-            }
-            public void setX(double x) {
-                setAttribute("anchor", x + "," + getY());
-            }
-            public double getY() {
-                return getAttribute("anchor").positionValue().getY();
-            }
-            public void setY(double y) {
-                setAttribute("anchor", getX() + "," + y);
-            }
 
-            // TODO erm whar???
-
-        });
 
         setMetaAttributes(MetaEditorAttribute.parse("body1,body2,axis,Slider<bounce,histop,lostop,stopcfm,stoperp>"));
 

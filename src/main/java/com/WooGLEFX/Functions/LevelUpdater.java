@@ -84,11 +84,13 @@ public class LevelUpdater {
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
-        }
+        } else {
 
-        // TODO figure something out to play in 1.5
-        Alarms.errorMessage(new RuntimeException(
-                "Sorry, I have no idea how to make Steam/GOG/EPIC play specific World of Goo levels. It works for the 1.3 version though."));
+            // TODO figure something out to play in 1.5
+            Alarms.errorMessage(new RuntimeException(
+                    "Sorry, I have no idea how to make Steam/GOG/EPIC play specific World of Goo levels. It works for the 1.3 version though."));
+
+        }
 
     }
 

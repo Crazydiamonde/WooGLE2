@@ -1,8 +1,6 @@
 package com.WooGLEFX.Functions.InputEvents;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
-import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersectingCorners;
-import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersection;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Engine.FX.*;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Engine.SelectionManager;
@@ -23,22 +21,22 @@ import java.util.List;
 
 public class MousePressedManager {
 
-    private static EditorObject getEditorObjectThatHasThis(ObjectPosition objectPosition, WorldLevel level) {
+    private static EditorObject getEditorObjectThatHasThis(ObjectComponent objectComponent, WorldLevel level) {
 
         for (EditorObject editorObject : level.getLevel()) {
-            if (List.of(editorObject.getObjectPositions()).contains(objectPosition)) return editorObject;
+            if (List.of(editorObject.getObjectComponents()).contains(objectComponent)) return editorObject;
         }
         for (EditorObject editorObject : level.getScene()) {
-            if (List.of(editorObject.getObjectPositions()).contains(objectPosition)) return editorObject;
+            if (List.of(editorObject.getObjectComponents()).contains(objectComponent)) return editorObject;
         }
         for (EditorObject editorObject : level.getResources()) {
-            if (List.of(editorObject.getObjectPositions()).contains(objectPosition)) return editorObject;
+            if (List.of(editorObject.getObjectComponents()).contains(objectComponent)) return editorObject;
         }
         for (EditorObject editorObject : level.getAddin()) {
-            if (List.of(editorObject.getObjectPositions()).contains(objectPosition)) return editorObject;
+            if (List.of(editorObject.getObjectComponents()).contains(objectComponent)) return editorObject;
         }
         for (EditorObject editorObject : level.getText()) {
-            if (List.of(editorObject.getObjectPositions()).contains(objectPosition)) return editorObject;
+            if (List.of(editorObject.getObjectComponents()).contains(objectComponent)) return editorObject;
         }
 
         return null;
@@ -104,14 +102,14 @@ public class MousePressedManager {
         }
 
         if (level.getSelected() != null &&
-                level.getSelected().containsObjectPosition(dragSettings.getObjectPosition())) {
+                level.getSelected().containsObjectPosition(dragSettings.getObjectComponent())) {
 
             if (dragSettings.getType() == DragSettings.MOVE) FXScene.getScene().setCursor(Cursor.MOVE);
             SelectionManager.setDragSettings(dragSettings);
 
         } else {
 
-            EditorObject selected = getEditorObjectThatHasThis(dragSettings.getObjectPosition(), level);
+            EditorObject selected = getEditorObjectThatHasThis(dragSettings.getObjectComponent(), level);
             assert selected != null;
 
             SelectionManager.setSelected(selected);
@@ -132,10 +130,12 @@ public class MousePressedManager {
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
         for (EditorObject editorObject : level.getLevel()) if (editorObject instanceof BallInstance ballInstance) {
-            if (MouseIntersection.mouseIntersection(ballInstance, mouseX, mouseY) != DragSettings.NULL) {
-                if (SelectionManager.getStrand1Gooball() == null) {
-                    SelectionManager.setStrand1Gooball(ballInstance);
-                    return;
+            for (ObjectComponent objectComponent : ballInstance.getObjectComponents()) {
+                if (objectComponent.mouseIntersection(mouseX, mouseY) != DragSettings.NULL) {
+                    if (SelectionManager.getStrand1Gooball() == null) {
+                        SelectionManager.setStrand1Gooball(ballInstance);
+                        return;
+                    }
                 }
             }
         }
@@ -174,16 +174,16 @@ public class MousePressedManager {
         double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
-        if (level.getSelected() != null) {
-            DragSettings dragSettings =
-                    MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), mouseX, mouseY);
+        EditorObject selected = level.getSelected();
+        if (selected != null) for (ObjectComponent objectComponent : selected.getObjectComponents()) {
+            DragSettings dragSettings = objectComponent.mouseIntersectingCorners(mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
         }
 
-        ArrayList<ObjectPosition> byDepth = Renderer.orderObjectPositionsByDepth(level);
+        ArrayList<ObjectComponent> byDepth = Renderer.orderObjectPositionsByDepth(level);
         for (int i = byDepth.size() - 1; i >= 0; i--) {
-            ObjectPosition object = byDepth.get(i);
-            DragSettings dragSettings = MouseIntersection.forPosition(object, mouseX, mouseY);
+            ObjectComponent object = byDepth.get(i);
+            DragSettings dragSettings = object.mouseIntersection(mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
         }
 

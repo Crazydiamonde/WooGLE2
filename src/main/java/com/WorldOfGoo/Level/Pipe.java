@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -24,7 +24,7 @@ public class Pipe extends EditorObject {
 
     private void addObjectPositionBetweenVertices(Vertex a, Vertex b) {
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE) {
+        addObjectComponent(new RectangleComponent() {
 
             public double getX() {
                 double x1 = a.getAttribute("x").doubleValue();
@@ -67,6 +67,9 @@ public class Pipe extends EditorObject {
             public double getEdgeSize() {
                 return 0.0;
             }
+            public boolean isEdgeOnly() {
+                return false;
+            }
             public double getDepth() {
                 return Renderer.GEOMETRY + 0.0000005;
             }
@@ -83,7 +86,7 @@ public class Pipe extends EditorObject {
 
             }
 
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return getBorderColor();
             }
 

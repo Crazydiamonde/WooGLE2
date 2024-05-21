@@ -1,6 +1,8 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.AnchorComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -28,7 +30,7 @@ public class Linearforcefield extends EditorObject {
         addAttribute("color",            InputField.COLOR);
         addAttribute("depth",            InputField.NUMBER);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
+        addObjectComponent(new RectangleComponent() {
             public double getX() {
                 return getAttribute("center").positionValue().getX();
             }
@@ -56,10 +58,16 @@ public class Linearforcefield extends EditorObject {
             public double getEdgeSize() {
                 return 4.5;
             }
+            public boolean isEdgeOnly() {
+                return true;
+            }
+            public double getDepth() {
+                return 1000000;
+            }
             public Paint getBorderColor() {
                 return new Color(1.0, 1.0, 0, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(1.0, 1.0, 0, 0.05);
             }
             public boolean isVisible() {
@@ -70,7 +78,7 @@ public class Linearforcefield extends EditorObject {
             }
         });
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
+        addObjectComponent(new AnchorComponent() {
             public double getX() {
                 return getAttribute("center").positionValue().getX();
             }
@@ -92,12 +100,15 @@ public class Linearforcefield extends EditorObject {
             public void setAnchor(double anchorX, double anchorY) {
                 setAttribute("force", anchorX / 20 + "," + -anchorY / 20);
             }
-            public double getEdgeSize() {
+            public double getLineWidth() {
                 return 3;
             }
-            public Paint getBorderColor() {
+            public Paint getColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                         new Stop(0, Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")));
+            }
+            public double getDepth() {
+                return 1000000;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowForcefields();

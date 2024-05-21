@@ -2,11 +2,9 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -53,7 +51,7 @@ public class SceneLayer extends EditorObject {
         addAttribute("anchor",     InputField.GEOMETRY);
         addAttribute("context",    InputField.CONTEXT)        .setDefaultValue("screen");
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        addObjectComponent(new ImageComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue() + animx;
             }
@@ -72,17 +70,17 @@ public class SceneLayer extends EditorObject {
             public void setRotation(double rotation) {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
-            public double getWidth() {
-                return getImage().getWidth() * Math.abs(getAttribute("scalex").doubleValue() * animscalex);
+            public double getScaleX() {
+                return Math.abs(getAttribute("scalex").doubleValue() * animscalex);
             }
-            public void setWidth(double width) {
-                setAttribute("scalex", width / getImage().getWidth());
+            public void setScaleX(double scaleX) {
+                setAttribute("scalex", scaleX);
             }
-            public double getHeight() {
-                return getImage().getHeight() * Math.abs(getAttribute("scaley").doubleValue() * animscaley);
+            public double getScaleY() {
+                return Math.abs(getAttribute("scaley").doubleValue() * animscaley);
             }
-            public void setHeight(double height) {
-                setAttribute("scaley", height / getImage().getHeight());
+            public void setScaleY(double scaleY) {
+                setAttribute("scaley", scaleY);
             }
             public double getDepth() {
                 return getAttribute("depth").doubleValue();

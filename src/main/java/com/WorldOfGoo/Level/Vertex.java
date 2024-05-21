@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -24,7 +24,7 @@ public class Vertex extends EditorObject {
         addAttribute("x", InputField.NUMBER).setDefaultValue("0").assertRequired();
         addAttribute("y", InputField.NUMBER).setDefaultValue("0").assertRequired();
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
+        addObjectComponent(new RectangleComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
@@ -73,13 +73,16 @@ public class Vertex extends EditorObject {
             public double getEdgeSize() {
                 return 4;
             }
+            public boolean isEdgeOnly() {
+                return true;
+            }
             public double getDepth() {
                 return Renderer.GEOMETRY + 0.000001;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 0, 1.0, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(1.0, 0, 1.0, 0.1);
             }
             public boolean isVisible() {

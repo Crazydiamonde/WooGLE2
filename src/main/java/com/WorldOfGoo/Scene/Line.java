@@ -1,6 +1,8 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.AnchorComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.LineComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
@@ -23,7 +25,7 @@ public class Line extends EditorObject {
         addAttribute("normal",   InputField.POSITION).setDefaultValue("1,0") .assertRequired();
         addAttribute("break",    InputField.NUMBER);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.LINE) {
+        addObjectComponent(new LineComponent() {
             public double getX() {
                 return getAttribute("anchor").positionValue().getX();
             }
@@ -39,10 +41,10 @@ public class Line extends EditorObject {
             public double getRotation() {
                 return Math.atan2(-getAttribute("normal").positionValue().getX(), -getAttribute("normal").positionValue().getY());
             }
-            public double getEdgeSize() {
+            public double getLineWidth() {
                 return 3;
             }
-            public Paint getBorderColor() {
+            public Paint getColor() {
                 if (LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 2) return new Color(0.0, 0.25, 1.0, 1.0);
 
                 if (ObjectUtil.attributeContainsTag(getAttribute("tag").listValue(), "deadly")) {
@@ -60,12 +62,15 @@ public class Line extends EditorObject {
                 return new Color(0.0, 0.25, 1.0, 1.0);
 
             }
+            public double getDepth() {
+                return Renderer.GEOMETRY;
+            }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }
         });
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
+        addObjectComponent(new AnchorComponent() {
             public double getX() {
                 return getAttribute("anchor").positionValue().getX();
             }
@@ -88,13 +93,13 @@ public class Line extends EditorObject {
                 double magnitude = Math.hypot(anchorX, anchorY);
                 setAttribute("normal", anchorX / magnitude + "," + -anchorY / magnitude);
             }
-            public double getEdgeSize() {
+            public double getLineWidth() {
                 return 3;
             }
             public double getDepth() {
                 return Renderer.GEOMETRY;
             }
-            public Paint getBorderColor() {
+            public Paint getColor() {
                 return Rectangle.geometryColor(getAttribute("tag").listValue(), getParent());
             }
             public boolean isVisible() {

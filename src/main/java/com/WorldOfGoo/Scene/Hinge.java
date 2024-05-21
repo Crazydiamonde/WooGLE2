@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -23,7 +23,7 @@ public class Hinge extends EditorObject {
         addAttribute("stopcfm", InputField.NUMBER);
         addAttribute("stoperp", InputField.NUMBER);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
+        addObjectComponent(new RectangleComponent() {
             public double getX() {
                 return getAttribute("anchor").positionValue().getX();
             }
@@ -48,13 +48,16 @@ public class Hinge extends EditorObject {
             public double getEdgeSize() {
                 return 2;
             }
+            public boolean isEdgeOnly() {
+                return true;
+            }
             public double getDepth(){
                 return Renderer.GEOMETRY + 1;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 1.0, 0, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(1.0, 1.0, 0, 0.1);
             }
             public boolean isVisible() {

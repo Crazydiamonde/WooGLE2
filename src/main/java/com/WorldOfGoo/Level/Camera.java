@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -17,7 +17,7 @@ public class Camera extends EditorObject {
         addAttribute("endpos",  InputField.POSITION)  .setDefaultValue("0,0");
         addAttribute("endzoom", InputField.NUMBER)    .setDefaultValue("1");
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
+        addObjectComponent(new RectangleComponent() {
             public double getX() {
                 return getAttribute("endpos").positionValue().getX();
             }
@@ -63,8 +63,14 @@ public class Camera extends EditorObject {
             public Paint getBorderColor() {
                 return new Color(0.0, 0.5, 0.5, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(0.0, 0.5, 0.5, 0.1);
+            }
+            public boolean isEdgeOnly() {
+                return true;
+            }
+            public double getDepth() {
+                return 100000;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowCameras();

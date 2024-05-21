@@ -1,7 +1,7 @@
 package com.WooGLEFX.Functions.InputEvents;
 
 import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectCreator;
-import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersection;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXScene;
@@ -63,17 +63,19 @@ public class MouseReleasedManager {
                             double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
                             double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
-                            if (MouseIntersection.mouseIntersection(ballInstance, mouseX, mouseY) != DragSettings.NULL) {
+                            for (ObjectComponent objectComponent : ballInstance.getObjectComponents()) {
+                                if (objectComponent.mouseIntersection(mouseX, mouseY) != DragSettings.NULL) {
 
-                                EditorObject strand = ObjectCreator.create("Strand", level.getLevelObject());
+                                    EditorObject strand = ObjectCreator.create("Strand", level.getLevelObject());
 
-                                strand.setAttribute("gb1", SelectionManager.getStrand1Gooball().getAttribute("id").stringValue());
-                                strand.setAttribute("gb2", ball.getAttribute("id").stringValue());
+                                    strand.setAttribute("gb1", SelectionManager.getStrand1Gooball().getAttribute("id").stringValue());
+                                    strand.setAttribute("gb2", ball.getAttribute("id").stringValue());
 
-                                level.getLevel().add(strand);
-                                ObjectAdder.addAnything(strand, level.getLevelObject());
-                                break;
+                                    level.getLevel().add(strand);
+                                    ObjectAdder.addAnything(strand, level.getLevelObject());
+                                    break;
 
+                                }
                             }
                         }
                     }

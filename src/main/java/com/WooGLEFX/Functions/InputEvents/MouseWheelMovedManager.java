@@ -1,9 +1,9 @@
 package com.WooGLEFX.Functions.InputEvents;
 
-import com.WooGLEFX.EditorObjects.ObjectDetection.MouseIntersectingCorners;
 import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectDrag;
 import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectResize;
 import com.WooGLEFX.EditorObjects.ObjectFunctions.ObjectRotate;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Engine.FX.FXContainers;
 import com.WooGLEFX.Engine.FX.FXPropertiesView;
@@ -45,8 +45,8 @@ public class MouseWheelMovedManager {
                 double newScaleX = oldScaleX * amt;
                 double newScaleY = oldScaleY * amt;
 
-                double newTranslateX = (int) ((oldTranslateX - mouseX) * amt + mouseX);
-                double newTranslateY = (int) ((oldTranslateY - mouseY) * amt + mouseY);
+                double newTranslateX = ((oldTranslateX - mouseX) * amt + mouseX);
+                double newTranslateY = ((oldTranslateY - mouseY) * amt + mouseY);
 
                 // Transform the canvas according to the updated translation and scale.
                 Renderer.t = new Affine();
@@ -58,7 +58,21 @@ public class MouseWheelMovedManager {
                 level.setZoom(newScaleX);
 
                 if (level.getSelected() != null) {
-                    DragSettings hit = MouseIntersectingCorners.mouseIntersectingCorners(level.getSelected(), mouseX, mouseY);
+                    DragSettings hit = DragSettings.NULL;
+
+                    double x = (e.getX() - level.getOffsetX()) / level.getZoom();
+                    double y = (e.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
+
+                    for (ObjectComponent objectComponent : level.getSelected().getObjectComponents()) {
+
+                        DragSettings result = objectComponent.mouseIntersectingCorners(x, y);
+                        if (result == DragSettings.NULL) continue;
+
+                        if (result.getType() != DragSettings.MOVE || hit == DragSettings.NULL) {
+                            hit = result;
+                        }
+
+                    }
                     switch (hit.getType()) {
                         case -1 -> FXScene.getScene().setCursor(Cursor.DEFAULT);
                         case DragSettings.MOVE -> FXScene.getScene().setCursor(Cursor.MOVE);

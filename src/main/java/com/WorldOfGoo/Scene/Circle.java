@@ -1,9 +1,10 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
 import com.WooGLEFX.EditorObjects.EditorAttribute;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
+import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
@@ -17,9 +18,6 @@ import javafx.scene.paint.Paint;
 import java.io.FileNotFoundException;
 
 public class Circle extends EditorObject {
-
-    private Image image;
-
 
     public Circle(EditorObject _parent) {
         super(_parent, "circle", "scene\\circle");
@@ -41,7 +39,7 @@ public class Circle extends EditorObject {
         addAttribute("rotspeed",         InputField.NUMBER);
         addAttribute("nogeomcollisions", InputField.FLAG);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE) {
+        addObjectComponent(new CircleComponent() {
             public double getX() {
 
                 if (getParent() instanceof Compositegeom compositegeom) {
@@ -144,13 +142,16 @@ public class Circle extends EditorObject {
                 boolean contacts = getAttribute("contacts").booleanValue();
                 return (contacts || LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 2) ? 4 : 0;
             }
+            public boolean isEdgeOnly() {
+                return false;
+            }
             public double getDepth() {
                 return Renderer.GEOMETRY;
             }
             public Paint getBorderColor() {
                 return Rectangle.geometryColor(getAttribute("tag").listValue(), getParent());
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 Color color = Rectangle.geometryColor(getAttribute("tag").listValue(), getParent());
                 return new Color(color.getRed(), color.getGreen(), color.getBlue(), 0.25);
             }
@@ -159,7 +160,7 @@ public class Circle extends EditorObject {
             }
         });
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        addObjectComponent(new ImageComponent() {
             public double getX() {
                 EditorAttribute imagepos = getAttribute("imagepos");
                 if (imagepos.stringValue().isEmpty()) return getAttribute("x").doubleValue();
@@ -177,38 +178,43 @@ public class Circle extends EditorObject {
                 setAttribute("imagepos", getX() + "," + -y);
             }
             public double getRotation() {
-                return Math.toRadians(getAttribute("imagerot").doubleValue());
+                return -getAttribute("imagerot").doubleValue();
             }
             public void setRotation(double rotation) {
-                setAttribute("imagerot", Math.toDegrees(rotation));
+                setAttribute("imagerot", -rotation);
             }
-            public double getWidth() {
-                Position scale = getAttribute("imagescale").positionValue();
-                return getImage().getWidth() * Math.abs(scale.getX());
+            public double getScaleX() {
+                return getAttribute("imagescale").positionValue().getX();
             }
-            public void setWidth(double width) {
+            public void setScaleX(double scaleX) {
                 Position scale = getAttribute("imagescale").positionValue();
-                setAttribute("imagescale", (width / getImage().getWidth()) + "," + scale.getY());
+                setAttribute("imagescale", scaleX + "," + scale.getY());
             }
-            public double getHeight() {
-                Position scale = getAttribute("imagescale").positionValue();
-                return getImage().getHeight() * Math.abs(scale.getY());
+            public double getScaleY() {
+                return getAttribute("imagescale").positionValue().getY();
             }
-            public void setHeight(double height) {
+            public void setScaleY(double scaleY) {
                 Position scale = getAttribute("imagescale").positionValue();
-                setAttribute("imagescale", scale.getX() + "," + (height / getImage().getHeight()));
+                setAttribute("imagescale", scale.getX() + "," + scaleY);
             }
             public Image getImage() {
-                return image;
+                try {
+                    return getAttribute("image").imageValue(LevelManager.getVersion());
+                } catch (FileNotFoundException e) {
+                    return null;
+                }
+            }
+            public double getDepth() {
+                return 0;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowGraphics();
             }
         });
 
-        setMetaAttributes(MetaEditorAttribute.parse("id,x,y,radius,Geometry<static,mass,material,tag,break,rotspeed,contacts,nogeomcollisions>?Image<image,imagepos,imagerot,imagescale>"));
-
-        getAttribute("image").addChangeListener((observable, oldValue, newValue) -> updateImage());
+        String geometry = "Geometry<static,mass,material,tag,break,rotspeed,contacts,nogeomcollisions>";
+        String image = "?Image<image,imagepos,imagerot,imagescale>";
+        setMetaAttributes(MetaEditorAttribute.parse("id,x,y,radius," + geometry + image));
 
     }
 
@@ -216,25 +222,6 @@ public class Circle extends EditorObject {
     @Override
     public String getName() {
         return getAttribute("id").stringValue();
-    }
-
-
-    @Override
-    public void update() {
-        updateImage();
-    }
-
-
-    private void updateImage() {
-
-        try {
-            if (!getAttribute("image").stringValue().isEmpty()) {
-                image = getAttribute("image").imageValue(LevelManager.getVersion());
-            }
-        } catch (FileNotFoundException ignored) {
-
-        }
-
     }
 
 }

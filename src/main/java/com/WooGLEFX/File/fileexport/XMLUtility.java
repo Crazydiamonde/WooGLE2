@@ -15,7 +15,7 @@ public class XMLUtility {
 
         String attributeName = attribute.getName();
 
-        if (attribute.stringValue().isEmpty() && !attribute.getRequiredInFile()) return;
+        if (attribute.actualValue().isEmpty() && !attribute.getRequiredInFile()) return;
 
         if ((attributeName.equals("up") || attributeName.equals("over") || attributeName.equals("disabled"))) {
             exportBuilder.append(attributeName).append("=\"\" ");

@@ -1,8 +1,9 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.EditorObjects._Ball;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.File.ResourceManagers.BallManager;
 import com.WooGLEFX.Functions.LevelLoader;
@@ -215,7 +216,7 @@ public class Strand extends EditorObject {
             update();
         }
 
-        if (strandImage != null) addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        if (strandImage != null) addObjectComponent(new ImageComponent() {
             public double getX() {
                 double x1 = goo1.getAttribute("x").doubleValue();
                 double x2 = goo2.getAttribute("x").doubleValue();
@@ -237,11 +238,11 @@ public class Strand extends EditorObject {
                 return Math.PI / 2 + Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
 
             }
-            public double getWidth() {
+            public double getScaleX() {
                 if (strand == null) return 0;
-                return strand.getAttribute("thickness").doubleValue();
+                return strand.getAttribute("thickness").doubleValue() / strandImage.getWidth();
             }
-            public double getHeight() {
+            public double getScaleY() {
 
                 double x1 = goo1.getAttribute("x").doubleValue();
                 double y1 = -goo1.getAttribute("y").doubleValue();
@@ -249,11 +250,14 @@ public class Strand extends EditorObject {
                 double x2 = goo2.getAttribute("x").doubleValue();
                 double y2 = -goo2.getAttribute("y").doubleValue();
 
-                return Math.hypot(x2 - x1, y2 - y1);
+                return Math.hypot(x2 - x1, y2 - y1) / strandImage.getHeight();
 
             }
-            public Image getImage(){
+            public Image getImage() {
                 return strandImage;
+            }
+            public double getDepth() {
+                return 0.00000001;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 2;
@@ -269,7 +273,7 @@ public class Strand extends EditorObject {
             }
         });
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE) {
+        addObjectComponent(new RectangleComponent() {
 
             public double getX() {
                 double x1 = goo1.getAttribute("x").doubleValue();
@@ -314,6 +318,9 @@ public class Strand extends EditorObject {
             public double getEdgeSize() {
                 return 3;
             }
+            public boolean isEdgeOnly() {
+                return false;
+            }
 
             public double getDepth(){
                 return 0.00000001;
@@ -330,6 +337,10 @@ public class Strand extends EditorObject {
                 if (length < minSize) return new Color(0.0, 0.0, 1.0, 1.0);
                 else return new Color(0.5, 0.5, 0.5, 1.0);
 
+            }
+
+            public Paint getColor() {
+                return new Color(0.0, 0.0, 0.0, 0.0);
             }
 
             public boolean isVisible() {

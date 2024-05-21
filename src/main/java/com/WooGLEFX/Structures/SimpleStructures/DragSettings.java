@@ -1,6 +1,6 @@
 package com.WooGLEFX.Structures.SimpleStructures;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 
 public class DragSettings {
 
@@ -11,15 +11,24 @@ public class DragSettings {
     public static final int SETANCHOR = 3;
 
 
-    public static final DragSettings NULL = new DragSettings(-1);
+    public static final DragSettings NULL = new DragSettings(-1, null);
 
 
     private final int type;
     public int getType() {
         return type;
     }
-    public DragSettings(int type) {
+
+
+    private final ObjectComponent objectComponent;
+    public ObjectComponent getObjectComponent() {
+        return objectComponent;
+    }
+
+
+    public DragSettings(int type, ObjectComponent objectComponent) {
         this.type = type;
+        this.objectComponent = objectComponent;
     }
 
 
@@ -83,15 +92,6 @@ public class DragSettings {
     }
     public void setRotateAngleOffset(double rotateAngleOffset) {
         this.rotateAngleOffset = rotateAngleOffset;
-    }
-
-
-    private ObjectPosition objectPosition;
-    public ObjectPosition getObjectPosition() {
-        return objectPosition;
-    }
-    public void setObjectPosition(ObjectPosition objectPosition) {
-        this.objectPosition = objectPosition;
     }
 
 }

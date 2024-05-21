@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ public class Button extends EditorObject {
         addAttribute("screenspace",           InputField.ANY);
         addAttribute("context",               InputField.ANY);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        addObjectComponent(new ImageComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
@@ -82,19 +83,17 @@ public class Button extends EditorObject {
             public void setRotation(double rotation) {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
-            public double getWidth() {
-                double scalex = getAttribute("scalex").doubleValue();
-                return image.getWidth() * Math.abs(scalex);
+            public double getScaleX() {
+                return Math.abs(getAttribute("scalex").doubleValue());
             }
-            public void setWidth(double width) {
-                setAttribute("scalex", width / image.getWidth());
+            public void setScaleX(double scaleX) {
+                setAttribute("scalex", scaleX);
             }
-            public double getHeight() {
-                double scaley = getAttribute("scaley").doubleValue();
-                return image.getHeight() * Math.abs(scaley);
+            public double getScaleY() {
+                return Math.abs(getAttribute("scaley").doubleValue());
             }
-            public void setHeight(double height) {
-                setAttribute("scaley", height / image.getHeight());
+            public void setScaleY(double scaleY) {
+                setAttribute("scaley", scaleY);
             }
             public double getDepth() {
                 return getAttribute("depth").doubleValue();

@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -18,7 +19,7 @@ public class Poi extends EditorObject {
         addAttribute("pause",      InputField.NUMBER)  .setDefaultValue("0")  .assertRequired();
         addAttribute("zoom",       InputField.NUMBER)  .setDefaultValue("1")  .assertRequired();
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
+        addObjectComponent(new RectangleComponent() {
             public double getX() {
                 return getAttribute("pos").positionValue().getX();
             }
@@ -61,10 +62,16 @@ public class Poi extends EditorObject {
             public double getEdgeSize() {
                 return 1;
             }
+            public boolean isEdgeOnly() {
+                return true;
+            }
+            public double getDepth() {
+                return 10000000;
+            }
             public Paint getBorderColor() {
                 return new Color(0.25, 0.8, 0.8, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(0.25, 0.8, 0.8, 0.1);
             }
             public boolean isVisible() {

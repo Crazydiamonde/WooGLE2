@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.File.ResourceManagers.ParticleManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -24,7 +24,7 @@ public class Fire extends EditorObject {
         addAttribute("y",         InputField.NUMBER)   .setDefaultValue("0") .assertRequired();
         addAttribute("radius",    InputField.NUMBER)   .setDefaultValue("50").assertRequired();
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE) {
+        addObjectComponent(new CircleComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
@@ -46,10 +46,16 @@ public class Fire extends EditorObject {
             public double getEdgeSize() {
                 return 0.5;
             }
+            public boolean isEdgeOnly() {
+                return false;
+            }
+            public double getDepth() {
+                return 100000;
+            }
             public Paint getBorderColor() {
                 return new Color(1.0, 0.25, 0.0, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(1.0, 0.25, 0.0, 0.1);
             }
             public boolean isVisible() {

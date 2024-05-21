@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.AnchorComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -25,7 +26,7 @@ public class Radialforcefield extends EditorObject {
         addAttribute("geomonly",         InputField.FLAG)                                   .assertRequired();
         addAttribute("enabled",          InputField.FLAG)      .setDefaultValue("true")     .assertRequired();
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE_HOLLOW) {
+        addObjectComponent(new CircleComponent() {
             public double getX() {
                 return getAttribute("center").positionValue().getX();
             }
@@ -47,10 +48,16 @@ public class Radialforcefield extends EditorObject {
             public double getEdgeSize() {
                 return 4.5;
             }
+            public boolean isEdgeOnly() {
+                return true;
+            }
+            public double getDepth() {
+                return 1000000;
+            }
             public Paint getBorderColor() {
                 return new Color(1.0, 1.0, 0, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(1.0, 1.0, 0, 0.05);
             }
             public boolean isVisible() {
@@ -58,12 +65,15 @@ public class Radialforcefield extends EditorObject {
             }
         });
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
+        addObjectComponent(new AnchorComponent() {
             public double getX() {
                 return getAttribute("center").positionValue().getX();
             }
             public double getY() {
                 return -getAttribute("center").positionValue().getY();
+            }
+            public double getAnchorX() {
+                return 0;
             }
             public double getAnchorY() {
                 return -getAttribute("forceatcenter").doubleValue() * 20;
@@ -71,10 +81,13 @@ public class Radialforcefield extends EditorObject {
             public void setAnchor(double anchorX, double anchorY) {
                 setAttribute("forceatcenter", -anchorY / 20);
             }
-            public double getEdgeSize() {
+            public double getLineWidth() {
                 return 3;
             }
-            public Paint getBorderColor() {
+            public double getDepth() {
+                return 1000000;
+            }
+            public Paint getColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                         new Stop(0, Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")));
             }
@@ -83,12 +96,15 @@ public class Radialforcefield extends EditorObject {
             }
         });
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.ANCHOR) {
+        addObjectComponent(new AnchorComponent() {
             public double getX() {
                 return getAttribute("center").positionValue().getX() + getAttribute("radius").doubleValue();
             }
             public double getY() {
                 return -getAttribute("center").positionValue().getY();
+            }
+            public double getAnchorX() {
+                return 0;
             }
             public double getAnchorY() {
                 return -getAttribute("forceatedge").doubleValue() * 20;
@@ -96,10 +112,13 @@ public class Radialforcefield extends EditorObject {
             public void setAnchor(double anchorX, double anchorY) {
                 setAttribute("forceatedge", -anchorY / 20);
             }
-            public double getEdgeSize() {
+            public double getLineWidth() {
                 return 3;
             }
-            public Paint getBorderColor() {
+            public double getDepth() {
+                return 1000000;
+            }
+            public Paint getColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                         new Stop(0, Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")));
             }

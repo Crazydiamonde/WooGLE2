@@ -3,6 +3,7 @@ package com.WooGLEFX.EditorObjects;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
 import com.WooGLEFX.Structures.WorldLevel;
@@ -117,21 +118,21 @@ public class EditorObject {
     }
 
 
-    private final ArrayList<ObjectPosition> objectPositions = new ArrayList<>();
-    public final ObjectPosition[] getObjectPositions() {
-        return objectPositions.toArray(new ObjectPosition[0]);
+    private final ArrayList<ObjectComponent> objectComponents = new ArrayList<>();
+    public final ObjectComponent[] getObjectComponents() {
+        return objectComponents.toArray(new ObjectComponent[0]);
     }
-    public final void addObjectPosition(ObjectPosition objectPosition) {
-        objectPositions.add(objectPosition);
+    public final void addObjectComponent(ObjectComponent objectComponent) {
+        objectComponents.add(objectComponent);
     }
-    public final void removeObjectPosition(ObjectPosition objectPosition) {
-        objectPositions.remove(objectPosition);
+    public final void removeObjectPosition(ObjectComponent objectComponent) {
+        objectComponents.remove(objectComponent);
     }
     public final void clearObjectPositions() {
-        objectPositions.clear();
+        objectComponents.clear();
     }
-    public final boolean containsObjectPosition(ObjectPosition position) {
-        return objectPositions.contains(position);
+    public final boolean containsObjectPosition(ObjectComponent position) {
+        return objectComponents.contains(position);
     }
 
 

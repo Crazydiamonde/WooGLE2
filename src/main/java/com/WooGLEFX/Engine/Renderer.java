@@ -3,8 +3,7 @@ package com.WooGLEFX.Engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
-import com.WooGLEFX.EditorObjects.ObjectDetection.Draw;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Engine.FX.FXCanvas;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -62,15 +61,15 @@ public class Renderer {
     }
 
 
-    private static void addObjectPositionToListByDepth(ArrayList<ObjectPosition> objectPositions,
-                                                       ObjectPosition objectPosition) {
+    private static void addObjectPositionToListByDepth(ArrayList<ObjectComponent> objectComponents,
+                                                       ObjectComponent objectComponent) {
 
         int i = 0;
-        while (i < objectPositions.size() && objectPositions.get(i).getDepth() < objectPosition.getDepth()) {
+        while (i < objectComponents.size() && objectComponents.get(i).getDepth() < objectComponent.getDepth()) {
             i++;
         }
 
-        objectPositions.add(i, objectPosition);
+        objectComponents.add(i, objectComponent);
 
     }
 
@@ -87,7 +86,7 @@ public class Renderer {
     }
 
 
-    private static void addAllObjectPositionsToList(ArrayList<ObjectPosition> objectPositions,
+    private static void addAllObjectPositionsToList(ArrayList<ObjectComponent> objectComponents,
                                                     EditorObject editorObject) {
 
         ArrayList<EditorObject> allObjects = new ArrayList<>();
@@ -99,27 +98,27 @@ public class Renderer {
         }
 
         for (EditorObject object : reversed) {
-            for (ObjectPosition objectPosition : object.getObjectPositions()) {
-                addObjectPositionToListByDepth(objectPositions, objectPosition);
+            for (ObjectComponent objectComponent : object.getObjectComponents()) {
+                addObjectPositionToListByDepth(objectComponents, objectComponent);
             }
         }
 
     }
 
 
-    public static ArrayList<ObjectPosition> orderObjectPositionsByDepth(WorldLevel worldLevel) {
+    public static ArrayList<ObjectComponent> orderObjectPositionsByDepth(WorldLevel worldLevel) {
 
         // TODO fix rendering order when undoing / pasting
 
-        ArrayList<ObjectPosition> objectPositions = new ArrayList<>();
+        ArrayList<ObjectComponent> objectComponents = new ArrayList<>();
 
-        addAllObjectPositionsToList(objectPositions, worldLevel.getLevelObject());
-        addAllObjectPositionsToList(objectPositions, worldLevel.getSceneObject());
-        addAllObjectPositionsToList(objectPositions, worldLevel.getResourcesObject());
-        addAllObjectPositionsToList(objectPositions, worldLevel.getAddinObject());
-        addAllObjectPositionsToList(objectPositions, worldLevel.getTextObject());
+        addAllObjectPositionsToList(objectComponents, worldLevel.getLevelObject());
+        addAllObjectPositionsToList(objectComponents, worldLevel.getSceneObject());
+        addAllObjectPositionsToList(objectComponents, worldLevel.getResourcesObject());
+        addAllObjectPositionsToList(objectComponents, worldLevel.getAddinObject());
+        addAllObjectPositionsToList(objectComponents, worldLevel.getTextObject());
 
-        return objectPositions;
+        return objectComponents;
 
     }
 
@@ -128,15 +127,19 @@ public class Renderer {
 
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 
-        ArrayList<ObjectPosition> objectPositionsOrderedByDepth = orderObjectPositionsByDepth(worldLevel);
+        ArrayList<ObjectComponent> objectPositionsOrderedByDepth = orderObjectPositionsByDepth(worldLevel);
 
-        for (ObjectPosition objectPosition : objectPositionsOrderedByDepth) {
+        for (ObjectComponent objectComponent : objectPositionsOrderedByDepth) {
+
+            if (!objectComponent.isVisible()) continue;
 
             graphicsContext.save();
 
-            boolean selected = SelectionManager.getSelected() != null && List.of(SelectionManager.getSelected().getObjectPositions()).contains(objectPosition);
+            boolean selected = SelectionManager.getSelected() != null && List.of(SelectionManager.getSelected().getObjectComponents()).contains(objectComponent);
 
-            Draw.draw(graphicsContext, objectPosition, selected);
+            objectComponent.draw(graphicsContext, selected);
+
+            graphicsContext.restore();
 
         }
 

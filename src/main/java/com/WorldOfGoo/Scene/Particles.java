@@ -2,7 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import java.util.ArrayList;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -36,23 +36,7 @@ public class Particles extends EditorObject {
         addAttribute("pretick", InputField.NUMBER)  .setDefaultValue("0");
         addAttribute("enabled", InputField.FLAG);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.RECTANGLE_HOLLOW) {
-            public double getX() {
-                return getAttribute("pos").positionValue().getX();
-            }
-            public void setX(double x) {
-                setAttribute("pos", x + "," + -getY());
-            }
-            public double getY() {
-                return -getAttribute("pos").positionValue().getY();
-            }
-            public void setY(double y) {
-                setAttribute("pos", getX() + "," + -y);
-            }
 
-            // TODO label width and height
-
-        });
 
         setMetaAttributes(MetaEditorAttribute.parse("effect,pos,depth,pretick,enabled,"));
 
@@ -213,7 +197,7 @@ public class Particles extends EditorObject {
             drawing.get(i).remove(0);
         }
 
-        addObjectPosition(particleGraphicsInstance.getObjectPosition());
+        addObjectComponent(particleGraphicsInstance.getObjectPosition());
 
     }
 

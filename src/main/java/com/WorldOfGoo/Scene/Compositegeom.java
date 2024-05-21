@@ -1,11 +1,14 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
+import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorAttribute;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
+import com.WooGLEFX.Structures.SimpleStructures.Position;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -37,7 +40,7 @@ public class Compositegeom extends EditorObject {
         addAttribute("contacts",         InputField.FLAG);
         addAttribute("nogeomcollisions", InputField.FLAG);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE_HOLLOW) {
+        addObjectComponent(new CircleComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
@@ -62,10 +65,16 @@ public class Compositegeom extends EditorObject {
             public double getEdgeSize() {
                 return 2.5;
             }
+            public boolean isEdgeOnly() {
+                return true;
+            }
+            public double getDepth() {
+                return Renderer.GEOMETRY;
+            }
             public Paint getBorderColor() {
                 return new Color(0, 1.0, 0, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(0, 1.0, 0, 0.25);
             }
             public boolean isVisible() {
@@ -73,7 +82,7 @@ public class Compositegeom extends EditorObject {
             }
         });
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        addObjectComponent(new ImageComponent() {
             public double getX() {
                 EditorAttribute imagepos = getAttribute("imagepos");
                 if (imagepos.stringValue().isEmpty()) return getAttribute("x").doubleValue();
@@ -91,24 +100,27 @@ public class Compositegeom extends EditorObject {
                 setAttribute("imagepos", getX() + "," + -y);
             }
             public double getRotation() {
-                return Math.toRadians(getAttribute("imagerot").doubleValue());
+                return -getAttribute("imagerot").doubleValue();
             }
             public void setRotation(double rotation) {
-                setAttribute("imagerot", Math.toDegrees(rotation));
+                setAttribute("imagerot", -rotation);
             }
-            public double getWidth() {
-                return getImage().getWidth() * Math.abs(getAttribute("imagescale").positionValue().getX());
+            public double getScaleX() {
+                return getAttribute("imagescale").positionValue().getX();
             }
-            public void setWidth(double width) {
-                double scaleY = getAttribute("imagescale").positionValue().getY();
-                setAttribute("imagescale", (width / getImage().getWidth()) + "," + scaleY);
+            public void setScaleX(double scaleX) {
+                Position scale = getAttribute("imagescale").positionValue();
+                setAttribute("imagescale", scaleX + "," + scale.getY());
             }
-            public double getHeight() {
-                return getImage().getHeight() * Math.abs(getAttribute("imagescale").positionValue().getY());
+            public double getScaleY() {
+                return getAttribute("imagescale").positionValue().getY();
             }
-            public void setHeight(double height) {
-                double scaleX = getAttribute("imagescale").positionValue().getX();
-                setAttribute("imagescale", scaleX + "," + (height / getImage().getHeight()));
+            public void setScaleY(double scaleY) {
+                Position scale = getAttribute("imagescale").positionValue();
+                setAttribute("imagescale", scale.getX() + "," + scaleY);
+            }
+            public double getDepth() {
+                return 0;
             }
             public Image getImage() {
                 return image;

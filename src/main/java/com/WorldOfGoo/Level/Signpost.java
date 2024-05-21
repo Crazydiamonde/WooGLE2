@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
 import javafx.scene.image.Image;
@@ -33,7 +33,7 @@ public class Signpost extends EditorObject {
         addAttribute("particles", InputField.PARTICLES);
         addAttribute("pulse",     InputField.ANY);
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.IMAGE) {
+        addObjectComponent(new ImageComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
@@ -52,19 +52,17 @@ public class Signpost extends EditorObject {
             public void setRotation(double rotation) {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
-            public double getWidth() {
-                double scalex = getAttribute("scalex").doubleValue();
-                return image.getWidth() * Math.abs(scalex);
+            public double getScaleX() {
+                return getAttribute("scalex").doubleValue();
             }
-            public void setWidth(double width) {
-                setAttribute("scalex", width / image.getWidth());
+            public void setScaleX(double scaleX) {
+                setAttribute("scalex", scaleX);
             }
-            public double getHeight() {
-                double scaley = getAttribute("scaley").doubleValue();
-                return image.getHeight() * Math.abs(scaley);
+            public double getScaleY() {
+                return getAttribute("scaley").doubleValue();
             }
-            public void setHeight(double height) {
-                setAttribute("scaley", height / image.getHeight());
+            public void setScaleY(double scaleY) {
+                setAttribute("scaley", scaleY);
             }
             public double getDepth() {
                 return getAttribute("depth").doubleValue();

@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -19,7 +19,7 @@ public class Levelexit extends EditorObject {
         addAttribute("radius", InputField.NUMBER)  .setDefaultValue("75")     .assertRequired();
         addAttribute("filter", InputField.ANY)                                .assertRequired();
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.CIRCLE_HOLLOW) {
+        addObjectComponent(new CircleComponent() {
             public double getX() {
                 return getAttribute("pos").positionValue().getX();
             }
@@ -41,13 +41,16 @@ public class Levelexit extends EditorObject {
             public double getEdgeSize() {
                 return 2;
             }
+            public boolean isEdgeOnly() {
+                return true;
+            }
             public double getDepth() {
                 return Renderer.GEOMETRY;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 0, 1.0, 1.0);
             }
-            public Paint getFillColor() {
+            public Paint getColor() {
                 return new Color(1.0, 0, 1.0, 0.1);
             }
             public boolean isVisible() {

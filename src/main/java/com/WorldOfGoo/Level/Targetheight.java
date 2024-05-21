@@ -1,6 +1,6 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.ObjectPosition;
+import com.WooGLEFX.EditorObjects.objectcomponents.LineComponent;
 import com.WooGLEFX.Engine.Renderer;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -16,20 +16,23 @@ public class Targetheight extends EditorObject {
 
         addAttribute("y", InputField.NUMBER).setDefaultValue("1000").assertRequired();
 
-        addObjectPosition(new ObjectPosition(ObjectPosition.LINE) {
+        addObjectComponent(new LineComponent() {
+            public double getX() {
+                return 0;
+            }
             public double getY() {
                 return -getAttribute("y").doubleValue();
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
-            public double getEdgeSize() {
+            public double getLineWidth() {
                 return 3;
             }
             public double getDepth() {
                 return Renderer.GEOMETRY;
             }
-            public Paint getBorderColor() {
+            public Paint getColor() {
                 return new Color(1.0, 0.0, 1.0, 1.0);
             }
             public boolean isVisible() {
