@@ -64,7 +64,7 @@ public class ParticleUtility {
 
         boolean shouldCreateNewInstance = false;
         if (obj instanceof Particleeffect)
-            shouldCreateNewInstance = counts.get(i) > obj.getAttribute("rate").doubleValue() * 50;
+            shouldCreateNewInstance = counts.get(i) > 1 / obj.getAttribute("rate").doubleValue();
         if (obj instanceof Ambientparticleeffect)
             shouldCreateNewInstance = drawing.get(i).size() < obj.getAttribute("maxparticles").doubleValue();
         if (shouldCreateNewInstance) createNewParticleGraphicsInstance(i, obj, particle, particleObject, counts, drawing);
@@ -87,21 +87,14 @@ public class ParticleUtility {
         double finalscale = InputField.getRange(particle.getAttribute("finalscale").stringValue(), Math.random());
         double absvar = InputField.getRange(particle.getAttribute("movedirvar").stringValue(), Math.random());
         double rotation = InputField.getRange(particle.getAttribute("movedir").stringValue(), Math.random()) + InputField.getRange(-absvar + "," + absvar, Math.random());
+        double visualRotation = InputField.getRange(particle.getAttribute("movedir").stringValue(), Math.random());
         double rotspeed = InputField.getRange(particle.getAttribute("rotspeed").stringValue(), Math.random());
         double speed = InputField.getRange(particle.getAttribute("speed").stringValue(), Math.random());
         double lifespan = InputField.getRange(particle.getAttribute("lifespan").stringValue(), Math.random());
         Position acceleration = Position.parse(particle.getAttribute("acceleration").stringValue());
         boolean fade = particle.getAttribute("fade").booleanValue();
         boolean additive = particle.getAttribute("additive").booleanValue();
-
-        double visualrotation;
         boolean directed = particle.getAttribute("directed").booleanValue();
-        if (directed) {
-            visualrotation = rotation;
-            visualrotation -= 90;
-        } else {
-            visualrotation = InputField.getRange(particle.getAttribute("rotation").stringValue(), Math.random());
-        }
 
         Position pos = new Position(0,0);
         if (obj instanceof Particleeffect) {
@@ -160,7 +153,7 @@ public class ParticleUtility {
 
         Image image = particle.getImages().get(0);
 
-        ParticleGraphicsInstance particleGraphicsInstance = new ParticleGraphicsInstance(pos, scale, finalscale, visualrotation, rotation, rotspeed, speed, acceleration, lifespan, fade, additive, image, directed, particleObject.getAttribute("depth").doubleValue());
+        ParticleGraphicsInstance particleGraphicsInstance = new ParticleGraphicsInstance(pos, scale, finalscale, visualRotation, rotation, rotspeed, speed, acceleration, lifespan, fade, additive, image, directed, particleObject.getAttribute("depth").doubleValue());
 
         drawing.get(i).add(particleGraphicsInstance);
 

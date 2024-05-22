@@ -11,26 +11,12 @@ public class ParticleGraphicsInstance {
 
     private final Position originalPos;
     private final double initialScale;
-    private final double finalscale;
     private final Position acceleration;
     private final double rotation;
     private final double initialDisplayRotation;
-    private final double rotspeed;
     private final double speed;
     private final double lifespan;
-    private final boolean fade;
-    private double alpha;
     private final double creationTimestamp;
-    private final boolean additive;
-    private final boolean directed;
-
-    public boolean getAdditive() {
-        return additive;
-    }
-
-    public double getAlpha() {
-        return alpha;
-    }
 
 
     private final ObjectComponent objectComponent;
@@ -39,20 +25,23 @@ public class ParticleGraphicsInstance {
     }
 
 
-    public ParticleGraphicsInstance(Position pos, double scale, double finalscale, double visualrotation, double rotation, double rotspeed, double speed, Position acceleration, double lifespan, boolean fade, boolean additive, Image image, boolean directed, double depth) {
+    public ParticleGraphicsInstance(Position pos,
+                                    double scale, double finalscale,
+                                    double visualRotation, double rotation, double rotspeed,
+                                    double speed, Position acceleration,
+                                    double lifespan,
+                                    boolean fade, boolean additive,
+                                    Image image,
+                                    boolean directed,
+                                    double depth) {
+
         this.originalPos = new Position(pos.getX(), pos.getY());
         this.initialScale = scale;
-        this.finalscale = finalscale;
         this.rotation = rotation;
-        this.rotspeed = rotspeed;
-        this.initialDisplayRotation = visualrotation;
+        this.initialDisplayRotation = visualRotation;
         this.speed = speed;
         this.acceleration = acceleration;
         this.lifespan = lifespan;
-        this.fade = fade;
-        this.additive = additive;
-        this.alpha = 1;
-        this.directed = directed;
         this.creationTimestamp = EditorWindow.getTimeElapsed();
 
         this.objectComponent = new ImageComponent() {
@@ -79,7 +68,7 @@ public class ParticleGraphicsInstance {
                     double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
                     double velocityX = initialVelocityX + accelerationX * dt * 50;
                     double velocityY = initialVelocityY + accelerationY * dt * 50;
-                    return Math.atan2(velocityY, velocityX) - 90;
+                    return Math.atan2(velocityY, velocityX) - Math.PI / 2;
                 } else {
                     double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
                     return Math.toRadians(-initialDisplayRotation) - rotspeed * dt;
@@ -146,23 +135,11 @@ public class ParticleGraphicsInstance {
         double x = this.originalPos.getX() + (this.speed * Math.cos(angle) + 0.5 * this.acceleration.getX() * dt * 50) * dt * 50;
         double y = this.originalPos.getY() + (this.speed * Math.sin(angle) + 0.5 * this.acceleration.getY() * dt * 50) * dt * 50;
         if (lifespan == -1) {
-            if (x < LevelManager.getLevel().getSceneObject().getAttribute("minx").doubleValue() ||
+            return x < LevelManager.getLevel().getSceneObject().getAttribute("minx").doubleValue() ||
                     y < LevelManager.getLevel().getSceneObject().getAttribute("miny").doubleValue() ||
                     x > LevelManager.getLevel().getSceneObject().getAttribute("maxx").doubleValue() ||
-                    y > LevelManager.getLevel().getSceneObject().getAttribute("maxy").doubleValue()) {
-                return true;
-            }
-        } else if (dt > this.lifespan) {
-            return true;
-        }
-        if (lifespan != -1) {
-            double thing = dt / this.lifespan;
-            //this.scale = this.initialScale * (1 - thing) + this.finalscale * thing;
-            if (fade) {
-                this.alpha = 1 - thing;
-            }
-        }
-        return false;
+                    y > LevelManager.getLevel().getSceneObject().getAttribute("maxy").doubleValue();
+        } else return dt > this.lifespan;
     }
 
 }

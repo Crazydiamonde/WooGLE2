@@ -2,11 +2,10 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.AnchorComponent;
 import com.WooGLEFX.EditorObjects.objectcomponents.LineComponent;
-import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
@@ -63,7 +62,7 @@ public class Line extends EditorObject {
 
             }
             public double getDepth() {
-                return Renderer.GEOMETRY;
+                return Depth.GEOMETRY;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
@@ -97,7 +96,7 @@ public class Line extends EditorObject {
                 return 3;
             }
             public double getDepth() {
-                return Renderer.GEOMETRY;
+                return Depth.GEOMETRY;
             }
             public Paint getColor() {
                 return Rectangle.geometryColor(getAttribute("tag").listValue(), getParent());

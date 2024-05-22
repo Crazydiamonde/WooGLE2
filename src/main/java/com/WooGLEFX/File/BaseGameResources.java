@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 public class BaseGameResources {
     // List all the Goo Ball types that are in the base game
-    public static final Set<String> GOO_BALL_TYPES = new HashSet<String>() {
+    public static final Set<String> GOO_BALL_TYPES = new HashSet<>() {
         {
             add("Anchor");
             add("AnchorFriendly");
@@ -67,7 +67,7 @@ public class BaseGameResources {
     };
 
     // List all levels that are in the base game
-    public static final Set<String> LEVELS = new HashSet<String>() {
+    public static final Set<String> LEVELS = new HashSet<>() {
         {
             add("AB3");
             add("BeautyAndTheTentacle");
@@ -132,7 +132,7 @@ public class BaseGameResources {
     };
 
     // List all images that are in the base game
-    public static final Set<String> IMAGES = new HashSet<String>() {
+    public static final Set<String> IMAGES = new HashSet<>() {
         {
             add("res/balls/Anchor/body");
             add("res/balls/AnchorSticky/body");

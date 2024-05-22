@@ -1,8 +1,8 @@
 package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.AnchorComponent;
-import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -62,7 +62,7 @@ public class Linearforcefield extends EditorObject {
                 return true;
             }
             public double getDepth() {
-                return 1000000;
+                return Depth.FORCEFIELDS;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 1.0, 0, 1.0);
@@ -108,7 +108,7 @@ public class Linearforcefield extends EditorObject {
                         new Stop(0, Color.valueOf("802000FF")), new Stop(1, Color.valueOf("FFC040FF")));
             }
             public double getDepth() {
-                return 1000000;
+                return Depth.FORCEFIELDS;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowForcefields();

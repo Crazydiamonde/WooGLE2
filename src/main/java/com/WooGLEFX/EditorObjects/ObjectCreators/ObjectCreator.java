@@ -8,7 +8,6 @@ import com.WorldOfGoo.Level.*;
 import com.WorldOfGoo.Particle.*;
 import com.WorldOfGoo.Resrc.*;
 import com.WorldOfGoo.Scene.*;
-import com.WorldOfGoo.Resrc.Font;
 import com.WorldOfGoo.Text.TextString;
 import com.WorldOfGoo.Text.TextStrings;
 import javafx.scene.control.TreeItem;

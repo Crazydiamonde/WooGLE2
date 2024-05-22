@@ -10,6 +10,7 @@ import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Functions.UndoHandling.UserActions.ObjectCreationAction;
 import com.WooGLEFX.Structures.WorldLevel;
 import com.WorldOfGoo.Level.BallInstance;
+import com.WorldOfGoo.Level.Strand;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
@@ -57,16 +58,19 @@ public class ClipboardManager {
                     if (okayToBeChild) {
                         object.setParent(level.getSelected().getParent());
                     } else {
-                        if (object.getClass().getPackage().getName().equals("com.WorldOfGoo.Scene")) {
-                            object.setParent(level.getSceneObject());
-                        } else if (object.getClass().getPackage().getName().equals("com.WorldOfGoo.Level")) {
-                            object.setParent(level.getLevelObject());
-                        } else if (object.getClass().getPackage().getName().equals("com.WorldOfGoo.Resrc")) {
-                            object.setParent(level.getResourcesObject());
+                        switch (object.getClass().getPackage().getName()) {
+                            case "com.WorldOfGoo.Scene" -> object.setParent(level.getSceneObject());
+                            case "com.WorldOfGoo.Level" -> object.setParent(level.getLevelObject());
+                            case "com.WorldOfGoo.Resrc" -> object.setParent(level.getResourcesObject());
                         }
                     }
                     if (object instanceof BallInstance) {
                         ObjectAdder.fixGooball(object);
+                        for (EditorObject editorObject : level.getLevel()) {
+                            if (editorObject instanceof Strand strand) {
+                                strand.update();
+                            }
+                        }
                     }
                     // object.getParent().getChildren().add(0, object);
                     ObjectManager.create(level, object, 0);

@@ -1,7 +1,7 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -71,7 +71,7 @@ public class Pipe extends EditorObject {
                 return false;
             }
             public double getDepth() {
-                return Renderer.GEOMETRY + 0.0000005;
+                return Depth.PIPE;
             }
 
             public Paint getBorderColor() {

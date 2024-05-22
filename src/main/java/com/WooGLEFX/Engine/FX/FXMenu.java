@@ -11,11 +11,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class FXMenu {
 
@@ -82,13 +79,7 @@ public class FXMenu {
         fileMenu.getItems().add(saveNewBallToOldItem);
 
         configurePaletteItem.setText("Configure Goo Ball Palette...");
-        configurePaletteItem.setOnAction(e -> {
-            try {
-                new PaletteReconfigurator().start(new Stage());
-            } catch (ParserConfigurationException | SAXException | IOException e1) {
-                throw new RuntimeException(e1);
-            }
-        });
+        configurePaletteItem.setOnAction(e -> new PaletteReconfigurator().start(new Stage()));
         fileMenu.getItems().add(configurePaletteItem);
 
         quitItem.setText("Quit");

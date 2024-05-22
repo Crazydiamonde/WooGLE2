@@ -24,7 +24,6 @@ import com.WorldOfGoo.Level.Music;
 import com.WorldOfGoo.Particle._Particle;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import com.WorldOfGoo.Resrc.Sound;
-import com.WorldOfGoo.Scene.SceneLayer;
 import com.WorldOfGoo.Text.TextString;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -206,9 +205,9 @@ public class LevelResourceManager {
 
             GlobalResourceManager.addResource(imageResourceObject, level.getVersion());
 
-            // Add a new Scenelayer with this image
-            SceneLayer layer = ObjectAdder.addSceneLayer(level.getSceneObject());
-            layer.setAttribute("image", imageResourceName);
+            // Add a new SceneLayer with this image
+            EditorObject layer = ObjectAdder.addObject("SceneLayer");
+            if (layer != null) layer.setAttribute("image", imageResourceName);
 
         } catch (IOException e) {
             Alarms.errorMessage(e);
@@ -260,7 +259,7 @@ public class LevelResourceManager {
             }
         }
 
-        if (possiblyUnusedResources.size() > 0) {
+        if (!possiblyUnusedResources.isEmpty()) {
             Alarms.confirmCleanResourcesMessage(possiblyUnusedResources);
         }
 
@@ -293,21 +292,12 @@ public class LevelResourceManager {
          * res\music.
          */
 
-        boolean alreadyInstalled = false;
-        /* check for file in 1.3 version */
-        if (level.getVersion() == GameVersion.OLD
-                && new File(FileManager.getOldWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
-            alreadyInstalled = true;
-        }
-        /* check for file in 1.5 version */
-        if (level.getVersion() == GameVersion.NEW
-                && new File(FileManager.getNewWOGdir() + "\\res\\music\\" + resrcFile.getName()).exists()) {
-            alreadyInstalled = true;
-        }
+        String dir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+
         /* copy file */
         String normalizedFilename = resrcFile.getName().split("\\.")[0].replace(' ', '_');
         String soundPath = "res/levels/" + level.getLevelName() + "/" + normalizedFilename;
-        if (!alreadyInstalled) {
+        if (!new File(dir + "\\res\\music\\" + resrcFile.getName()).exists()) {
             try {
                 if (level.getVersion() == GameVersion.OLD) {
                     Files.copy(resrcFile.toPath(),
@@ -390,21 +380,12 @@ public class LevelResourceManager {
          * res\music.
          */
 
-        boolean alreadyInstalled = false;
-        /* check for file in 1.3 version */
-        if (level.getVersion() == GameVersion.OLD
-                && new File(FileManager.getOldWOGdir() + "\\res\\sounds\\" + resrcFile.getName()).exists()) {
-            alreadyInstalled = true;
-        }
-        /* check for file in 1.5 version */
-        if (level.getVersion() == GameVersion.NEW
-                && new File(FileManager.getNewWOGdir() + "\\res\\sounds\\" + resrcFile.getName()).exists()) {
-            alreadyInstalled = true;
-        }
+        String dir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+
         /* copy file */
         String normalizedFilename = resrcFile.getName().split("\\.")[0].replace(' ', '_');
         String soundPath = "res/levels/" + level.getLevelName() + "/" + normalizedFilename;
-        if (!alreadyInstalled) {
+        if (!new File(dir + "\\res\\music\\" + resrcFile.getName()).exists()) {
             try {
                 if (level.getVersion() == GameVersion.OLD) {
                     Files.copy(resrcFile.toPath(),
@@ -624,12 +605,12 @@ public class LevelResourceManager {
             }
         }
 
-        if (allFailedResources.size() > 0) {
+        if (!allFailedResources.isEmpty()) {
             StringBuilder fullError = new StringBuilder();
             for (String resource : allFailedResources) {
                 fullError.append("\n").append(resource);
             }
-            Alarms.loadingInitialResourcesError(fullError.toString().substring(1));
+            Alarms.loadingInitialResourcesError(fullError.substring(1));
         }
     }
 

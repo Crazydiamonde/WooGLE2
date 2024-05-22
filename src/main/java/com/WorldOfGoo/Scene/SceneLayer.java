@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import java.io.FileNotFoundException;
 
+import com.WooGLEFX.EditorObjects.ImageUtility;
 import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.*;
@@ -10,9 +11,6 @@ import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 
 public class SceneLayer extends EditorObject {
 
@@ -93,10 +91,10 @@ public class SceneLayer extends EditorObject {
             }
         });
 
-        String meta1 = "id,name,x,y,scalex,scaley,rotation,";
-        String meta2 = "Image<image,depth,tilex,tiley,tilecountx,tilecounty,alpha,colorize,anchor,context>";
-        String meta3 = "?Anim<anim,animspeed,animdelay,animloop>";
-        setMetaAttributes(MetaEditorAttribute.parse(meta1 + meta2 + meta3));
+        String general = "id,name,x,y,scalex,scaley,rotation,";
+        String image = "Image<image,depth,tilex,tiley,tilecountx,tilecounty,alpha,colorize,anchor,context>";
+        String anim = "?Anim<anim,animspeed,animdelay,animloop>";
+        setMetaAttributes(MetaEditorAttribute.parse(general + image + anim));
 
         getAttribute("image").addChangeListener((observable, oldValue, newValue) -> updateImage());
         getAttribute("colorize").addChangeListener((observable, oldValue, newValue) -> updateImage());
@@ -107,47 +105,6 @@ public class SceneLayer extends EditorObject {
     @Override
     public String getName() {
         return getAttribute("name").stringValue();
-    }
-
-
-    public static Image colorize(Image image, Color colorize) {
-        double rScale = colorize.getR() / 255.0;
-        double gScale = colorize.getG() / 255.0;
-        double bScale = colorize.getB() / 255.0;
-
-        WritableImage writableImage = new WritableImage((int)image.getWidth(), (int)image.getHeight());
-        PixelWriter pixelWriter = writableImage.getPixelWriter();
-
-        int[] pixelBuffer = new int[(int)image.getWidth() * (int)image.getHeight()];
-
-        for (int x = 0; x < image.getWidth() - 1; x++) {
-            for (int y = 0; y < image.getHeight() - 1; y++) {
-
-                long pixel = (image.getPixelReader().getArgb(x, y));
-
-                if (pixel < 0) {
-                    pixel += 4294967296L;
-                }
-
-                // AAAAAAAA RRRRRRRR GGGGGGGG BBBBBBBB
-
-                int pixelA = (int)(pixel / (2 << 23));
-                int pixelR = (int)((pixel % (2 << 23)) / (2 << 15));
-                int pixelG = (int)((pixel % (2 << 15)) / (2 << 7));
-                int pixelB = (int)(pixel % (2 << 7));
-
-                int scaledR = (int)(pixelR * rScale);
-                int scaledG = (int)(pixelG * gScale);
-                int scaledB = (int)(pixelB * bScale);
-
-                pixelBuffer[y * (int)image.getWidth() + x] = (pixelA * (2 << 23)) + (scaledR * (2 << 15)) + (scaledG * (2 << 7)) + scaledB;
-
-            }
-        }
-
-        pixelWriter.setPixels(0, 0, (int)image.getWidth(), (int)image.getHeight(), PixelFormat.getIntArgbInstance(), pixelBuffer, 0, (int)image.getWidth());
-
-        return writableImage;
     }
 
 
@@ -213,9 +170,7 @@ public class SceneLayer extends EditorObject {
 
     @Override
     public void update() {
-
         updateImage();
-
     }
 
 
@@ -224,6 +179,7 @@ public class SceneLayer extends EditorObject {
         try {
             if (!getAttribute("image").stringValue().isEmpty()) {
                 image = getAttribute("image").imageValue(LevelManager.getVersion());
+                image = ImageUtility.colorize(image, getAttribute("colorize").colorValue());
             }
         } catch (FileNotFoundException ignored) {
 

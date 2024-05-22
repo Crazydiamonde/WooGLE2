@@ -1,7 +1,7 @@
 package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -52,7 +52,7 @@ public class Hinge extends EditorObject {
                 return true;
             }
             public double getDepth(){
-                return Renderer.GEOMETRY + 1;
+                return Depth.MECHANICS;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 1.0, 0, 1.0);

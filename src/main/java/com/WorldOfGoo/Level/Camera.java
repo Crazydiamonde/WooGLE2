@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -70,7 +71,7 @@ public class Camera extends EditorObject {
                 return true;
             }
             public double getDepth() {
-                return 100000;
+                return Depth.CAMERA;
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowCameras();

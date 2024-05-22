@@ -66,7 +66,7 @@ public class ObjectXMLParser extends DefaultHandler {
         currentObject = obj;
 
         EditorObject absoluteParent = obj;
-        while (absoluteParent != null && absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+        while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
 
         if (absoluteParent instanceof Scene)            scene.add(obj);
         if (absoluteParent instanceof Level)            level.add(obj);

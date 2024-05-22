@@ -61,6 +61,7 @@ public class MouseMovedManager {
                 return;
             }
             for (ObjectComponent objectComponent : selected.getObjectComponents()) {
+                if (!objectComponent.isSelectable()) continue;
                 if (objectComponent.mouseIntersection(x, y) != DragSettings.NULL) {
                     FXScene.getScene().setCursor(Cursor.MOVE);
                     return;

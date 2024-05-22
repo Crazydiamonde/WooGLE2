@@ -150,11 +150,7 @@ public class FXHierarchy {
                     SelectionManager.setSelected(hierarchy.getTreeItem(row.getIndex()).getValue());
                     FXPropertiesView.changeTableView(hierarchy.getTreeItem(row.getIndex()).getValue());
                     if (event.getButton().equals(MouseButton.SECONDARY)) {
-                        try {
-                            row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
+                        row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
                     }
                 }
             });
@@ -296,7 +292,7 @@ public class FXHierarchy {
 
     }
 
-    public static ContextMenu contextMenuForEditorObject(EditorObject object) throws FileNotFoundException {
+    public static ContextMenu contextMenuForEditorObject(EditorObject object) {
 
         // Create the content menu.
         ContextMenu menu = new ContextMenu();
@@ -311,44 +307,7 @@ public class FXHierarchy {
             addItemItem.setGraphic(new ImageView(getObjectIcon(ObjectCreator.create(childToAdd, null))));
 
             // Set the item's action to creating the child, with the object as its parent.
-            addItemItem.setOnAction(event -> {
-                switch (childToAdd) {
-                    case "BallInstance" -> ObjectAdder.addBall(object, "");
-                    case "Strand" -> ObjectAdder.addStrand(object);
-                    case "camera" -> ObjectAdder.addCamera(object);
-                    case "poi" -> ObjectAdder.addPoi(object);
-                    case "music" -> ObjectAdder.addMusic(object);
-                    case "loopsound" -> ObjectAdder.addLoopsound(object);
-                    case "linearforcefield" -> ObjectAdder.addLinearForcefield(object);
-                    case "radialforcefield" -> ObjectAdder.addRadialForcefield(object);
-                    case "particles" -> ObjectAdder.addParticle(object);
-                    case "SceneLayer" -> ObjectAdder.addSceneLayer(object);
-                    case "buttongroup" -> ObjectAdder.addButtongroup(object);
-                    case "button" -> ObjectAdder.addButton(object);
-                    case "circle" -> ObjectAdder.addCircle(object);
-                    case "rectangle" -> ObjectAdder.addRectangle(object);
-                    case "hinge" -> ObjectAdder.addHinge(object);
-                    case "compositegeom" -> ObjectAdder.addCompositegeom(object);
-                    case "label" -> ObjectAdder.addLabel(object);
-                    case "line" -> ObjectAdder.addLine(object);
-                    case "motor" -> ObjectAdder.addMotor(object);
-                    case "slider" -> ObjectAdder.addSlider(object);
-                    case "endoncollision" -> ObjectAdder.addEndoncollision(object);
-                    case "endonnogeom" -> ObjectAdder.addEndonnogeom(object);
-                    case "endonmessage" -> ObjectAdder.addEndonmessage(object);
-                    case "targetheight" -> ObjectAdder.addTargetheight(object);
-                    case "fire" -> ObjectAdder.addFire(object);
-                    case "levelexit" -> ObjectAdder.addLevelexit(object);
-                    case "pipe" -> ObjectAdder.addPipe(object);
-                    case "signpost" -> ObjectAdder.addSign(object);
-                    case "textstring" -> ObjectAdder.addString(object);
-                    case "resrcimage" -> ObjectAdder.addResrcImage(object);
-                    case "sound" -> ObjectAdder.addSound(object);
-                    case "setdefaults" -> ObjectAdder.addSetDefaults(object);
-                    case "Vertex" -> ObjectAdder.addPipeVertex(object);
-                    default -> throw new RuntimeException("Unknown child type: " + childToAdd);
-                }
-            });
+            addItemItem.setOnAction(event -> ObjectAdder.addObject(childToAdd));
 
             menu.getItems().add(addItemItem);
         }

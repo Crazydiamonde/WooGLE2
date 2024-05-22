@@ -1,6 +1,7 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -65,7 +66,7 @@ public class Poi extends EditorObject {
                 return true;
             }
             public double getDepth() {
-                return 10000000;
+                return Depth.CAMERA;
             }
             public Paint getBorderColor() {
                 return new Color(0.25, 0.8, 0.8, 1.0);

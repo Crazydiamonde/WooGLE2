@@ -21,12 +21,6 @@ public class Renderer {
     public static final Paint selectionOutline2 = Paint.valueOf("FFFFFFFF");
     public static final Paint noLevel = Paint.valueOf("A0A0A0FF");
 
-
-    public static final double GEOMETRY = 10000.0;
-
-
-
-
     public static Affine t;
 
     public static double angleTo(Point2D p1, Point2D p2) {

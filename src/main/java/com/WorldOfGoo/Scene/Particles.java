@@ -2,26 +2,12 @@ package com.WorldOfGoo.Scene;
 
 import java.util.ArrayList;
 
-import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
-import com.WooGLEFX.File.ResourceManagers.ParticleManager;
-import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import com.WooGLEFX.Structures.SimpleStructures.Position;
-import com.WooGLEFX.Structures.WorldLevel;
-import com.WorldOfGoo.Particle.Ambientparticleeffect;
-import com.WorldOfGoo.Particle.Particleeffect;
-import com.WorldOfGoo.Particle._Particle;
-import javafx.scene.image.Image;
 
 public class Particles extends EditorObject {
-
-    private static double lerp(double a, double b, double m) {
-        return a * m + b * (1 - m);
-    }
-
 
     private final ArrayList<ArrayList<ParticleGraphicsInstance>> drawing = new ArrayList<>();
     public ArrayList<ArrayList<ParticleGraphicsInstance>> getDrawing() {
@@ -64,10 +50,6 @@ public class Particles extends EditorObject {
     // }
 
     /*
-    public void draw(GraphicsContext graphicsContext, GraphicsContext imageGraphicsContext) {
-
-
-    }
 
     public DragSettings mouseIntersection(double mX2, double mY2) {
         if (LevelManager.getLevel().isShowParticles()) {

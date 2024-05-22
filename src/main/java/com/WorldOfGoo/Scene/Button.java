@@ -1,25 +1,18 @@
 package com.WorldOfGoo.Scene;
 
+import com.WooGLEFX.EditorObjects.ImageUtility;
 import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
-import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.Functions.LevelManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
-import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
 
-import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 
 import java.io.FileNotFoundException;
 
 public class Button extends EditorObject {
-
-    private static final Logger logger = LoggerFactory.getLogger(Button.class);
-
 
     private Image image;
 
@@ -108,6 +101,9 @@ public class Button extends EditorObject {
 
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,anchor,depth,alpha,rotation,scalex,scaley,colorize,?Graphics<up,over,down,downover,armed,downarmed,disabled,downdisabled>latch,?Events<onclick,onmouseenter,onmouseexit>?Text<font,text,tooltip,textcolorup,textcolorupover,textcoloruparmed,textcolorupdisabled,textcolordown,textcolordownover,textcolordownarmed,textcolordowndisabled>overlay,screenspace,context,"));
 
+        getAttribute("up").addChangeListener((observable, oldValue, newValue) -> updateImage());
+        getAttribute("colorize").addChangeListener((observable, oldValue, newValue) -> updateImage());
+
     }
 
 
@@ -119,36 +115,21 @@ public class Button extends EditorObject {
 
     @Override
     public void update() {
-
-        //try {
-        colorize();
-        //} catch (FileNotFoundException e) {
-        //    LevelLoader.failedResources.add("From Button: image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
-        //}
-
-        ChangeListener<String> wizard = (observable, oldValue, newValue) -> {
-            logger.trace("Image changed from " + oldValue + " to " + newValue);
-            //try {
-            colorize();
-            //} catch (FileNotFoundException e) {
-            //    LevelLoader.failedResources.add("From Button: Image \"" + getAttribute("up") + "\" (version " + LevelManager.getLevel().getVersion() + ")");
-            //}
-        };
-
-        //addChangeListener("up", wizard);
-        //addChangeListener("colorize", wizard);
-
+        updateImage();
     }
 
 
-    private void colorize() {
+    private void updateImage() {
+
         try {
-            image = getAttribute("up").imageValue(LevelManager.getVersion());
-            Color color = getAttribute("colorize").colorValue();
-            image = SceneLayer.colorize(image, color);
+            if (!getAttribute("up").stringValue().isEmpty()) {
+                image = getAttribute("up").imageValue(LevelManager.getVersion());
+                image = ImageUtility.colorize(image, getAttribute("colorize").colorValue());
+            }
         } catch (FileNotFoundException ignored) {
 
         }
+
     }
 
 }

@@ -12,7 +12,6 @@ public class Color {
         return a;
     }
 
-
     public int getR() {
         return r;
     }

@@ -2,7 +2,7 @@ package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.ParticleGraphicsInstance;
 import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -55,13 +55,13 @@ public class Fire extends EditorObject {
                 setAttribute("radius", radius);
             }
             public double getEdgeSize() {
-                return 0.5;
+                return 3;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 0.25, 0.0, 1.0);
             }
             public double getDepth() {
-                return Renderer.GEOMETRY;
+                return Depth.GEOMETRY;
             }
             public Paint getColor() {
                 return new Color(1.0, 0.25, 0.0, 0.1);

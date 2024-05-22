@@ -14,49 +14,19 @@ public class ObjectRotate {
 
         ObjectComponent objectComponent = SelectionManager.getDragSettings().getObjectComponent();
 
-        if (objectComponent instanceof RectangleComponent rectangleComponent) {
+        Point2D object = new Point2D(objectComponent.getX(), objectComponent.getY());
 
-            Point2D object = new Point2D(objectComponent.getX(), objectComponent.getY());
+        Point2D source = new Point2D(dragSourceX, dragSourceY);
+        Point2D mouse = new Point2D(mouseX, mouseY);
 
-            Point2D source = new Point2D(dragSourceX, dragSourceY);
-            Point2D mouse = new Point2D(mouseX, mouseY);
+        double angleToSource = Renderer.angleTo(object, source);
+        double angleToMouse = Renderer.angleTo(object, mouse);
 
-            double angleToSource = Renderer.angleTo(object, source);
-            double angleToMouse = Renderer.angleTo(object, mouse);
+        double deltaAngle = angleToMouse - angleToSource;
 
-            double deltaAngle = angleToMouse - angleToSource;
-
-            rectangleComponent.setRotation(deltaAngle + rotateAngleOffset);
-
-        } else if (objectComponent instanceof ImageComponent imageComponent) {
-
-            Point2D object = new Point2D(objectComponent.getX(), objectComponent.getY());
-
-            Point2D source = new Point2D(dragSourceX, dragSourceY);
-            Point2D mouse = new Point2D(mouseX, mouseY);
-
-            double angleToSource = Renderer.angleTo(object, source);
-            double angleToMouse = Renderer.angleTo(object, mouse);
-
-            double deltaAngle = angleToMouse - angleToSource;
-
-            imageComponent.setRotation(deltaAngle + rotateAngleOffset);
-
-        } else if (objectComponent instanceof CircleComponent circleComponent) {
-
-            Point2D object = new Point2D(objectComponent.getX(), objectComponent.getY());
-
-            Point2D source = new Point2D(dragSourceX, dragSourceY);
-            Point2D mouse = new Point2D(mouseX, mouseY);
-
-            double angleToSource = Renderer.angleTo(object, source);
-            double angleToMouse = Renderer.angleTo(object, mouse);
-
-            double deltaAngle = angleToMouse - angleToSource;
-
-            circleComponent.setRotation(deltaAngle + rotateAngleOffset);
-
-        }
+        if (objectComponent instanceof RectangleComponent RC) RC.setRotation(deltaAngle + rotateAngleOffset);
+        else if (objectComponent instanceof ImageComponent IC) IC.setRotation(deltaAngle + rotateAngleOffset);
+        else if (objectComponent instanceof CircleComponent CC) CC.setRotation(deltaAngle + rotateAngleOffset);
 
     }
 

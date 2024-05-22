@@ -114,7 +114,7 @@ public class MousePressedManager {
 
             SelectionManager.setSelected(selected);
             FXPropertiesView.changeTableView(selected);
-            selected.getParent().getTreeItem().setExpanded(true);
+            if (selected.getParent() != null) selected.getParent().getTreeItem().setExpanded(true);
             FXHierarchy.getHierarchy().getSelectionModel().select(selected.getTreeItem());
             // Scroll to this position in the selection model
             FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()));
@@ -176,7 +176,7 @@ public class MousePressedManager {
 
         EditorObject selected = level.getSelected();
         if (selected != null) for (ObjectComponent objectComponent : selected.getObjectComponents()) {
-            if (!objectComponent.isVisible()) continue;
+            if (!objectComponent.isSelectable()) continue;
             DragSettings dragSettings = objectComponent.mouseIntersectingCorners(mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
         }
@@ -184,7 +184,7 @@ public class MousePressedManager {
         ArrayList<ObjectComponent> byDepth = Renderer.orderObjectPositionsByDepth(level);
         for (int i = byDepth.size() - 1; i >= 0; i--) {
             ObjectComponent object = byDepth.get(i);
-            if (!object.isVisible()) continue;
+            if (!object.isSelectable()) continue;
             DragSettings dragSettings = object.mouseIntersection(mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
         }

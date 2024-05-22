@@ -1,5 +1,6 @@
 package com.WooGLEFX.EditorObjects.objectcomponents;
 
+import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.EditorObjects.objectcomponents.generic.BorderProperty;
 import com.WooGLEFX.EditorObjects.objectcomponents.generic.ColoredProperty;
 import com.WooGLEFX.EditorObjects.objectcomponents.generic.RotatableProperty;
@@ -30,6 +31,7 @@ public abstract class CircleComponent extends ObjectComponent
         double x = getX();
         double y = getY();
         double radius = getRadius();
+        double rotation = getRotation();
 
         double offsetX = LevelManager.getLevel().getOffsetX();
         double offsetY = LevelManager.getLevel().getOffsetY();
@@ -45,12 +47,23 @@ public abstract class CircleComponent extends ObjectComponent
 
         graphicsContext.setStroke(getBorderColor());
 
-        double woag = Math.min(getEdgeSize(), Math.abs(radius) / 2) / 2;
+        double woag = Math.min(getEdgeSize(), Math.abs(radius)) / 2;
 
         graphicsContext.setLineWidth(woag * 2 * zoom);
         if (getEdgeSize() != 0)
             graphicsContext.strokeOval(screenX + woag * zoom, screenY + woag * zoom,
                     (radius - woag) * 2 * zoom, (radius - woag) * 2 * zoom);
+
+        Point2D center = new Point2D(x, y);
+
+        Point2D right = new Point2D(x + radius, y);
+        right = ObjectUtil.rotate(right, rotation, center);
+        right = right.multiply(zoom).add(offsetX, offsetY);
+
+        Point2D left = new Point2D(x - radius, y);
+        left = ObjectUtil.rotate(left, rotation, center);
+        left = new Point2D(left.getX(), left.getY());
+        left = left.multiply(zoom).add(offsetX, offsetY);
 
         if (selected) {
 
@@ -74,8 +87,8 @@ public abstract class CircleComponent extends ObjectComponent
             }
 
             if (isRotatable()) {
-                graphicsContext.strokeOval(screenX - 4, screenY + radius * zoom - 4, 8, 8);
-                graphicsContext.strokeOval(screenX + radius * 2 * zoom - 4, screenY + radius * zoom - 4, 8, 8);
+                graphicsContext.strokeOval(left.getX() - 4, left.getY() - 4, 8, 8);
+                graphicsContext.strokeOval(right.getX() - 4, right.getY() - 4, 8, 8);
             }
 
         }
@@ -110,12 +123,22 @@ public abstract class CircleComponent extends ObjectComponent
         double x = getX();
         double y = getY();
         double radius = getRadius();
+        double rotation = getRotation();
+
+        Point2D center = new Point2D(x, y);
 
         Point2D left = new Point2D(x - radius, y);
         Point2D top = new Point2D(x, y - radius);
         Point2D right = new Point2D(x + radius, y);
         Point2D bottom = new Point2D(x, y + radius);
         double distance = 4 / LevelManager.getLevel().getZoom();
+
+
+        Point2D rotateLeft = new Point2D(x - radius, y);
+        rotateLeft = ObjectUtil.rotate(rotateLeft, rotation, center);
+
+        Point2D rotateRight = new Point2D(x + radius, y);
+        rotateRight = ObjectUtil.rotate(rotateRight, rotation, center);
 
         if (isResizable() && (
                 rectangleIntersection(mouseX, mouseY, left, distance) ||
@@ -133,14 +156,31 @@ public abstract class CircleComponent extends ObjectComponent
 
         }
 
-        if (isRotatable() && (
-                rectangleIntersection(mouseX, mouseY, left, distance) ||
-                rectangleIntersection(mouseX, mouseY, right, distance)
-        )) {
+
+        boolean rotating = false;
+
+        double dragSourceX = 0;
+        double dragSourceY = 0;
+
+        if (isRotatable() && rectangleIntersection(mouseX, mouseY, rotateLeft, distance)) {
+            rotating = true;
+            dragSourceX = x - radius;
+            dragSourceY = y;
+        }
+
+        if (isRotatable() && rectangleIntersection(mouseX, mouseY, rotateRight, distance)) {
+            rotating = true;
+            dragSourceX = x + radius;
+            dragSourceY = y;
+        }
+
+        if (rotating) {
 
             DragSettings rotateSettings = new DragSettings(DragSettings.ROTATE, this);
-            rotateSettings.setInitialSourceX(0);
-            rotateSettings.setInitialSourceY(0);
+            Point2D dragSourceRotated = ObjectUtil.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
+            rotateSettings.setInitialSourceX(dragSourceRotated.getX());
+            rotateSettings.setInitialSourceY(dragSourceRotated.getY());
+            rotateSettings.setRotateAngleOffset(rotation);
             return rotateSettings;
 
         }

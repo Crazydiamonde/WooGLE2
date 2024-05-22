@@ -2,6 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.AnchorComponent;
 import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -52,7 +53,7 @@ public class Radialforcefield extends EditorObject {
                 return true;
             }
             public double getDepth() {
-                return 1000000;
+                return Depth.FORCEFIELDS;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 1.0, 0, 1.0);
@@ -85,7 +86,7 @@ public class Radialforcefield extends EditorObject {
                 return 3;
             }
             public double getDepth() {
-                return 1000000;
+                return Depth.FORCEFIELDS;
             }
             public Paint getColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
@@ -116,7 +117,7 @@ public class Radialforcefield extends EditorObject {
                 return 3;
             }
             public double getDepth() {
-                return 1000000;
+                return Depth.FORCEFIELDS;
             }
             public Paint getColor() {
                 return new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,

@@ -1,11 +1,13 @@
 package com.WorldOfGoo.Scene;
 
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class Scene extends EditorObject {
 
@@ -20,31 +22,140 @@ public class Scene extends EditorObject {
 
         setMetaAttributes(MetaEditorAttribute.parse("backgroundcolor,minx,miny,maxx,maxy,"));
 
+        addObjectComponent(new RectangleComponent() {
+            public double getX() {
+                double minx = getAttribute("minx").doubleValue();
+                double maxx = getAttribute("maxx").doubleValue();
+                return (minx + maxx) / 2;
+            }
+            public void setX(double x) {
+                double width = getWidth();
+                setAttribute("minx", x - width / 2);
+                setAttribute("maxx", x + width / 2);
+            }
+            public double getY() {
+                double miny = -getAttribute("miny").doubleValue();
+                double maxy = -getAttribute("maxy").doubleValue();
+                return (miny + maxy) / 2;
+            }
+            public void setY(double y) {
+                double height = getHeight();
+                setAttribute("miny", -(y - height / 2));
+                setAttribute("maxy", -(y + height / 2));
+            }
+            public double getWidth() {
+                double minx = getAttribute("minx").doubleValue();
+                double maxx = getAttribute("maxx").doubleValue();
+                return Math.abs(maxx - minx);
+            }
+            public void setWidth(double width) {
+                double x = getX();
+                setAttribute("minx", x - width / 2);
+                setAttribute("maxx", x + width / 2);
+            }
+            public double getHeight() {
+                double miny = -getAttribute("miny").doubleValue();
+                double maxy = -getAttribute("maxy").doubleValue();
+                return Math.abs(maxy - miny);
+            }
+            public void setHeight(double height) {
+                double y = getY();
+                setAttribute("miny", y - height / 2);
+                setAttribute("maxy", y + height / 2);
+            }
+            public double getDepth() {
+                return Depth.SCENE;
+            }
+            public double getEdgeSize() {
+                return 4.0;
+            }
+            public Paint getBorderColor() {
+                return new Color(0.0, 0.0,0.0, 1.0);
+            }
+            public boolean isEdgeOnly() {
+                return true;
+            }
+            public Paint getColor() {
+                return new Color(0.0, 0.0, 0.0, 0.0);
+            }
+            public boolean isRotatable() {
+                return false;
+            }
+        });
+
+        addObjectComponent(new RectangleComponent() {
+            public double getX() {
+                double minx = getAttribute("minx").doubleValue();
+                double maxx = getAttribute("maxx").doubleValue();
+                return (minx + maxx) / 2;
+            }
+            public void setX(double x) {
+                double width = getWidth();
+                setAttribute("minx", x - width / 2);
+                setAttribute("maxx", x + width / 2);
+            }
+            public double getY() {
+                double miny = -getAttribute("miny").doubleValue();
+                double maxy = -getAttribute("maxy").doubleValue();
+                return (miny + maxy) / 2;
+            }
+            public void setY(double y) {
+                double height = getHeight();
+                setAttribute("miny", -(y - height / 2));
+                setAttribute("maxy", -(y + height / 2));
+            }
+            public double getWidth() {
+                double minx = getAttribute("minx").doubleValue();
+                double maxx = getAttribute("maxx").doubleValue();
+                return Math.abs(maxx - minx);
+            }
+            public double getHeight() {
+                double miny = -getAttribute("miny").doubleValue();
+                double maxy = -getAttribute("maxy").doubleValue();
+                return Math.abs(maxy - miny);
+            }
+            public double getDepth() {
+                return Depth.SCENE_BG;
+            }
+            public double getEdgeSize() {
+                return 0.0;
+            }
+            public Paint getBorderColor() {
+                return new Color(0.0, 0.0,0.0, 0.0);
+            }
+            public boolean isEdgeOnly() {
+                return false;
+            }
+            public Paint getColor() {
+                if (LevelManager.getLevel().getVisibilitySettings().isShowSceneBGColor()) {
+                    com.WooGLEFX.Structures.SimpleStructures.Color backgroundColor = getAttribute("backgroundcolor").colorValue();
+                    double r = backgroundColor.getR() / 255.0;
+                    double g = backgroundColor.getG() / 255.0;
+                    double b = backgroundColor.getB() / 255.0;
+                    return new Color(r, g, b, 1.0);
+                }
+                return new Color(0.0, 0.0, 0.0, 0.0);
+            }
+            public boolean isSelectable() {
+                return LevelManager.getLevel().getVisibilitySettings().isShowSceneBGColor();
+            }
+            public boolean isDraggable() {
+                return LevelManager.getLevel().getVisibilitySettings().isShowSceneBGColor();
+            }
+            public boolean isResizable() {
+                return false;
+            }
+            public boolean isRotatable() {
+                return false;
+            }
+        });
+
     }
 
 
     @Override
     public String[] getPossibleChildren() {
         return new String[]{ "SceneLayer", "button", "buttongroup", "circle", "compositegeom", "hinge", "label", "line", "linearforcefield", "motor", "particles", "radialforcefield", "rectangle", "slider" };
-    }
-
-
-    public void draw(GraphicsContext graphicsContext) {
-        double sceneLeft = getAttribute("minx").doubleValue();
-        double sceneTop = -getAttribute("maxy").doubleValue();
-        double sceneRight = getAttribute("maxx").doubleValue();
-        double sceneBottom = -getAttribute("miny").doubleValue();
-
-        graphicsContext.setStroke(Renderer.selectionOutline2);
-        graphicsContext.setLineWidth(0.9 * LevelManager.getLevel().getZoom());
-        graphicsContext.setLineDashes(3 * LevelManager.getLevel().getZoom());
-        graphicsContext.setLineDashOffset(0);
-        graphicsContext.strokeRect(sceneLeft * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), sceneTop * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), (sceneRight - sceneLeft) * LevelManager.getLevel().getZoom(), (sceneBottom - sceneTop) * LevelManager.getLevel().getZoom());
-        graphicsContext.setStroke(Renderer.selectionOutline);
-        graphicsContext.setLineWidth(LevelManager.getLevel().getZoom());
-        graphicsContext.setLineDashOffset(3 * LevelManager.getLevel().getZoom());
-        graphicsContext.strokeRect(sceneLeft * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), sceneTop * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), (sceneRight - sceneLeft) * LevelManager.getLevel().getZoom(), (sceneBottom - sceneTop) * LevelManager.getLevel().getZoom());
-        graphicsContext.setLineDashes(0);
     }
 
 }

@@ -30,7 +30,7 @@ public class ObjectManager {
             object.getParent().getTreeItem().getChildren().add(row, object.getTreeItem());
         }
 
-        if (object.getChildren().size() > 0) {
+        if (!object.getChildren().isEmpty()) {
             int i = 0;
             for (EditorObject child : object.getChildren().toArray(new EditorObject[0])) {
                 create(level, child, i);

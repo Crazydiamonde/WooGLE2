@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class AnimationManager {
 
-    private static final ArrayList<WoGAnimation> animations = new ArrayList<>();;
+    private static final ArrayList<WoGAnimation> animations = new ArrayList<>();
     public static ArrayList<WoGAnimation> getAnimations() {
         return animations;
     }
@@ -20,7 +20,7 @@ public class AnimationManager {
             for (EditorObject object : LevelManager.getLevel().getScene()) {
                 if (object instanceof SceneLayer sceneLayer) {
                     String anim = object.getAttribute("anim").stringValue();
-                    if (!anim.equals("")) {
+                    if (!anim.isEmpty()) {
                         for (WoGAnimation animation : animations) {
                             if (animation.getName().equals(anim + ".anim.binuni")
                                     || animation.getName().equals(anim + ".anim.binltl")) {

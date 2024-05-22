@@ -186,8 +186,8 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
         if (mX > x - width / 2 && mX < x + width / 2 && mY > y - height / 2 && mY < y + height / 2) {
             double goodX = (mX - (x - width / 2)) / (width / image.getWidth());
             double goodY = (mY - (y - height / 2)) / (height / image.getHeight());
-            int pixel = image.getPixelReader().getArgb((int) goodX, (int) goodY);
-            if (pixel >> 24 != 0) {
+            long pixel = image.getPixelReader().getArgb((int)goodX, (int)goodY);
+            if ((pixel & 0xFF000000L) > 0x80000000L) {
                 DragSettings dragSettings = new DragSettings(isDraggable() ? DragSettings.MOVE : DragSettings.NONE, this);
                 dragSettings.setInitialSourceX(mouseX - x);
                 dragSettings.setInitialSourceY(mouseY - y);

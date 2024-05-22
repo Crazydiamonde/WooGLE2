@@ -70,38 +70,38 @@ public class LevelWriter {
             }
         }
 
-        String scene = XMLUtility.recursiveXMLexport("", worldLevel.getSceneObject(), 0, false);
+        String scene = XMLUtility.recursiveXMLExport("", worldLevel.getSceneObject(), 0, false);
         scene += "\n\t<!-- ForceFields -->\n";
         for (EditorObject object : forceFields) {
-            scene = XMLUtility.recursiveXMLexport(scene, object, 1, true) + "\n";
+            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
         }
         scene += "\n\t<!-- Particles -->\n";
         for (EditorObject object : particles) {
-            scene = XMLUtility.recursiveXMLexport(scene, object, 1, true) + "\n";
+            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
         }
         scene += "\n\t<!-- SceneLayers -->\n";
         for (EditorObject object : sceneLayers) {
-            scene = XMLUtility.recursiveXMLexport(scene, object, 1, true) + "\n";
+            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
         }
         scene += "\n\t<!-- Buttons -->\n";
         for (EditorObject object : buttons) {
-            scene = XMLUtility.recursiveXMLexport(scene, object, 1, true) + "\n";
+            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
         }
         scene += "\n\t<!-- Labels -->\n";
         for (EditorObject object : labels) {
-            scene = XMLUtility.recursiveXMLexport(scene, object, 1, true) + "\n";
+            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
         }
         scene += "\n\t<!-- Static Geometry -->\n";
         for (EditorObject object : staticGeometry) {
-            scene = XMLUtility.recursiveXMLexport(scene, object, 1, true) + "\n";
+            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
         }
         scene += "\n\t<!-- Dynamic Geometry -->\n";
         for (EditorObject object : dynamicGeometry) {
-            scene = XMLUtility.recursiveXMLexport(scene, object, 1, true) + "\n";
+            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
         }
         scene += "\n\t<!-- Geometry Constraints -->\n";
         for (EditorObject object : geometryConstraints) {
-            scene = XMLUtility.recursiveXMLexport(scene, object, 1, true) + "\n";
+            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
         }
         scene += "</scene>";
 
@@ -110,7 +110,7 @@ public class LevelWriter {
     }
 
 
-    private static LevelInformation getAllLevelInformation(WorldLevel worldLevel) {
+    private static String getLevel(WorldLevel worldLevel) {
 
         /*
             - Camera
@@ -161,61 +161,68 @@ public class LevelWriter {
             }
         }
 
-        String level = XMLUtility.recursiveXMLexport("", worldLevel.getLevelObject(), 0, false);
+        String level = XMLUtility.recursiveXMLExport("", worldLevel.getLevelObject(), 0, false);
         level += "\n\t<!-- Camera -->\n";
         for (EditorObject object : camera) {
-            level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
         }
         level += "\n\t<!-- Music -->\n";
         for (EditorObject object : music) {
-            level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
         }
         if (!loopsound.isEmpty()) {
             level += "\n\t<!-- Loop Sound -->\n";
             for (EditorObject object : loopsound) {
-                level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+                level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
             }
         }
         level += "\n\t<!-- Fire -->\n";
         for (EditorObject object : fire) {
-            level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
         }
         level += "\n\t<!-- Signposts -->\n";
         for (EditorObject object : signposts) {
-            level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
         }
         level += "\n\t<!-- Pipes -->\n";
         for (EditorObject object : pipes) {
-            level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
         }
         level += "\n\t<!-- Balls -->\n";
         for (EditorObject object : balls) {
-            level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
         }
         level += "\n\t<!-- Arms -->\n";
         for (EditorObject object : arms) {
-            level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
         }
         level += "\n\t<!-- Level Exit -->\n";
         for (EditorObject object : levelExit) {
-            level = XMLUtility.recursiveXMLexport(level, object, 1, true) + "\n";
+            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
         }
         level += "\n</level>";
 
+        return level;
+
+    }
+
+
+    private static LevelInformation getAllLevelInformation(WorldLevel worldLevel) {
+
         String scene = getScene(worldLevel);
+
+        String level = getLevel(worldLevel);
 
         EditorObject addinObject = worldLevel.getAddinObject();
         String addin = XMLUtility.fullAddinXMLExport("", addinObject, 0);
 
         EditorObject textObject = worldLevel.getTextObject();
-        String text = XMLUtility.recursiveXMLexport("", textObject, 0, true);
+        String text = XMLUtility.recursiveXMLExport("", textObject, 0, true);
 
         EditorObject resourcesObject = worldLevel.getResourcesObject();
-        String resrc = XMLUtility.recursiveXMLexport("", resourcesObject, 0, true);
-
+        String resrc = XMLUtility.recursiveXMLExport("", resourcesObject, 0, true);
 
         return new LevelInformation(scene, level, resrc, addin, text);
-
 
     }
 

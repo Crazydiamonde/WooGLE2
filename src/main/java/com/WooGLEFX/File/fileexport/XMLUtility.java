@@ -49,12 +49,12 @@ public class XMLUtility {
     }
 
 
-    public static String recursiveXMLexport(String export, EditorObject object, int spaces, boolean children) {
-        return recursiveXMLexport(export, object, spaces, children, "", "");
+    public static String recursiveXMLExport(String export, EditorObject object, int spaces, boolean children) {
+        return recursiveXMLExport(export, object, spaces, children, "", "");
     }
 
 
-    private static String recursiveXMLexport(String export, EditorObject object, int spaces, boolean children, String defaultsPath, String defaultsPrefix) {
+    private static String recursiveXMLExport(String export, EditorObject object, int spaces, boolean children, String defaultsPath, String defaultsPrefix) {
 
         export += "\t".repeat(spaces) + "<" + object.getType() + " ";
         StringBuilder exportBuilder = new StringBuilder(export);
@@ -75,7 +75,7 @@ public class XMLUtility {
                 object instanceof Resources ||
                 object instanceof TextStrings
         );
-        if (object.getChildren().size() > 0 || shouldAlwaysDisplayChildren) {
+        if (!object.getChildren().isEmpty() || shouldAlwaysDisplayChildren) {
             export += " >\n";
             if (children) {
                 for (EditorObject child : object.getChildren()) {
@@ -85,7 +85,7 @@ public class XMLUtility {
                         curDefaultsPath = child.getAttribute("path").stringValue();
                         curDefaultsPrefix = child.getAttribute("idprefix").stringValue();
                     }
-                    export = recursiveXMLexport(export, child, spaces + 1, true, curDefaultsPath, curDefaultsPrefix) + "\n";
+                    export = recursiveXMLExport(export, child, spaces + 1, true, curDefaultsPath, curDefaultsPrefix) + "\n";
                 }
                 export += "\t".repeat(spaces) + "</" + object.getType() + ">";
             }
@@ -105,8 +105,8 @@ public class XMLUtility {
             } else {
                 export += "\t".repeat(spaces) + "<ocd>" + object.getAttribute("type") + "," + object.getAttribute("value") + "</ocd>";
             }
-        } else if (object.getAttributes().length == 1 && object.getChildren().size() == 0) {
-            if (object.getAttributes()[0].stringValue().equals("")) {
+        } else if (object.getAttributes().length == 1 && object.getChildren().isEmpty()) {
+            if (object.getAttributes()[0].stringValue().isEmpty()) {
                 export += "\t".repeat(spaces) + "<" + object.getType() + " />";
             } else {
                 export += "\t".repeat(spaces) + "<" + object.getType() + ">" + object.getAttributes()[0].stringValue() + "</" + object.getType() + ">";
@@ -115,7 +115,7 @@ public class XMLUtility {
             export += "\t".repeat(spaces) + "<" + object.getType() + " ";
             StringBuilder exportBuilder = new StringBuilder(export);
             for (EditorAttribute attribute : object.getAttributes()) {
-                if (!attribute.stringValue().equals("") || attribute.getRequiredInFile()) {
+                if (!attribute.stringValue().isEmpty() || attribute.getRequiredInFile()) {
                     if ((attribute.getName().equals("up") || attribute.getName().equals("over") || attribute.getName().equals("disabled"))) {
                         exportBuilder.append(attribute.getName()).append("=\"\" ");
                     } else {
@@ -126,7 +126,7 @@ public class XMLUtility {
             export = exportBuilder.toString();
             export = export.substring(0, export.length() - 1);
 
-            if (object.getChildren().size() > 0) {
+            if (!object.getChildren().isEmpty()) {
                 export += ">\n";
                 for (EditorObject child : object.getChildren()) {
                     export = fullAddinXMLExport(export, child, spaces + 1) + "\n";

@@ -1,7 +1,7 @@
 package com.WorldOfGoo.Level;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.LineComponent;
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -30,7 +30,7 @@ public class Targetheight extends EditorObject {
                 return 3;
             }
             public double getDepth() {
-                return Renderer.GEOMETRY;
+                return Depth.GEOMETRY;
             }
             public Paint getColor() {
                 return new Color(1.0, 0.0, 1.0, 1.0);

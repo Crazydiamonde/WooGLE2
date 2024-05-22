@@ -14,6 +14,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -138,14 +139,16 @@ public class GoomodExporter {
         }
 
         try {
-            new ZipUtility().zip(new ArrayList<>(List.of(new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod").listFiles())), start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
+            File[] files = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod").listFiles();
+            if (files == null) return;
+            new ZipUtility().zip(new ArrayList<>(List.of(files)), start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
             File srcGoomod = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
             Files.move(
                     srcGoomod.toPath(),
                     file.toPath(),
                     StandardCopyOption.REPLACE_EXISTING
             );
-        } catch (Exception e) {
+        } catch (IOException e) {
             Alarms.errorMessage(e);
         }
     }

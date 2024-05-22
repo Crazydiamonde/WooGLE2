@@ -12,7 +12,7 @@ public class ClipboardHandler {
 
         EditorObject object = null;
 
-        String currentWord = "";
+        StringBuilder currentWord = new StringBuilder();
         String attributeName = "";
         boolean settingAttribute = false;
 
@@ -21,30 +21,30 @@ public class ClipboardHandler {
 
             if (settingAttribute) {
                 if (part == '=') {
-                    attributeName = currentWord;
-                    currentWord = "";
+                    attributeName = currentWord.toString();
+                    currentWord = new StringBuilder();
                 } else if (part == ';') {
-                    object.setAttribute(attributeName, currentWord);
-                    currentWord = "";
+                    object.setAttribute(attributeName, currentWord.toString());
+                    currentWord = new StringBuilder();
                 } else if (part == '>') {
                     settingAttribute = false;
-                    object.setAttribute(attributeName, currentWord);
-                    currentWord = "";
+                    object.setAttribute(attributeName, currentWord.toString());
+                    currentWord = new StringBuilder();
                 } else {
-                    currentWord += part;
+                    currentWord.append(part);
                 }
             } else {
                 if (part == ':') {
-                    if (!currentWord.equals("WOGEditor")) {
+                    if (!currentWord.toString().equals("WOGEditor")) {
                         return null;
                     }
-                    currentWord = "";
+                    currentWord = new StringBuilder();
                 } else if (part == '<') {
-                    object = ObjectCreator.create(currentWord, null);
-                    currentWord = "";
+                    object = ObjectCreator.create(currentWord.toString(), null);
+                    currentWord = new StringBuilder();
                     settingAttribute = true;
                 } else {
-                    currentWord += part;
+                    currentWord.append(part);
                 }
             }
         }

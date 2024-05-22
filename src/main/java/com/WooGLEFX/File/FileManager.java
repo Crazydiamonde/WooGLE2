@@ -293,7 +293,7 @@ public class FileManager {
         Files.write(Paths.get(editorLocation + "properties.xml"), Collections.singleton(export.toString()), StandardCharsets.UTF_8);
     }
 
-    public static ArrayList<ArrayList<String>> attributes = new ArrayList<>();
-    public static ArrayList<String> objectNames = new ArrayList<>();
+    public static final ArrayList<ArrayList<String>> attributes = new ArrayList<>();
+    public static final ArrayList<String> objectNames = new ArrayList<>();
 
 }

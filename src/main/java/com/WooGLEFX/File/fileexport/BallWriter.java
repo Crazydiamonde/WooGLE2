@@ -30,10 +30,10 @@ public class BallWriter {
 
         //TODO add XML comments to files
 
-        String ballXML = XMLUtility.recursiveXMLexport("", ball.objects.get(0), 0, true);
+        String ballXML = XMLUtility.recursiveXMLExport("", ball.objects.get(0), 0, true);
         logger.trace(ballXML);
 
-        String resrcXML = XMLUtility.recursiveXMLexport("", ball.resources.get(0), 0, true);
+        String resrcXML = XMLUtility.recursiveXMLExport("", ball.resources.get(0), 0, true);
         logger.trace(resrcXML);
 
         String name = ball.objects.get(0).getAttribute("name").stringValue();

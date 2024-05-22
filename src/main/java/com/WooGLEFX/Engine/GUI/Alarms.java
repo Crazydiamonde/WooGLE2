@@ -156,7 +156,7 @@ public class Alarms {
                 confirmText = "Clone";
                 titleText = "New level name (directory name):";
             }
-            case "changename" -> {
+            case "changeName" -> {
                 confirmText = "Rename";
                 titleText = "New level name (directory name):";
             }

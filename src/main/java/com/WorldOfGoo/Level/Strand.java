@@ -11,10 +11,10 @@ import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
+import com.WooGLEFX.Structures.SimpleStructures.Position;
 import com.WorldOfGoo.Ball.BallStrand;
 
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -126,11 +126,6 @@ public class Strand extends EditorObject {
 
     }
 
-    private Point2D lineIntersection(double x1, double y1, double m1, double x2, double y2, double m2) {
-        double x = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
-        return new Point2D(x, m1 * (x - x1) + y1);
-    }
-
 
     private static Point2D lineLineSegmentIntersection(double x1, double y1, double theta, double x2, double y2,
                                                       double x3, double y3) {
@@ -162,22 +157,22 @@ public class Strand extends EditorObject {
     private static Point2D lineBoxIntersection(double x1, double y1, double theta, double x2, double y2, double sizeX,
                                               double sizeY, double rotation) {
 
-        Point2D topLeft = ObjectUtil.rotate(new Point2D(x2 - sizeX / 2, y2 - sizeY / 2), -rotation,
+        Point2D topLeft = ObjectUtil.rotate(new Point2D(x2 - sizeX / 2, y2 - sizeY / 2), rotation,
                 new Point2D(x2, y2));
-        Point2D topRight = ObjectUtil.rotate(new Point2D(x2 + sizeX / 2, y2 - sizeY / 2), -rotation,
+        Point2D topRight = ObjectUtil.rotate(new Point2D(x2 + sizeX / 2, y2 - sizeY / 2), rotation,
                 new Point2D(x2, y2));
-        Point2D bottomLeft = ObjectUtil.rotate(new Point2D(x2 - sizeX / 2, y2 + sizeY / 2), -rotation,
+        Point2D bottomLeft = ObjectUtil.rotate(new Point2D(x2 - sizeX / 2, y2 + sizeY / 2), rotation,
                 new Point2D(x2, y2));
-        Point2D bottomRight = ObjectUtil.rotate(new Point2D(x2 + sizeX / 2, y2 + sizeY / 2), -rotation,
+        Point2D bottomRight = ObjectUtil.rotate(new Point2D(x2 + sizeX / 2, y2 + sizeY / 2), rotation,
                 new Point2D(x2, y2));
 
-        Point2D top = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), topRight.getX(),
+        Point2D top = lineLineSegmentIntersection(x1, y1, theta, topLeft.getX(), topLeft.getY(), topRight.getX(),
                 topRight.getY());
-        Point2D bottom = lineLineSegmentIntersection(x1, y1, -theta, bottomLeft.getX(), bottomLeft.getY(),
+        Point2D bottom = lineLineSegmentIntersection(x1, y1, theta, bottomLeft.getX(), bottomLeft.getY(),
                 bottomRight.getX(), bottomRight.getY());
-        Point2D left = lineLineSegmentIntersection(x1, y1, -theta, topLeft.getX(), topLeft.getY(), bottomLeft.getX(),
+        Point2D left = lineLineSegmentIntersection(x1, y1, theta, topLeft.getX(), topLeft.getY(), bottomLeft.getX(),
                 bottomLeft.getY());
-        Point2D right = lineLineSegmentIntersection(x1, y1, -theta, topRight.getX(), topRight.getY(),
+        Point2D right = lineLineSegmentIntersection(x1, y1, theta, topRight.getX(), topRight.getY(),
                 bottomRight.getX(), bottomRight.getY());
 
         Point2D origin = new Point2D(x1, y1);
@@ -276,15 +271,85 @@ public class Strand extends EditorObject {
         addObjectComponent(new RectangleComponent() {
 
             public double getX() {
+
+                if (goo1 == null || goo2 == null) return 0;
+
                 double x1 = goo1.getAttribute("x").doubleValue();
+                double y1 = -goo1.getAttribute("y").doubleValue();
+                double rotation1 = -Math.toRadians(goo1.getAttribute("angle").doubleValue());
+
                 double x2 = goo2.getAttribute("x").doubleValue();
-                return (x1 + x2) / 2;
+                double y2 = -goo2.getAttribute("y").doubleValue();
+                double rotation2 = -Math.toRadians(goo2.getAttribute("angle").doubleValue());
+
+                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(goo1.getBall().getShapeSize(), goo1.getBall().getShapeSize2());
+                boolean circle1 = goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
+
+                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(goo2.getBall().getShapeSize(), goo2.getBall().getShapeSize2());
+                boolean circle2 = goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
+
+                double theta = Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
+
+                Point2D hit1;
+                Point2D hit2;
+
+                if (circle1) {
+                    double r1 = size1.getX() / 2;
+                    hit1 = new Point2D(x1 + r1 * Math.cos(theta), y1 + r1 * Math.sin(theta));
+                } else {
+                    hit1 = lineBoxIntersection(x2, y2, theta - Math.PI, x1, y1, size1.getX(), size1.getY(), rotation1);
+                }
+
+                if (circle2) {
+                    double r2 = size2.getX() / 2;
+                    hit2 = new Point2D(x2 - r2 * Math.cos(theta), y2 - r2 * Math.sin(theta));
+                } else {
+                    hit2 = lineBoxIntersection(x1, y1, theta, x2, y2, size2.getX(), size2.getY(), rotation2);
+                }
+
+                return (hit1.getX() + hit2.getX()) / 2;
+
             }
 
             public double getY() {
+
+                if (goo1 == null || goo2 == null) return 0;
+
+                double x1 = goo1.getAttribute("x").doubleValue();
                 double y1 = -goo1.getAttribute("y").doubleValue();
+                double rotation1 = -Math.toRadians(goo1.getAttribute("angle").doubleValue());
+
+                double x2 = goo2.getAttribute("x").doubleValue();
                 double y2 = -goo2.getAttribute("y").doubleValue();
-                return (y1 + y2) / 2;
+                double rotation2 = -Math.toRadians(goo2.getAttribute("angle").doubleValue());
+
+                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(goo1.getBall().getShapeSize(), goo1.getBall().getShapeSize2());
+                boolean circle1 = goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
+
+                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(goo2.getBall().getShapeSize(), goo2.getBall().getShapeSize2());
+                boolean circle2 = goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
+
+                double theta = Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
+
+                Point2D hit1;
+                Point2D hit2;
+
+                if (circle1) {
+                    double r1 = size1.getX() / 2;
+                    hit1 = new Point2D(x1 + r1 * Math.cos(theta), y1 + r1 * Math.sin(theta));
+                } else {
+                    hit1 = lineBoxIntersection(x2, y2, theta - Math.PI, x1, y1, size1.getX(), size1.getY(), rotation1);
+                }
+
+                if (circle2) {
+                    double r2 = size2.getX() / 2;
+                    hit2 = new Point2D(x2 - r2 * Math.cos(theta), y2 - r2 * Math.sin(theta));
+                } else {
+                    hit2 = lineBoxIntersection(x1, y1, theta, x2, y2, size2.getX(), size2.getY(), rotation2);
+                }
+
+                return (hit1.getY() + hit2.getY()) / 2;
+
             }
 
             public double getRotation() {
@@ -305,18 +370,47 @@ public class Strand extends EditorObject {
 
             public double getHeight() {
 
+                if (goo1 == null || goo2 == null) return 0;
+
                 double x1 = goo1.getAttribute("x").doubleValue();
                 double y1 = -goo1.getAttribute("y").doubleValue();
+                double rotation1 = -Math.toRadians(goo1.getAttribute("angle").doubleValue());
 
                 double x2 = goo2.getAttribute("x").doubleValue();
                 double y2 = -goo2.getAttribute("y").doubleValue();
+                double rotation2 = -Math.toRadians(goo2.getAttribute("angle").doubleValue());
 
-                return Math.hypot(x2 - x1, y2 - y1);
+                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(goo1.getBall().getShapeSize(), goo1.getBall().getShapeSize2());
+                boolean circle1 = goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
+
+                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(goo2.getBall().getShapeSize(), goo2.getBall().getShapeSize2());
+                boolean circle2 = goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
+
+                double theta = Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
+
+                Point2D hit1;
+                Point2D hit2;
+
+                if (circle1) {
+                    double r1 = size1.getX() / 2;
+                    hit1 = new Point2D(x1 + r1 * Math.cos(theta), y1 + r1 * Math.sin(theta));
+                } else {
+                    hit1 = lineBoxIntersection(x2, y2, theta - Math.PI, x1, y1, size1.getX(), size1.getY(), rotation1);
+                }
+
+                if (circle2) {
+                    double r2 = size2.getX() / 2;
+                    hit2 = new Point2D(x2 - r2 * Math.cos(theta), y2 - r2 * Math.sin(theta));
+                } else {
+                    hit2 = lineBoxIntersection(x1, y1, theta, x2, y2, size2.getX(), size2.getY(), rotation2);
+                }
+
+                return Math.hypot(hit2.getY() - hit1.getY(), hit2.getX() - hit1.getX()) + 3.0;
 
             }
 
             public double getEdgeSize() {
-                return 3;
+                return 0;
             }
             public boolean isEdgeOnly() {
                 return false;
@@ -327,6 +421,10 @@ public class Strand extends EditorObject {
             }
 
             public Paint getBorderColor() {
+                return new Color(0.0, 0.0, 0.0, 0.0);
+            }
+
+            public Paint getColor() {
 
                 double length = getHeight();
 
@@ -337,10 +435,6 @@ public class Strand extends EditorObject {
                 if (length < minSize) return new Color(0.0, 0.0, 1.0, 1.0);
                 else return new Color(0.5, 0.5, 0.5, 1.0);
 
-            }
-
-            public Paint getColor() {
-                return new Color(0.0, 0.0, 0.0, 0.0);
             }
 
             public boolean isVisible() {
@@ -358,75 +452,6 @@ public class Strand extends EditorObject {
 
         });
 
-    }
-
-
-    public void draw(GraphicsContext graphicsContext) {
-
-        /*
-        if (LevelManager.getLevel().getShowGoos() == 1) {
-
-            if (goo1 != null && goo2 != null) {
-                Position pos1 = new Position(goo1.getDouble("x"), -goo1.getDouble("y"));
-                Position size1 = new Position(goo1.getBall().getShapeSize(), goo1.getBall().getShapeSize2());
-                boolean circle1 = goo1.getBall().getShapeType().equals("circle");
-                double rot1 = goo1.getDouble("angle");
-
-                Position pos2 = new Position(goo2.getDouble("x"), -goo2.getDouble("y"));
-                Position size2 = new Position(goo2.getBall().getShapeSize(), goo2.getBall().getShapeSize2());
-                boolean circle2 = goo2.getBall().getShapeType().equals("circle");
-                double rot2 = goo2.getDouble("angle");
-
-                double maxSize = -1;
-                double minSize = -1;
-                for (EditorObject object2 : goo2.getBall().getObjects()) {
-                    if (object2 instanceof BallStrand) {
-                        minSize = object2.getDouble("minlen") / 2;
-                        maxSize = object2.getDouble("maxlen2") / 2;
-                    }
-                }
-
-                graphicsContext.save();
-                graphicsContext.setTransform(new Affine());
-
-                graphicsContext.setStroke(Renderer.middleColor);
-                graphicsContext.setLineWidth(LevelManager.getLevel().getZoom() * 3);
-
-                double theta = Renderer.angleTo(new Point2D(pos1.getX(), pos1.getY()), new Point2D(pos2.getX(), pos2.getY()));
-
-                Point2D hit1;
-                Point2D hit2;
-
-                if (circle1) {
-                    double r1 = size1.getX() / 2;
-                    hit1 = new Point2D(pos1.getX() + r1 * Math.cos(theta), pos1.getY() - r1 * Math.sin(theta));
-                } else {
-                    hit1 = lineBoxIntersection(pos2.getX(), pos2.getY(), theta - 3.1415, pos1.getX(), pos1.getY(), size1.getX(), size1.getY(), Math.toRadians(rot1));
-                }
-
-                if (circle2) {
-                    double r2 = size2.getX() / 2;
-                    hit2 = new Point2D(pos2.getX() - r2 * Math.cos(theta), pos2.getY() + r2 * Math.sin(theta));
-                } else {
-                    hit2 = lineBoxIntersection(pos1.getX(), pos1.getY(), theta, pos2.getX(), pos2.getY(), size2.getX(), size2.getY(), Math.toRadians(rot2));
-                }
-
-                double colorWeightA = 1.5 / (0.5 + Math.exp((Math.log(0.25)) / maxSize * hit1.distance(hit2))) - 2;
-                double colorWeightB = 1.5 / (0.5 + Math.exp((Math.log(0.25)) / minSize * hit1.distance(hit2))) - 2;
-
-                if (colorWeightA > 0) {
-                    graphicsContext.setStroke(Paint.valueOf(HexFormat.of().toHexDigits((int) (Math.min(colorWeightA * 256, 128) + 127)).substring(6) + "8080FF"));
-                }
-                if (colorWeightB < 0) {
-                    graphicsContext.setStroke(Paint.valueOf("8080" + HexFormat.of().toHexDigits((int) (Math.min(-colorWeightB * 256, 128) + 127)).substring(6) + "FF"));
-                }
-
-                graphicsContext.strokeLine(hit1.getX() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), hit1.getY() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY(), hit2.getX() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetX(), hit2.getY() * LevelManager.getLevel().getZoom() + LevelManager.getLevel().getOffsetY());
-                graphicsContext.restore();
-            }
-        }
-
-         */
     }
 
 }

@@ -197,11 +197,9 @@ public abstract class RectangleComponent extends ObjectComponent
 
         Point2D right = new Point2D(x + width / 2, y);
         right = ObjectUtil.rotate(right, rotation, center);
-        right = new Point2D(right.getX(), right.getY());
 
         Point2D left = new Point2D(x - width / 2, y);
         left = ObjectUtil.rotate(left, rotation, center);
-        left = new Point2D(left.getX(), left.getY());
 
         Point2D topRight = new Point2D(x + width / 2, y + height / 2);
         topRight = ObjectUtil.rotate(topRight, rotation, center);

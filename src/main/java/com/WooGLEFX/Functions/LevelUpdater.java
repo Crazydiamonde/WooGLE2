@@ -16,7 +16,9 @@ import com.WorldOfGoo.Resrc.Resources;
 import com.WorldOfGoo.Resrc.ResrcImage;
 import com.WorldOfGoo.Resrc.Sound;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +44,9 @@ public class LevelUpdater {
 
     public static void saveSpecificLevel(WorldLevel level, GameVersion version) {
         try {
-            if (version == GameVersion.OLD) {
-                LevelWriter.saveAsXML(level, FileManager.getOldWOGdir() + "\\res\\levels\\" + level.getLevelName(),
-                        version, false, true);
-            } else {
-                LevelWriter.saveAsXML(level, FileManager.getNewWOGdir() + "\\res\\levels\\" + level.getLevelName(),
-                        version, false, true);
-            }
+            String dir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+            LevelWriter.saveAsXML(level, dir + "\\res\\levels\\" + level.getLevelName(),
+                    version, false, true);
         } catch (IOException e) {
             Alarms.errorMessage(e);
         }
@@ -70,25 +68,17 @@ public class LevelUpdater {
     public static void playLevel(WorldLevel level) {
         if (level.getVersion() == GameVersion.OLD) {
             try {
-                ProcessBuilder processBuilder = new ProcessBuilder(FileManager.getOldWOGdir() + "\\WorldOfGoo.exe",
-                        level.getLevelName());
+                ProcessBuilder processBuilder = new ProcessBuilder(
+                        FileManager.getOldWOGdir() + "\\WorldOfGoo.exe", level.getLevelName());
                 processBuilder.directory(new File(FileManager.getOldWOGdir()));
-                processBuilder.redirectErrorStream(true);
-                /* Process process = */processBuilder.start();
-                // BufferedReader reader = new BufferedReader(new
-                // InputStreamReader(process.getInputStream()));
-                // String line;
-                // while ((line = reader.readLine()) != null) {
-                // logger.debug(line);
-                // }
+                processBuilder.start();
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
         } else {
 
             // TODO figure something out to play in 1.5
-            Alarms.errorMessage(new RuntimeException(
-                    "Sorry, I have no idea how to make Steam/GOG/EPIC play specific World of Goo levels. It works for the 1.3 version though."));
+            Alarms.errorMessage(new RuntimeException("Playing is currently unsupported for 1.5; try 1.3 instead. :("));
 
         }
 
@@ -96,7 +86,7 @@ public class LevelUpdater {
 
     public static void renameLevel(WorldLevel level) {
         if (level != null) {
-            Alarms.askForLevelName("changename", level.getVersion());
+            Alarms.askForLevelName("changeName", level.getVersion());
         }
     }
 
@@ -107,27 +97,47 @@ public class LevelUpdater {
         String start = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
 
         /* Change level name in directory */
-        new File(start + "\\res\\levels\\" + level.getLevelName()).renameTo(new File(start + "\\res\\levels\\" + text));
+        File originalLevelDirectory = new File(start + "\\res\\levels\\" + level.getLevelName());
+        File levelDirectory = new File(start + "\\res\\levels\\" + text);
+        if (!originalLevelDirectory.renameTo(levelDirectory)) {
+            Alarms.errorMessage("Could not rename level! (" + level.getLevelName() + " to " + text + ")");
+            return;
+        }
 
         /* Change the names of the scene, level, resrc, addin, text files */
-        for (File levelPart : new File(start + "\\res\\levels\\" + text).listFiles()) {
+        File[] levelParts = levelDirectory.listFiles();
+        if (levelParts == null) return;
+
+        for (File levelPart : levelParts) {
             if (levelPart.getName().length() >= level.getLevelName().length()
                     && levelPart.getName().startsWith(level.getLevelName())) {
-                levelPart.renameTo(new File(start + "\\res\\levels\\" + text + "\\" + text
-                        + levelPart.getName().substring(level.getLevelName().length())));
+                if (!levelPart.renameTo(new File(start + "\\res\\levels\\" + text + "\\" + text
+                        + levelPart.getName().substring(level.getLevelName().length())))) {
+                    Alarms.errorMessage("Could not rename level! (" + level.getLevelName() + " to " + text + ")");
+                    return;
+                }
             }
         }
 
         /* Edit every resource */
         for (EditorObject resource : level.getResources()) {
+
             if (resource instanceof Resources) {
+
                 resource.setAttribute("id", "scene_" + text);
+
             } else if (resource instanceof ResrcImage || resource instanceof Sound) {
-                /* Change ID */
-                resource.setAttribute("id",
-                        resource.getAttribute("id").stringValue().replaceAll(level.getLevelName().toUpperCase(), text.toUpperCase()));
-                resource.setAttribute("path", resource.getAttribute("path").stringValue().replaceAll(level.getLevelName(), text));
+
+                String previousID = resource.getAttribute("id").stringValue();
+                String newID = previousID.replaceAll(level.getLevelName().toUpperCase(), text.toUpperCase());
+                resource.setAttribute("id", newID);
+
+                String previousPath = resource.getAttribute("path").stringValue();
+                String newPath = previousPath.replaceAll(level.getLevelName(), text);
+                resource.setAttribute("path", newPath);
+
             }
+
         }
 
         level.setLevelName(text);
@@ -147,7 +157,8 @@ public class LevelUpdater {
         String start = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         try {
             nuke(new File(start + "\\res\\levels\\" + level.getLevelName()));
-            FXLevelSelectPane.getLevelSelectPane().getTabs().remove(FXLevelSelectPane.getLevelSelectPane().getSelectionModel().getSelectedItem());
+            TabPane levelSelectPane = FXLevelSelectPane.getLevelSelectPane();
+            levelSelectPane.getTabs().remove(levelSelectPane.getSelectionModel().getSelectedItem());
         } catch (Exception e) {
             Alarms.errorMessage(e);
         }
@@ -155,7 +166,8 @@ public class LevelUpdater {
 
     public static void nuke(File file) throws Exception {
         if (file.isDirectory()) {
-            for (File child : file.listFiles()) {
+            File[] children = file.listFiles();
+            if (children != null) for (File child : children) {
                 nuke(child);
             }
         }
@@ -163,23 +175,22 @@ public class LevelUpdater {
     }
 
     public static void exportLevel(WorldLevel level, boolean includeAddinInfo) {
+
+        String dir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+
         FileChooser fileChooser = new FileChooser();
-        if (!Files.exists(Path.of((level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir())
-                + "\\res\\levels\\" + level.getLevelName() + "\\goomod"))) {
+        if (!Files.exists(Path.of((dir + "\\res\\levels\\" + level.getLevelName() + "\\goomod")))) {
             try {
-                Files.createDirectories(
-                        Path.of((level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir())
-                                + "\\res\\levels\\" + level.getLevelName() + "\\goomod"));
+                Files.createDirectories(Path.of((dir + "\\res\\levels\\" + level.getLevelName() + "\\goomod")));
             } catch (Exception e) {
                 Alarms.errorMessage(e);
             }
         }
-        fileChooser.setInitialDirectory(
-                new File((level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir())
-                        + "\\res\\levels\\" + level.getLevelName() + "\\goomod"));
+        fileChooser.setInitialDirectory(new File((dir + "\\res\\levels\\" + level.getLevelName() + "\\goomod")));
         fileChooser.setInitialFileName(level.getLevelName());
-        fileChooser.getExtensionFilters()
-                .add(new FileChooser.ExtensionFilter("World of Goo mod (*.goomod)", "*.goomod"));
+
+        ExtensionFilter goomodFilter = new ExtensionFilter("World of Goo mod (*.goomod)", "*.goomod");
+        fileChooser.getExtensionFilters().add(goomodFilter);
         File export = fileChooser.showSaveDialog(FXStage.getStage());
 
         ArrayList<_Ball> balls = new ArrayList<>();

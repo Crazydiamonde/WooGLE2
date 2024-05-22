@@ -19,8 +19,6 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import java.util.ArrayList;
-
 public class MouseReleasedManager {
 
     /** Called whenever the mouse is released. */
@@ -37,7 +35,6 @@ public class MouseReleasedManager {
 
                 EditorObject selected = level.getSelected();
 
-                ArrayList<AttributeChangeAction> changes = new ArrayList<>();
                 for (EditorAttribute attribute : selected.getAttributes()) {
                     for (EditorAttribute oldAttribute : SelectionManager.getOldAttributes()) {
                         if (attribute.getName().equals(oldAttribute.getName()) && !attribute.stringValue().equals(oldAttribute.stringValue())) {

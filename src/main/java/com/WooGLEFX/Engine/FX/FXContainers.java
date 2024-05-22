@@ -28,7 +28,7 @@ public class FXContainers {
     }
 
 
-    public static final VBox viewPane = new VBox();
+    private static final VBox viewPane = new VBox();
     public static VBox getViewPane() {
         return viewPane;
     }

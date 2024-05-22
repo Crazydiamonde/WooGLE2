@@ -2,7 +2,7 @@ package com.WorldOfGoo.Scene;
 
 import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
 import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorAttribute;
 import com.WooGLEFX.EditorObjects.EditorObject;
@@ -54,22 +54,22 @@ public class Compositegeom extends EditorObject {
                 setAttribute("y", -y);
             }
             public double getRotation() {
-                return getAttribute("rotation").doubleValue();
+                return -getAttribute("rotation").doubleValue();
             }
             public void setRotation(double rotation) {
-                setAttribute("rotation", rotation);
+                setAttribute("rotation", -rotation);
             }
             public double getRadius() {
                 return 10;
             }
             public double getEdgeSize() {
-                return 2.5;
+                return 4;
             }
             public boolean isEdgeOnly() {
                 return true;
             }
             public double getDepth() {
-                return Renderer.GEOMETRY;
+                return Depth.COMPOSITEGEOM;
             }
             public Paint getBorderColor() {
                 return new Color(0, 1.0, 0, 1.0);
@@ -79,6 +79,9 @@ public class Compositegeom extends EditorObject {
             }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
+            }
+            public boolean isResizable() {
+                return false;
             }
         });
 

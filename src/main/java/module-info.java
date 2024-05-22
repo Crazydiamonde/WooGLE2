@@ -1,14 +1,11 @@
 module com.example.WOGAnniversaryEditor {
   requires transitive javafx.controls;
   requires java.desktop;
-  requires javafx.fxml;
   requires javafx.swing;
   requires transitive javafx.graphics;
   requires org.bouncycastle.provider;
   requires java.xml;
   requires org.slf4j;
-  requires ch.qos.logback.classic;
-  requires ch.qos.logback.core;
 
   exports com.WorldOfGoo.Scene;
   exports com.WorldOfGoo.Level;

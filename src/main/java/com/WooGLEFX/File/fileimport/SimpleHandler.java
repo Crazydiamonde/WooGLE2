@@ -14,18 +14,18 @@ public class SimpleHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
         switch (qName) {
             case "oldWOG" -> {
-                if (!attributes.getValue(attributes.getIndex("filepath")).equals("")) {
+                if (!attributes.getValue(attributes.getIndex("filepath")).isEmpty()) {
                     FileManager.setOldWOGdir(attributes.getValue(attributes.getIndex("filepath")));
                 }
-                if (!FileManager.getOldWOGdir().equals("") && Files.exists(Path.of(FileManager.getOldWOGdir()))) {
+                if (!FileManager.getOldWOGdir().isEmpty() && Files.exists(Path.of(FileManager.getOldWOGdir()))) {
                     FileManager.setHasOldWOG(true);
                 }
             }
             case "newWOG" -> {
-                if (!attributes.getValue(attributes.getIndex("filepath")).equals("")) {
+                if (!attributes.getValue(attributes.getIndex("filepath")).isEmpty()) {
                     FileManager.setNewWOGdir(attributes.getValue(attributes.getIndex("filepath")));
                 }
-                if (!FileManager.getNewWOGdir().equals("") && Files.exists(Path.of(FileManager.getNewWOGdir()))) {
+                if (!FileManager.getNewWOGdir().isEmpty() && Files.exists(Path.of(FileManager.getNewWOGdir()))) {
                     FileManager.setHasNewWOG(true);
                 }
             }

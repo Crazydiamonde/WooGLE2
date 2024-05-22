@@ -1,5 +1,6 @@
 package com.WooGLEFX.Engine.FX;
 
+import com.WooGLEFX.EditorObjects.ObjectCreators.ObjectCreator;
 import com.WooGLEFX.EditorObjects._Ball;
 import com.WooGLEFX.Engine.SelectionManager;
 import com.WooGLEFX.File.FileManager;
@@ -22,13 +23,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class FXEditorButtons {
 
@@ -162,6 +160,8 @@ public class FXEditorButtons {
         double width = maxX - minX;
         double height = maxY - minY;
 
+        Button idk = new Button();
+
         if (width > 0 && height > 0) {
 
             BufferedImage toWriteOn = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
@@ -249,7 +249,6 @@ public class FXEditorButtons {
                     }
                 }
             }
-            Button idk = new Button();
 
             double scaleFactor = (double) size / Math.max(toWriteOn.getWidth(), toWriteOn.getHeight());
 
@@ -263,16 +262,20 @@ public class FXEditorButtons {
             g2d.dispose();
 
             idk.setGraphic(new ImageView(SwingFXUtils.toFXImage(dimg, null)));
-            idk.setOnAction(
-                    e -> ObjectAdder.addBall(LevelManager.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name").stringValue()));
-            return idk;
-        } else {
-            Button idk = new Button();
-            idk.setPrefSize(size, size);
-            idk.setOnAction(
-                    e -> ObjectAdder.addBall(LevelManager.getLevel().getLevelObject(), ball.getObjects().get(0).getAttribute("name").stringValue()));
-            return idk;
         }
+
+        idk.setPrefSize(size, size);
+        idk.setOnAction(e -> {
+
+            String name = ball.getObjects().get(0).getAttribute("name").stringValue();
+
+            EditorObject ballInstance = ObjectCreator.create("BallInstance", LevelManager.getLevel().getLevelObject());
+            ballInstance.setAttribute("type", name);
+
+            ObjectAdder.addAnything(ballInstance, LevelManager.getLevel().getLevelObject());
+
+        });
+        return idk;
     }
 
     public static void addBallsTo() {
@@ -590,32 +593,32 @@ public class FXEditorButtons {
         String prefix = "ButtonIcons\\AddObject\\";
 
         setIcon(addLineButton, prefix + "line.png");
-        addLineButton.setOnAction(e -> ObjectAdder.addLine(LevelManager.getLevel().getSceneObject()));
+        addLineButton.setOnAction(e -> ObjectAdder.addObject("line"));
         addLineButton.setTooltip(new DelayedTooltip("Add Line"));
         toolBar.getItems().add(addLineButton);
 
         setIcon(addRectangleButton, prefix + "rectangle.png");
-        addRectangleButton.setOnAction(e -> ObjectAdder.addRectangle(LevelManager.getLevel().getSceneObject()));
+        addRectangleButton.setOnAction(e -> ObjectAdder.addObject("rectangle"));
         addRectangleButton.setTooltip(new DelayedTooltip("Add Rectangle"));
         toolBar.getItems().add(addRectangleButton);
 
         setIcon(addCircleButton, prefix + "circle.png");
-        addCircleButton.setOnAction(e -> ObjectAdder.addCircle(LevelManager.getLevel().getSceneObject()));
+        addCircleButton.setOnAction(e -> ObjectAdder.addObject("circle"));
         addCircleButton.setTooltip(new DelayedTooltip("Add Circle"));
         toolBar.getItems().add(addCircleButton);
 
         setIcon(addSceneLayerButton, prefix + "SceneLayer.png");
-        addSceneLayerButton.setOnAction(e -> ObjectAdder.addSceneLayer(LevelManager.getLevel().getSceneObject()));
+        addSceneLayerButton.setOnAction(e -> ObjectAdder.addObject("SceneLayer"));
         addSceneLayerButton.setTooltip(new DelayedTooltip("Add Scene Layer"));
         toolBar.getItems().add(addSceneLayerButton);
 
         setIcon(addCompGeomButton, prefix + "compositegeom.png");
-        addCompGeomButton.setOnAction(e -> ObjectAdder.addCompositegeom(LevelManager.getLevel().getSceneObject()));
+        addCompGeomButton.setOnAction(e -> ObjectAdder.addObject("compositegeom"));
         addCompGeomButton.setTooltip(new DelayedTooltip("Add Composite Geometry"));
         toolBar.getItems().add(addCompGeomButton);
 
         setIcon(addHingeButton, prefix + "hinge.png");
-        addHingeButton.setOnAction(e -> ObjectAdder.addHinge(LevelManager.getLevel().getSceneObject()));
+        addHingeButton.setOnAction(e -> ObjectAdder.addObject("hinge"));
         addHingeButton.setTooltip(new DelayedTooltip("Add Hinge"));
         toolBar.getItems().add(addHingeButton);
 
@@ -627,41 +630,41 @@ public class FXEditorButtons {
         toolBar.getItems().add(autoPipeButton);
 
         setIcon(addVertexButton, prefix + "Vertex.png");
-        addVertexButton.setOnAction(e -> ObjectAdder.addPipeVertex(LevelManager.getLevel().getLevelObject()));
+        addVertexButton.setOnAction(e -> ObjectAdder.addObject("Vertex"));
         addVertexButton.setTooltip(new DelayedTooltip("Add Vertex"));
         toolBar.getItems().add(addVertexButton);
 
         toolBar.getItems().add(new Separator());
 
         setIcon(addFireButton, prefix + "fire.png");
-        addFireButton.setOnAction(e -> ObjectAdder.addFire(LevelManager.getLevel().getLevelObject()));
+        addFireButton.setOnAction(e -> ObjectAdder.addObject("fire"));
         addFireButton.setTooltip(new DelayedTooltip("Add Fire"));
         toolBar.getItems().add(addFireButton);
 
         setIcon(addLinearFFButton, prefix + "linearforcefield.png");
-        addLinearFFButton.setOnAction(e -> ObjectAdder.addLinearForcefield(LevelManager.getLevel().getSceneObject()));
+        addLinearFFButton.setOnAction(e -> ObjectAdder.addObject("linearforcefield"));
         addLinearFFButton.setTooltip(new DelayedTooltip("Add Linear Force Field"));
         toolBar.getItems().add(addLinearFFButton);
 
         setIcon(addRadialFFButton, prefix + "radialforcefield.png");
-        addRadialFFButton.setOnAction(e -> ObjectAdder.addRadialForcefield(LevelManager.getLevel().getSceneObject()));
+        addRadialFFButton.setOnAction(e -> ObjectAdder.addObject("radialforcefield"));
         addRadialFFButton.setTooltip(new DelayedTooltip("Add Radial Force Field"));
         toolBar.getItems().add(addRadialFFButton);
 
         setIcon(addParticlesButton, prefix + "particles.png");
-        addParticlesButton.setOnAction(e -> ObjectAdder.addParticle(LevelManager.getLevel().getSceneObject()));
+        addParticlesButton.setOnAction(e -> ObjectAdder.addObject("particles"));
         addParticlesButton.setTooltip(new DelayedTooltip("Add Particles"));
         toolBar.getItems().add(addParticlesButton);
 
         toolBar.getItems().add(new Separator());
 
         setIcon(addSignpostButton, prefix + "signpost.png");
-        addSignpostButton.setOnAction(e -> ObjectAdder.addSign(LevelManager.getLevel().getSceneObject()));
+        addSignpostButton.setOnAction(e -> ObjectAdder.addObject("signpost"));
         addSignpostButton.setTooltip(new DelayedTooltip("Add Signpost"));
         toolBar.getItems().add(addSignpostButton);
 
         setIcon(addLabelButton, prefix + "label.png");
-        addLabelButton.setOnAction(e -> ObjectAdder.addLabel(LevelManager.getLevel().getSceneObject()));
+        addLabelButton.setOnAction(e -> ObjectAdder.addObject("label"));
         addLabelButton.setTooltip(new DelayedTooltip("Add Label"));
         toolBar.getItems().add(addLabelButton);
 
@@ -729,13 +732,7 @@ public class FXEditorButtons {
         if (mouseEvent.getButton() == MouseButton.SECONDARY) {
             ContextMenu contextMenu = new ContextMenu();
             MenuItem menuItem = new MenuItem("Configure Palette...");
-            menuItem.setOnAction(actionEvent -> {
-                try {
-                    new PaletteReconfigurator().start(new Stage());
-                } catch (ParserConfigurationException | SAXException | IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            menuItem.setOnAction(actionEvent -> new PaletteReconfigurator().start(new Stage()));
             contextMenu.getItems().add(menuItem);
             if (toolbar != null) {
                 toolbar.setContextMenu(contextMenu);

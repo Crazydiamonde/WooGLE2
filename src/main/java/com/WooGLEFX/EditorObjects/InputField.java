@@ -53,7 +53,7 @@ public class InputField {
     //TODO make imagepath and soundpath actual field types and make verifying them possible which is hard because of setdefaults
 
     public static boolean verify(EditorObject object, int type, String potential) {
-        if (potential.equals("")){
+        if (potential.isEmpty()){
             return !(type == ANY_REQUIRED || type == IMAGE_REQUIRED);
         }
         switch (type) {

@@ -73,6 +73,7 @@ public class LevelSelector extends Application {
                                 for (String levelName : BaseGameResources.LEVELS) {
                                     if (levelName.equals(levelFile.getName())) {
                                         ok = true;
+                                        break;
                                     }
                                 }
                             }
@@ -81,6 +82,7 @@ public class LevelSelector extends Application {
                                 for (String levelName : BaseGameResources.LEVELS) {
                                     if (levelName.equals(levelFile.getName())) {
                                         ok = false;
+                                        break;
                                     }
                                 }
                             }
@@ -121,7 +123,7 @@ public class LevelSelector extends Application {
         cancelButton.setLayoutY(332);
 
         openButton.setOnAction(actionEvent -> {
-            if (!selected.equals("")) {
+            if (!selected.isEmpty()) {
                 LevelLoader.openLevel(selected, version);
                 stage.close();
                 selectedLabel = null;

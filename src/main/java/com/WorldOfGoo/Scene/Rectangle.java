@@ -3,7 +3,7 @@ package com.WorldOfGoo.Scene;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
 import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
-import com.WooGLEFX.Engine.Renderer;
+import com.WooGLEFX.Engine.Depth;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
@@ -52,7 +52,7 @@ public class Rectangle extends EditorObject {
 
                     double compGeomX = compositegeom.getAttribute("x").doubleValue();
                     double compGeomY = -compositegeom.getAttribute("y").doubleValue();
-                    double compGeomRotation = compositegeom.getAttribute("rotation").doubleValue();
+                    double compGeomRotation = -compositegeom.getAttribute("rotation").doubleValue();
 
                     double x = getAttribute("x").doubleValue();
                     double y = -getAttribute("y").doubleValue();
@@ -76,7 +76,7 @@ public class Rectangle extends EditorObject {
 
                     double compGeomX = compositegeom.getAttribute("x").doubleValue();
                     double compGeomY = -compositegeom.getAttribute("y").doubleValue();
-                    double compGeomRotation = compositegeom.getAttribute("rotation").doubleValue();
+                    double compGeomRotation = -compositegeom.getAttribute("rotation").doubleValue();
 
                     Point2D position = new Point2D(x, getY());
                     position = position.subtract(compGeomX, compGeomY);
@@ -98,7 +98,7 @@ public class Rectangle extends EditorObject {
 
                     double compGeomX = compositegeom.getAttribute("x").doubleValue();
                     double compGeomY = -compositegeom.getAttribute("y").doubleValue();
-                    double compGeomRotation = compositegeom.getAttribute("rotation").doubleValue();
+                    double compGeomRotation = -compositegeom.getAttribute("rotation").doubleValue();
 
                     double x = getAttribute("x").doubleValue();
                     double y = -getAttribute("y").doubleValue();
@@ -122,7 +122,7 @@ public class Rectangle extends EditorObject {
 
                     double compGeomX = compositegeom.getAttribute("x").doubleValue();
                     double compGeomY = -compositegeom.getAttribute("y").doubleValue();
-                    double compGeomRotation = compositegeom.getAttribute("rotation").doubleValue();
+                    double compGeomRotation = -compositegeom.getAttribute("rotation").doubleValue();
 
                     Point2D position = new Point2D(getX(), y);
                     position = position.subtract(compGeomX, compGeomY);
@@ -184,7 +184,7 @@ public class Rectangle extends EditorObject {
                 return false;
             }
             public double getDepth() {
-                return Renderer.GEOMETRY;
+                return Depth.GEOMETRY;
             }
             public Paint getBorderColor() {
                 return geometryColor(getAttribute("tag").listValue(), getParent());

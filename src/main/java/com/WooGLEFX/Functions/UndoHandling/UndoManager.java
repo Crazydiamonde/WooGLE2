@@ -27,7 +27,7 @@ public class UndoManager {
 
         WorldLevel level = LevelManager.getLevel();
 
-        if (level.undoActions.size() != 0) {
+        if (!level.undoActions.isEmpty()) {
             UserAction[] changes = level.undoActions.pop();
             level.redoActions.add(changes);
             FXMenu.redoItem.setDisable(false);
@@ -69,7 +69,7 @@ public class UndoManager {
             }
         }
         // TODO Undo stack should track if there are any unsaved changes, this isn't always true
-        if (level.undoActions.size() == 0) {
+        if (level.undoActions.isEmpty()) {
             level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
             FXMenu.undoItem.setDisable(true);
             FXEditorButtons.buttonUndo.setDisable(true);
@@ -86,7 +86,7 @@ public class UndoManager {
 
         WorldLevel level = LevelManager.getLevel();
 
-        if (level.redoActions.size() != 0) {
+        if (!level.redoActions.isEmpty()) {
             UserAction[] changes = level.redoActions.pop();
             registerChange(changes);
             for (UserAction change : changes) {
@@ -128,7 +128,7 @@ public class UndoManager {
                 FXHierarchy.getHierarchy().refresh();
             }
         }
-        if (level.redoActions.size() == 0) {
+        if (level.redoActions.isEmpty()) {
             FXMenu.redoItem.setDisable(true);
             FXEditorButtons.buttonRedo.setDisable(true);
         }

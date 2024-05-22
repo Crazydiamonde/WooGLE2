@@ -46,7 +46,7 @@ public class PaletteReconfigurator extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws ParserConfigurationException, SAXException, IOException {
+    public void start(Stage stage) {
         VBox oldVBox = new VBox();
         VBox newVBox = new VBox();
 
@@ -102,7 +102,7 @@ public class PaletteReconfigurator extends Application {
 
                     boolean alreadyHasBall = false;
                     for (_Ball ball : BallManager.getImportedBalls()) {
-                        if (ball.getObjects().get(0).getAttribute("name").equals(ballName)) {
+                        if (ball.getObjects().get(0).getAttribute("name").stringValue().equals(ballName)) {
                             alreadyHasBall = true;
                             break;
                         }

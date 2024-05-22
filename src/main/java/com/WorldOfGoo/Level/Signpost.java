@@ -1,5 +1,6 @@
 package com.WorldOfGoo.Level;
 
+import com.WooGLEFX.EditorObjects.ImageUtility;
 import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.Functions.LevelLoader;
 import com.WooGLEFX.Functions.LevelManager;
@@ -9,7 +10,6 @@ import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.EditorObjects.InputField;
 import com.WooGLEFX.Structures.SimpleStructures.Color;
 import com.WooGLEFX.Structures.SimpleStructures.MetaEditorAttribute;
-import com.WorldOfGoo.Scene.SceneLayer;
 
 public class Signpost extends EditorObject {
 
@@ -103,7 +103,7 @@ public class Signpost extends EditorObject {
             image = getAttribute("image").imageValue(LevelManager.getVersion());
             if (image == null) return;
             Color color = getAttribute("colorize").colorValue();
-            image = SceneLayer.colorize(image, color);
+            image = ImageUtility.colorize(image, color);
         } catch (Exception e) {
             // TODO make this cleaner
             if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")")) {

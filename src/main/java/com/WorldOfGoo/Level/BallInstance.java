@@ -3,6 +3,7 @@ package com.WorldOfGoo.Level;
 import com.WooGLEFX.EditorObjects.objectcomponents.CircleComponent;
 import com.WooGLEFX.EditorObjects.objectcomponents.ImageComponent;
 import com.WooGLEFX.EditorObjects.ObjectUtil;
+import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.File.FileManager;
 import com.WooGLEFX.File.ResourceManagers.GlobalResourceManager;
 import com.WooGLEFX.EditorObjects._Ball;
@@ -21,6 +22,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BallInstance extends EditorObject {
@@ -148,20 +150,46 @@ public class BallInstance extends EditorObject {
     }
 
 
+    private static ArrayList<Part> orderPartsByLayer(ArrayList<EditorObject> objects) {
+
+        ArrayList<Part> orderedParts = new ArrayList<>();
+
+        for (EditorObject editorObject : objects) {
+
+            if (editorObject instanceof Part part) {
+
+                double layer = part.getAttribute("layer").doubleValue();
+                int i = 0;
+
+                while (i < orderedParts.size() && orderedParts.get(i).getAttribute("layer").doubleValue() < layer) i++;
+
+                orderedParts.add(i, part);
+
+            }
+
+        }
+
+        return orderedParts;
+
+    }
+
+
     public void refreshObjectPositions() {
 
-        if (ball == null) return;
 
         clearObjectPositions();
 
-        int i = 0;
-
-        for (EditorObject editorObject : ball.getObjects()) if (editorObject instanceof Part part) {
-            addPartAsObjectPosition(part, randomSeed * i);
-            i++;
+        if (ball != null) {
+            int i = 0;
+            for (Part part : orderPartsByLayer(ball.getObjects())) {
+                addPartAsObjectPosition(part, randomSeed * i);
+                i++;
+            }
         }
 
-        addObjectComponent(new CircleComponent() {
+        boolean isCircle = ball == null || ball.getShapeType().equals("circle");
+
+        if (isCircle) addObjectComponent(new CircleComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
@@ -181,8 +209,8 @@ public class BallInstance extends EditorObject {
                 setAttribute("angle", -Math.toDegrees(rotation));
             }
             public double getRadius() {
-                //return ball.getObjects().get(0).getAttribute("shape").stringValue();
-                return 10;
+                if (ball == null) return 15;
+                return ball.getShapeSize() / 2;
             }
             public double getEdgeSize() {
                 return 3;
@@ -191,7 +219,11 @@ public class BallInstance extends EditorObject {
                 return true;
             }
             public Paint getBorderColor() {
-                return new Color(0.5 ,0.5, 0.5, 1);
+                if (ball == null) {
+                    return new Color(0.5, 0.25, 0.25, 1.0);
+                } else {
+                    return new Color(0.5 ,0.5, 0.5, 1);
+                }
             }
             public Paint getColor() {
                 return new Color(0, 0, 0, 0);
@@ -200,8 +232,76 @@ public class BallInstance extends EditorObject {
                 return 0.000001;
             }
             public boolean isVisible() {
-                return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 1;
+                return ball == null || LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 1;
             }
+            public boolean isResizable() {
+                return false;
+            }
+        });
+
+        else addObjectComponent(new RectangleComponent() {
+            public double getX() {
+                return getAttribute("x").doubleValue();
+            }
+
+            public void setX(double x) {
+                setAttribute("x", x);
+            }
+
+            public double getY() {
+                return -getAttribute("y").doubleValue();
+            }
+
+            public void setY(double y) {
+                setAttribute("y", -y);
+            }
+
+            public double getRotation() {
+                return -Math.toRadians(getAttribute("angle").doubleValue());
+            }
+
+            public void setRotation(double rotation) {
+                setAttribute("angle", -Math.toDegrees(rotation));
+            }
+
+            public double getWidth() {
+                if (ball == null) return 15;
+                return ball.getShapeSize();
+            }
+
+            public double getHeight() {
+                if (ball == null) return 15;
+                return ball.getShapeSize2();
+            }
+
+            public double getEdgeSize() {
+                return 3;
+            }
+
+            public boolean isEdgeOnly() {
+                return true;
+            }
+
+            public Paint getBorderColor() {
+                if (ball == null) {
+                    return new Color(0.5, 0.25, 0.25, 1.0);
+                } else {
+                    return new Color(0.5, 0.5, 0.5, 1);
+                }
+            }
+
+            public Paint getColor() {
+                return new Color(0, 0, 0, 0);
+            }
+
+            public double getDepth() {
+                return 0.000001;
+            }
+
+            public boolean isVisible() {
+                return ball == null || LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 1;
+            }
+
             public boolean isResizable() {
                 return false;
             }

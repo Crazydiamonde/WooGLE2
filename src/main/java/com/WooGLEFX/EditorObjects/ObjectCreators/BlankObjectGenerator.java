@@ -15,7 +15,7 @@ public class BlankObjectGenerator {
         EditorObject levels = ObjectCreator.create("Addin_levels", addin);
         EditorObject level = ObjectCreator.create("Addin_level", levels);
         EditorObject addinLevelDir = ObjectCreator.create("Addin_dir", level);
-        EditorObject addinLevelName = ObjectCreator.create("Addin_wtf_name", level);
+        ObjectCreator.create("Addin_wtf_name", level);
         ObjectCreator.create("Addin_subtitle", level);
         ObjectCreator.create("Addin_ocd", level);
 
