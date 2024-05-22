@@ -7,25 +7,25 @@ module com.example.WOGAnniversaryEditor {
   requires java.xml;
   requires org.slf4j;
 
-  exports com.WorldOfGoo.Scene;
-  exports com.WorldOfGoo.Level;
-  exports com.WorldOfGoo.Resrc;
-  exports com.WorldOfGoo.Ball;
-  exports com.WorldOfGoo.Particle;
-  exports com.WorldOfGoo.Text;
-  exports com.WooGLEFX.Engine.GUI;
-  exports com.WooGLEFX.Structures;
-  exports com.WooGLEFX.File;
-  exports com.WooGLEFX.EditorObjects;
-  exports com.WooGLEFX.Functions.UndoHandling.UserActions;
-  exports com.WooGLEFX.Structures.SimpleStructures;
-  exports com.WooGLEFX.File.ResourceManagers.Resources;
-  exports com.WooGLEFX.Engine;
-  exports com.WooGLEFX.Engine.FX;
-    exports com.WooGLEFX.File.fileexport;
-  exports com.WooGLEFX.EditorObjects.ObjectCreators;
-  exports com.WooGLEFX.File.fileimport;
-  exports com.WooGLEFX.File.ResourceManagers;
-    exports com.WooGLEFX.EditorObjects.objectcomponents;
+  exports com.worldOfGoo.scene;
+  exports com.worldOfGoo.level;
+  exports com.worldOfGoo.resrc;
+  exports com.worldOfGoo.ball;
+  exports com.worldOfGoo.particle;
+  exports com.worldOfGoo.text;
+  exports com.woogleFX.engine.gui;
+  exports com.woogleFX.structures;
+  exports com.woogleFX.file;
+  exports com.woogleFX.editorObjects;
+  exports com.woogleFX.functions.undoHandling.userActions;
+  exports com.woogleFX.structures.simpleStructures;
+  exports com.woogleFX.file.resourceManagers.resources;
+  exports com.woogleFX.engine;
+  exports com.woogleFX.engine.fx;
+    exports com.woogleFX.file.fileExport;
+  exports com.woogleFX.editorObjects.objectCreators;
+  exports com.woogleFX.file.fileImport;
+  exports com.woogleFX.file.resourceManagers;
+    exports com.woogleFX.editorObjects.objectComponents;
 
 }
