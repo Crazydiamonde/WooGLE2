@@ -64,6 +64,7 @@ public class MouseReleasedManager {
                             double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
                             for (ObjectComponent objectComponent : ballInstance.getObjectComponents()) {
+                                if (!objectComponent.isVisible()) continue;
                                 if (objectComponent.mouseIntersection(mouseX, mouseY) != DragSettings.NULL) {
 
                                     EditorObject strand = ObjectCreator.create("Strand", level.getLevelObject());

@@ -176,6 +176,7 @@ public class MousePressedManager {
 
         EditorObject selected = level.getSelected();
         if (selected != null) for (ObjectComponent objectComponent : selected.getObjectComponents()) {
+            if (!objectComponent.isVisible()) continue;
             DragSettings dragSettings = objectComponent.mouseIntersectingCorners(mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
         }
@@ -183,6 +184,7 @@ public class MousePressedManager {
         ArrayList<ObjectComponent> byDepth = Renderer.orderObjectPositionsByDepth(level);
         for (int i = byDepth.size() - 1; i >= 0; i--) {
             ObjectComponent object = byDepth.get(i);
+            if (!object.isVisible()) continue;
             DragSettings dragSettings = object.mouseIntersection(mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
         }

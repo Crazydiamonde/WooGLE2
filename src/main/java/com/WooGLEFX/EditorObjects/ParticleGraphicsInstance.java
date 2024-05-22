@@ -109,6 +109,16 @@ public class ParticleGraphicsInstance {
             public double getDepth() {
                 return depth;
             }
+            public boolean isAdditive() {
+                return additive;
+            }
+            public double getAlpha() {
+                if (lifespan != -1 && fade) {
+                    double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
+                    return 1 - dt / lifespan;
+                }
+                return 1.0;
+            }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().isShowParticles();
             }

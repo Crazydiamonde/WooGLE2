@@ -1,6 +1,5 @@
 package com.WorldOfGoo.Level;
 
-import com.WooGLEFX.EditorObjects.objectcomponents.ObjectComponent;
 import com.WooGLEFX.EditorObjects.objectcomponents.RectangleComponent;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorObject;

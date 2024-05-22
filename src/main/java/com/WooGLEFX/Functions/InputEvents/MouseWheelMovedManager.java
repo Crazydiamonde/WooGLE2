@@ -65,6 +65,8 @@ public class MouseWheelMovedManager {
 
                     for (ObjectComponent objectComponent : level.getSelected().getObjectComponents()) {
 
+                        if (!objectComponent.isVisible()) continue;
+
                         DragSettings result = objectComponent.mouseIntersectingCorners(x, y);
                         if (result == DragSettings.NULL) continue;
 

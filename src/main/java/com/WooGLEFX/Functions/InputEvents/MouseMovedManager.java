@@ -35,6 +35,8 @@ public class MouseMovedManager {
 
         for (ObjectComponent objectComponent : selected.getObjectComponents()) {
 
+            if (!objectComponent.isVisible()) continue;
+
             DragSettings result = objectComponent.mouseIntersectingCorners(x, y);
             if (result == DragSettings.NULL) continue;
 

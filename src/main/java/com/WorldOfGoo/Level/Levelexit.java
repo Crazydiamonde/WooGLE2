@@ -39,7 +39,7 @@ public class Levelexit extends EditorObject {
                 setAttribute("radius", radius);
             }
             public double getEdgeSize() {
-                return 2;
+                return 4;
             }
             public boolean isEdgeOnly() {
                 return true;

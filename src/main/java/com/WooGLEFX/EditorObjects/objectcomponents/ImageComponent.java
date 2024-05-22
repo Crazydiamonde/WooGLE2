@@ -7,6 +7,7 @@ import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
 
@@ -39,8 +40,19 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
     }
 
 
+    /** Returns if this image is additive. */
+    public boolean isAdditive() {
+        return false;
+    }
+
+
     /** Returns this component's image. */
     public abstract Image getImage();
+
+
+    public double getAlpha() {
+        return 1.0;
+    }
 
 
     @Override
@@ -66,6 +78,10 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
         t.appendScale(zoom, zoom);
         t.appendRotation(Math.toDegrees(rotation), x, y);
         graphicsContext.setTransform(t);
+
+        if (isAdditive()) graphicsContext.setGlobalBlendMode(BlendMode.ADD);
+
+        graphicsContext.setGlobalAlpha(getAlpha());
 
         graphicsContext.drawImage(image, x - width / 2.0, y - height / 2.0, width, height);
 

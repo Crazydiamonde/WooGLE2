@@ -100,9 +100,7 @@ public abstract class AnchorComponent extends ObjectComponent implements Colored
 
         Point2D rotatedMouse = ObjectUtil.rotate(new Point2D(mouseX, mouseY), -angle, new Point2D(x, y));
 
-        double forceScale = 20;
-
-        double forceMagnitude = Math.hypot(anchorX, anchorY) * forceScale;
+        double forceMagnitude = Math.hypot(anchorX, anchorY);
 
         if (rotatedMouse.getX() > x - drawWidth / 2 && rotatedMouse.getX() < x + forceMagnitude + drawWidth / 2 && rotatedMouse.getY() > y - drawWidth / 2 && rotatedMouse.getY() < y + drawWidth / 2) {
             DragSettings anchorSettings = new DragSettings(DragSettings.MOVE, this);

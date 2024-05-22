@@ -68,24 +68,6 @@ public class DragSettings {
     }
 
 
-    private double initialScaleX;
-    public double getInitialScaleX() {
-        return initialScaleX;
-    }
-    public void setInitialScaleX(double initialScaleX) {
-        this.initialScaleX = initialScaleX;
-    }
-
-
-    private double initialScaleY;
-    public double getInitialScaleY() {
-        return initialScaleY;
-    }
-    public void setInitialScaleY(double initialScaleY) {
-        this.initialScaleY = initialScaleY;
-    }
-
-
     private double rotateAngleOffset;
     public double getRotateAngleOffset() {
         return rotateAngleOffset;
