@@ -13,14 +13,15 @@ import java.io.FileNotFoundException;
 
 public class EffectsManager {
 
+    public static final String strandImageID = "IMAGE_BALL_GENERIC_ARM_INACTIVE";
+
     public static ObjectComponent getPlacingStrand(EditorObject goo1, double mouseX, double mouseY) {
 
         Image strandImage;
 
         try {
-            if (FileManager.hasNewWOG())
-                strandImage = GlobalResourceManager.getImage("IMAGE_BALL_GENERIC_ARM_INACTIVE", GameVersion.NEW);
-            else strandImage = GlobalResourceManager.getImage("IMAGE_BALL_GENERIC_ARM_INACTIVE", GameVersion.OLD);
+            if (FileManager.hasNewWOG()) strandImage = GlobalResourceManager.getImage(strandImageID, GameVersion.NEW);
+            else strandImage = GlobalResourceManager.getImage(strandImageID, GameVersion.OLD);
         } catch (FileNotFoundException e) {
             return null;
         }

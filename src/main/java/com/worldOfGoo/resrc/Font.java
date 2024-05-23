@@ -11,6 +11,11 @@ public class Font extends EditorObject {
         addAttribute("id", InputField.ANY);
         addAttribute("path", InputField.ANY);
 
+        // extra attributes from 1.5
+        addAttribute("cn", InputField.ANY);
+        addAttribute("ko", InputField.ANY);
+        addAttribute("jp", InputField.ANY);
+
     }
 
 }

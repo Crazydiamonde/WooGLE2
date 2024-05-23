@@ -50,7 +50,7 @@ public class LevelManager {
             vBox.getChildren().add(2, FXEditorButtons.getNewGooballsToolbar());
         }
 
-        String levelName = level.getLevelName() + " (version " + level.getVersion() + ")";
+        String levelName = level.getLevelName() + " (version " + (level.getVersion() == GameVersion.OLD ? "1.3" : "1.5") + ")";
         FXStage.getStage().setTitle(levelName + " — World of Goo Anniversary Editor");
 
         level.getVisibilitySettings().updateButtons();

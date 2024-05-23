@@ -127,7 +127,7 @@ public class LevelLoader {
         }
         // Don't open a level if it's already open
         for (Tab tab : FXLevelSelectPane.getLevelSelectPane().getTabs()) {
-            if (tab.getText().equals(levelName)) {
+            if (tab.getText().equals(levelName) && ((LevelTab)tab).getLevel().getVersion() == version) {
                 FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(tab);
                 return;
             }

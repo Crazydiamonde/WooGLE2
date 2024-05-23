@@ -279,7 +279,14 @@ public class FXMenu {
         // TODO better checking for edit buttons
 
         boolean inLevel = LevelManager.getLevel() != null;
-        for (MenuItem menuItem : fileMenu.getItems()) menuItem.setDisable(!inLevel);
+
+
+        reloadWorldOfGooOldItem.setDisable(!FileManager.hasOldWOG());
+        saveOldBallToNewItem.setDisable(!FileManager.hasOldWOG());
+
+        reloadWorldOfGooNewItem.setDisable(!FileManager.hasNewWOG());
+        saveNewBallToOldItem.setDisable(!FileManager.hasNewWOG());
+
         for (MenuItem menuItem : levelMenu.getItems()) menuItem.setDisable(!inLevel);
         for (MenuItem menuItem : editMenu.getItems()) menuItem.setDisable(!inLevel);
         for (MenuItem menuItem : resourcesMenu.getItems()) menuItem.setDisable(!inLevel);
