@@ -96,10 +96,10 @@ public class ObjectAdder {
                     "rectangle", "hinge", "compositegeom", "label",
                     "line", "motor", "slider" -> level.getSceneObject();
 
-            case "Strand", "camera", "poi", "music", "loopsound",
-                    "endoncollision", "endonnogeom", "endonmessage",
-                    "targetheight", "fire", "levelexit", "pipe",
-                    "signpost", "Vertex" -> level.getLevelObject();
+            case "BallInstance", "Strand", "camera", "poi", "music",
+                    "loopsound", "endoncollision", "endonnogeom",
+                    "endonmessage", "targetheight", "fire", "levelexit",
+                    "pipe", "signpost", "Vertex" -> level.getLevelObject();
 
             case "resrcimage", "sound", "setdefaults" ->
                     level.getResourcesObject().getChildren().get(0);
@@ -216,6 +216,7 @@ public class ObjectAdder {
         if (object instanceof BallInstance ballInstance) {
             ballInstance.setAttribute("x", FXCanvas.getScreenCenter().getX());
             ballInstance.setAttribute("y", -FXCanvas.getScreenCenter().getY());
+            fixGooball(object);
         } else if (object instanceof Line line) {
             line.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         } else if (object instanceof Rectangle rectangle) {

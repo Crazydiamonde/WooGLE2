@@ -9,6 +9,7 @@ import com.woogleFX.functions.PaletteManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,7 +32,7 @@ public class PaletteReconfigurator extends Application {
         HBox ballHBox = new HBox();
         CheckBox enableBox = new CheckBox();
         Label ballName = new Label(ballNameString);
-        ballName.setId(String.valueOf(version));
+        ballName.setId(version == GameVersion.OLD ? "1.3" : "1.5");
 
         int i = 0;
         for (String name2 : PaletteManager.getPaletteBalls()) {
@@ -42,6 +43,9 @@ public class PaletteReconfigurator extends Application {
         }
 
         ballHBox.getChildren().addAll(enableBox, ballName);
+
+        ballHBox.setSpacing(5);
+
         return ballHBox;
     }
 
@@ -49,6 +53,9 @@ public class PaletteReconfigurator extends Application {
     public void start(Stage stage) {
         VBox oldVBox = new VBox();
         VBox newVBox = new VBox();
+
+        oldVBox.setSpacing(10);
+        newVBox.setSpacing(10);
 
         stage.setTitle("Configure Goo Ball Palette");
 
@@ -77,17 +84,19 @@ public class PaletteReconfigurator extends Application {
 
         ScrollPane pane = new ScrollPane(new HBox(oldVBox, newVBox));
 
+        pane.setPadding(new Insets(20, 20, 20, 20));
+
         Button applyButton = new Button("Apply");
         Button cancelButton = new Button("Cancel");
 
         applyButton.setOnAction(actionEvent -> {
-            ArrayList<String> paletteBalls = new ArrayList<>();
-            ArrayList<GameVersion> paletteVersions = new ArrayList<>();
 
             ArrayList<Node> nodeList = new ArrayList<>();
 
             nodeList.addAll(oldVBox.getChildren());
             nodeList.addAll(newVBox.getChildren());
+
+            PaletteManager.clear();
 
             for (Node ballHBox : nodeList) {
                 if (!(ballHBox instanceof HBox)) continue;

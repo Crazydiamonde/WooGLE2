@@ -19,8 +19,14 @@ public class EditorWindow extends AnimationTimer {
     private static long timeStarted = -1;
 
 
+    private static long currentTime = -1;
+
+
     @Override
     public void handle(long now) {
+
+        double timeStep = (now - currentTime) / 1000000000d;
+        currentTime = now;
 
         if (timeStarted == -1) timeStarted = now;
         timeElapsed = (now - timeStarted) / 1000000000f;
@@ -30,12 +36,12 @@ public class EditorWindow extends AnimationTimer {
         if (LevelManager.getLevel() != null) {
             for (EditorObject editorObject : LevelManager.getLevel().getScene()) {
                 if (editorObject instanceof Particles particles) {
-                    ParticleUtility.frameUpdate(particles, particles.getCounts(), particles.getDrawing());
+                    ParticleUtility.frameUpdate(particles, particles.getCounts(), particles.getDrawing(), timeStep);
                 }
             }
             for (EditorObject editorObject : LevelManager.getLevel().getLevel()) {
                 if (editorObject instanceof Fire fire) {
-                    ParticleUtility.frameUpdate(fire, fire.getCounts(), fire.getDrawing());
+                    ParticleUtility.frameUpdate(fire, fire.getCounts(), fire.getDrawing(), timeStep);
                 }
             }
         }

@@ -30,8 +30,8 @@ public class SimpleHandler extends DefaultHandler {
                 }
             }
             case "Ball" -> {
-                PaletteManager.getPaletteBalls().add(attributes.getValue(attributes.getIndex("ball")));
-                PaletteManager.getPaletteVersions().add(attributes.getValue(attributes.getIndex("version")).equals("1.3") ? GameVersion.OLD : GameVersion.NEW);
+                PaletteManager.addPaletteBall(attributes.getValue(attributes.getIndex("ball")));
+                PaletteManager.addPaletteVersion(attributes.getValue(attributes.getIndex("version")).equals("1.3") ? GameVersion.OLD : GameVersion.NEW);
             }
         }
     }

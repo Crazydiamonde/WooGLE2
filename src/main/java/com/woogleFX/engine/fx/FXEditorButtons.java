@@ -4,6 +4,7 @@ import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.file.FileManager;
+import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.functions.*;
 import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
 import com.woogleFX.file.resourceManagers.BallManager;
@@ -23,10 +24,13 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class FXEditorButtons {
 
@@ -80,10 +84,10 @@ public class FXEditorButtons {
         double maxX = 0;
         double maxY = 0;
 
-        for (EditorObject part : ball.getObjects()) {
+        for (EditorObject editorObject : ball.getObjects()) {
             String state = "standing";
 
-            if (part instanceof Part) {
+            if (editorObject instanceof Part part) {
 
                 boolean ok = false;
 
@@ -131,8 +135,8 @@ public class FXEditorButtons {
                     double myX = 0.5 * (highX - lowX) + lowX;
                     double myY = 0.5 * (highY - lowY) + lowY;
 
-                    if (((Part) part).getImages().isEmpty()) {
-                        Image img = ((Part) part).getImages().get(0);
+                    if (!part.getImages().isEmpty()) {
+                        Image img = part.getImages().get(0);
                         if (img != null) {
                             BufferedImage image = SwingFXUtils.fromFXImage(img, null);
 
@@ -272,6 +276,8 @@ public class FXEditorButtons {
             EditorObject ballInstance = ObjectCreator.create("BallInstance", LevelManager.getLevel().getLevelObject());
             ballInstance.setAttribute("type", name);
 
+            LevelManager.getLevel().getLevel().add(ballInstance);
+
             ObjectAdder.addAnything(ballInstance, LevelManager.getLevel().getLevelObject());
 
         });
@@ -282,11 +288,42 @@ public class FXEditorButtons {
         int size = 18;
         int i = 0;
         for (String paletteBall : PaletteManager.getPaletteBalls()) {
+
+            GameVersion version = PaletteManager.getPaletteVersions().get(i);
+
+            boolean alreadyHasBall = false;
+            for (_Ball _ball : BallManager.getImportedBalls()) {
+                if (_ball.getObjects().get(0).getAttribute("name").stringValue().equals(paletteBall)) {
+                    alreadyHasBall = true;
+                    break;
+                }
+            }
+
+            if (!alreadyHasBall) {
+                _Ball _ball;
+                try {
+                    _ball = FileManager.openBall(paletteBall, version);
+                } catch (ParserConfigurationException | SAXException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                for (EditorObject resrc : FileManager.commonBallResrcData) {
+                    GlobalResourceManager.addResource(resrc, version);
+                }
+
+                if (_ball != null) {
+                    _ball.makeImages(version);
+                    _ball.setVersion(version);
+                    BallManager.getImportedBalls().add(_ball);
+                }
+            }
+
             for (_Ball ball : BallManager.getImportedBalls()) {
+
                 if (ball.getObjects().get(0).getAttribute("name").stringValue().equals(paletteBall)
                         && ball.getVersion() == PaletteManager.getPaletteVersions().get(i)) {
                     Button button = createTemplateForBall(size, ball);
-                    button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name")));
+                    button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name").stringValue()));
                     if (ball.getVersion() == GameVersion.OLD) {
                         oldGooballsToolbar.getItems().add(button);
                     } else {

@@ -20,7 +20,7 @@ public class ParticleUtility {
     }
 
 
-    public static void frameUpdate(EditorObject particleObject, ArrayList<Integer> counts, ArrayList<ArrayList<ParticleGraphicsInstance>> drawing) {
+    public static void frameUpdate(EditorObject particleObject, ArrayList<Double> counts, ArrayList<ArrayList<ParticleGraphicsInstance>> drawing, double deltaTime) {
 
         WorldLevel level = LevelManager.getLevel();
         if (level == null) return;
@@ -34,14 +34,14 @@ public class ParticleUtility {
         for (EditorObject obj : ParticleManager.getParticles()) {
             if (obj instanceof Particleeffect || obj instanceof Ambientparticleeffect) {
                 String name = obj.getAttribute("name").stringValue();
-                if (name.equals(effect)) updateParticle(obj, particleObject, counts, drawing);
+                if (name.equals(effect)) updateParticle(obj, particleObject, counts, drawing, deltaTime);
             }
         }
 
     }
 
 
-    public static void updateParticle(EditorObject obj, EditorObject particleObject, ArrayList<Integer> counts, ArrayList<ArrayList<ParticleGraphicsInstance>> drawing) {
+    public static void updateParticle(EditorObject obj, EditorObject particleObject, ArrayList<Double> counts, ArrayList<ArrayList<ParticleGraphicsInstance>> drawing, double deltaTime) {
 
         ArrayList<_Particle> particles = new ArrayList<>();
         if (obj instanceof Particleeffect) particles = ((Particleeffect) obj).getParticles();
@@ -49,22 +49,22 @@ public class ParticleUtility {
 
         int i = 0;
         for (int i2 = particles.size() - 1; i2 >= 0; i2--) {
-            updateParticleObject(particles.get(i2), i, obj, particleObject, counts, drawing);
+            updateParticleObject(particles.get(i2), i, obj, particleObject, counts, drawing, deltaTime);
             i++;
         }
 
     }
 
 
-    public static void updateParticleObject(_Particle particle, int i, EditorObject obj, EditorObject particleObject, ArrayList<Integer> counts, ArrayList<ArrayList<ParticleGraphicsInstance>> drawing) {
+    public static void updateParticleObject(_Particle particle, int i, EditorObject obj, EditorObject particleObject, ArrayList<Double> counts, ArrayList<ArrayList<ParticleGraphicsInstance>> drawing, double deltaTime) {
 
-        if (counts.size() == i) counts.add(0);
-        counts.set(i, counts.get(i) + 1);
+        if (counts.size() == i) counts.add(0.0);
+        counts.set(i, counts.get(i) + deltaTime);
         if (drawing.size() == i) drawing.add(new ArrayList<>());
 
         boolean shouldCreateNewInstance = false;
         if (obj instanceof Particleeffect)
-            shouldCreateNewInstance = counts.get(i) > 1 / obj.getAttribute("rate").doubleValue();
+            shouldCreateNewInstance = counts.get(i) > obj.getAttribute("rate").doubleValue();
         if (obj instanceof Ambientparticleeffect)
             shouldCreateNewInstance = drawing.get(i).size() < obj.getAttribute("maxparticles").doubleValue();
         if (shouldCreateNewInstance) createNewParticleGraphicsInstance(i, obj, particle, particleObject, counts, drawing);
@@ -79,9 +79,9 @@ public class ParticleUtility {
     }
 
 
-    public static void createNewParticleGraphicsInstance(int i, EditorObject obj, _Particle particle, EditorObject particleObject, ArrayList<Integer> counts, ArrayList<ArrayList<ParticleGraphicsInstance>> drawing) {
+    public static void createNewParticleGraphicsInstance(int i, EditorObject obj, _Particle particle, EditorObject particleObject, ArrayList<Double> counts, ArrayList<ArrayList<ParticleGraphicsInstance>> drawing) {
 
-        counts.set(i, 0);
+        counts.set(i, 0.0);
 
         double scale = InputField.getRange(particle.getAttribute("scale").stringValue(), Math.random());
         double finalscale = InputField.getRange(particle.getAttribute("finalscale").stringValue(), Math.random());

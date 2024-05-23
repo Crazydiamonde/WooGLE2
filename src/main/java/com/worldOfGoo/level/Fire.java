@@ -20,8 +20,8 @@ public class Fire extends EditorObject {
     }
 
 
-    private final ArrayList<Integer> counts = new ArrayList<>();
-    public ArrayList<Integer> getCounts() {
+    private final ArrayList<Double> counts = new ArrayList<>();
+    public ArrayList<Double> getCounts() {
         return counts;
     }
 

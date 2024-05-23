@@ -110,7 +110,7 @@ public class MousePressedManager {
         } else {
 
             EditorObject selected = getEditorObjectThatHasThis(dragSettings.getObjectComponent(), level);
-            assert selected != null;
+            if (selected == null) return;
 
             SelectionManager.setSelected(selected);
             FXPropertiesView.changeTableView(selected);

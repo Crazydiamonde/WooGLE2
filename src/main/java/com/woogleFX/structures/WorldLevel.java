@@ -220,7 +220,7 @@ public class WorldLevel {
                 boolean alreadyInText = false;
                 for (EditorObject textObject : text) {
                     if (textObject instanceof TextString string) {
-                        if (string.getAttribute("id").equals(signpost.getAttribute("text"))) {
+                        if (string.getAttribute("id").stringValue().equals(signpost.getAttribute("text").stringValue())) {
                             alreadyInText = true;
                             break;
                         }
@@ -230,9 +230,9 @@ public class WorldLevel {
                     try {
                         ObjectUtil.deepClone(GlobalResourceManager.getText(signpost.getAttribute("text").stringValue(), version), text.get(0));
                     } catch (Exception e) {
-                        LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text") + "\" (version " + version + ")"));
+                        LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text").stringValue() + "\" (version " + version + ")"));
                         EditorObject string = ObjectCreator.create("string", text.get(0));
-                        string.setAttribute("id", signpost.getAttribute("text"));
+                        string.setAttribute("id", signpost.getAttribute("text").stringValue());
                     }
                 }
             }

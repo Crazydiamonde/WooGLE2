@@ -4,6 +4,7 @@ import com.woogleFX.editorObjects.ImageUtility;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.functions.LevelLoader;
 import com.woogleFX.functions.LevelManager;
+import com.woogleFX.structures.GameVersion;
 import javafx.scene.image.Image;
 
 import com.woogleFX.editorObjects.EditorObject;
@@ -106,8 +107,8 @@ public class Signpost extends EditorObject {
             image = ImageUtility.colorize(image, color);
         } catch (Exception e) {
             // TODO make this cleaner
-            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")")) {
-                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")");
+            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + (LevelManager.getVersion() == GameVersion.OLD ? "1.3" : "1.5") + ")")) {
+                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + (LevelManager.getVersion() == GameVersion.OLD ? "1.3" : "1.5") + ")");
             }
             image = null;
         }

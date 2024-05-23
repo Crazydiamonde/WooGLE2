@@ -15,8 +15,8 @@ public class Particles extends EditorObject {
     }
 
 
-    private final ArrayList<Integer> counts = new ArrayList<>();
-    public ArrayList<Integer> getCounts() {
+    private final ArrayList<Double> counts = new ArrayList<>();
+    public ArrayList<Double> getCounts() {
         return counts;
     }
 
@@ -29,8 +29,6 @@ public class Particles extends EditorObject {
         addAttribute("pos",     InputField.POSITION).setDefaultValue("0,0");
         addAttribute("pretick", InputField.NUMBER)  .setDefaultValue("0");
         addAttribute("enabled", InputField.FLAG);
-
-
 
         setMetaAttributes(MetaEditorAttribute.parse("effect,pos,depth,pretick,enabled,"));
 
