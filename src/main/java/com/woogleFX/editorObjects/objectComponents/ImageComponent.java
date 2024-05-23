@@ -50,6 +50,12 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
     public abstract Image getImage();
 
 
+    /** Returns if this image is from a geometry object. */
+    public boolean isGeometryImage() {
+        return false;
+    }
+
+
     public double getAlpha() {
         return 1.0;
     }
@@ -114,7 +120,7 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
             if (isResizable()) {
 
                 graphicsContext.setStroke(Renderer.selectionOutline);
-                if (!true) {
+                if (isGeometryImage()) {
                     graphicsContext.fillRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
                     graphicsContext.fillRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
                     graphicsContext.fillRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
@@ -131,7 +137,7 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
             if (isRotatable()) {
 
                 graphicsContext.setStroke(Renderer.selectionOutline);
-                if (!true) {
+                if (isGeometryImage()) {
                     graphicsContext.fillOval(left.getX() - 4, left.getY() - 4, 8, 8);
                     graphicsContext.fillOval(right.getX() - 4, right.getY() - 4, 8, 8);
                     graphicsContext.setStroke(Renderer.selectionOutline2);
@@ -147,16 +153,19 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
 
             if (isSelectable()) {
 
+                double absWidth = Math.abs(width);
+                double absHeight = Math.abs(height);
+
                 graphicsContext.setStroke(Renderer.selectionOutline2);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashes(3);
                 graphicsContext.setLineDashOffset(0);
-                graphicsContext.strokeRect(screenX2 - width * zoom / 2, screenY2 - height * zoom / 2, width * zoom, height * zoom);
+                graphicsContext.strokeRect(screenX2 - absWidth * zoom / 2, screenY2 - absHeight * zoom / 2, absWidth * zoom, absHeight * zoom);
 
                 graphicsContext.setStroke(Renderer.selectionOutline);
                 graphicsContext.setLineWidth(1);
                 graphicsContext.setLineDashOffset(3);
-                graphicsContext.strokeRect(screenX2 - width * zoom / 2, screenY2 - height * zoom / 2, width * zoom, height * zoom);
+                graphicsContext.strokeRect(screenX2 - absWidth * zoom / 2, screenY2 - absHeight * zoom / 2, absWidth * zoom, absHeight * zoom);
                 graphicsContext.setLineDashes(0);
 
             }
@@ -175,8 +184,8 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
         double x = getX();
         double y = getY();
         double rotation = getRotation();
-        double width = image.getWidth() * getScaleX();
-        double height = image.getHeight() * getScaleY();
+        double width = image.getWidth() * Math.abs(getScaleX());
+        double height = image.getHeight() * Math.abs(getScaleY());
 
         Point2D rotated = ObjectUtil.rotate(new Point2D(mouseX, mouseY), -rotation, new Point2D(x, y));
 
@@ -209,8 +218,8 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
         double x = getX();
         double y = getY();
         double rotation = getRotation();
-        double width = image.getWidth() * getScaleX();
-        double height = image.getHeight() * getScaleY();
+        double width = image.getWidth() * Math.abs(getScaleX());
+        double height = image.getHeight() * Math.abs(getScaleY());
 
         Point2D center = new Point2D(x, y);
 
@@ -299,6 +308,8 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
             resizeSettings.setInitialSourceY(dragSourceRotated.getY());
             resizeSettings.setAnchorX(dragAnchorRotated.getX());
             resizeSettings.setAnchorY(dragAnchorRotated.getY());
+            resizeSettings.setInitialScaleX(getScaleX());
+            resizeSettings.setInitialScaleY(getScaleY());
             return resizeSettings;
         }
 

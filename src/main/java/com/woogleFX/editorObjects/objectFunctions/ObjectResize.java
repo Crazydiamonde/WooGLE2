@@ -11,7 +11,9 @@ import javafx.geometry.Point2D;
 public class ObjectResize {
 
     public static void resizeFromMouse(double mouseX, double mouseY,
-                                       double resizeDragAnchorX, double resizeDragAnchorY) {
+                                       double resizeDragSourceX, double resizeDragSourceY,
+                                       double resizeDragAnchorX, double resizeDragAnchorY,
+                                       double resizeInitialScaleX, double resizeInitialScaleY) {
 
         ObjectComponent objectComponent = SelectionManager.getDragSettings().getObjectComponent();
 
@@ -32,12 +34,18 @@ public class ObjectResize {
         double deltaX = rotatedReal.getX() - rotatedAnchor.getX();
         double deltaY = rotatedReal.getY() - rotatedAnchor.getY();
 
+        deltaX *= Math.signum(resizeInitialScaleX);
+        deltaX *= Math.signum(resizeDragSourceX - resizeDragAnchorX);
+
+        deltaY *= Math.signum(resizeInitialScaleY);
+        deltaY *= Math.signum(resizeDragSourceY - resizeDragAnchorY);
+
         if (objectComponent instanceof RectangleComponent rectangleComponent) {
             rectangleComponent.setWidth(Math.abs(deltaX));
             rectangleComponent.setHeight(Math.abs(deltaY));
         } else if (objectComponent instanceof ImageComponent imageComponent) {
-            imageComponent.setScaleX(Math.abs(deltaX) / imageComponent.getImage().getWidth());
-            imageComponent.setScaleY(Math.abs(deltaY) / imageComponent.getImage().getHeight());
+            imageComponent.setScaleX(deltaX / imageComponent.getImage().getWidth());
+            imageComponent.setScaleY(deltaY / imageComponent.getImage().getHeight());
         }
 
         objectComponent.setX(center.getX());

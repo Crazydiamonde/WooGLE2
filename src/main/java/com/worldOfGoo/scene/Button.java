@@ -77,13 +77,13 @@ public class Button extends EditorObject {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
             public double getScaleX() {
-                return Math.abs(getAttribute("scalex").doubleValue());
+                return getAttribute("scalex").doubleValue();
             }
             public void setScaleX(double scaleX) {
                 setAttribute("scalex", scaleX);
             }
             public double getScaleY() {
-                return Math.abs(getAttribute("scaley").doubleValue());
+                return getAttribute("scaley").doubleValue();
             }
             public void setScaleY(double scaleY) {
                 setAttribute("scaley", scaleY);

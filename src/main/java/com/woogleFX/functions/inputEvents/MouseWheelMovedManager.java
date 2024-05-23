@@ -98,7 +98,9 @@ public class MouseWheelMovedManager {
 
                         case DragSettings.RESIZE -> ObjectResize.resizeFromMouse(
                                 gameRelativeMouseX, gameRelativeMouseY,
-                                dragSettings.getAnchorX(), dragSettings.getAnchorY());
+                                dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY(),
+                                dragSettings.getAnchorX(), dragSettings.getAnchorY(),
+                                SelectionManager.getDragSettings().getInitialScaleX(), SelectionManager.getDragSettings().getInitialScaleY());
 
                         case DragSettings.ROTATE -> ObjectRotate.rotateFromMouse(
                                 gameRelativeMouseX, gameRelativeMouseY, dragSettings.getInitialSourceX(), dragSettings.getInitialSourceY(), dragSettings.getRotateAngleOffset());

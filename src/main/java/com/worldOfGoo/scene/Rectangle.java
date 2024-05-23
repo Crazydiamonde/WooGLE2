@@ -236,6 +236,9 @@ public class Rectangle extends EditorObject {
             public Image getImage() {
                 return image;
             }
+            public boolean isGeometryImage() {
+                return true;
+            }
             public double getDepth() {
                 return 0;
             }

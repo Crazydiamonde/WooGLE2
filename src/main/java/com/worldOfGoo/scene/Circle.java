@@ -204,6 +204,9 @@ public class Circle extends EditorObject {
                     return null;
                 }
             }
+            public boolean isGeometryImage() {
+                return true;
+            }
             public double getDepth() {
                 return 0;
             }

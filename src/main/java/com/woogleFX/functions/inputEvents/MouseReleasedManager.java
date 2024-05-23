@@ -77,6 +77,10 @@ public class MouseReleasedManager {
 
                                     level.getLevel().add(strand);
                                     ObjectAdder.addAnything(strand, level.getLevelObject());
+
+                                    SelectionManager.getStrand1Gooball().update();
+                                    ball.update();
+
                                     break;
 
                                 }

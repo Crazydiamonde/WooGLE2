@@ -69,13 +69,13 @@ public class SceneLayer extends EditorObject {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
             public double getScaleX() {
-                return Math.abs(getAttribute("scalex").doubleValue() * animscalex);
+                return getAttribute("scalex").doubleValue() * animscalex;
             }
             public void setScaleX(double scaleX) {
                 setAttribute("scalex", scaleX);
             }
             public double getScaleY() {
-                return Math.abs(getAttribute("scaley").doubleValue() * animscaley);
+                return getAttribute("scaley").doubleValue() * animscaley;
             }
             public void setScaleY(double scaleY) {
                 setAttribute("scaley", scaleY);

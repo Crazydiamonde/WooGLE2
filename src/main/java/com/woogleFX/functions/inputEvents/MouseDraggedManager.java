@@ -35,7 +35,7 @@ public class MouseDraggedManager {
             // performed.
             switch (SelectionManager.getDragSettings().getType()) {
                 case DragSettings.MOVE -> ObjectDrag.dragFromMouse(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
-                case DragSettings.RESIZE -> ObjectResize.resizeFromMouse(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getAnchorX(), SelectionManager.getDragSettings().getAnchorY());
+                case DragSettings.RESIZE -> ObjectResize.resizeFromMouse(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY(), SelectionManager.getDragSettings().getAnchorX(), SelectionManager.getDragSettings().getAnchorY(), SelectionManager.getDragSettings().getInitialScaleX(), SelectionManager.getDragSettings().getInitialScaleY());
                 case DragSettings.ROTATE -> ObjectRotate.rotateFromMouse(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY(), SelectionManager.getDragSettings().getRotateAngleOffset());
                 case DragSettings.SETANCHOR -> ObjectSetAnchor.setAnchor(gameRelativeMouseX, gameRelativeMouseY, SelectionManager.getDragSettings().getInitialSourceX(), SelectionManager.getDragSettings().getInitialSourceY());
             }

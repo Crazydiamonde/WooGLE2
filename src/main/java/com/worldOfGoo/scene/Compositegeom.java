@@ -128,6 +128,9 @@ public class Compositegeom extends EditorObject {
             public Image getImage() {
                 return image;
             }
+            public boolean isGeometryImage() {
+                return true;
+            }
             public boolean isVisible() {
                 return LevelManager.getLevel().getVisibilitySettings().getShowGeometry() != 0;
             }

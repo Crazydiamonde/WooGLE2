@@ -48,6 +48,7 @@ public class Renderer {
             }
             canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
             drawLevelToCanvas(level, canvas);
+
         } else {
             clear(canvas);
         }
@@ -122,6 +123,12 @@ public class Renderer {
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 
         ArrayList<ObjectComponent> objectPositionsOrderedByDepth = orderObjectPositionsByDepth(worldLevel);
+
+        if (SelectionManager.getStrand1Gooball() != null) {
+            double gameRelativeX = (SelectionManager.getMouseX() - worldLevel.getOffsetX()) / worldLevel.getZoom();
+            double gameRelativeY = (SelectionManager.getMouseY() - worldLevel.getOffsetY()) / worldLevel.getZoom();
+            addObjectPositionToListByDepth(objectPositionsOrderedByDepth, EffectsManager.getPlacingStrand(SelectionManager.getStrand1Gooball(), gameRelativeX, gameRelativeY));
+        }
 
         for (ObjectComponent objectComponent : objectPositionsOrderedByDepth) {
 

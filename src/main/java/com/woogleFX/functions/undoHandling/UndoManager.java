@@ -44,8 +44,7 @@ public class UndoManager {
                 } else if (change instanceof ImportResourceAction) {
                     LevelResourceManager.deleteResource(level, change.getObject().getAttribute("path").stringValue());
                     ObjectManager.deleteItem(level, change.getObject(), false);
-                } else if (change instanceof HierarchyDragAction) {
-                    HierarchyDragAction dragAction = (HierarchyDragAction) change;
+                } else if (change instanceof HierarchyDragAction dragAction) {
                     int toIndex = dragAction.getToPosition();
                     int fromIndex = dragAction.getFromPosition();
                     // Shift all the items opposite of the direction the original item was dragged
@@ -105,8 +104,7 @@ public class UndoManager {
                         // TODO make this work with loopsounds instead of just music
                         LevelResourceManager.importMusic(level, new File(((ImportResourceAction) change).getPath()), false);
                     }
-                } else if (change instanceof HierarchyDragAction) {
-                    HierarchyDragAction dragAction = (HierarchyDragAction) change;
+                } else if (change instanceof HierarchyDragAction dragAction) {
                     int toIndex = dragAction.getToPosition();
                     int fromIndex = dragAction.getFromPosition();
                     if (toIndex > fromIndex) {

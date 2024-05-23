@@ -4,23 +4,15 @@ import com.woogleFX.editorObjects.EditorObject;
 
 public class HierarchyDragAction extends UserAction {
 
-    private int toPosition;
-    private int fromPosition;
-
+    private final int toPosition;
     public int getToPosition() {
         return toPosition;
     }
 
+
+    private final int fromPosition;
     public int getFromPosition() {
         return fromPosition;
-    }
-
-    public void setToPosition(int toPosition) {
-        this.toPosition = toPosition;
-    }
-
-    public void setFromPosition(int fromPosition) {
-        this.fromPosition = fromPosition;
     }
 
     public HierarchyDragAction(EditorObject object, int fromPosition, int toPosition) {
