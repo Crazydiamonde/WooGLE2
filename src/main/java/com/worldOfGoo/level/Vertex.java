@@ -77,7 +77,7 @@ public class Vertex extends EditorObject {
                 return true;
             }
             public double getDepth() {
-                return Depth.MECHANICS;
+                return getParent().getAttribute("depth").doubleValue() + 0.0001;
             }
             public Paint getBorderColor() {
                 return new Color(1.0, 0, 1.0, 1.0);

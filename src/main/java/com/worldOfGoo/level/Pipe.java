@@ -71,7 +71,7 @@ public class Pipe extends EditorObject {
                 return false;
             }
             public double getDepth() {
-                return Depth.PIPE;
+                return getAttribute("depth").doubleValue();
             }
 
             public Paint getBorderColor() {
