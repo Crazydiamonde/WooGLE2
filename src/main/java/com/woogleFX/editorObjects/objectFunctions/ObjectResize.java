@@ -28,6 +28,7 @@ public class ObjectResize {
 
         Point2D center = new Point2D((mouseX + resizeDragAnchorX) / 2, (mouseY + resizeDragAnchorY) / 2);
 
+        Point2D rotatedSource = ObjectUtil.rotate(new Point2D(resizeDragSourceX, resizeDragSourceY), -rotation, center);
         Point2D rotatedReal = ObjectUtil.rotate(new Point2D(mouseX, mouseY), -rotation, center);
         Point2D rotatedAnchor = ObjectUtil.rotate(new Point2D(resizeDragAnchorX, resizeDragAnchorY), -rotation, center);
 
@@ -35,10 +36,10 @@ public class ObjectResize {
         double deltaY = rotatedReal.getY() - rotatedAnchor.getY();
 
         deltaX *= Math.signum(resizeInitialScaleX);
-        deltaX *= Math.signum(resizeDragSourceX - resizeDragAnchorX);
+        deltaX *= Math.signum(rotatedSource.getX() - rotatedAnchor.getX());
 
         deltaY *= Math.signum(resizeInitialScaleY);
-        deltaY *= Math.signum(resizeDragSourceY - resizeDragAnchorY);
+        deltaY *= Math.signum(rotatedSource.getY() - rotatedAnchor.getY());
 
         if (objectComponent instanceof RectangleComponent rectangleComponent) {
             rectangleComponent.setWidth(Math.abs(deltaX));
