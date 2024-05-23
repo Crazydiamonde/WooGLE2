@@ -1,6 +1,6 @@
 package com;
 
-import com.WooGLEFX.Engine.Main;
+import com.woogleFX.engine.Main;
 
 public class SupremeMain {
     public static void main(String[] args) {
