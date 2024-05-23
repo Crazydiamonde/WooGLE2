@@ -197,8 +197,6 @@ public class LevelResourceManager {
 
             level.getResources().add(imageResourceObject);
             imageResourceObject.setParent(level.getResourcesObject().getChildren().get(0), whereToPlaceResource);
-            level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource,
-                    imageResourceObject.getTreeItem());
 
             UndoManager.registerChange(new ImportResourceAction(imageResourceObject, imgPath));
             level.redoActions.clear();
@@ -334,8 +332,6 @@ public class LevelResourceManager {
 
         level.getResources().add(soundResourceObject);
         soundResourceObject.setParent(level.getResourcesObject().getChildren().get(0), whereToPlaceResource);
-        level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource,
-                soundResourceObject.getTreeItem());
 
         /* If a music object already exists, change its sound attribute. */
         for (EditorObject music : level.getLevel()) {
@@ -423,8 +419,6 @@ public class LevelResourceManager {
 
         level.getResources().add(soundResourceObject);
         soundResourceObject.setParent(level.getResourcesObject().getChildren().get(0), whereToPlaceResource);
-        level.getResourcesObject().getChildren().get(0).getTreeItem().getChildren().add(whereToPlaceResource,
-                soundResourceObject.getTreeItem());
 
         /* If a music object already exists, change its sound attribute. */
         for (EditorObject music : level.getLevel()) {

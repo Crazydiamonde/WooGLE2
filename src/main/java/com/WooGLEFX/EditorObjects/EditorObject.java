@@ -40,9 +40,15 @@ public class EditorObject {
     public final EditorObject getParent() {
         return parent;
     }
-    public final void setParent(EditorObject parent) {
+    public final void setParent(EditorObject parent, int row) {
         this.parent = parent;
-        if (parent != null) parent.getChildren().add(this);
+        if (parent != null) {
+            parent.getChildren().add(row, this);
+            parent.getTreeItem().getChildren().add(row, treeItem);
+        }
+    }
+    public final void setParent(EditorObject parent) {
+        setParent(parent, parent == null ? 0 : parent.getChildren().size());
     }
 
 
@@ -58,17 +64,9 @@ public class EditorObject {
     }
 
 
-    /** The TreeItem associated with this object. */
-    private TreeItem<EditorObject> treeItem;
+    private final TreeItem<EditorObject> treeItem = new TreeItem<>(this);
     public final TreeItem<EditorObject> getTreeItem() {
         return treeItem;
-    }
-    public final void setTreeItem(TreeItem<EditorObject> treeItem) {
-        this.treeItem = treeItem;
-    }
-    public final void setParent(EditorObject parent, int row) {
-        this.parent = parent;
-        if (parent != null) parent.getChildren().add(row, this);
     }
 
 
@@ -122,17 +120,17 @@ public class EditorObject {
     public final ObjectComponent[] getObjectComponents() {
         return objectComponents.toArray(new ObjectComponent[0]);
     }
-    public final void addObjectComponent(ObjectComponent objectComponent) {
-        objectComponents.add(objectComponent);
+    public final void addObjectComponent(ObjectComponent c) {
+        objectComponents.add(c);
     }
-    public final void removeObjectPosition(ObjectComponent objectComponent) {
-        objectComponents.remove(objectComponent);
+    public final void removeObjectPosition(ObjectComponent c) {
+        objectComponents.remove(c);
     }
     public final void clearObjectPositions() {
         objectComponents.clear();
     }
-    public final boolean containsObjectPosition(ObjectComponent position) {
-        return objectComponents.contains(position);
+    public final boolean containsObjectPosition(ObjectComponent c) {
+        return objectComponents.contains(c);
     }
 
 

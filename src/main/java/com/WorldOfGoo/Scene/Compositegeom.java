@@ -175,7 +175,7 @@ public class Compositegeom extends EditorObject {
 
     @Override
     public String[] getPossibleChildren() {
-        return new String[]{"Circle", "Rectangle"};
+        return new String[]{ "circle", "rectangle" };
     }
 
 }

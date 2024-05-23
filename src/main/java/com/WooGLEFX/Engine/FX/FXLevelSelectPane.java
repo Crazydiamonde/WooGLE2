@@ -1,5 +1,7 @@
 package com.WooGLEFX.Engine.FX;
 
+import com.WooGLEFX.EditorObjects.EditorObject;
+import com.WooGLEFX.Functions.HierarchyManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.Engine.GUI.Alarms;
 import com.WooGLEFX.Structures.SimpleStructures.LevelTab;
@@ -44,23 +46,29 @@ public class FXLevelSelectPane {
         tab.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
             // If the user has just selected this tab:
             if (t1) {
+
                 // Set this tab's level to be the currently selected level.
                 LevelManager.setLevel(level);
-                switch (level.getCurrentlySelectedSection()) {
-                    case "Scene" -> FXHierarchy.getHierarchy().setRoot(level.getSceneObject().getTreeItem());
-                    case "Level" -> FXHierarchy.getHierarchy().setRoot(level.getLevelObject().getTreeItem());
-                    case "Resrc" -> FXHierarchy.getHierarchy().setRoot(level.getResourcesObject().getTreeItem());
-                    case "Text" -> FXHierarchy.getHierarchy().setRoot(level.getTextObject().getTreeItem());
-                    case "Addin" -> FXHierarchy.getHierarchy().setRoot(level.getAddinObject().getTreeItem());
-                }
 
-                switch (level.getCurrentlySelectedSection()) {
-                    case "Scene" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(0);
-                    case "Level" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(1);
-                    case "Resrc" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(2);
-                    case "Text" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(3);
-                    case "Addin" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(4);
-                }
+                EditorObject rootObject = switch (level.getCurrentlySelectedSection()) {
+                    case "Scene" -> level.getSceneObject();
+                    case "Level" -> level.getLevelObject();
+                    case "Resrc" -> level.getResourcesObject();
+                    case "Text" -> level.getTextObject();
+                    case "Addin" -> level.getAddinObject();
+                    default -> null;
+                };
+                FXHierarchy.getHierarchy().setRoot(rootObject.getTreeItem());
+
+                int i = switch (level.getCurrentlySelectedSection()) {
+                    case "Scene" -> 0;
+                    case "Level" -> 1;
+                    case "Resrc" -> 2;
+                    case "Text" -> 3;
+                    case "Addin" -> 4;
+                    default -> -1;
+                };
+                FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(i);
 
             } else {
                 // Destroy and replace the level tab to prevent an unknown freezing issue.

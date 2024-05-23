@@ -11,6 +11,7 @@ import com.WooGLEFX.Engine.GUI.Alarms;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Functions.UndoHandling.UserActions.ObjectCreationAction;
 import com.WooGLEFX.Structures.WorldLevel;
+import com.WorldOfGoo.Addin.Addin;
 import com.WorldOfGoo.Level.*;
 import com.WorldOfGoo.Resrc.ResourceManifest;
 import com.WorldOfGoo.Resrc.ResrcImage;
@@ -18,6 +19,7 @@ import com.WorldOfGoo.Resrc.SetDefaults;
 import com.WorldOfGoo.Resrc.Sound;
 import com.WorldOfGoo.Scene.*;
 import com.WorldOfGoo.Text.TextString;
+import com.WorldOfGoo.Text.TextStrings;
 import javafx.geometry.Point2D;
 
 public class ObjectAdder {
@@ -85,11 +87,16 @@ public class ObjectAdder {
 
 
     public static EditorObject addObject(String name) {
+        return addObject(name, null);
+    }
+
+
+    public static EditorObject addObject(String name, EditorObject parent) {
 
         WorldLevel level = LevelManager.getLevel();
         if (level == null) return null;
 
-        EditorObject parent = switch (name) {
+        if (parent == null) parent = switch (name) {
 
             case "linearforcefield", "radialforcefield", "particles",
                     "SceneLayer", "buttongroup", "button", "circle",
@@ -116,6 +123,8 @@ public class ObjectAdder {
         if (parent instanceof Scene) level.getScene().add(obj);
         else if (parent instanceof Level) level.getLevel().add(obj);
         else if (parent instanceof ResourceManifest) level.getResources().add(obj);
+        else if (parent instanceof Addin) level.getAddin().add(obj);
+        else if (parent instanceof TextStrings) level.getText().add(obj);
 
         addAnything(obj, parent);
 
@@ -125,16 +134,13 @@ public class ObjectAdder {
 
     public static void addAnything(EditorObject obj, EditorObject parent) {
         adjustObject(obj, parent);
-        // obj.setTreeItem(new TreeItem<>(obj));
-        // parent.getTreeItem().getChildren().add(obj.getTreeItem());
-        FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(obj.getTreeItem()));
-        FXHierarchy.getHierarchy().getSelectionModel().select(FXHierarchy.getHierarchy().getRow(obj.getTreeItem()));
+
+        FXHierarchy.getHierarchy().getSelectionModel().select(obj.getTreeItem());
         obj.update();
         SelectionManager.setSelected(obj);
         FXPropertiesView.changeTableView(LevelManager.getLevel().getSelected());
 
-        UndoManager.registerChange(new ObjectCreationAction(obj,
-                FXHierarchy.getHierarchy().getRow(obj.getTreeItem()) - FXHierarchy.getHierarchy().getRow(obj.getParent().getTreeItem())));
+        UndoManager.registerChange(new ObjectCreationAction(obj, obj.getParent().getChildren().indexOf(obj)));
         LevelManager.getLevel().redoActions.clear();
     }
 
@@ -144,7 +150,7 @@ public class ObjectAdder {
      *
      * @param obj The BallInstance to modify.
      */
-    public static void fixGooball(EditorObject obj) {
+    public static void fixGooBall(EditorObject obj) {
 
         // Create an array to store which id numbers are already taken by BallInstances.
         boolean[] taken = new boolean[LevelManager.getLevel().getLevel().size()];
@@ -249,10 +255,11 @@ public class ObjectAdder {
                 }
                 if (pipe == null) {
                     Alarms.errorMessage("You must create a pipe to add the vertex to.");
+                    return;
                 }
             }
             Vertex previous = null;
-            if (pipe != null) for (EditorObject child : pipe.getChildren()) {
+            for (EditorObject child : pipe.getChildren()) {
                 if (child instanceof Vertex) {
                     previous = (Vertex) child;
                 }
@@ -260,7 +267,6 @@ public class ObjectAdder {
             vertex.setPrevious(previous);
             vertex.setAttribute("x", FXCanvas.getScreenCenter().getX());
             vertex.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-
         } else if (object instanceof Fire fire) {
             fire.setAttribute("x", FXCanvas.getScreenCenter().getX());
             fire.setAttribute("y", -FXCanvas.getScreenCenter().getY());

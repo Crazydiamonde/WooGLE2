@@ -116,8 +116,6 @@ public class MousePressedManager {
             FXPropertiesView.changeTableView(selected);
             if (selected.getParent() != null) selected.getParent().getTreeItem().setExpanded(true);
             FXHierarchy.getHierarchy().getSelectionModel().select(selected.getTreeItem());
-            // Scroll to this position in the selection model
-            FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()));
 
         }
 

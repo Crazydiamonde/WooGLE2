@@ -11,22 +11,14 @@ import com.WorldOfGoo.Level.BallInstance;
 import com.WorldOfGoo.Level.Level;
 import com.WorldOfGoo.Level.Strand;
 import com.WorldOfGoo.Scene.Scene;
-import javafx.scene.control.TreeItem;
 
 public class ObjectManager {
 
     public static void create(WorldLevel level, EditorObject object, int row) {
         object.update();
 
-        if (object.getTreeItem() == null) {
-            object.setTreeItem(new TreeItem<>(object));
-        }
-
         if (!object.getParent().getChildren().contains(object)) {
-            object.getParent().getChildren().add(object);
-        }
-
-        if (!object.getParent().getTreeItem().getChildren().contains(object.getTreeItem())) {
+            object.getParent().getChildren().add(row, object);
             object.getParent().getTreeItem().getChildren().add(row, object.getTreeItem());
         }
 
@@ -96,9 +88,9 @@ public class ObjectManager {
         level.getAddin().remove(item);
         level.getText().remove(item);
 
-        item.getParent().getTreeItem().getChildren().remove(item.getTreeItem());
         if (!parentDeleted) {
             item.getParent().getChildren().remove(item);
+            item.getParent().getTreeItem().getChildren().remove(item.getTreeItem());
         }
 
         if (item instanceof BallInstance ballInstance) {
@@ -149,7 +141,7 @@ public class ObjectManager {
         SelectionManager.setSelected(selected);
         FXPropertiesView.changeTableView(selected);
         // hierarchy.getFocusModel().focus(row);
-        FXHierarchy.getHierarchy().getSelectionModel().select(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()));
+        FXHierarchy.getHierarchy().getSelectionModel().select(selected.getTreeItem());
         FXHierarchy.getHierarchy().refresh();
 
     }

@@ -65,7 +65,7 @@ public class ClipboardManager {
                         }
                     }
                     if (object instanceof BallInstance) {
-                        ObjectAdder.fixGooball(object);
+                        ObjectAdder.fixGooBall(object);
                         for (EditorObject editorObject : level.getLevel()) {
                             if (editorObject instanceof Strand strand) {
                                 strand.update();
@@ -75,8 +75,7 @@ public class ClipboardManager {
                     // object.getParent().getChildren().add(0, object);
                     ObjectManager.create(level, object, 0);
                     SelectionManager.setSelected(object);
-                    UndoManager.registerChange(new ObjectCreationAction(object, FXHierarchy.getHierarchy().getRow(object.getTreeItem())
-                            - FXHierarchy.getHierarchy().getRow(object.getParent().getTreeItem()) - 1));
+                    UndoManager.registerChange(new ObjectCreationAction(object, object.getParent().getChildren().indexOf(object)));
                     level.redoActions.clear();
                     FXHierarchy.getHierarchy().refresh();
                 }

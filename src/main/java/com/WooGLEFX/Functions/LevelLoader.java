@@ -21,7 +21,6 @@ import com.WorldOfGoo.Resrc.ResrcImage;
 import com.WorldOfGoo.Resrc.Sound;
 import com.WorldOfGoo.Scene.SceneLayer;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TreeItem;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,16 +69,11 @@ public class LevelLoader {
         FXEditorButtons.updateAllButtons();
         FXMenu.updateAllButtons();
 
-        level.getSceneObject().setTreeItem(new TreeItem<>(level.getSceneObject()));
         level.getSceneObject().setAttribute("backgroundcolor", "255,255,255");
-        level.getLevelObject().setTreeItem(new TreeItem<>(level.getLevelObject()));
-        level.getResourcesObject().setTreeItem(new TreeItem<>(level.getResourcesObject()));
 
         EditorObject resourcesThing = ObjectCreator.create("Resources", level.getResourcesObject());
-        resourcesThing.setTreeItem(new TreeItem<>(resourcesThing));
         resourcesThing.setAttribute("id", "scene_" + level.getLevelName());
         resourcesThing.getTreeItem().setExpanded(true);
-        level.getResourcesObject().getTreeItem().getChildren().add(resourcesThing.getTreeItem());
 
         for (EditorObject object : level.getScene()) {
             object.update();

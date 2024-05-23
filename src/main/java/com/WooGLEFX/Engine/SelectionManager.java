@@ -2,12 +2,11 @@ package com.WooGLEFX.Engine;
 
 import com.WooGLEFX.Engine.FX.FXEditorButtons;
 import com.WooGLEFX.Engine.FX.FXHierarchy;
+import com.WooGLEFX.Functions.HierarchyManager;
 import com.WooGLEFX.Functions.LevelManager;
 import com.WooGLEFX.EditorObjects.EditorAttribute;
 import com.WooGLEFX.EditorObjects.EditorObject;
 import com.WooGLEFX.Structures.SimpleStructures.DragSettings;
-import com.WorldOfGoo.Resrc.ResourceManifest;
-import com.WorldOfGoo.Text.TextStrings;
 
 public class SelectionManager {
 
@@ -125,16 +124,9 @@ public class SelectionManager {
         while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
 
         if (LevelManager.getLevel().getSelected() != null && LevelManager.getLevel().getSelected().getParent() != null) {
-            if (absoluteParent instanceof ResourceManifest) {
-                FXHierarchy.getHierarchy().setRoot(absoluteParent.getChildren().get(0).getTreeItem());
-                FXHierarchy.getHierarchy().setShowRoot(true);
-            } else if (absoluteParent instanceof TextStrings) {
-                FXHierarchy.getHierarchy().setRoot(absoluteParent.getTreeItem());
-                FXHierarchy.getHierarchy().setShowRoot(true);
-            } else {
-                FXHierarchy.getHierarchy().setRoot(absoluteParent.getTreeItem());
-                FXHierarchy.getHierarchy().setShowRoot(true);
-            }
+
+            FXHierarchy.getHierarchy().setRoot(absoluteParent.getTreeItem());
+            FXHierarchy.getHierarchy().setShowRoot(true);
 
             switch (LevelManager.getLevel().getSelected().getClass().getPackage().getName()) {
                 case "com.WorldOfGoo.Scene" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(0);
