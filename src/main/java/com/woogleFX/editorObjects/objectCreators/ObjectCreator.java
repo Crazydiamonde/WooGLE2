@@ -21,9 +21,13 @@ public class ObjectCreator {
 
     public static EditorObject create(String _name, EditorObject _parent) {
 
+        boolean shouldStop = _name.startsWith("_");
+        String name = shouldStop ? _name.substring(1) : _name;
+
+
         WorldLevel level = LevelManager.getLevel();
 
-        EditorObject parent = (_parent != null || level == null) ? _parent : switch(_name) {
+        EditorObject parent = (_parent != null || level == null) ? _parent : switch(name) {
 
             case "linearforcefield", "radialforcefield", "particles",
                     "SceneLayer", "buttongroup", "button", "circle",
@@ -41,7 +45,7 @@ public class ObjectCreator {
 
         };
 
-        EditorObject toAdd = switch (_name) {
+        EditorObject toAdd = switch (name) {
             case "addin", "Addin_addin" -> new Addin(parent);
             case "Addin_id" -> new AddinID(parent);
             case "Addin_name" -> new AddinName(parent);
@@ -114,11 +118,11 @@ public class ObjectCreator {
         };
 
         if (toAdd == null) {
-            logger.error("Attempted to create an invalid object: \"" + _name + "\"");
+            logger.error("Attempted to create an invalid object: \"" + name + "\"");
             return null;
         }
 
-        if (parent != null) toAdd.setParent(parent);
+        if (parent != null && !shouldStop) toAdd.setParent(parent);
 
         return toAdd;
 

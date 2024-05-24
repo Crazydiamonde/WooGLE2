@@ -1,22 +1,23 @@
-.tree-table-row-cell:hover {
-    -fx-background-color: lightblue;
+.tree-table-row-cell:filled:even {
+    -fx-background-color: #f6f6f6;
 }
 
-#work {
-    -fx-background-color:
-            #b5b5b5,
-            linear-gradient(#f0f0f0, #f0f0f0);
+.tree-table-row-cell:filled:odd {
+    -fx-background-color: #ffffff;
+}
+
+.tree-table-row-cell:filled:hover {
+    -fx-background-color: #c0e0ff;
+}
+
+.tree-table-row-cell:filled:selected .tree-table-cell {
+    -fx-background-color: #a0b0ff;
+    -fx-text-fill: #000000;
 }
 
 .button {
     -fx-background-insets: 0,0,0;
     -fx-padding: 0 0 0 0;
-}
-
-#thing {
-    -fx-background-color:
-        #b5b5b5,
-        linear-gradient(#f0f0f0, #f0f0f0);
 }
 
 .tooltip {

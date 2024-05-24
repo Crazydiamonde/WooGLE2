@@ -72,6 +72,7 @@ public class FXHierarchy {
 
     }
 
+
     private static final TabPane hierarchySwitcherButtons = new TabPane();
     public static TabPane getHierarchySwitcherButtons() {
         return hierarchySwitcherButtons;
@@ -114,8 +115,6 @@ public class FXHierarchy {
             hierarchy.setShowRoot(true);
 
         });
-
-        hierarchy.sort();
 
     }
 

@@ -21,8 +21,8 @@ public class Button extends EditorObject {
         super(_parent, "button", "scene\\button");
 
         addAttribute("id",                    InputField.ANY)                                  .assertRequired();
-        addAttribute("depth",                 InputField.NUMBER).assertRequired();
-        addAttribute("x",                     InputField.NUMBER).assertRequired();
+        addAttribute("depth",                 InputField.NUMBER).setDefaultValue("0")          .assertRequired();
+        addAttribute("x",                     InputField.NUMBER)                               .assertRequired();
         addAttribute("y",                     InputField.NUMBER).setDefaultValue("0")          .assertRequired();
         addAttribute("scalex",                InputField.NUMBER).setDefaultValue("1")          .assertRequired();
         addAttribute("scaley",                InputField.NUMBER).setDefaultValue("1")          .assertRequired();

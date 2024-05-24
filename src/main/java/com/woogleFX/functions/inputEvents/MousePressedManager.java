@@ -58,6 +58,8 @@ public class MousePressedManager {
 
         if (level.getSelected() != null) ifSelectedAlreadyExists(level);
 
+        if (event.getY() < FXCanvas.getMouseYOffset()) return;
+
         if (SelectionManager.getMode() == SelectionManager.SELECTION) manageSelection(event, level);
         else if (SelectionManager.getMode() == SelectionManager.STRAND) tryToPlaceStrand(event, level);
 
@@ -116,6 +118,7 @@ public class MousePressedManager {
             FXPropertiesView.changeTableView(selected);
             if (selected.getParent() != null) selected.getParent().getTreeItem().setExpanded(true);
             FXHierarchy.getHierarchy().getSelectionModel().select(selected.getTreeItem());
+            FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()));
 
         }
 

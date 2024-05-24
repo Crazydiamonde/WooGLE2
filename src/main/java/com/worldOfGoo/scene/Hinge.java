@@ -46,7 +46,7 @@ public class Hinge extends EditorObject {
                 return 15;
             }
             public double getEdgeSize() {
-                return 2;
+                return 4;
             }
             public boolean isEdgeOnly() {
                 return true;

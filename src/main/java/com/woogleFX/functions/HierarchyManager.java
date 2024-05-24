@@ -21,6 +21,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class HierarchyManager {
 
@@ -30,12 +32,6 @@ public class HierarchyManager {
         } catch (FileNotFoundException e) {
             return null;
         }
-    }
-
-
-    private static EditorObject objectBeingDragged;
-    public static EditorObject getObjectBeingDragged() {
-        return objectBeingDragged;
     }
 
 
@@ -57,7 +53,7 @@ public class HierarchyManager {
             // Update this cell's text.
             cell.setText(item);
             // Override the default padding that ruins the text.
-            cell.setPadding(new Insets(0, 0, 0, 0));
+            cell.setPadding(new Insets(-2, 0, 0, 3));
         }
 
     }
@@ -74,7 +70,7 @@ public class HierarchyManager {
             // Update this cell's text.
             cell.setText(item);
             // Override the default padding that ruins the text.
-            cell.setPadding(new Insets(0, 0, 0, 0));
+            cell.setPadding(new Insets(-2, 0, 0, 3));
 
             if (cell.getTableRow().getItem() != null) {
                 ImageView imageView;
@@ -119,20 +115,28 @@ public class HierarchyManager {
         int direction = (int)Math.signum(toIndex - fromIndex);
         if (direction == 0) return false;
 
+        if (direction > 0) toIndex -= 1;
+
         EditorObject toItem = hierarchy.getTreeItem(toIndex).getValue();
         EditorObject fromItem = hierarchy.getTreeItem(fromIndex).getValue();
 
+        // YOU CAN'T PUT AN OBJECT INSIDE ITSELF
+        if (toItem.getChildren().contains(fromItem)) return false;
+
+        // Or inside an object that doesn't have it as a possible child
+        if (Stream.of(toItem.getParent().getPossibleChildren()).noneMatch(e -> e.equals(fromItem.getType()))) return false;
+
+        // Add the dragged item just above the item that it gets dragged to
         int indexOfToItem = toItem.getParent().getChildren().indexOf(toItem);
-        int indexOfToTreeItem = toItem.getParent().getTreeItem().getChildren().indexOf(toItem.getTreeItem());
 
         fromItem.getParent().getChildren().remove(fromItem);
         fromItem.getParent().getTreeItem().getChildren().remove(fromItem.getTreeItem());
 
         fromItem.setParent(toItem.getParent(), indexOfToItem);
 
-        hierarchy.getSelectionModel().select(indexOfToTreeItem);
+        hierarchy.getSelectionModel().select(toIndex);
 
-        UndoManager.registerChange(new HierarchyDragAction(HierarchyManager.getObjectBeingDragged(), HierarchyManager.getOldDropIndex(), toIndex));
+        UndoManager.registerChange(new HierarchyDragAction(fromItem, HierarchyManager.getOldDropIndex(), toIndex));
         UndoManager.clearRedoActions();
 
         return true;
@@ -161,7 +165,6 @@ public class HierarchyManager {
                 ClipboardContent content = new ClipboardContent();
                 content.putString(selected2.getValue().getClass().getName());
                 db.setContent(content);
-                objectBeingDragged = row.getItem();
                 oldDropIndex = row.getIndex();
                 event.consume();
             }
@@ -169,11 +172,15 @@ public class HierarchyManager {
 
         row.setOnDragExited(event -> {
             // row.setStyle("");
+            row.setStyle("-fx-border-width: 0 0 0 0;");
+            row.setPadding(new Insets(1, 0, 0, 0));
         });
 
         row.setOnDragOver(event -> {
             if (event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.MOVE);
+                row.setStyle("-fx-border-color: #0000ff; -fx-border-width: 2 0 0 0;");
+                row.setPadding(new Insets(-1, 0, 0, 0));
                 // row.setStyle("-fx-font-size: 12pt, -fx-background-color: #D0F0FFFF");
             }
             event.consume();
@@ -184,6 +191,8 @@ public class HierarchyManager {
                     HierarchyManager.handleDragDrop(hierarchy, row));
             event.consume();
         });
+
+        row.setPadding(new Insets(1, 0, 0, 0));
 
         return row;
 
@@ -202,7 +211,7 @@ public class HierarchyManager {
             MenuItem addItemItem = new MenuItem("Add " + childToAdd);
 
             // Attempt to set graphics for this menu item.
-            addItemItem.setGraphic(new ImageView(HierarchyManager.getObjectIcon(ObjectCreator.create(childToAdd, null))));
+            addItemItem.setGraphic(new ImageView(HierarchyManager.getObjectIcon(ObjectCreator.create("_" + childToAdd, null))));
 
             // Set the item's action to creating the child, with the object as its parent.
             addItemItem.setOnAction(event -> ObjectAdder.addObject(childToAdd, object));
