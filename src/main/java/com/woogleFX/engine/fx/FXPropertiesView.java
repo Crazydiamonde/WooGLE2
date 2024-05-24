@@ -82,6 +82,8 @@ public class FXPropertiesView {
                 }
             });
 
+            row.setId("notDragTarget");
+
             return row;
         });
 

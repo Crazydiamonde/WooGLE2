@@ -1,18 +1,30 @@
-.tree-table-row-cell:filled:even {
+#notDragTarget .tree-table-row-cell:filled:even {
     -fx-background-color: #f6f6f6;
 }
 
-.tree-table-row-cell:filled:odd {
+#notDragTarget .tree-table-row-cell:filled:odd {
     -fx-background-color: #ffffff;
 }
 
-.tree-table-row-cell:filled:hover {
+#notDragTarget .tree-table-row-cell:filled:hover {
     -fx-background-color: #c0e0ff;
 }
 
-.tree-table-row-cell:filled:selected .tree-table-cell {
+#notDragTarget .tree-table-row-cell:filled:selected .tree-table-cell {
     -fx-background-color: #a0b0ff;
     -fx-text-fill: #000000;
+}
+
+#dragTarget {
+    -fx-background-color: #d0e0ff;
+}
+
+#dragTarget .tree-table-cell {
+    -fx-background-color: #d0e0ff;
+    -fx-text-fill: #808080;
+    -fx-border-color: #d0e0ff;
+    -fx-border-size: 3 3 3 3;
+    -fx-padding: 0 0 1 3;
 }
 
 .button {

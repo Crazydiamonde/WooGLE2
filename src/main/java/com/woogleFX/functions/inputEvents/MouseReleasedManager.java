@@ -6,6 +6,7 @@ import com.woogleFX.engine.fx.FXCanvas;
 import com.woogleFX.engine.fx.FXContainers;
 import com.woogleFX.engine.fx.FXScene;
 import com.woogleFX.engine.SelectionManager;
+import com.woogleFX.functions.HierarchyManager;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
 import com.woogleFX.functions.undoHandling.UndoManager;
@@ -27,6 +28,10 @@ public class MouseReleasedManager {
     public static void eventMouseReleased(MouseEvent event) {
 
         WorldLevel level = LevelManager.getLevel();
+
+        System.out.println("here");
+
+        if (HierarchyManager.getDragSourceRow() != null) HierarchyManager.getDragSourceRow().setId("notDragTarget");
 
         // If the mouse was released inside the editor window:
         if (event.getButton() == MouseButton.PRIMARY

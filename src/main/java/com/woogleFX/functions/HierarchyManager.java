@@ -40,6 +40,12 @@ public class HierarchyManager {
     }
 
 
+    private static TreeTableRow<EditorObject> dragSourceRow;
+    public static TreeTableRow<EditorObject> getDragSourceRow() {
+        return dragSourceRow;
+    }
+
+
     public static void updateNameCell(TreeTableCell<EditorObject, String> cell, String item, boolean empty) {
 
         if (empty) {
@@ -104,12 +110,9 @@ public class HierarchyManager {
     }
 
 
-    public static boolean handleDragDrop(TreeTableView<EditorObject> hierarchy, TreeTableRow<EditorObject> row) {
-
-        if (row.isEmpty()) return false;
+    public static boolean handleDragDrop(TreeTableView<EditorObject> hierarchy, int toIndex) {
 
         int fromIndex = oldDropIndex;
-        int toIndex = row.getIndex();
 
         int direction = (int)Math.signum(toIndex - fromIndex);
         if (direction == 0) return false;
@@ -145,7 +148,7 @@ public class HierarchyManager {
 
     public static TreeTableRow<EditorObject> createRow(TreeTableView<EditorObject> hierarchy) {
 
-        final TreeTableRow<EditorObject> row = new TreeTableRow<>();
+        TreeTableRow<EditorObject> row = new TreeTableRow<>();
 
         row.setOnMousePressed(event -> {
             if (hierarchy.getTreeItem(row.getIndex()) != null) {
@@ -170,26 +173,47 @@ public class HierarchyManager {
             oldDropIndex = row.getIndex();
             event.consume();
 
+            dragSourceRow = row;
+
+            row.setId("dragTarget");
+
         });
 
         row.setOnDragExited(event -> {
             // row.setStyle("");
             row.setStyle("-fx-border-width: 0 0 0 0;");
+            row.setTranslateY(0);
             row.setPadding(new Insets(1, 0, 0, 0));
         });
 
         row.setOnDragOver(event -> {
             if (event.getDragboard().hasString() && row.getTreeItem() != null) {
+
+                if (event.getY() + row.getTranslateY() >= 9) {
+                    row.setStyle("-fx-border-color: #a0a0ff; -fx-border-width: 0 0 2 0;");
+                    row.setTranslateY(1);
+                    row.setPadding(new Insets(0, 0, 0, 0));
+                } else {
+                    row.setStyle("-fx-border-color: #a0a0ff; -fx-border-width: 2 0 0 0;");
+                    row.setTranslateY(-1);
+                    row.setPadding(new Insets(0, 0, 0, 0));
+                }
+
+                row.toFront();
+
                 event.acceptTransferModes(TransferMode.MOVE);
-                row.setStyle("-fx-border-color: #0000ff; -fx-border-width: 2 0 0 0;");
-                row.setPadding(new Insets(-1, 0, 0, 0));
+
             }
             event.consume();
         });
 
         row.setOnDragDropped(event -> {
-            event.setDropCompleted(event.getDragboard().hasString() &&
-                    HierarchyManager.handleDragDrop(hierarchy, row));
+            dragSourceRow.setId("notDragTarget");
+            if (!row.isEmpty()) {
+                int toIndex = row.getIndex();
+                if (event.getY() + row.getTranslateY() >= 9) toIndex += 1;
+                event.setDropCompleted(event.getDragboard().hasString() && handleDragDrop(hierarchy, toIndex));
+            }
             event.consume();
         });
 
