@@ -21,4 +21,10 @@ public class HierarchyDragAction extends UserAction {
         this.toPosition = toPosition;
     }
 
+
+    @Override
+    public UserAction getInverse() {
+        return new HierarchyDragAction(getObject(), toPosition, fromPosition);
+    }
+
 }

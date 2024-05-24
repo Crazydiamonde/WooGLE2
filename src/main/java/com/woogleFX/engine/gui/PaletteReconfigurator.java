@@ -122,7 +122,7 @@ public class PaletteReconfigurator extends Application {
                         try {
                             ball = FileManager.openBall(ballName, ballVersion);
                         } catch (ParserConfigurationException | SAXException | IOException e) {
-                            throw new RuntimeException(e);
+                            ball = null;
                         }
 
                         for (EditorObject resrc : FileManager.commonBallResrcData) {
@@ -145,7 +145,7 @@ public class PaletteReconfigurator extends Application {
             try {
                 FileManager.saveProperties();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Alarms.errorMessage(e);
             }
 
             stage.close();

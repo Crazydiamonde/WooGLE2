@@ -28,4 +28,11 @@ public class AttributeChangeAction extends UserAction {
         this.oldValue = oldValue;
         this.newValue = newValue;
     }
+
+
+    @Override
+    public UserAction getInverse() {
+        return new AttributeChangeAction(getObject(), attributeName, newValue, oldValue);
+    }
+
 }

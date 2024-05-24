@@ -33,13 +33,13 @@ public class LevelTab extends Tab {
     public static final int UNSAVED_CHANGES = 1;
     public static final int UNSAVED_CHANGES_UNMODIFIABLE = 2;
 
-    private static final Image noChangesImageOld;
-    private static final Image changesImageOld;
-    private static final Image changesUnmodifiableImageOld;
+    private static Image noChangesImageOld;
+    private static Image changesImageOld;
+    private static Image changesUnmodifiableImageOld;
 
-    private static final Image noChangesImageNew;
-    private static final Image changesImageNew;
-    private static final Image changesUnmodifiableImageNew;
+    private static Image noChangesImageNew;
+    private static Image changesImageNew;
+    private static Image changesUnmodifiableImageNew;
 
     static {
         try {
@@ -52,8 +52,8 @@ public class LevelTab extends Tab {
             changesImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_new.png");
             changesUnmodifiableImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_new.png");
 
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (FileNotFoundException ignored) {
+
         }
     }
 

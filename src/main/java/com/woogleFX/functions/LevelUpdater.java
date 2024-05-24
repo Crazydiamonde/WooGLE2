@@ -1,5 +1,7 @@
 package com.woogleFX.functions;
 
+import com.woogleFX.editorObjects.EditorAttribute;
+import com.woogleFX.editorObjects.InputField;
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.engine.fx.FXLevelSelectPane;
 import com.woogleFX.engine.fx.FXStage;
@@ -35,21 +37,62 @@ public class LevelUpdater {
 
     public static void saveLevel(WorldLevel level) {
         GameVersion version = level.getVersion();
-        saveSpecificLevel(level, version);
-        if (level.getEditingStatus() != LevelTab.NO_UNSAVED_CHANGES) {
-            level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
+        if (saveSpecificLevel(level, version)) {
+            if (level.getEditingStatus() != LevelTab.NO_UNSAVED_CHANGES) {
+                level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
+            }
         }
     }
 
 
-    public static void saveSpecificLevel(WorldLevel level, GameVersion version) {
+    private static boolean verifySingleObject(EditorObject object) {
+        for (EditorAttribute attribute : object.getAttributes())
+            if (!InputField.verify(object, attribute.getType(), attribute.stringValue()))
+                return false;
+        return true;
+    }
+
+
+    private static boolean verifyAllObjects(ArrayList<EditorObject> editorObjects) {
+        for (EditorObject object : editorObjects) if (!verifySingleObject(object)) return false;
+        return true;
+    }
+
+
+    private static boolean verifyEntireLevel(WorldLevel level) {
+        return verifyAllObjects(level.getScene()) &&
+                verifyAllObjects(level.getLevel()) &&
+                verifyAllObjects(level.getResources()) &&
+                verifyAllObjects(level.getText()) &&
+                verifyAllObjects(level.getAddin());
+    }
+
+
+    public static boolean saveSpecificLevel(WorldLevel level, GameVersion version) {
+
+        boolean okayToSave = true;
+
+        // Check for errors in level objects
+        if (!verifyEntireLevel(level)) {
+            // Fail to save
+            Alarms.errorMessage("Level could not be verified");
+            okayToSave = false;
+        }
+
+        // TODO: check for game errors (stuff like there being a levelexit but no pipe)
+
+        if (!okayToSave) return false;
+
         try {
             String dir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
             LevelWriter.saveAsXML(level, dir + "\\res\\levels\\" + level.getLevelName(),
                     version, false, true);
+            return true;
         } catch (IOException e) {
             Alarms.errorMessage(e);
+            return false;
         }
+
     }
 
 
@@ -58,8 +101,9 @@ public class LevelUpdater {
         for (Tab tab : FXLevelSelectPane.getLevelSelectPane().getTabs().toArray(new Tab[0])) {
             LevelTab levelTab = (LevelTab) tab;
             if (levelTab.getLevel().getEditingStatus() == LevelTab.UNSAVED_CHANGES) {
-                saveSpecificLevel(levelTab.getLevel(), levelTab.getLevel().getVersion());
-                levelTab.getLevel().setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, false);
+                if (saveSpecificLevel(levelTab.getLevel(), levelTab.getLevel().getVersion())) {
+                    levelTab.getLevel().setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, false);
+                }
             }
         }
         FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(selectedIndex);

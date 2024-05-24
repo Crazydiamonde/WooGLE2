@@ -314,8 +314,8 @@ public class FXPropertiesView {
                             // Set width depending on height
                             graphic.setFitWidth(graphic.getImage().getWidth() * 17 / graphic.getImage().getHeight());
                             label.setGraphic(graphic);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                        } catch (Exception ignored) {
+
                         }
 
                         setImageItem.setGraphic(label);

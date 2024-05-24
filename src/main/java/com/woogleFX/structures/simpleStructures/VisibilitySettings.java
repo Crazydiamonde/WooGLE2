@@ -8,25 +8,25 @@ import java.io.FileNotFoundException;
 
 public class VisibilitySettings {
 
-    private static final Image showHideAnim0;
-    private static final Image showHideAnim;
-    private static final Image showHideCam0;
-    private static final Image showHideCam1;
-    private static final Image showHideForcefields0;
-    private static final Image showHideForcefields1;
-    private static final Image showHideGeometry0;
-    private static final Image showHideGeometry1;
-    private static final Image showHideGoobs0;
-    private static final Image showHideGoobs1;
-    private static final Image showHideGoobs2;
-    private static final Image showHideImages0;
-    private static final Image showHideImages1;
-    private static final Image showHideLabels0;
-    private static final Image showHideLabels1;
-    private static final Image showHideParticles0;
-    private static final Image showHideParticles1;
-    private static final Image showHideBGColor0;
-    private static final Image showHideBGColor1;
+    private static Image showHideAnim0;
+    private static Image showHideAnim;
+    private static Image showHideCam0;
+    private static Image showHideCam1;
+    private static Image showHideForcefields0;
+    private static Image showHideForcefields1;
+    private static Image showHideGeometry0;
+    private static Image showHideGeometry1;
+    private static Image showHideGoobs0;
+    private static Image showHideGoobs1;
+    private static Image showHideGoobs2;
+    private static Image showHideImages0;
+    private static Image showHideImages1;
+    private static Image showHideLabels0;
+    private static Image showHideLabels1;
+    private static Image showHideParticles0;
+    private static Image showHideParticles1;
+    private static Image showHideBGColor0;
+    private static Image showHideBGColor1;
 
     static {
         try {
@@ -49,8 +49,8 @@ public class VisibilitySettings {
             showHideParticles1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png");
             showHideBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
             showHideBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (FileNotFoundException ignored) {
+
         }
     }
 

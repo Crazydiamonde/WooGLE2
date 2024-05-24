@@ -3,6 +3,7 @@ package com.woogleFX.engine.fx;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.engine.SelectionManager;
+import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.functions.*;
@@ -304,7 +305,8 @@ public class FXEditorButtons {
                 try {
                     _ball = FileManager.openBall(paletteBall, version);
                 } catch (ParserConfigurationException | SAXException | IOException e) {
-                    throw new RuntimeException(e);
+                    Alarms.errorMessage(e);
+                    return;
                 }
 
                 for (EditorObject resrc : FileManager.commonBallResrcData) {

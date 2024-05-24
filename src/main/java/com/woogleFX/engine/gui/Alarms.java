@@ -144,25 +144,29 @@ public class Alarms {
 
     public static void askForLevelName(String purpose, GameVersion version) {
 
-        String titleText = "";
+        String titleText;
+        String confirmText;
 
-        String confirmText = "OK";
         switch (purpose) {
             case "new" -> {
-                confirmText = "Create";
                 titleText = "New level name (directory name):";
+                confirmText = "Create";
             }
             case "clone" -> {
-                confirmText = "Clone";
                 titleText = "New level name (directory name):";
+                confirmText = "Clone";
             }
             case "changeName" -> {
-                confirmText = "Rename";
                 titleText = "New level name (directory name):";
+                confirmText = "Rename";
             }
             case "delete" -> {
-                confirmText = "Delete";
                 titleText = "Enter level name to confirm:";
+                confirmText = "Delete";
+            }
+            default -> {
+                titleText = "";
+                confirmText = "OK";
             }
         }
 

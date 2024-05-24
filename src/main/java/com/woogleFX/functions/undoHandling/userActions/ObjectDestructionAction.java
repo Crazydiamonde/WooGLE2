@@ -15,4 +15,10 @@ public class ObjectDestructionAction extends UserAction {
         this.position = position;
     }
 
+
+    @Override
+    public UserAction getInverse() {
+        return new ObjectCreationAction(getObject(), position);
+    }
+
 }

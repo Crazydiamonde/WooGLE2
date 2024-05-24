@@ -8,8 +8,13 @@ import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 import com.woogleFX.structures.WorldLevel;
 import javafx.scene.control.TreeItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EditorObject {
+
+    public static final Logger logger = LoggerFactory.getLogger(EditorObject.class);
+
 
     /** The name that World of Goo assigns to this object.
      * This is the same for every object of the same type. */
@@ -81,7 +86,8 @@ public class EditorObject {
     }
     public final EditorAttribute getAttribute(String name) {
         for (EditorAttribute attribute : attributes) if (attribute.getName().equals(name)) return attribute;
-        throw new RuntimeException("Accessed invalid attribute " + name + " (for " + type + ")");
+        logger.error("Accessed invalid attribute " + name + " (for " + type + ")");
+        return EditorAttribute.NULL;
     }
     public final void setAttribute(String name, Object value) {
         getAttribute(name).setValue(String.valueOf(value));

@@ -2,10 +2,10 @@ package com.woogleFX.functions.undoHandling.userActions;
 
 import com.woogleFX.editorObjects.EditorObject;
 
-public class UserAction {
+public abstract class UserAction {
 
     private final EditorObject object;
-    public EditorObject getObject() {
+    public final EditorObject getObject() {
         return object;
     }
 
@@ -13,5 +13,8 @@ public class UserAction {
     public UserAction(EditorObject object) {
         this.object = object;
     }
+
+
+    public abstract UserAction getInverse();
 
 }

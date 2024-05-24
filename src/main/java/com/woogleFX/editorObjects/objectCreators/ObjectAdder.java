@@ -113,7 +113,7 @@ public class ObjectAdder {
 
             case "textstring" -> level.getTextObject();
 
-            default -> throw new RuntimeException("Invalid object " + name);
+            default -> null;
 
         };
 
