@@ -34,8 +34,8 @@ public class MouseWheelMovedManager {
         double mouseX = e.getX();
         double mouseY = e.getY() - FXCanvas.getMouseYOffset();
 
-        if (oldScaleX * amt > 0.001 || oldScaleX * amt < 1000 ||
-            oldScaleY * amt > 0.001 || oldScaleY * amt < 1000) return;
+        if (oldScaleX * amt < 0.001 || oldScaleX * amt > 1000 ||
+            oldScaleY * amt < 0.001 || oldScaleY * amt > 1000) return;
 
         double newScaleX = oldScaleX * amt;
         double newScaleY = oldScaleY * amt;
