@@ -161,7 +161,7 @@ public class BallInstance extends EditorObject {
                 double layer = part.getAttribute("layer").doubleValue();
                 int i = 0;
 
-                while (i < orderedParts.size() && orderedParts.get(i).getAttribute("layer").doubleValue() < layer) i++;
+                while (i < orderedParts.size() && orderedParts.get(i).getAttribute("layer").doubleValue() <= layer) i++;
 
                 orderedParts.add(i, part);
 
@@ -419,7 +419,7 @@ public class BallInstance extends EditorObject {
                 return scale;
             }
             public double getDepth() {
-                return part.getAttribute("layer").doubleValue() + 0.000001;
+                return 0.000001;
             }
             public Image getImage() {
                 return img;
@@ -484,7 +484,7 @@ public class BallInstance extends EditorObject {
                 return scale;
             }
             public double getDepth() {
-                return part.getAttribute("layer").doubleValue() + 0.000002;
+                return 0.000001;
             }
             public Image getImage() {
                 return pupilImg;

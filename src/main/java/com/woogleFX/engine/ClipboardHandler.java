@@ -3,6 +3,8 @@ package com.woogleFX.engine;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects.EditorAttribute;
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.functions.LevelManager;
+import com.woogleFX.structures.WorldLevel;
 
 public class ClipboardHandler {
 
@@ -40,7 +42,23 @@ public class ClipboardHandler {
                     }
                     currentWord = new StringBuilder();
                 } else if (part == '<') {
-                    object = ObjectCreator.create(currentWord.toString(), null);
+
+                    WorldLevel level = LevelManager.getLevel();
+
+                    boolean okayToBeChild = level.getSelected() != null && level.getSelected().getParent() != null;
+
+                    if (okayToBeChild) {
+                        okayToBeChild = false;
+                        for (String possibleChild : level.getSelected().getParent().getPossibleChildren()) {
+                            if (possibleChild.contentEquals(currentWord)) {
+                                okayToBeChild = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    EditorObject parent = okayToBeChild ? level.getSelected().getParent() : null;
+                    object = ObjectCreator.create(currentWord.toString(), parent);
                     currentWord = new StringBuilder();
                     settingAttribute = true;
                 } else {

@@ -60,7 +60,7 @@ public class Renderer {
                                                        ObjectComponent objectComponent) {
 
         int i = 0;
-        while (i < objectComponents.size() && objectComponents.get(i).getDepth() < objectComponent.getDepth()) {
+        while (i < objectComponents.size() && objectComponents.get(i).getDepth() <= objectComponent.getDepth()) {
             i++;
         }
 

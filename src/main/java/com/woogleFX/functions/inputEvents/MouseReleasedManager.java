@@ -29,8 +29,6 @@ public class MouseReleasedManager {
 
         WorldLevel level = LevelManager.getLevel();
 
-        System.out.println("here");
-
         if (HierarchyManager.getDragSourceRow() != null) HierarchyManager.getDragSourceRow().setId("notDragTarget");
 
         // If the mouse was released inside the editor window:

@@ -33,25 +33,8 @@ public class ObjectManager {
         EditorObject absoluteParent = LevelManager.getLevel().getSelected();
         while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
 
-        if (absoluteParent instanceof Scene) {
-            level.getScene().add(object);
-        }
-        if (absoluteParent instanceof Level) {
-            level.getLevel().add(object);
-        }
-
-        if (object instanceof BallInstance ballInstance) {
-            for (EditorObject strandObject : level.getLevel()) {
-                if (strandObject instanceof Strand strand) {
-                    if (ballInstance.getAttribute("id").equals(strand.getAttribute("gb1"))) {
-                        strand.setGoo1(ballInstance);
-                    }
-                    if (ballInstance.getAttribute("id").equals(strand.getAttribute("gb2"))) {
-                        strand.setGoo2(ballInstance);
-                    }
-                }
-            }
-        }
+        if (absoluteParent instanceof Scene) level.getScene().add(object);
+        if (absoluteParent instanceof Level) level.getLevel().add(object);
 
         if (object instanceof BallInstance ballInstance) {
 
@@ -61,11 +44,13 @@ public class ObjectManager {
 
                 String gb1 = strand.getAttribute("gb1").stringValue();
                 if (gb1.equals(id)) {
+                    strand.setGoo1(ballInstance);
                     strand.update();
                 }
 
                 String gb2 = strand.getAttribute("gb2").stringValue();
                 if (gb2.equals(id)) {
+                    strand.setGoo2(ballInstance);
                     strand.update();
                 }
 

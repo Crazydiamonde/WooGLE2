@@ -16,13 +16,13 @@ import javafx.scene.input.ClipboardContent;
 
 public class ClipboardManager {
 
-
     public static void cut() {
         if (LevelManager.getLevel().getSelected() != null) {
             copy();
             ObjectManager.delete(LevelManager.getLevel());
         }
     }
+
 
     public static void copy() {
         if (LevelManager.getLevel().getSelected() != null && FXPropertiesView.getPropertiesView().getEditingCell() == null) {
@@ -33,54 +33,35 @@ public class ClipboardManager {
         }
     }
 
+
     public static void paste() {
 
         WorldLevel level = LevelManager.getLevel();
+        if (level == null) return;
 
-        if (FXPropertiesView.getPropertiesView().getEditingCell() == null) {
-            String clipboard = Clipboard.getSystemClipboard().getString();
-            if (clipboard != null) {
-                EditorObject object = ClipboardHandler.importFromClipboardString(clipboard);
-                if (object != null) {
+        if (FXPropertiesView.getPropertiesView().getEditingCell() != null) return;
 
-                    boolean okayToBeChild = level.getSelected() != null && level.getSelected().getParent() != null;
+        String clipboard = Clipboard.getSystemClipboard().getString();
+        if (clipboard == null) return;
 
-                    if (okayToBeChild) {
-                        okayToBeChild = false;
-                        for (String possibleChild : level.getSelected().getParent().getPossibleChildren()) {
-                            if (possibleChild.equals(object.getType())) {
-                                okayToBeChild = true;
-                                break;
-                            }
-                        }
-                    }
+        EditorObject object = ClipboardHandler.importFromClipboardString(clipboard);
+        if (object == null) return;
 
-                    if (okayToBeChild) {
-                        object.setParent(level.getSelected().getParent());
-                    } else {
-                        switch (object.getClass().getPackage().getName()) {
-                            case "com.WorldOfGoo.Scene" -> object.setParent(level.getSceneObject());
-                            case "com.WorldOfGoo.Level" -> object.setParent(level.getLevelObject());
-                            case "com.WorldOfGoo.Resrc" -> object.setParent(level.getResourcesObject());
-                        }
-                    }
-                    if (object instanceof BallInstance) {
-                        ObjectAdder.fixGooBall(object);
-                        for (EditorObject editorObject : level.getLevel()) {
-                            if (editorObject instanceof Strand strand) {
-                                strand.update();
-                            }
-                        }
-                    }
-                    // object.getParent().getChildren().add(0, object);
-                    ObjectManager.create(level, object, 0);
-                    SelectionManager.setSelected(object);
-                    UndoManager.registerChange(new ObjectCreationAction(object, object.getParent().getChildren().indexOf(object)));
-                    level.redoActions.clear();
-                    FXHierarchy.getHierarchy().refresh();
+        if (object instanceof BallInstance) {
+            ObjectAdder.fixGooBall(object);
+            for (EditorObject editorObject : level.getLevel()) {
+                if (editorObject instanceof Strand strand) {
+                    strand.update();
                 }
             }
         }
+
+        ObjectManager.create(level, object, 0);
+        SelectionManager.setSelected(object);
+        UndoManager.registerChange(new ObjectCreationAction(object, object.getParent().getChildren().indexOf(object)));
+        level.redoActions.clear();
+        FXHierarchy.getHierarchy().refresh();
+
     }
 
 }
