@@ -279,7 +279,7 @@ public class FXEditorButtons {
 
             LevelManager.getLevel().getLevel().add(ballInstance);
 
-            ObjectAdder.addAnything(ballInstance, LevelManager.getLevel().getLevelObject());
+            ObjectAdder.addAnything(ballInstance);
 
         });
         return idk;

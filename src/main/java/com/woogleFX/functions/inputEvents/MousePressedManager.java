@@ -106,6 +106,8 @@ public class MousePressedManager {
         if (level.getSelected() != null &&
                 level.getSelected().containsObjectPosition(dragSettings.getObjectComponent())) {
 
+            if (!dragSettings.getObjectComponent().isDraggable()) return;
+
             if (dragSettings.getType() == DragSettings.MOVE) FXScene.getScene().setCursor(Cursor.MOVE);
             SelectionManager.setDragSettings(dragSettings);
 

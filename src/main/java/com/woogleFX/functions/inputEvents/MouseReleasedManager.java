@@ -93,7 +93,7 @@ public class MouseReleasedManager {
                                 strand.setAttribute("gb2", ball.getAttribute("id").stringValue());
 
                                 level.getLevel().add(strand);
-                                ObjectAdder.addAnything(strand, level.getLevelObject());
+                                ObjectAdder.addAnything(strand);
 
                                 SelectionManager.getStrand1Gooball().update();
                                 ball.update();

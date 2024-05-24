@@ -12,23 +12,32 @@ import javafx.scene.paint.Paint;
 
 public class Vertex extends EditorObject {
 
-    private Vertex previous = null;
-    public void setPrevious(Vertex previous) {
-        this.previous = previous;
-    }
-
-
     public Vertex(EditorObject _parent) {
         super(_parent, "Vertex", "level\\vertex");
 
         addAttribute("x", InputField.NUMBER).setDefaultValue("0").assertRequired();
         addAttribute("y", InputField.NUMBER).setDefaultValue("0").assertRequired();
 
+        Vertex thisVertex = this;
+
         addObjectComponent(new RectangleComponent() {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
             public void setX(double x) {
+
+                EditorObject pipe = null;
+                for (EditorObject editorObject : LevelManager.getLevel().getLevelObject().getChildren())
+                    if (editorObject instanceof Pipe) {
+                        pipe = editorObject;
+                        break;
+                    }
+
+                if (pipe == null) return;
+
+                EditorObject previous;
+                if (pipe.getChildren().indexOf(thisVertex) == 0) previous = null;
+                else previous = pipe.getChildren().get(pipe.getChildren().indexOf(thisVertex) - 1);
 
                 if (previous != null) {
                     double previousX = previous.getAttribute("x").doubleValue();
@@ -47,6 +56,19 @@ public class Vertex extends EditorObject {
                 return -getAttribute("y").doubleValue();
             }
             public void setY(double y) {
+
+                EditorObject pipe = null;
+                for (EditorObject editorObject : LevelManager.getLevel().getLevelObject().getChildren())
+                    if (editorObject instanceof Pipe) {
+                        pipe = editorObject;
+                        break;
+                    }
+
+                if (pipe == null) return;
+
+                EditorObject previous;
+                if (pipe.getChildren().indexOf(thisVertex) == 0) previous = null;
+                else previous = pipe.getChildren().get(pipe.getChildren().indexOf(thisVertex) - 1);
 
                 if (previous != null) {
                     double previousY = -previous.getAttribute("y").doubleValue();

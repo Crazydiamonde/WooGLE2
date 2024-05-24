@@ -7,7 +7,6 @@ import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.functions.ObjectManager;
 import com.woogleFX.functions.undoHandling.UndoManager;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.functions.undoHandling.userActions.ObjectCreationAction;
 import com.woogleFX.structures.WorldLevel;
@@ -70,12 +69,14 @@ public class ObjectAdder {
                  */
                 EditorObject pipe = ObjectCreator.create("pipe", LevelManager.getLevel().getLevelObject());
                 EditorObject vertex1 = ObjectCreator.create("Vertex", pipe);
+                if (vertex1 == null) return;
                 vertex1.setAttribute("x", levelexit.getAttribute("pos").positionValue().getX());
                 vertex1.setAttribute("y", levelexit.getAttribute("pos").positionValue().getY());
+
                 EditorObject vertex2 = ObjectCreator.create("Vertex", pipe);
+                if (vertex2 == null) return;
                 vertex2.setAttribute("x", closestPoint.getX());
                 vertex2.setAttribute("y", closestPoint.getY());
-                ((Vertex) vertex2).setPrevious((Vertex) vertex1);
 
                 LevelManager.getLevel().getLevel().add(pipe);
                 LevelManager.getLevel().getLevel().add(vertex1);
@@ -118,7 +119,7 @@ public class ObjectAdder {
         };
 
         EditorObject obj = ObjectCreator.create(name, parent);
-        adjustObject(obj, parent);
+        adjustObject(obj);
 
         if (parent instanceof Scene) level.getScene().add(obj);
         else if (parent instanceof Level) level.getLevel().add(obj);
@@ -126,14 +127,14 @@ public class ObjectAdder {
         else if (parent instanceof Addin) level.getAddin().add(obj);
         else if (parent instanceof TextStrings) level.getText().add(obj);
 
-        addAnything(obj, parent);
+        addAnything(obj);
 
         return obj;
     }
 
 
-    public static void addAnything(EditorObject obj, EditorObject parent) {
-        adjustObject(obj, parent);
+    public static void addAnything(EditorObject obj) {
+        adjustObject(obj);
 
         FXHierarchy.getHierarchy().getSelectionModel().select(obj.getTreeItem());
         obj.update();
@@ -217,7 +218,7 @@ public class ObjectAdder {
     }
 
 
-    private static void adjustObject(EditorObject object, EditorObject parent) {
+    private static void adjustObject(EditorObject object) {
         if (object instanceof BallInstance ballInstance) {
             ballInstance.setAttribute("x", FXCanvas.getScreenCenter().getX());
             ballInstance.setAttribute("y", -FXCanvas.getScreenCenter().getY());
@@ -241,29 +242,6 @@ public class ObjectAdder {
         } else if (object instanceof Hinge hinge) {
             hinge.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
         } else if (object instanceof Vertex vertex) {
-            // get the previous vertex before this one
-            EditorObject pipe = null;
-            if (parent instanceof Pipe) {
-                pipe = parent;
-            } else {
-                for (EditorObject child : parent.getChildren()) {
-                    if (child instanceof Pipe) {
-                        pipe = child;
-                        break;
-                    }
-                }
-                if (pipe == null) {
-                    Alarms.errorMessage("You must create a pipe to add the vertex to.");
-                    return;
-                }
-            }
-            Vertex previous = null;
-            for (EditorObject child : pipe.getChildren()) {
-                if (child instanceof Vertex) {
-                    previous = (Vertex) child;
-                }
-            }
-            vertex.setPrevious(previous);
             vertex.setAttribute("x", FXCanvas.getScreenCenter().getX());
             vertex.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         } else if (object instanceof Fire fire) {
