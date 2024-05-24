@@ -1,16 +1,16 @@
-#notDragTarget .tree-table-row-cell:filled:even {
+.tree-table-row-cell:filled:even {
     -fx-background-color: #f6f6f6;
 }
 
-#notDragTarget .tree-table-row-cell:filled:odd {
+.tree-table-row-cell:filled:odd {
     -fx-background-color: #ffffff;
 }
 
-#notDragTarget .tree-table-row-cell:filled:hover {
+.tree-table-row-cell:filled:hover {
     -fx-background-color: #c0e0ff;
 }
 
-#notDragTarget .tree-table-row-cell:filled:selected .tree-table-cell {
+.tree-table-row-cell:filled:selected .tree-table-cell {
     -fx-background-color: #a0b0ff;
     -fx-text-fill: #000000;
 }
