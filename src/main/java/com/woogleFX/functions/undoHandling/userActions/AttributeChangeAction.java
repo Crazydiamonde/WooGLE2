@@ -1,30 +1,17 @@
 package com.woogleFX.functions.undoHandling.userActions;
 
-import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.editorObjects.EditorAttribute;
+import com.woogleFX.engine.fx.FXHierarchy;
+import com.woogleFX.engine.fx.FXPropertiesView;
 
 public class AttributeChangeAction extends UserAction {
 
-    private final String attributeName;
-    public String getAttributeName() {
-        return attributeName;
-    }
-
-
+    private final EditorAttribute attribute;
     private final String oldValue;
-    public String getOldValue() {
-        return oldValue;
-    }
-
-
     private final String newValue;
-    public String getNewValue() {
-        return newValue;
-    }
-
-
-    public AttributeChangeAction(EditorObject object, String attributeName, String oldValue, String newValue) {
-        super(object);
-        this.attributeName = attributeName;
+    public AttributeChangeAction(EditorAttribute attribute, String oldValue, String newValue) {
+        super(null);
+        this.attribute = attribute;
         this.oldValue = oldValue;
         this.newValue = newValue;
     }
@@ -32,7 +19,15 @@ public class AttributeChangeAction extends UserAction {
 
     @Override
     public UserAction getInverse() {
-        return new AttributeChangeAction(getObject(), attributeName, newValue, oldValue);
+        return new AttributeChangeAction(attribute, newValue, oldValue);
+    }
+
+
+    @Override
+    public void execute() {
+        attribute.setValue(newValue);
+        FXHierarchy.getHierarchy().refresh();
+        FXPropertiesView.getPropertiesView().refresh();
     }
 
 }

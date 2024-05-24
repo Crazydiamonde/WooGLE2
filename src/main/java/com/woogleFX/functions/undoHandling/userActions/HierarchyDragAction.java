@@ -1,20 +1,13 @@
 package com.woogleFX.functions.undoHandling.userActions;
 
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.engine.fx.FXHierarchy;
+import com.woogleFX.functions.HierarchyManager;
 
 public class HierarchyDragAction extends UserAction {
 
     private final int toPosition;
-    public int getToPosition() {
-        return toPosition;
-    }
-
-
     private final int fromPosition;
-    public int getFromPosition() {
-        return fromPosition;
-    }
-
     public HierarchyDragAction(EditorObject object, int fromPosition, int toPosition) {
         super(object);
         this.fromPosition = fromPosition;
@@ -24,7 +17,19 @@ public class HierarchyDragAction extends UserAction {
 
     @Override
     public UserAction getInverse() {
-        return new HierarchyDragAction(getObject(), toPosition, fromPosition);
+
+        int extra;
+        if (toPosition > fromPosition) extra = getObject().getChildren().size();
+        else extra = 0;
+
+        return new HierarchyDragAction(getObject(), toPosition - extra, fromPosition);
+    }
+
+
+    @Override
+    public void execute() {
+        HierarchyManager.setOldDropIndex(fromPosition);
+        HierarchyManager.handleDragDrop(FXHierarchy.getHierarchy(), toPosition);
     }
 
 }

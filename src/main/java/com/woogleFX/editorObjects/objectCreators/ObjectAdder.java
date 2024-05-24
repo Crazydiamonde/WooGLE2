@@ -141,7 +141,6 @@ public class ObjectAdder {
         FXPropertiesView.changeTableView(LevelManager.getLevel().getSelected());
 
         UndoManager.registerChange(new ObjectCreationAction(obj, obj.getParent().getChildren().indexOf(obj)));
-        LevelManager.getLevel().redoActions.clear();
     }
 
     /**

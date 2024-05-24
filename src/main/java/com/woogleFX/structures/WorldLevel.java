@@ -150,6 +150,15 @@ public class WorldLevel {
     }
 
 
+    private int lastSavedUndoPosition = 0;
+    public int getLastSavedUndoPosition() {
+        return lastSavedUndoPosition;
+    }
+    public void setLastSavedUndoPosition(int position) {
+        this.lastSavedUndoPosition = position;
+    }
+
+
     private void cameraToMiddleOfLevel() {
 
         EditorObject sceneObject = scene.get(0);
@@ -232,6 +241,7 @@ public class WorldLevel {
                     } catch (Exception e) {
                         LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text").stringValue() + "\" (version " + version + ")"));
                         EditorObject string = ObjectCreator.create("string", text.get(0));
+                        if (string == null) continue;
                         string.setAttribute("id", signpost.getAttribute("text").stringValue());
                     }
                 }

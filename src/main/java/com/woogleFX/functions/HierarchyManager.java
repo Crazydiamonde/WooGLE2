@@ -6,6 +6,7 @@ import com.woogleFX.editorObjects.InputField;
 import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.SelectionManager;
+import com.woogleFX.engine.fx.FXHierarchy;
 import com.woogleFX.engine.fx.FXPropertiesView;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.functions.undoHandling.UndoManager;
@@ -37,6 +38,9 @@ public class HierarchyManager {
     private static int oldDropIndex;
     public static int getOldDropIndex() {
         return oldDropIndex;
+    }
+    public static void setOldDropIndex(int oldDropIndex) {
+        HierarchyManager.oldDropIndex = oldDropIndex;
     }
 
 
@@ -112,15 +116,12 @@ public class HierarchyManager {
 
     public static boolean handleDragDrop(TreeTableView<EditorObject> hierarchy, int toIndex) {
 
-        int fromIndex = oldDropIndex;
+        // TODO: give the user a way to choose if they want an object to be a child of the object above it
 
-        int direction = (int)Math.signum(toIndex - fromIndex);
-        if (direction == 0) return false;
-
-        if (direction > 0) toIndex -= 1;
+        if (toIndex == oldDropIndex) return false;
 
         EditorObject toItem = hierarchy.getTreeItem(toIndex).getValue();
-        EditorObject fromItem = hierarchy.getTreeItem(fromIndex).getValue();
+        EditorObject fromItem = hierarchy.getTreeItem(oldDropIndex).getValue();
 
         // YOU CAN'T PUT AN OBJECT INSIDE ITSELF
         if (toItem.getChildren().contains(fromItem)) return false;
@@ -137,9 +138,6 @@ public class HierarchyManager {
         fromItem.setParent(toItem.getParent(), indexOfToItem);
 
         hierarchy.getSelectionModel().select(toIndex);
-
-        UndoManager.registerChange(new HierarchyDragAction(fromItem, HierarchyManager.getOldDropIndex(), toIndex));
-        UndoManager.clearRedoActions();
 
         return true;
 
@@ -212,7 +210,12 @@ public class HierarchyManager {
             if (!row.isEmpty()) {
                 int toIndex = row.getIndex();
                 if (event.getY() + row.getTranslateY() >= 9) toIndex += 1;
-                event.setDropCompleted(event.getDragboard().hasString() && handleDragDrop(hierarchy, toIndex));
+                if (toIndex > oldDropIndex) toIndex -= 1;
+                boolean completed = handleDragDrop(hierarchy, toIndex);
+                event.setDropCompleted(event.getDragboard().hasString() && completed);
+
+                if (completed) UndoManager.registerChange(new HierarchyDragAction(FXHierarchy.getHierarchy().getTreeItem(oldDropIndex).getValue(), oldDropIndex, toIndex));
+
             }
             event.consume();
         });

@@ -59,7 +59,6 @@ public class ClipboardManager {
         ObjectManager.create(level, object, 0);
         SelectionManager.setSelected(object);
         UndoManager.registerChange(new ObjectCreationAction(object, object.getParent().getChildren().indexOf(object)));
-        level.redoActions.clear();
         FXHierarchy.getHierarchy().refresh();
 
     }

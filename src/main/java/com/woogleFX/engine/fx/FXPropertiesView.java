@@ -215,9 +215,8 @@ public class FXPropertiesView {
             if (e.getNewValue().isEmpty() || InputField.verify(SelectionManager.getSelected(), attribute.getType(), e.getNewValue())) {
 
                 // Push an attribute change to the undo buffer.
-                UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(), oldValue,
+                UndoManager.registerChange(new AttributeChangeAction(attribute, oldValue,
                         attribute.stringValue()));
-                UndoManager.clearRedoActions();
 
                 // If we have edited the name or ID of the object, change the object's "Name or
                 // ID" value.
@@ -323,9 +322,8 @@ public class FXPropertiesView {
                         setImageItem.setGraphic(label);
 
                         setImageItem.setOnAction(event -> {
-                            UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
+                            UndoManager.registerChange(new AttributeChangeAction(attribute,
                                     attribute.stringValue(), resource.getAttribute("id").stringValue()));
-                            UndoManager.clearRedoActions();
                             attribute.setValue(resource.getAttribute("id").stringValue());
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.stringValue());
@@ -345,9 +343,8 @@ public class FXPropertiesView {
                         MenuItem setImageItem = new MenuItem(ballFile.getName());
 
                         setImageItem.setOnAction(event -> {
-                            UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
+                            UndoManager.registerChange(new AttributeChangeAction(attribute,
                                     attribute.stringValue(), ballFile.getName()));
-                            UndoManager.clearRedoActions();
                             attribute.setValue(ballFile.getName());
                             if (contextMenu.isFocused()) {
                                 cell.commitEdit(attribute.stringValue());
@@ -363,9 +360,8 @@ public class FXPropertiesView {
                     MenuItem setImageItem = new MenuItem(particleType);
 
                     setImageItem.setOnAction(event -> {
-                        UndoManager.registerChange(new AttributeChangeAction(SelectionManager.getSelected(), attribute.getName(),
+                        UndoManager.registerChange(new AttributeChangeAction(attribute,
                                 attribute.stringValue(), particleType));
-                        UndoManager.clearRedoActions();
                         attribute.setValue(particleType);
                         if (contextMenu.isFocused()) {
                             cell.commitEdit(attribute.stringValue());

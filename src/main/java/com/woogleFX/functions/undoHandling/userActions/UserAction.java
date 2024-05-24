@@ -17,4 +17,7 @@ public abstract class UserAction {
 
     public abstract UserAction getInverse();
 
+
+    public abstract void execute();
+
 }

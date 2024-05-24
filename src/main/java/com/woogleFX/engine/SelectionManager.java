@@ -1,12 +1,13 @@
 package com.woogleFX.engine;
 
+import com.woogleFX.engine.fx.FXContainers;
 import com.woogleFX.engine.fx.FXEditorButtons;
 import com.woogleFX.engine.fx.FXHierarchy;
-import com.woogleFX.functions.HierarchyManager;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorAttribute;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.simpleStructures.DragSettings;
+import javafx.scene.control.SplitPane;
 
 public class SelectionManager {
 
@@ -119,8 +120,19 @@ public class SelectionManager {
 
     public static void goToSelectedInHierarchy() {
 
+        EditorObject selected = LevelManager.getLevel().getSelected();
+        if (selected == null) {
+
+            SplitPane splitPane = FXContainers.getSplitPane();
+            double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth();
+
+            if (SelectionManager.getMouseX() < editorViewWidth)
+                FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
+
+            return;
+        }
+
         EditorObject absoluteParent = LevelManager.getLevel().getSelected();
-        if (absoluteParent == null) return;
         while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
 
         if (LevelManager.getLevel().getSelected() != null && LevelManager.getLevel().getSelected().getParent() != null) {

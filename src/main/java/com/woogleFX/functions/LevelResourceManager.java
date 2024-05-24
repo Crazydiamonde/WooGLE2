@@ -199,7 +199,6 @@ public class LevelResourceManager {
             imageResourceObject.setParent(level.getResourcesObject().getChildren().get(0), whereToPlaceResource);
 
             UndoManager.registerChange(new ImportResourceAction(imageResourceObject, imgPath));
-            level.redoActions.clear();
 
             GlobalResourceManager.addResource(imageResourceObject, level.getVersion());
 
@@ -219,7 +218,6 @@ public class LevelResourceManager {
         SelectionManager.setSelected(newTextObject);
         UndoManager.registerChange(
                 new ObjectCreationAction(newTextObject, level.getTextObject().getChildren().indexOf(newTextObject)));
-        level.redoActions.clear();
     }
 
     public static void cleanLevelResources(WorldLevel level) {
@@ -339,8 +337,7 @@ public class LevelResourceManager {
                 String oldID = music.getAttribute("id").stringValue();
                 music.setAttribute("id", soundResourceName);
                 UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
-                        new AttributeChangeAction(music, "id", oldID, soundResourceName));
-                level.redoActions.clear();
+                        new AttributeChangeAction(music.getAttribute("id"), oldID, soundResourceName));
                 return;
             }
         }
@@ -352,7 +349,6 @@ public class LevelResourceManager {
         UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                 new ObjectCreationAction(soundResourceObject, whereToPlaceResource),
                 new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
-        level.redoActions.clear();
 
     }
 
@@ -426,8 +422,7 @@ public class LevelResourceManager {
                 String oldID = music.getAttribute("id").stringValue();
                 music.setAttribute("id", soundResourceName);
                 UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
-                        new AttributeChangeAction(music, "id", oldID, soundResourceName));
-                level.redoActions.clear();
+                        new AttributeChangeAction(music.getAttribute("id"), oldID, soundResourceName));
                 return;
             }
         }
@@ -439,7 +434,6 @@ public class LevelResourceManager {
         UndoManager.registerChange(new ImportResourceAction(soundResourceObject, resrcFile.getPath()),
                 new ObjectCreationAction(soundResourceObject, whereToPlaceResource),
                 new ObjectCreationAction(musicObject, level.getLevel().size() - 1));
-        level.redoActions.clear();
 
     }
 

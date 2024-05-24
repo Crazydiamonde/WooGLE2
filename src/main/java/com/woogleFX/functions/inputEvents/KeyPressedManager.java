@@ -16,7 +16,8 @@ public class KeyPressedManager {
                 LevelUpdater.saveLevel(LevelManager.getLevel());
             }
             if (event.getCode() == KeyCode.Z) {
-                UndoManager.undo();
+                if (event.isShiftDown()) UndoManager.redo();
+                else UndoManager.undo();
             }
             if (event.getCode() == KeyCode.X) {
                 ClipboardManager.cut();

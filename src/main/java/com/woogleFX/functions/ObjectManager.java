@@ -113,7 +113,6 @@ public class ObjectManager {
         int row = parent.getChildren().indexOf(selected);
 
         UndoManager.registerChange(new ObjectDestructionAction(selected, row));
-        level.redoActions.clear();
 
         deleteItem(level, selected, false);
 
