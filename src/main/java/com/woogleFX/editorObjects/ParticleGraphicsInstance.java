@@ -68,7 +68,7 @@ public class ParticleGraphicsInstance {
                     double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
                     double velocityX = initialVelocityX + accelerationX * dt * 50;
                     double velocityY = initialVelocityY + accelerationY * dt * 50;
-                    return Math.atan2(velocityY, velocityX) - Math.PI / 2;
+                    return Math.atan2(velocityY, velocityX) + Math.PI / 2;
                 } else {
                     double dt = EditorWindow.getTimeElapsed() - creationTimestamp;
                     return Math.toRadians(-initialDisplayRotation) - rotspeed * dt;

@@ -38,7 +38,6 @@ public class LevelUpdater {
     public static void saveLevel(WorldLevel level) {
         GameVersion version = level.getVersion();
         if (saveSpecificLevel(level, version)) {
-            System.out.println(level.undoActions.size());
             level.setLastSavedUndoPosition(level.undoActions.size());
             if (level.getEditingStatus() != LevelTab.NO_UNSAVED_CHANGES) {
                 level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);

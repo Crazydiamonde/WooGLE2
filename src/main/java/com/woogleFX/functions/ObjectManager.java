@@ -1,5 +1,6 @@
 package com.woogleFX.functions;
 
+import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.fx.FXHierarchy;
 import com.woogleFX.engine.fx.FXPropertiesView;
 import com.woogleFX.engine.SelectionManager;
@@ -31,7 +32,8 @@ public class ObjectManager {
         }
 
         EditorObject absoluteParent = LevelManager.getLevel().getSelected();
-        while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+        if (absoluteParent == null) absoluteParent = ObjectCreator.getDefaultParent(object.getType());
+        else while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
 
         if (absoluteParent instanceof Scene) level.getScene().add(object);
         if (absoluteParent instanceof Level) level.getLevel().add(object);

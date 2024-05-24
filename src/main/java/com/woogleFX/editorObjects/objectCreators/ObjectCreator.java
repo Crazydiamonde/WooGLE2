@@ -19,15 +19,11 @@ public class ObjectCreator {
     private static final Logger logger = LoggerFactory.getLogger(ObjectCreator.class);
 
 
-    public static EditorObject create(String _name, EditorObject _parent) {
-
-        boolean shouldStop = _name.startsWith("_");
-        String name = shouldStop ? _name.substring(1) : _name;
-
+    public static EditorObject getDefaultParent(String name) {
 
         WorldLevel level = LevelManager.getLevel();
 
-        EditorObject parent = (_parent != null || level == null) ? _parent : switch(name) {
+        return switch(name) {
 
             case "linearforcefield", "radialforcefield", "particles",
                     "SceneLayer", "buttongroup", "button", "circle",
@@ -44,6 +40,19 @@ public class ObjectCreator {
             default -> null;
 
         };
+
+    }
+
+
+    public static EditorObject create(String _name, EditorObject _parent) {
+
+        boolean shouldStop = _name.startsWith("_");
+        String name = shouldStop ? _name.substring(1) : _name;
+
+
+        WorldLevel level = LevelManager.getLevel();
+
+        EditorObject parent = (_parent != null || level == null) ? _parent : getDefaultParent(name);
 
         EditorObject toAdd = switch (name) {
             case "addin", "Addin_addin" -> new Addin(parent);

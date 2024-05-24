@@ -747,14 +747,20 @@ public class FXEditorButtons {
 
     public static void updateAllButtons() {
 
-        // TODO better checking for edit buttons
-
         boolean inLevel = LevelManager.getLevel() != null;
+
         for (Node node : functionsToolbar.getItems()) node.setDisable(!inLevel);
         for (Node node : oldGooballsToolbar.getItems()) node.setDisable(!inLevel);
         for (Node node : newGooballsToolbar.getItems()) node.setDisable(!inLevel);
         for (Node node : nullGooballsToolbar.getItems()) node.setDisable(!inLevel);
         for (Node node : addObjectsToolbar.getItems()) node.setDisable(!inLevel);
+
+        buttonUndo.setDisable(!inLevel || LevelManager.getLevel().undoActions.isEmpty());
+        buttonRedo.setDisable(!inLevel || LevelManager.getLevel().redoActions.isEmpty());
+        buttonCut.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
+        buttonCopy.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
+        buttonPaste.setDisable(!inLevel);
+        buttonDelete.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
 
         boolean hasOld = FileManager.hasOldWOG();
         buttonNewOld.setDisable(!hasOld);
