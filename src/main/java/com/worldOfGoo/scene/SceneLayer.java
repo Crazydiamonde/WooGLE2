@@ -51,31 +51,36 @@ public class SceneLayer extends EditorObject {
 
         addObjectComponent(new ImageComponent() {
             public double getX() {
-                return getAttribute("x").doubleValue() + animx;
+                double extraX = LevelManager.getLevel().getVisibilitySettings().isShowAnimations() ? animx : 0;
+                return getAttribute("x").doubleValue() + extraX;
             }
             public void setX(double x) {
                 setAttribute("x", x);
             }
             public double getY() {
-                return -getAttribute("y").doubleValue() - animy;
+                double extraY = LevelManager.getLevel().getVisibilitySettings().isShowAnimations() ? animy : 0;
+                return -getAttribute("y").doubleValue() + extraY;
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
             public double getRotation() {
-                return -Math.toRadians(getAttribute("rotation").doubleValue() - animrotation);
+                double extraRotation = LevelManager.getLevel().getVisibilitySettings().isShowAnimations() ? animrotation : 0;
+                return -Math.toRadians(getAttribute("rotation").doubleValue() - extraRotation);
             }
             public void setRotation(double rotation) {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
             public double getScaleX() {
-                return getAttribute("scalex").doubleValue() * animscalex;
+                double extraScaleX = LevelManager.getLevel().getVisibilitySettings().isShowAnimations() ? animscalex : 1;
+                return getAttribute("scalex").doubleValue() * extraScaleX;
             }
             public void setScaleX(double scaleX) {
                 setAttribute("scalex", scaleX);
             }
             public double getScaleY() {
-                return getAttribute("scaley").doubleValue() * animscaley;
+                double extraScaleY = LevelManager.getLevel().getVisibilitySettings().isShowAnimations() ? animscaley : 1;
+                return getAttribute("scaley").doubleValue() * extraScaleY;
             }
             public void setScaleY(double scaleY) {
                 setAttribute("scaley", scaleY);

@@ -21,7 +21,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class HierarchyManager {
@@ -160,14 +159,17 @@ public class HierarchyManager {
 
         row.setOnDragDetected(event -> {
             TreeItem<EditorObject> selected2 = hierarchy.getSelectionModel().getSelectedItem();
-            if (selected2 != null) {
-                Dragboard db = hierarchy.startDragAndDrop(TransferMode.ANY);
-                ClipboardContent content = new ClipboardContent();
-                content.putString(selected2.getValue().getClass().getName());
-                db.setContent(content);
-                oldDropIndex = row.getIndex();
-                event.consume();
-            }
+            if (selected2 == null) return;
+
+            if (row.getTreeItem() == null) return;
+
+            Dragboard db = hierarchy.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(selected2.getValue().getClass().getName());
+            db.setContent(content);
+            oldDropIndex = row.getIndex();
+            event.consume();
+
         });
 
         row.setOnDragExited(event -> {
@@ -177,11 +179,10 @@ public class HierarchyManager {
         });
 
         row.setOnDragOver(event -> {
-            if (event.getDragboard().hasString()) {
+            if (event.getDragboard().hasString() && row.getTreeItem() != null) {
                 event.acceptTransferModes(TransferMode.MOVE);
                 row.setStyle("-fx-border-color: #0000ff; -fx-border-width: 2 0 0 0;");
                 row.setPadding(new Insets(-1, 0, 0, 0));
-                // row.setStyle("-fx-font-size: 12pt, -fx-background-color: #D0F0FFFF");
             }
             event.consume();
         });
@@ -211,7 +212,8 @@ public class HierarchyManager {
             MenuItem addItemItem = new MenuItem("Add " + childToAdd);
 
             // Attempt to set graphics for this menu item.
-            addItemItem.setGraphic(new ImageView(HierarchyManager.getObjectIcon(ObjectCreator.create("_" + childToAdd, null))));
+            EditorObject temporaryGraphicObject = ObjectCreator.create("_" + childToAdd, null);
+            if (temporaryGraphicObject != null) addItemItem.setGraphic(new ImageView(getObjectIcon(temporaryGraphicObject)));
 
             // Set the item's action to creating the child, with the object as its parent.
             addItemItem.setOnAction(event -> ObjectAdder.addObject(childToAdd, object));
