@@ -38,7 +38,7 @@ public class Poi extends EditorObject {
                 double zoom = getAttribute("zoom").doubleValue();
 
                 double screenWidth = aspect.equals("widescreen") ? 1007 : 800;
-                return screenWidth * zoom;
+                return screenWidth / zoom;
 
             }
             public void setWidth(double width) {
@@ -46,18 +46,18 @@ public class Poi extends EditorObject {
                 String aspect = getParent().getAttribute("aspect").stringValue();
 
                 double screenWidth = aspect.equals("widescreen") ? 1007 : 800;
-                setAttribute("zoom", width / screenWidth);
+                setAttribute("zoom", screenWidth / width);
 
             }
             public double getHeight() {
 
                 double zoom = getAttribute("zoom").doubleValue();
 
-                return 525 * zoom;
+                return 525 / zoom;
 
             }
             public void setHeight(double height) {
-                setAttribute("zoom", height / 525);
+                setAttribute("zoom", 525 / height);
             }
             public double getEdgeSize() {
                 return 1;

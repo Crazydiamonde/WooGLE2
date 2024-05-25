@@ -16,9 +16,11 @@ import com.worldOfGoo.resrc.ResrcImage;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -41,11 +43,13 @@ public class FXPropertiesView {
         TreeTableColumn<EditorAttribute, String> name = new TreeTableColumn<>();
         name.setGraphic(new Label("Name"));
         name.setCellValueFactory(param -> param.getValue().getValue().getNameProperty());
+        name.setSortable(false);
         propertiesView.getColumns().add(name);
 
         TreeTableColumn<EditorAttribute, String> value = new TreeTableColumn<>();
         value.setGraphic(new Label("Value"));
         value.setCellValueFactory(param -> param.getValue().getValue().getValueProperty());
+        value.setSortable(false);
         propertiesView.getColumns().add(value);
 
         // Limit the width of the "names" column.
@@ -147,13 +151,19 @@ public class FXPropertiesView {
 
                         Bounds bounds = localToScreen(getBoundsInLocal());
 
-                        if (bounds != null) {
+                        if (bounds == null) return;
 
-                            double x = bounds.getMinX();
-                            double y = bounds.getMinY() + 18;
+                        double x = bounds.getMinX();
+                        double y = bounds.getMinY() + 18;
 
-                            possibleAttributeValues(this).show(FXStage.getStage(), x, y);
-                        }
+                        ContextMenu contextMenu = possibleAttributeValues(this);
+
+                        if (((VBox)((ScrollPane)contextMenu.getItems().get(0).getGraphic()).getContent()).getChildren().isEmpty()) return;
+
+                        contextMenu.show(FXStage.getStage(), x, y);
+
+                        contextMenu.requestFocus();
+
                     }
 
                     @Override
@@ -169,30 +179,13 @@ public class FXPropertiesView {
                         int type = getTableRow().getItem().getType();
                         super.commitEdit(InputField.verify(SelectionManager.getSelected(), type, s) ? s : before);
                     }
+
+
                 };
 
-                cell.setOnMousePressed(event -> {
-
-                    cell.setContextMenu(possibleAttributeValues(cell));
-                    cell.getContextMenu().show(propertiesView, FXStage.getStage().getX()
-                                    + FXContainers.getSplitPane().getDividers().get(0).getPosition() * FXContainers.getSplitPane().getWidth(),
-                            100);
-                    propertiesView.getSelectionModel().selectedItemProperty()
-                            .addListener((observable, oldValue, newValue) -> {
-                                if (newValue != null) {
-                                    cell.getContextMenu().hide();
-                                }
-                            });
-
-                    if (cell.getContextMenu() != null) {
-                        cell.getContextMenu().show(propertiesView,
-                                FXStage.getStage().getX() + FXContainers.getSplitPane().getDividers().get(0).getPosition()
-                                        * FXContainers.getSplitPane().getWidth(),
-                                100);
-                    }
-                    if (!cell.isSelected() && cell.getContextMenu() != null) {
-                        cell.getContextMenu().hide();
-                    }
+                cell.setOnMousePressed(e -> {
+                    cell.startEdit();
+                    e.consume();
                 });
 
                 return cell;
@@ -240,8 +233,9 @@ public class FXPropertiesView {
         value.setEditable(true);
         propertiesView.setEditable(true);
 
-        // Set the "value" column to extend to the very edge of the TreeTableView.
-        value.prefWidthProperty().bind(propertiesView.widthProperty().subtract(name.widthProperty()));
+        propertiesView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+
+        propertiesView.setPrefWidth(FXHierarchy.getHierarchy().getPrefWidth());
 
         propertiesView.prefWidthProperty().bind(FXHierarchy.getHierarchy().widthProperty());
         propertiesView.setRoot(new TreeItem<>(EditorAttribute.NULL));
@@ -288,38 +282,34 @@ public class FXPropertiesView {
         return treeItem;
     }
 
-    public static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell) {
+    private static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell) {
         ContextMenu contextMenu = new ContextMenu();
         EditorAttribute attribute = cell.getTableRow().getItem();
         if (attribute == null) {
             return contextMenu;
         }
 
+        VBox vBox = new VBox();
+
         switch (attribute.getType()) {
             case InputField.IMAGE, InputField.IMAGE_REQUIRED -> {
                 for (EditorObject resource : LevelManager.getLevel().getResources()) {
                     if (resource instanceof ResrcImage) {
-                        MenuItem setImageItem = new MenuItem();
+                        Button setImageItem = new Button(resource.getAttribute("id").stringValue());
 
-                        Label label = new Label(resource.getAttribute("id").stringValue());
-                        label.setMaxHeight(17);
-                        label.setMinHeight(17);
-                        label.setPrefHeight(17);
-                        label.setStyle("-fx-font-size: 11");
-                        label.setPadding(new Insets(0, 0, 0, 0));
+                        configureButton(setImageItem);
 
                         // Add thumbnail of the image to the menu item
                         try {
                             ImageView graphic = new ImageView(GlobalResourceManager.getImage(resource.getAttribute("id").stringValue(), LevelManager.getVersion()));
-                            graphic.setFitHeight(17);
+                            graphic.setFitHeight(30);
                             // Set width depending on height
-                            graphic.setFitWidth(graphic.getImage().getWidth() * 17 / graphic.getImage().getHeight());
-                            label.setGraphic(graphic);
+                            graphic.setFitWidth(graphic.getImage().getWidth() * 30 / graphic.getImage().getHeight());
+                            setImageItem.setGraphic(graphic);
                         } catch (Exception ignored) {
 
                         }
 
-                        setImageItem.setGraphic(label);
 
                         setImageItem.setOnAction(event -> {
                             UndoManager.registerChange(new AttributeChangeAction(attribute,
@@ -330,7 +320,7 @@ public class FXPropertiesView {
                             }
                         });
 
-                        contextMenu.getItems().add(setImageItem);
+                        vBox.getChildren().add(setImageItem);
                     }
                 }
             }
@@ -340,7 +330,9 @@ public class FXPropertiesView {
                 File[] ballFiles = new File(path + "\\res\\balls").listFiles();
                 if (ballFiles != null) {
                     for (File ballFile : ballFiles) {
-                        MenuItem setImageItem = new MenuItem(ballFile.getName());
+                        Button setImageItem = new Button(ballFile.getName());
+
+                        configureButton(setImageItem);
 
                         setImageItem.setOnAction(event -> {
                             UndoManager.registerChange(new AttributeChangeAction(attribute,
@@ -351,13 +343,15 @@ public class FXPropertiesView {
                             }
                         });
 
-                        contextMenu.getItems().add(setImageItem);
+                        vBox.getChildren().add(setImageItem);
                     }
                 }
             }
             case InputField.PARTICLES -> {
                 for (String particleType : ParticleManager.getSortedParticleNames()) {
-                    MenuItem setImageItem = new MenuItem(particleType);
+                    Button setImageItem = new Button(particleType);
+
+                    configureButton(setImageItem);
 
                     setImageItem.setOnAction(event -> {
                         UndoManager.registerChange(new AttributeChangeAction(attribute,
@@ -368,12 +362,49 @@ public class FXPropertiesView {
                         }
                     });
 
-                    contextMenu.getItems().add(setImageItem);
+                    vBox.getChildren().add(setImageItem);
                 }
             }
         }
 
+        vBox.setPrefWidth(300);
+        vBox.setMaxHeight(100);
+
+        ScrollPane pane = new ScrollPane(vBox);
+        pane.setPadding(new Insets(0, -12, 0, 0));
+        pane.setMaxWidth(300);
+        pane.setPrefWidth(300);
+        pane.setMaxHeight(300);
+
+        MenuItem menuItem = new MenuItem();
+        menuItem.setGraphic(pane);
+        contextMenu.getItems().add(menuItem);
+
+        menuItem.setId("contextMenu");
+
+        pane.setId("contextMenu");
+
+        pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        contextMenu.setId("contextMenu");
+
         return contextMenu;
+
+    }
+
+
+    private static void configureButton(Button button) {
+
+        button.setMinWidth(300);
+        button.setMaxWidth(300);
+        button.setPrefWidth(300);
+        button.setMinHeight(36);
+        button.setMaxHeight(36);
+        button.setPrefHeight(36);
+        button.setPadding(new Insets(2));
+        button.setId("contextMenu");
+        button.setAlignment(Pos.CENTER_LEFT);
+
     }
 
 

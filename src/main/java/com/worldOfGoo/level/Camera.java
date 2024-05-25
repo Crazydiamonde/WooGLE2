@@ -37,7 +37,7 @@ public class Camera extends EditorObject {
                 double endzoom = getAttribute("endzoom").doubleValue();
 
                 double screenWidth = (aspect.equals("widescreen")) ? 1007 : 800;
-                return screenWidth * endzoom;
+                return screenWidth / endzoom;
 
             }
             public void setWidth(double width) {
@@ -45,18 +45,18 @@ public class Camera extends EditorObject {
                 String aspect = getAttribute("aspect").stringValue();
 
                 double screenWidth = (aspect.equals("widescreen")) ? 1007 : 800;
-                setAttribute("endzoom", width / screenWidth);
+                setAttribute("endzoom", screenWidth / width);
 
             }
             public double getHeight() {
 
                 double endzoom = getAttribute("endzoom").doubleValue();
 
-                return 525 * endzoom;
+                return 525 / endzoom;
 
             }
             public void setHeight(double height) {
-                setAttribute("endzoom", height / 525);
+                setAttribute("endzoom", 525 / height);
             }
             public double getEdgeSize() {
                 return 1.0;

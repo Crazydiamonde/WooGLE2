@@ -66,7 +66,7 @@ public class SceneLayer extends EditorObject {
             }
             public double getRotation() {
                 double extraRotation = LevelManager.getLevel().getVisibilitySettings().isShowAnimations() ? animrotation : 0;
-                return -Math.toRadians(getAttribute("rotation").doubleValue() - extraRotation);
+                return -Math.toRadians(getAttribute("rotation").doubleValue() + extraRotation);
             }
             public void setRotation(double rotation) {
                 setAttribute("rotation", -Math.toDegrees(rotation));
@@ -87,6 +87,9 @@ public class SceneLayer extends EditorObject {
             }
             public double getDepth() {
                 return getAttribute("depth").doubleValue();
+            }
+            public double getAlpha() {
+                return getAttribute("alpha").doubleValue();
             }
             public Image getImage() {
                 return image;

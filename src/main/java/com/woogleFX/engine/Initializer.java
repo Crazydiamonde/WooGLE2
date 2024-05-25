@@ -48,7 +48,7 @@ public class Initializer {
             if (FileManager.getOldWOGdir().isEmpty() && FileManager.getNewWOGdir().isEmpty()) {
                 Alarms.missingWOG();
             } else {
-                startWithWorldOfGooVersion(stage2);
+                startWithWorldOfGooVersion();
             }
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -70,7 +70,7 @@ public class Initializer {
     }
 
 
-    public static void startWithWorldOfGooVersion(Stage stage) {
+    public static void startWithWorldOfGooVersion() {
 
         initializeGUI();
 

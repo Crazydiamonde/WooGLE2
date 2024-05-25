@@ -28,9 +28,11 @@ public class FXHierarchy {
         hierarchyElements.setCellValueFactory(new TreeItemPropertyValueFactory<>("type"));
         hierarchy.getColumns().add(hierarchyElements);
         hierarchyElements.setPrefWidth(200);
+        hierarchyElements.setSortable(false);
 
         TreeTableColumn<EditorObject, String> hierarchyNames = new TreeTableColumn<>();
         hierarchyNames.setGraphic(new Label("ID or Name"));
+        hierarchyNames.setSortable(false);
 
         hierarchyNames.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));
 
@@ -63,10 +65,11 @@ public class FXHierarchy {
 
         hierarchy.setRowFactory(treeTableView -> HierarchyManager.createRow(hierarchy));
 
-        hierarchy.setColumnResizePolicy(TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
+        hierarchy.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 
-        hierarchyNames.prefWidthProperty().bind(hierarchy.widthProperty().subtract(hierarchyElements.widthProperty()));
         hierarchy.setPrefHeight(FXStage.getStage().getHeight() * 0.4);
+
+        hierarchy.setId("hierarchy");
 
         hierarchySwitcherButtons();
 

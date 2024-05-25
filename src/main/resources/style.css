@@ -15,6 +15,11 @@
     -fx-text-fill: #000000;
 }
 
+#hierarchy .tree-table-view .scroll-bar:horizontal {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+}
+
 #dragTarget {
     -fx-background-color: #d0e0ff;
 }
@@ -38,4 +43,32 @@
     -fx-text-fill: #000000;
     -fx-font-size: 12;
     -fx-padding: 4 4 4 4;
+}
+
+#contextMenu .menu-item {
+    -fx-background-color:white;
+    -fx-text-fill: #000000;
+    -fx-padding:0;
+}
+
+#contextMenu .menu-item:focused {
+    -fx-background-color:white;
+    -fx-text-fill: #000000;
+}
+
+#contextMenu .menu-item:selected {
+    -fx-background-color:white;
+    -fx-text-fill: #000000;
+}
+
+#contextMenu .button {
+    -fx-background-color:white;
+    -fx-padding: 2 2 2 2;
+    -fx-background-radius: 0;
+}
+
+#contextMenu .button:hover {
+    -fx-background-color: #c0e0ff;
+    -fx-padding: 2 2 2 2;
+    -fx-background-radius: 0;
 }

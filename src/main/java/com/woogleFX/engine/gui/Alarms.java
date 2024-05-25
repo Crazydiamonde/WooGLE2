@@ -277,7 +277,7 @@ public class Alarms {
         selectOldButton.setOnAction(actionEvent -> {
             if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD)) {
                 FileManager.setHasOldWOG(true);
-                Initializer.startWithWorldOfGooVersion(stage);
+                Initializer.startWithWorldOfGooVersion();
                 stage.close();
             }
         });
@@ -285,7 +285,7 @@ public class Alarms {
         selectNewButton.setOnAction(actionEvent -> {
             if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD)) {
                 FileManager.setHasNewWOG(true);
-                Initializer.startWithWorldOfGooVersion(stage);
+                Initializer.startWithWorldOfGooVersion();
                 stage.close();
             }
         });

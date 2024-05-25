@@ -43,7 +43,7 @@ public class FXContainers {
 
         StackPane pane = new StackPane(thingPane, new Pane(FXCanvas.getCanvas()));
         Separator separator = new Separator();
-        viewPane.getChildren().addAll(FXHierarchy.getHierarchy(), separator, FXHierarchy.getHierarchySwitcherButtons(), FXPropertiesView.getPropertiesView());
+        viewPane.getChildren().addAll(FXHierarchy.getHierarchySwitcherButtons(), FXHierarchy.getHierarchy(), separator, FXPropertiesView.getPropertiesView());
         separator.hoverProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1) {
                 FXScene.getScene().setCursor(Cursor.N_RESIZE);
@@ -53,7 +53,7 @@ public class FXContainers {
         });
 
         separator.setOnMouseDragged(event -> {
-            double height = SelectionManager.getMouseY() + FXCanvas.getMouseYOffset() - FXContainers.getvBox().getChildren().get(4).getLayoutY() - 2;
+            double height = SelectionManager.getMouseY() + FXCanvas.getMouseYOffset() - FXContainers.getvBox().getChildren().get(4).getLayoutY() - FXHierarchy.getHierarchySwitcherButtons().getHeight() - 2;
             FXHierarchy.getHierarchy().setMinHeight(height);
             FXHierarchy.getHierarchy().setMaxHeight(height);
             FXHierarchy.getHierarchy().setPrefHeight(height);

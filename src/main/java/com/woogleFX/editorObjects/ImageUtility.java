@@ -14,6 +14,8 @@ public class ImageUtility {
         double gScale = colorize.getG() / 255.0;
         double bScale = colorize.getB() / 255.0;
 
+        if (rScale == 1 && gScale == 1 && bScale == 1) return image;
+
         WritableImage writableImage = new WritableImage((int)image.getWidth(), (int)image.getHeight());
         PixelWriter pixelWriter = writableImage.getPixelWriter();
 

@@ -87,12 +87,7 @@ public class Renderer {
         ArrayList<EditorObject> allObjects = new ArrayList<>();
         recursiveGetAllObjectsInList(allObjects, editorObject);
 
-        ArrayList<EditorObject> reversed = new ArrayList<>();
-        for (int i = allObjects.size() - 1; i >= 0; i--) {
-            reversed.add(allObjects.get(i));
-        }
-
-        for (EditorObject object : reversed) {
+        for (EditorObject object : allObjects) {
             for (ObjectComponent objectComponent : object.getObjectComponents()) {
                 addObjectPositionToListByDepth(objectComponents, objectComponent);
             }

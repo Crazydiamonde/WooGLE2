@@ -124,7 +124,7 @@ public class SelectionManager {
         if (selected == null) {
 
             SplitPane splitPane = FXContainers.getSplitPane();
-            double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth();
+            double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth() - 6;
 
             if (SelectionManager.getMouseX() < editorViewWidth)
                 FXHierarchy.getHierarchy().getSelectionModel().clearSelection();

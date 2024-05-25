@@ -69,7 +69,7 @@ public class MousePressedManager {
     private static void secondaryMouseButton(MouseEvent event) {
 
         SplitPane splitPane = FXContainers.getSplitPane();
-        double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth();
+        double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth() - 6;
 
         // Mouse pan with right-click
         if (event.getX() < editorViewWidth && event.getY() > FXCanvas.getMouseYOffset()) {
@@ -96,6 +96,11 @@ public class MousePressedManager {
 
 
     private static void manageSelection(MouseEvent event, WorldLevel level) {
+
+        SplitPane splitPane = FXContainers.getSplitPane();
+        double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth() - 6;
+
+        if (event.getX() > editorViewWidth || event.getY() < FXCanvas.getMouseYOffset()) return;
 
         DragSettings dragSettings = tryToSelectSomething(event, level);
         if (dragSettings == DragSettings.NULL) {
@@ -168,11 +173,6 @@ public class MousePressedManager {
 
 
     public static DragSettings tryToSelectSomething(MouseEvent event, WorldLevel level) {
-
-        SplitPane splitPane = FXContainers.getSplitPane();
-        double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth();
-
-        if (event.getX() > editorViewWidth || event.getY() < FXCanvas.getMouseYOffset()) return DragSettings.NULL;
 
         double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
