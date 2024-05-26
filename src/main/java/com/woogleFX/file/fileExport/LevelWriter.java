@@ -219,7 +219,7 @@ public class LevelWriter {
         EditorObject textObject = worldLevel.getTextObject();
         String text = XMLUtility.recursiveXMLExport("", textObject, 0, true);
 
-        EditorObject resourcesObject = worldLevel.getResourcesObject();
+        EditorObject resourcesObject = worldLevel.getResrcObject();
         String resrc = XMLUtility.recursiveXMLExport("", resourcesObject, 0, true);
 
         return new LevelInformation(scene, level, resrc, addin, text);

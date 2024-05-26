@@ -8,21 +8,6 @@ import java.util.ArrayList;
 
 public class Part extends EditorObject {
 
-    private final ArrayList<Image> images = new ArrayList<>();
-    public ArrayList<Image> getImages() {
-        return images;
-    }
-
-
-    private Image pupilImage = null;
-    public Image getPupilImage() {
-        return pupilImage;
-    }
-    public void setPupilImage(Image pupilImage) {
-        this.pupilImage = pupilImage;
-    }
-
-
     public Part(EditorObject _parent) {
         super(_parent, "part");
 

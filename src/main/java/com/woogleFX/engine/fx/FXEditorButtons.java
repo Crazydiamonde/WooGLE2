@@ -14,6 +14,9 @@ import com.woogleFX.engine.gui.PaletteReconfigurator;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
 import com.worldOfGoo.ball.Part;
+import com.worldOfGoo.resrc.Font;
+import com.worldOfGoo.resrc.ResrcImage;
+import com.worldOfGoo.resrc.Sound;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -80,6 +83,7 @@ public class FXEditorButtons {
 
     public static Button createTemplateForBall(int size, _Ball ball) {
 
+        /*
         double minX = 0;
         double minY = 0;
         double maxX = 0;
@@ -283,6 +287,9 @@ public class FXEditorButtons {
 
         });
         return idk;
+
+         */
+        return null;
     }
 
     public static void addBallsTo() {
@@ -309,12 +316,7 @@ public class FXEditorButtons {
                     return;
                 }
 
-                for (EditorObject resrc : FileManager.commonBallResrcData) {
-                    GlobalResourceManager.addResource(resrc, version);
-                }
-
                 if (_ball != null) {
-                    _ball.makeImages(version);
                     _ball.setVersion(version);
                     BallManager.getImportedBalls().add(_ball);
                 }
@@ -325,12 +327,12 @@ public class FXEditorButtons {
                 if (ball.getObjects().get(0).getAttribute("name").stringValue().equals(paletteBall)
                         && ball.getVersion() == PaletteManager.getPaletteVersions().get(i)) {
                     Button button = createTemplateForBall(size, ball);
-                    button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name").stringValue()));
-                    if (ball.getVersion() == GameVersion.OLD) {
-                        oldGooballsToolbar.getItems().add(button);
-                    } else {
-                        newGooballsToolbar.getItems().add(button);
-                    }
+                    //button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name").stringValue()));
+                    //if (ball.getVersion() == GameVersion.OLD) {
+                    //    oldGooballsToolbar.getItems().add(button);
+                    //} else {
+                    //    newGooballsToolbar.getItems().add(button);
+                    //}
                 }
             }
             i++;

@@ -5,6 +5,7 @@ import com.woogleFX.engine.gui.Alarms;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
@@ -22,7 +23,9 @@ public class BaseGameResources {
         try {
             String contents = Files.readString(Path.of(file));
             String[] each = contents.split("\n");
-            set.addAll(List.of(each));
+            String[] each2 = new String[each.length];
+            for (int i = 0; i < each.length; i++) each2[i] = each[i].substring(0, each[i].length() - 1);
+            set.addAll(List.of(each2));
         } catch (IOException e) {
             Alarms.errorMessage("Could not load " + file);
         }

@@ -50,7 +50,7 @@ public class GoomodExporter {
         } catch (Exception e) {
             Alarms.errorMessage(e);
         }
-        for (EditorObject resource : level.getResources()) {
+        for (EditorObject resource : level.getResrc()) {
             String resourceNameStripped = resource.getAttribute("path").stringValue();
             if (resourceNameStripped != null && resourceNameStripped.contains("/")) {
                 resourceNameStripped = resourceNameStripped.substring(0, resourceNameStripped.lastIndexOf("/"));
@@ -68,8 +68,8 @@ public class GoomodExporter {
                     }
                 }
                 try {
-                    BufferedImage oldImage = SwingFXUtils.fromFXImage(resource.getAttribute("id").imageValue(level.getVersion()), null);
-                    File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".png");
+                    BufferedImage oldImage = SwingFXUtils.fromFXImage(resource.getAttribute("id").imageValue(level.getResrc(), level.getVersion()), null);
+                    File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").stringValue() + ".png");
                     ImageIO.write(oldImage, "png", newImageFile);
                 } catch (Exception e) {
                     Alarms.errorMessage(e);
@@ -88,8 +88,8 @@ public class GoomodExporter {
                 }
                 try {
                     Files.copy(
-                            Path.of(start + "\\" + resource.getAttribute("path") + ".ogg"),
-                            Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".ogg"),
+                            Path.of(start + "\\" + resource.getAttribute("path").stringValue() + ".ogg"),
+                            Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").stringValue() + ".ogg"),
                             StandardCopyOption.REPLACE_EXISTING
                     );
                 } catch (Exception e) {
@@ -113,8 +113,8 @@ public class GoomodExporter {
                 }
                 BallWriter.exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ballName, level.getVersion(), true);
                 for (EditorObject resource : ball.getResources()) {
-                    if (resource instanceof ResrcImage) {
-                        String realpath = resource.getAttribute("path").stringValue();
+                    if (resource instanceof ResrcImage resrcImage) {
+                        String realpath = resrcImage.getAdjustedPath();
                         if (BaseGameResources.containsImage(realpath)) {
                             // Skip if base game image
                             continue;
@@ -127,9 +127,9 @@ public class GoomodExporter {
                         if (!Files.exists(subfolder)) {
                             Files.createDirectories(subfolder);
                         }
-                        BufferedImage oldImage = SwingFXUtils.fromFXImage(resource.getAttribute("id").imageValue(level.getVersion()), null);
-                        File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".png");
-                        ImageIO.write(oldImage, "png", newImageFile);
+                        //BufferedImage oldImage = SwingFXUtils.fromFXImage(resource.getAttribute("id").imageValue(level.getVersion()), null);
+                        //File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".png");
+                        //ImageIO.write(oldImage, "png", newImageFile);
                     }
                 }
                 exportedBalls.add(ballName);

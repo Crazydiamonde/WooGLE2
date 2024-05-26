@@ -165,10 +165,12 @@ public class Compositegeom extends EditorObject {
 
     private void updateImage() {
 
+        if (LevelManager.getLevel() == null) return;
+
         if (getAttribute("image").stringValue().isEmpty()) return;
 
         try {
-            image = getAttribute("image").imageValue(LevelManager.getVersion());
+            image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
         } catch (FileNotFoundException ignored) {
             image = null;
         }

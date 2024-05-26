@@ -52,7 +52,7 @@ public class FXLevelSelectPane {
                 EditorObject rootObject = switch (level.getCurrentlySelectedSection()) {
                     case "Scene" -> level.getSceneObject();
                     case "Level" -> level.getLevelObject();
-                    case "Resrc" -> level.getResourcesObject();
+                    case "Resrc" -> level.getResrcObject();
                     case "Text" -> level.getTextObject();
                     case "Addin" -> level.getAddinObject();
                     default -> null;

@@ -121,9 +121,11 @@ public class Button extends EditorObject {
 
     private void updateImage() {
 
+        if (LevelManager.getLevel() == null) return;
+
         try {
             if (!getAttribute("up").stringValue().isEmpty()) {
-                image = getAttribute("up").imageValue(LevelManager.getVersion());
+                image = getAttribute("up").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
                 image = ImageUtility.colorize(image, getAttribute("colorize").colorValue());
             }
         } catch (FileNotFoundException ignored) {

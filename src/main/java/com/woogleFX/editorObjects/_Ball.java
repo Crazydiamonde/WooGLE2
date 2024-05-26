@@ -1,9 +1,10 @@
 package com.woogleFX.editorObjects;
 
-import com.woogleFX.functions.LevelLoader;
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.structures.GameVersion;
-import com.worldOfGoo.ball.Part;
+import com.worldOfGoo.resrc.Font;
+import com.worldOfGoo.resrc.ResrcImage;
+import com.worldOfGoo.resrc.SetDefaults;
+import com.worldOfGoo.resrc.Sound;
 
 import java.util.ArrayList;
 
@@ -66,9 +67,9 @@ public class _Ball {
     }
 
 
-    public _Ball(ArrayList<EditorObject> _objects, ArrayList<EditorObject> _resources){
+    public _Ball(ArrayList<EditorObject> _objects, ArrayList<EditorObject> resources) {
         this.objects = _objects;
-        this.resources = _resources;
+        this.resources = resources;
 
         String input2 = objects.get(0).getAttribute("shape").stringValue();
 
@@ -97,41 +98,25 @@ public class _Ball {
                 setShapeVariance(0);
             }
         }
-    }
 
+        SetDefaults currentSetDefaults = null;
 
-    public void makeImages(GameVersion version) {
-        for (EditorObject obj : objects) {
-            if (obj.getType().equals("part")) {
-                String word = "";
-                for (int i = 0; i < obj.getAttribute("image").stringValue().length(); i++) {
-                    String singleChar = obj.getAttribute("image").stringValue().substring(i, i + 1);
-                    if (singleChar.equals(",")) {
-                        try {
-                            ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
-                        } catch (Exception e) {
-                            LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name").stringValue() + "\": Image \"" + word + "\" (version " + (version == GameVersion.OLD ? "1.3" : "1.5") + ")"));
-                        }
-                        word = "";
-                    } else {
-                        word += singleChar;
-                    }
-                }
-                try {
-                    ((Part) obj).getImages().add(GlobalResourceManager.getImage(word, version));
-                } catch (Exception e) {
-                    LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name").stringValue() + "\": Image \"" + word + "\" (version " + (version == GameVersion.OLD ? "1.3" : "1.5") + ")"));
-                }
+        for (EditorObject editorObject : resources) {
 
-                if (!obj.getAttribute("pupil").stringValue().isEmpty()) {
-                    try {
-                        ((Part) obj).setPupilImage(GlobalResourceManager.getImage(obj.getAttribute("pupil").stringValue(), version));
-                    } catch (Exception e) {
-                        LevelLoader.failedResources.add(("From ball \"" + getObjects().get(0).getAttribute("name").stringValue() + "\": Image \"" + obj.getAttribute("pupil").stringValue() + "\" (version " + (version == GameVersion.OLD ? "1.3" : "1.5") + ")"));
-                    }
-                }
+            if (editorObject instanceof SetDefaults setDefaults) {
+                currentSetDefaults = setDefaults;
             }
+
+            else if (editorObject instanceof ResrcImage resrcImage) {
+                resrcImage.setSetDefaults(currentSetDefaults);
+            } else if (editorObject instanceof Sound sound) {
+                sound.setSetDefaults(currentSetDefaults);
+            } else if (editorObject instanceof Font font) {
+                font.setSetDefaults(currentSetDefaults);
+            }
+
         }
+
     }
 
 }

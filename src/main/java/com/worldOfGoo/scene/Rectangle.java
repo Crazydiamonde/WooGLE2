@@ -301,9 +301,11 @@ public class Rectangle extends EditorObject {
 
     private void updateImage() {
 
+        if (LevelManager.getLevel() == null) return;
+
         try {
             if (!getAttribute("image").stringValue().isEmpty()) {
-                image = getAttribute("image").imageValue(LevelManager.getVersion());
+                image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
             }
         } catch (FileNotFoundException ignored) {
 

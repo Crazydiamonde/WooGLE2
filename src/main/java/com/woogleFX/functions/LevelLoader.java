@@ -5,7 +5,6 @@ import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.editorObjects.objectCreators.BlankObjectGenerator;
 import com.woogleFX.file.resourceManagers.BallManager;
 import com.woogleFX.engine.gui.Alarms;
@@ -64,14 +63,13 @@ public class LevelLoader {
         textList.add(ObjectCreator.create("strings", null));
 
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
-        LevelManager.setLevel(level);
         level.setLevelName(name);
         FXEditorButtons.updateAllButtons();
         FXMenu.updateAllButtons();
 
         level.getSceneObject().setAttribute("backgroundcolor", "255,255,255");
 
-        EditorObject resourcesThing = ObjectCreator.create("Resources", level.getResourcesObject());
+        EditorObject resourcesThing = ObjectCreator.create("Resources", level.getResrcObject());
         resourcesThing.setAttribute("id", "scene_" + level.getLevelName());
         resourcesThing.getTreeItem().setExpanded(true);
 
@@ -83,7 +81,7 @@ public class LevelLoader {
             object.update();
         }
 
-        for (EditorObject object : level.getResources()) {
+        for (EditorObject object : level.getResrc()) {
             object.update();
         }
 
@@ -134,7 +132,6 @@ public class LevelLoader {
 
         try {
             level = FileManager.openLevel(levelName, version);
-            LevelManager.setLevel(level);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             Alarms.errorMessage(e);
             return;
@@ -151,39 +148,27 @@ public class LevelLoader {
             if (object instanceof BallInstance) {
                 boolean alreadyIn = false;
                 for (_Ball ball : BallManager.getImportedBalls()) {
-                    if (ball.getObjects().get(0).getAttribute("name").equals(object.getAttribute("type"))
+                    if (ball.getObjects().get(0).getAttribute("name").stringValue().equals(object.getAttribute("type").stringValue())
                             && ball.getVersion() == level.getVersion()) {
                         alreadyIn = true;
                         break;
                     }
                 }
-                if (!alreadyIn) {
-                    try {
-                        _Ball ball2 = FileManager.openBall(object.getAttribute("type").stringValue(), version);
+                if (alreadyIn) continue;
+                try {
 
-                        for (EditorObject resrc : FileManager.commonBallResrcData) {
-                            GlobalResourceManager.addResource(resrc, version);
-                        }
+                    _Ball ball2 = FileManager.openBall(object.getAttribute("type").stringValue(), version);
 
-                        if (ball2 != null) {
-                            ball2.makeImages(version);
-                            ball2.setVersion(version);
+                    if (ball2 != null) {
+                        ball2.setVersion(version);
+                        BallManager.getImportedBalls().add(ball2);
+                    }
 
-                            BallManager.getImportedBalls().add(ball2);
-                        }
-                    } catch (ParserConfigurationException | SAXException | IOException e) {
-                        if (!failedResources
-                                .contains("Ball: " + object.getAttribute("type").stringValue() + " (version " + (version == GameVersion.OLD ? 1.3 : 1.5) + ")")) {
-                            failedResources.add("Ball: " + object.getAttribute("type").stringValue() + " (version " + (version == GameVersion.OLD ? 1.3 : 1.5) + ")");
-                        }
+                } catch (ParserConfigurationException | SAXException | IOException e) {
+                    if (!failedResources.contains("Ball: " + object.getAttribute("type").stringValue() + " (version " + version + ")")) {
+                        failedResources.add("Ball: " + object.getAttribute("type").stringValue() + " (version " + version + ")");
                     }
                 }
-            }
-        }
-
-        for (EditorObject object : level.getResources()) {
-            if (object instanceof ResrcImage) {
-                GlobalResourceManager.addResource(object, level.getVersion());
             }
         }
 
@@ -195,7 +180,7 @@ public class LevelLoader {
             object.update();
         }
 
-        for (EditorObject object : level.getResources()) {
+        for (EditorObject object : level.getResrc()) {
             object.update();
         }
 
@@ -239,7 +224,7 @@ public class LevelLoader {
         ArrayList<EditorObject> addinList = new ArrayList<>();
         ArrayList<EditorObject> textList = new ArrayList<>();
 
-        FileManager.supremeAddToList(resourcesList, ObjectUtil.deepClone(LevelManager.getLevel().getResourcesObject(), null));
+        FileManager.supremeAddToList(resourcesList, ObjectUtil.deepClone(LevelManager.getLevel().getResrcObject(), null));
         FileManager.supremeAddToList(sceneList, ObjectUtil.deepClone(LevelManager.getLevel().getSceneObject(), null));
         FileManager.supremeAddToList(levelList, ObjectUtil.deepClone(LevelManager.getLevel().getLevelObject(), null));
         // Generate new addin object. idk why cloning it doesn't work, but this is arguably better anyway
@@ -248,19 +233,17 @@ public class LevelLoader {
 
         String oldLevelName = LevelManager.getLevel().getLevelName();
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
-        LevelManager.setLevel(level);
 
         level.setLevelName(name);
         FXEditorButtons.updateAllButtons();
         FXMenu.updateAllButtons();
 
-        for (EditorObject object : level.getResources()) {
+        for (EditorObject object : level.getResrc()) {
             if (object instanceof Resources) {
                 object.setAttribute("id", "scene_" + name);
             } else if (object instanceof ResrcImage || object instanceof Sound) {
                 object.setAttribute("id", object.getAttribute("id").stringValue().replaceAll(oldLevelName.toUpperCase(), name.toUpperCase()));
             }
-            GlobalResourceManager.addResource(object, version);
             object.update();
         }
 

@@ -1,135 +1,191 @@
 package com.woogleFX.file.resourceManagers;
 
-import com.woogleFX.file.FileManager;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.file.resourceManagers.resources.Resource;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.file.resourceManagers.resources.ImageResource;
-import com.woogleFX.file.resourceManagers.resources.TextResource;
-import com.worldOfGoo.resrc.Resources;
+import com.woogleFX.engine.gui.Alarms;
+import com.woogleFX.file.FileManager;
+import com.woogleFX.file.fileImport.AnimationReader;
+import com.woogleFX.structures.GameVersion;
+import com.worldOfGoo.particle._Particle;
+import com.worldOfGoo.resrc.Font;
 import com.worldOfGoo.resrc.ResrcImage;
 import com.worldOfGoo.resrc.SetDefaults;
+import com.worldOfGoo.resrc.Sound;
 import com.worldOfGoo.text.TextString;
-import javafx.scene.image.Image;
+import org.xml.sax.SAXException;
 
-import java.io.FileNotFoundException;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+/** Stores global resources (those specified in properties/resources.xml). */
 public class GlobalResourceManager {
 
-    private static final ArrayList<Resource> oldResources = new ArrayList<>();
+    private static final ArrayList<EditorObject> oldResources = new ArrayList<>();
+    public static ArrayList<EditorObject> getOldResources() {
+        return oldResources;
+    }
 
 
-    private static final ArrayList<Resource> newResources = new ArrayList<>();
+    private static final ArrayList<EditorObject> newResources = new ArrayList<>();
+    public static ArrayList<EditorObject> getNewResources() {
+        return newResources;
+    }
 
 
-    /**
-     * @param id The id (all caps property) of the resource.
-     * @param version Specifies which version of WoG (1.3 or 1.5).
-     * @return The image associated with the resource.
-     * @throws FileNotFoundException If there is no resource matching the id, or if the resource path does not lead to an image.
-     */
-    public static Image getImage(String id, GameVersion version) throws FileNotFoundException {
+    private static final ArrayList<String> allFailedResources = new ArrayList<>();
 
-        if (version == GameVersion.OLD) {
-            for (Resource resource : oldResources) {
-                if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
 
-                    if (imageResource.getImage() == null) {
-                        imageResource.setImage(FileManager.openImageFromFilePath(FileManager.getOldWOGdir() + "\\" + ((ImageResource) resource).getPath() + ".png"));
-                    }
+    public static void init() {
 
-                    return imageResource.getImage();
-                }
-            }
-        } else if (version == GameVersion.NEW) {
-            for (Resource resource : newResources) {
-                if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
+        allFailedResources.clear();
 
-                    if (imageResource.getImage() == null) {
-                        imageResource.setImage(FileManager.openImageFromFilePath(FileManager.getNewWOGdir() + "\\" + ((ImageResource) resource).getPath() + ".png"));
-                    }
-
-                    return imageResource.getImage();
-                }
-            }
+        oldResources.clear();
+        if (FileManager.hasOldWOG()) {
+            openResources(GameVersion.OLD);
+            openParticles(GameVersion.OLD);
+            openAnimations(GameVersion.OLD);
+            openText(GameVersion.OLD);
         }
 
-        throw new FileNotFoundException("Invalid image resource ID: \"" + id + "\" (version " + version + ")");
+        newResources.clear();
+        if (FileManager.hasNewWOG()) {
+            openResources(GameVersion.NEW);
+            openParticles(GameVersion.NEW);
+            openAnimations(GameVersion.NEW);
+            openText(GameVersion.NEW);
+        }
+
+        // Load particle names, remove duplicates, and sort them alphabetically
+        Set<String> particleNames = new HashSet<>();
+        ParticleManager.getParticles().stream()
+                .filter(particle -> particle.attributeExists("name"))
+                .forEach(particle -> particleNames.add(particle.getAttribute("name").stringValue()));
+        ParticleManager.getSortedParticleNames().clear();
+        ParticleManager.getSortedParticleNames().addAll(particleNames);
+        ParticleManager.getSortedParticleNames().sort(String::compareToIgnoreCase);
+
+        if (!allFailedResources.isEmpty()) {
+            StringBuilder fullError = new StringBuilder();
+            for (String resource : allFailedResources) {
+                fullError.append("\n").append(resource);
+            }
+            Alarms.loadingInitialResourcesError(fullError.substring(1));
+        }
 
     }
 
 
-    public static void updateResource(String id, GameVersion version) throws FileNotFoundException {
-        if (version == GameVersion.OLD) {
-            for (Resource resource : oldResources) {
-                if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
-                    imageResource.setImage(FileManager.openImageFromFilePath(FileManager.getOldWOGdir() + "\\" + ((ImageResource) resource).getPath() + ".png"));
-                }
-            }
-        } else if (version == GameVersion.NEW) {
-            for (Resource resource : newResources) {
-                if (resource instanceof ImageResource imageResource && resource.getId().equals(id)) {
-                    imageResource.setImage(FileManager.openImageFromFilePath(FileManager.getNewWOGdir() + "\\" + ((ImageResource) resource).getPath() + ".png"));
-                }
-            }
-        }
-    }
+    private static void openResources(GameVersion version) {
 
+        ArrayList<EditorObject> toAddTo = version == GameVersion.OLD ? oldResources : newResources;
 
-    public static TextString getText(String id, GameVersion version) throws FileNotFoundException {
-
-        if (version == GameVersion.OLD) {
-            for (Resource resource : oldResources) {
-                if (resource instanceof TextResource textResource && resource.getId().equals(id)) {
-                    return textResource.getText();
-                }
-            }
-        } else if (version == GameVersion.NEW) {
-            for (Resource resource : newResources) {
-                if (resource instanceof TextResource textResource && resource.getId().equals(id)) {
-                    return textResource.getText();
-                }
-            }
+        ArrayList<EditorObject> resources;
+        try {
+            resources = FileManager.openResources(version);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Alarms.errorMessage(e);
+            return;
         }
 
-        throw new FileNotFoundException("Invalid text resource ID: \"" + id + "\" (version " + version + ")");
-    }
+        SetDefaults currentSetDefaults = null;
 
+        for (EditorObject editorObject : resources) {
 
-    public static void addResource(EditorObject resource, GameVersion version) {
-
-        EditorObject resourceManifest = resource;
-        while (!(resourceManifest instanceof Resources) && resourceManifest.getParent() != null) {
-            resourceManifest = resourceManifest.getParent();
-        }
-
-        int resrcIndex = resourceManifest.getChildren().indexOf(resource);
-
-        String idprefix = "";
-        String pathprefix = "";
-        for (int i = resrcIndex - 1; i >= 0; i--) {
-            EditorObject editorObject = resourceManifest.getChildren().get(i);
             if (editorObject instanceof SetDefaults setDefaults) {
-                idprefix = setDefaults.getAttribute("idprefix").stringValue();
-                pathprefix = setDefaults.getAttribute("path").stringValue();
-                break;
+                currentSetDefaults = setDefaults;
+            }
+
+            else if (editorObject instanceof ResrcImage resrcImage) {
+                resrcImage.setSetDefaults(currentSetDefaults);
+                toAddTo.add(resrcImage);
+            } else if (editorObject instanceof Sound sound) {
+                sound.setSetDefaults(currentSetDefaults);
+                toAddTo.add(sound);
+            } else if (editorObject instanceof Font font) {
+                font.setSetDefaults(currentSetDefaults);
+                toAddTo.add(font);
+            }
+
+        }
+
+    }
+
+
+    private static void openParticles(GameVersion version) {
+
+        try {
+            FileManager.openParticles(version);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Alarms.errorMessage(e);
+            return;
+        }
+
+        ArrayList<EditorObject> particles2 = FileManager.commonBallData;
+        ParticleManager.getParticles().addAll(particles2);
+        for (EditorObject particle : particles2) {
+            try {
+                if (particle instanceof _Particle _particle) {
+                    _particle.update(version);
+                } else {
+                    particle.update();
+                }
+            } catch (Exception e) {
+                allFailedResources.add("Particle: " + particle.getParent().getAttribute("name").stringValue() + " (version " + version + ")");
             }
         }
 
-        if (version == GameVersion.OLD) {
-            if (resource instanceof ResrcImage) {
-                oldResources.add(new ImageResource(idprefix + resource.getAttribute("id").stringValue(), pathprefix + resource.getAttribute("path").stringValue(), null));
-            } else if (resource instanceof TextString textString) {
-                oldResources.add(new TextResource(idprefix + resource.getAttribute("id").stringValue(), textString));
-            }
-        } else if (version == GameVersion.NEW) {
-            if (resource instanceof ResrcImage) {
-                newResources.add(new ImageResource(idprefix + resource.getAttribute("id").stringValue(), pathprefix + resource.getAttribute("path").stringValue(), null));
-            } else if (resource instanceof TextString textString) {
-                newResources.add(new TextResource(idprefix + resource.getAttribute("id").stringValue(), textString));
+    }
+
+
+    private static void openAnimations(GameVersion version) {
+
+        String dir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+
+        File animationsDirectory = new File(dir + "\\res\\anim");
+        File[] animationsArray = animationsDirectory.listFiles();
+        if (animationsArray == null) return;
+
+        for (File second : animationsArray) {
+            if (version == GameVersion.NEW || !second.getName().substring(second.getName().lastIndexOf(".")).equals(".binltl64")) {
+                try (FileInputStream test2 = new FileInputStream(second)) {
+                    byte[] allBytes = test2.readAllBytes();
+                    if (version == GameVersion.OLD) {
+                        AnimationManager.getAnimations().add(AnimationReader.readBinltl(allBytes, second.getName()));
+                    } else if (version == GameVersion.NEW) {
+                        AnimationManager.getAnimations().add(AnimationReader.readBinuni(allBytes, second.getName()));
+                    }
+                } catch (Exception e) {
+                    allFailedResources.add("Animation: " + second.getName() + " (version " + version + ")");
+                }
             }
         }
+
+    }
+
+
+    private static void openText(GameVersion version) {
+
+        ArrayList<EditorObject> toAddTo = version == GameVersion.OLD ? oldResources : newResources;
+
+        ArrayList<EditorObject> textList;
+        try {
+            textList = FileManager.openText(version);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Alarms.errorMessage(e);
+            return;
+        }
+        if (textList == null) return;
+
+        for (EditorObject text : textList) {
+            if (text instanceof TextString) {
+                toAddTo.add(text);
+            }
+        }
+
     }
 
 }

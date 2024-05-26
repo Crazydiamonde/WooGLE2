@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.file.resourceManagers.ParticleManager;
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.file.resourceManagers.ResourceManager;
+import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.GameVersion;
 import com.woogleFX.editorObjects.InputField;
 
@@ -43,19 +45,19 @@ public class _Particle extends EditorObject {
 
 
     public void update(GameVersion version) throws Exception {
+
         axialsinoffsets.clear();
-        for (EditorObject thing : ParticleManager.getParticles()) {
-            if (thing instanceof Axialsinoffset && thing.getParent() == this) {
-                axialsinoffsets.add((Axialsinoffset)thing);
+        for (EditorObject editorObject : ParticleManager.getParticles()) {
+            if (editorObject instanceof Axialsinoffset axialsinoffset && editorObject.getParent() == this) {
+                axialsinoffsets.add(axialsinoffset);
             }
         }
+
         images.clear();
-        String mogus = getAttribute("image").stringValue();
-        while (mogus.contains(",")) {
-            images.add(GlobalResourceManager.getImage(mogus.substring(0, mogus.indexOf(",")), version));
-            mogus = mogus.substring(mogus.indexOf(",") + 1);
+        for (String image : getAttribute("image").listValue()) {
+            images.add(ResourceManager.getImage(null, image, version));
         }
-        images.add(GlobalResourceManager.getImage(mogus, version));
+
     }
 
 }

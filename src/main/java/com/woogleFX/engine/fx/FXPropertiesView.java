@@ -2,7 +2,7 @@ package com.woogleFX.engine.fx;
 
 import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
+import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.file.resourceManagers.ParticleManager;
 import com.woogleFX.functions.undoHandling.UndoManager;
@@ -293,7 +293,7 @@ public class FXPropertiesView {
 
         switch (attribute.getType()) {
             case InputField.IMAGE, InputField.IMAGE_REQUIRED -> {
-                for (EditorObject resource : LevelManager.getLevel().getResources()) {
+                for (EditorObject resource : LevelManager.getLevel().getResrc()) {
                     if (resource instanceof ResrcImage) {
                         Button setImageItem = new Button(resource.getAttribute("id").stringValue());
 
@@ -301,7 +301,7 @@ public class FXPropertiesView {
 
                         // Add thumbnail of the image to the menu item
                         try {
-                            ImageView graphic = new ImageView(GlobalResourceManager.getImage(resource.getAttribute("id").stringValue(), LevelManager.getVersion()));
+                            ImageView graphic = new ImageView(ResourceManager.getImage(LevelManager.getLevel().getResrc(), resource.getAttribute("id").stringValue(), LevelManager.getVersion()));
                             graphic.setFitHeight(30);
                             // Set width depending on height
                             graphic.setFitWidth(graphic.getImage().getWidth() * 30 / graphic.getImage().getHeight());

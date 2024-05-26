@@ -14,6 +14,7 @@ import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import com.woogleFX.structures.simpleStructures.Position;
 import com.worldOfGoo.ball.BallStrand;
 
+import com.worldOfGoo.resrc.ResrcImage;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -42,6 +43,9 @@ public class Strand extends EditorObject {
     }
 
 
+    private int strandBallID = 2;
+
+
     public Strand(EditorObject _parent) {
         super(_parent, "Strand", "level\\strand");
 
@@ -64,22 +68,27 @@ public class Strand extends EditorObject {
     }
 
 
-    private void setStrand(String type) {
+    private boolean setStrand(String type) {
 
         for (_Ball ball : BallManager.getImportedBalls()) {
             String ballType = ball.getObjects().get(0).getAttribute("name").stringValue();
             if (ballType.equals(type)) {
                 for (EditorObject object : ball.getObjects()) if (object instanceof BallStrand strand2) {
                     this.strand = strand2;
+                    return true;
                 }
             }
         }
+
+        return false;
 
     }
 
 
     @Override
     public void update() {
+
+        if (LevelManager.getLevel() == null) return;
 
         for (EditorObject obj : LevelManager.getLevel().getLevel()) if (obj instanceof BallInstance ballInstance) {
 
@@ -94,7 +103,7 @@ public class Strand extends EditorObject {
                 if (strand == null) {
 
                     String type = ballInstance.getAttribute("type").stringValue();
-                    setStrand(type);
+                    if (setStrand(type)) strandBallID = 1;
 
                 }
 
@@ -105,7 +114,7 @@ public class Strand extends EditorObject {
                 goo2 = ballInstance;
 
                 String type = ballInstance.getAttribute("type").stringValue();
-                setStrand(type);
+                if (setStrand(type)) strandBallID = 2;
 
             }
 
@@ -113,11 +122,15 @@ public class Strand extends EditorObject {
 
         if (strand != null) {
             try {
-                strandImage = strand.getAttribute("image").imageValue(LevelManager.getVersion());
+                _Ball ball;
+                if (strandBallID == 1) ball = goo1.getBall(); else ball = goo2.getBall();
+                if (goo1.getBall() == null || goo2.getBall() == null) return;
+                strandImage = strand.getAttribute("image").imageValue(ball.getResources(), LevelManager.getVersion());
             } catch (Exception e) {
+                e.printStackTrace();
                 // TODO make this cleaner
-                if (!LevelLoader.failedResources.contains("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")")) {
-                    LevelLoader.failedResources.add("From strand: \"" + strand.getAttribute("image") + "\" (version " + LevelManager.getVersion() + ")");
+                if (!LevelLoader.failedResources.contains("From Strand: \"" + strand.getAttribute("image").stringValue() + "\" (version " + LevelManager.getVersion() + ")")) {
+                    LevelLoader.failedResources.add("From Strand: \"" + strand.getAttribute("image").stringValue() + "\" (version " + LevelManager.getVersion() + ")");
                 }
             }
         }

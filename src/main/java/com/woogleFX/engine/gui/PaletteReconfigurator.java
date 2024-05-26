@@ -8,6 +8,9 @@ import com.woogleFX.file.resourceManagers.BallManager;
 import com.woogleFX.functions.PaletteManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
+import com.worldOfGoo.resrc.Font;
+import com.worldOfGoo.resrc.ResrcImage;
+import com.worldOfGoo.resrc.Sound;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -32,7 +35,7 @@ public class PaletteReconfigurator extends Application {
         HBox ballHBox = new HBox();
         CheckBox enableBox = new CheckBox();
         Label ballName = new Label(ballNameString);
-        ballName.setId(version == GameVersion.OLD ? "1.3" : "1.5");
+        ballName.setId(version.toString());
 
         int i = 0;
         for (String name2 : PaletteManager.getPaletteBalls()) {
@@ -125,12 +128,7 @@ public class PaletteReconfigurator extends Application {
                             ball = null;
                         }
 
-                        for (EditorObject resrc : FileManager.commonBallResrcData) {
-                            GlobalResourceManager.addResource(resrc, ballVersion);
-                        }
-
                         if (ball != null) {
-                            ball.makeImages(ballVersion);
                             ball.setVersion(ballVersion);
                             BallManager.getImportedBalls().add(ball);
                         }

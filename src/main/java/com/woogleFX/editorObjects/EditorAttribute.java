@@ -1,6 +1,6 @@
 package com.woogleFX.editorObjects;
 
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
+import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.Color;
 import com.woogleFX.structures.simpleStructures.Position;
@@ -10,6 +10,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class EditorAttribute {
 
@@ -40,7 +41,11 @@ public class EditorAttribute {
     }
 
     public double doubleValue() {
-        return Double.parseDouble(stringValue());
+        try {
+            return Double.parseDouble(stringValue());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     public int intValue() {
@@ -59,8 +64,8 @@ public class EditorAttribute {
         return Color.parse(stringValue());
     }
 
-    public Image imageValue(GameVersion version) throws FileNotFoundException {
-        return GlobalResourceManager.getImage(stringValue(), version);
+    public Image imageValue(ArrayList<EditorObject> resources, GameVersion version) throws FileNotFoundException {
+        return ResourceManager.getImage(resources, stringValue(), version);
     }
 
     public String[] listValue() {

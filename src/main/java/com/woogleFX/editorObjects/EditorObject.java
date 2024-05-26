@@ -30,15 +30,6 @@ public class EditorObject {
     }
 
 
-    private WorldLevel level;
-    public final WorldLevel getLevel() {
-        return level;
-    }
-    public final void setLevel(WorldLevel level) {
-        this.level = level;
-    }
-
-
     /** The parent of this object.
      * Every object is required to have a parent except for level/scene/resrc/addin/text root objects. */
     private EditorObject parent;

@@ -199,7 +199,7 @@ public class Circle extends EditorObject {
             }
             public Image getImage() {
                 try {
-                    return getAttribute("image").imageValue(LevelManager.getVersion());
+                    return getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
                 } catch (FileNotFoundException e) {
                     return null;
                 }

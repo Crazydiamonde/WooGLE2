@@ -1,18 +1,21 @@
 package com.woogleFX.structures;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Stack;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.engine.fx.FXContainers;
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
-import com.woogleFX.functions.LevelLoader;
+import com.woogleFX.file.resourceManagers.ResourceManager;
+import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.simpleStructures.LevelTab;
 import com.woogleFX.structures.simpleStructures.VisibilitySettings;
 import com.woogleFX.functions.undoHandling.userActions.UserAction;
-import com.worldOfGoo.level.Signpost;
+import com.worldOfGoo.resrc.Font;
+import com.worldOfGoo.resrc.ResrcImage;
+import com.worldOfGoo.resrc.SetDefaults;
+import com.worldOfGoo.resrc.Sound;
 import com.worldOfGoo.scene.Label;
 import com.worldOfGoo.text.TextString;
 
@@ -37,12 +40,12 @@ public class WorldLevel {
         return level.get(0);
     }
 
-    private final ArrayList<EditorObject> resources;
-    public ArrayList<EditorObject> getResources() {
-        return resources;
+    private final ArrayList<EditorObject> resrc;
+    public ArrayList<EditorObject> getResrc() {
+        return resrc;
     }
-    public EditorObject getResourcesObject() {
-        return resources.get(0);
+    public EditorObject getResrcObject() {
+        return resrc.get(0);
     }
 
     private final ArrayList<EditorObject> addin;
@@ -187,68 +190,52 @@ public class WorldLevel {
 
     public WorldLevel(ArrayList<EditorObject> scene,
                       ArrayList<EditorObject> level,
-                      ArrayList<EditorObject> resources,
+                      ArrayList<EditorObject> resrc,
                       ArrayList<EditorObject> addin,
                       ArrayList<EditorObject> text,
                       GameVersion version) {
 
         this.scene = scene;
         this.level = level;
-        this.resources = resources;
+        this.resrc = resrc;
         this.addin = addin;
         this.text = text;
         this.version = version;
 
+        LevelManager.setLevel(this);
+
         for (EditorObject object : addin) object.getTreeItem().setExpanded(true);
         for (EditorObject object : text) object.getTreeItem().setExpanded(true);
 
-        for (EditorObject sceneObject : scene) {
-            if (sceneObject instanceof Label label) {
-                boolean alreadyInText = false;
-                for (EditorObject textObject : text) {
-                    if (textObject instanceof TextString string) {
-                        if (string.getAttribute("id").stringValue().equals(label.getAttribute("text").stringValue())) {
-                            alreadyInText = true;
-                            break;
-                        }
-                    }
-                }
-                if (!alreadyInText) {
-                    try {
-                        EditorObject myString = ObjectUtil.deepClone(GlobalResourceManager.getText(label.getAttribute("text").stringValue(), version), text.get(0));
-                        text.add(myString);
-                    } catch (Exception e) {
-                        LevelLoader.failedResources.add(("Level text \"" + label.getAttribute("text").stringValue() + "\" (version " + version + ")"));
-                    }
-                }
+        SetDefaults currentSetDefaults = null;
+
+        for (EditorObject editorObject : resrc) {
+
+            if (editorObject instanceof SetDefaults setDefaults) {
+                currentSetDefaults = setDefaults;
             }
+
+            else if (editorObject instanceof ResrcImage resrcImage) {
+                resrcImage.setSetDefaults(currentSetDefaults);
+            } else if (editorObject instanceof Sound sound) {
+                sound.setSetDefaults(currentSetDefaults);
+            } else if (editorObject instanceof Font font) {
+                font.setSetDefaults(currentSetDefaults);
+            }
+
         }
 
-        for (EditorObject levelObject : level) {
-            if (levelObject instanceof Signpost signpost) {
-                boolean alreadyInText = false;
-                for (EditorObject textObject : text) {
-                    if (textObject instanceof TextString string) {
-                        if (string.getAttribute("id").stringValue().equals(signpost.getAttribute("text").stringValue())) {
-                            alreadyInText = true;
-                            break;
-                        }
-                    }
-                }
-                if (!alreadyInText) {
-                    try {
-                        ObjectUtil.deepClone(GlobalResourceManager.getText(signpost.getAttribute("text").stringValue(), version), text.get(0));
-                    } catch (Exception e) {
-                        LevelLoader.failedResources.add(("Level text \"" + signpost.getAttribute("text").stringValue() + "\" (version " + version + ")"));
-                        EditorObject string = ObjectCreator.create("string", text.get(0));
-                        if (string == null) continue;
-                        string.setAttribute("id", signpost.getAttribute("text").stringValue());
-                    }
-                }
+        for (EditorObject editorObject : scene) if (editorObject instanceof Label label) {
+            try {
+                TextString textString = ResourceManager.getText(null, label.getAttribute("text").stringValue(), version);
+                text.add(ObjectUtil.deepClone(textString, text.get(0)));
+            } catch (FileNotFoundException ignored) {
+
             }
         }
 
         cameraToMiddleOfLevel();
+
     }
 
 }

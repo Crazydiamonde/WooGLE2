@@ -123,21 +123,21 @@ public class Alarms {
         });
     }
 
-    public static void confirmCleanResourcesMessage(ArrayList<EditorObject> resourceNames) {
+    public static void confirmCleanResourcesMessage(WorldLevel level, ArrayList<EditorObject> resourceNames) {
 
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setHeaderText("Clean Level Resources");
         StringBuilder content = new StringBuilder("Are you sure you want to remove unused resources?\nThe following resources will be cleaned:");
 
         for (EditorObject resourceName : resourceNames) {
-            content.append("\n").append(resourceName.getAttribute("id"));
+            content.append("\n").append(resourceName.getAttribute("id").stringValue());
         }
 
         alert.setContentText(content.toString());
 
         alert.showAndWait().ifPresent(buttonType -> {
             if (buttonType.equals(ButtonType.OK)) {
-                LevelResourceManager.confirmedCleanLevelResources(resourceNames);
+                LevelResourceManager.confirmedCleanLevelResources(level, resourceNames);
             }
         });
     }

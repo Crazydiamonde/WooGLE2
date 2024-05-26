@@ -1,16 +1,13 @@
 package com.woogleFX.file;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -80,7 +77,7 @@ public class FileManager {
     public static Image getFailedImage() {
         return failedImage;
     }
-    public static void openFailedImage() throws FileNotFoundException {
+    public static void openFailedImage() throws IOException {
         failedImage = openImageFromFilePath(editorLocation + "ObjectIcons\\failed.png");
     }
 
@@ -107,8 +104,11 @@ public class FileManager {
         saxParser.parse(properties, defaultHandler);
     }
 
-    public static Image openImageFromFilePath(String file_path) throws FileNotFoundException {
-        return new Image(new FileInputStream(file_path));
+    public static Image openImageFromFilePath(String file_path) throws IOException {
+        InputStream inputStream = new FileInputStream(file_path);
+        Image image = new Image(inputStream);
+        inputStream.close();
+        return image;
     }
 
     public static Image getIcon(String imagePath) throws FileNotFoundException {
@@ -289,7 +289,7 @@ public class FileManager {
     public static void saveProperties() throws IOException {
         StringBuilder export = new StringBuilder("<properties>\n\n<oldWOG filepath=\"" + oldWOGdir + "\"/>\n<newWOG filepath=\"" + newWOGdir + "\"/>\n<gooBallPalette>\n");
         for (int i = 0; i < PaletteManager.getPaletteBalls().size(); i++) {
-            export.append("\t<Ball ball=\"").append(PaletteManager.getPaletteBalls().get(i)).append("\" version=\"").append(PaletteManager.getPaletteVersions().get(i) == GameVersion.OLD ? "1.3" : "1.5").append("\"/>\n");
+            export.append("\t<Ball ball=\"").append(PaletteManager.getPaletteBalls().get(i)).append("\" version=\"").append(PaletteManager.getPaletteVersions().get(i).toString()).append("\"/>\n");
         }
         export.append("</gooBallPalette>\n</properties>");
 

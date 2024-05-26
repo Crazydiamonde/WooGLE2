@@ -14,6 +14,7 @@ import com.worldOfGoo.particle.Ambientparticleeffect;
 import com.worldOfGoo.particle.Particleeffect;
 import com.worldOfGoo.resrc.ResrcImage;
 import com.worldOfGoo.resrc.SetDefaults;
+import com.worldOfGoo.resrc.Sound;
 import com.worldOfGoo.scene.Circle;
 import com.worldOfGoo.scene.Compositegeom;
 import com.worldOfGoo.scene.Rectangle;
@@ -87,9 +88,9 @@ public class InputField {
                 }
             case IMAGE, IMAGE_REQUIRED:
 
-                EditorObject resourceManifest = LevelManager.getLevel().getResourcesObject();
+                EditorObject resourceManifest = LevelManager.getLevel().getResrcObject();
 
-                for (EditorObject resrc : LevelManager.getLevel().getResources()) {
+                for (EditorObject resrc : LevelManager.getLevel().getResrc()) {
 
                     if (resrc instanceof ResrcImage resrcImage) {
 
@@ -170,6 +171,19 @@ public class InputField {
                 return false;
             case CONTEXT:
                 return potential.equals("screen");
+            case FONT:
+                return true;
+            case IMAGE_PATH:
+                String imageGameDir = LevelManager.getLevel().getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+                if (object instanceof ResrcImage resrcImage) {
+                    return new File(imageGameDir + "\\" + resrcImage.getAdjustedPath() + ".png").exists();
+                } else return false;
+            case SOUND_PATH:
+                String soundGameDir = LevelManager.getLevel().getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+                if (object instanceof Sound sound) {
+                    return new File(soundGameDir + "\\" + sound.getAdjustedPath() + ".png").exists();
+                } else return false;
+
             default:
                 return false;
         }

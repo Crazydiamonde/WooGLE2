@@ -184,9 +184,11 @@ public class SceneLayer extends EditorObject {
 
     private void updateImage() {
 
+        if (LevelManager.getLevel() == null) return;
+
         try {
             if (!getAttribute("image").stringValue().isEmpty()) {
-                image = getAttribute("image").imageValue(LevelManager.getVersion());
+                image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
                 image = ImageUtility.colorize(image, getAttribute("colorize").colorValue());
             }
         } catch (FileNotFoundException ignored) {

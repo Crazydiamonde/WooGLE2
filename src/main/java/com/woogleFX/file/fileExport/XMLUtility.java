@@ -103,7 +103,7 @@ public class XMLUtility {
             if (object.getAttribute("type").stringValue().isEmpty() && object.getAttribute("value").stringValue().isEmpty()) {
                 export += "\t".repeat(spaces) + "<ocd />";
             } else {
-                export += "\t".repeat(spaces) + "<ocd>" + object.getAttribute("type") + "," + object.getAttribute("value") + "</ocd>";
+                export += "\t".repeat(spaces) + "<ocd>" + object.getAttribute("type").stringValue() + "," + object.getAttribute("value").stringValue() + "</ocd>";
             }
         } else if (object.getAttributes().length == 1 && object.getChildren().isEmpty()) {
             if (object.getAttributes()[0].stringValue().isEmpty()) {

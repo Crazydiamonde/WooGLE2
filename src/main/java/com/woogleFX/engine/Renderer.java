@@ -98,13 +98,11 @@ public class Renderer {
 
     public static ArrayList<ObjectComponent> orderObjectPositionsByDepth(WorldLevel worldLevel) {
 
-        // TODO fix rendering order when undoing / pasting
-
         ArrayList<ObjectComponent> objectComponents = new ArrayList<>();
 
         addAllObjectPositionsToList(objectComponents, worldLevel.getLevelObject());
         addAllObjectPositionsToList(objectComponents, worldLevel.getSceneObject());
-        addAllObjectPositionsToList(objectComponents, worldLevel.getResourcesObject());
+        addAllObjectPositionsToList(objectComponents, worldLevel.getResrcObject());
         addAllObjectPositionsToList(objectComponents, worldLevel.getAddinObject());
         addAllObjectPositionsToList(objectComponents, worldLevel.getTextObject());
 

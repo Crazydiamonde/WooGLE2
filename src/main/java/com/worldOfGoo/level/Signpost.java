@@ -101,14 +101,14 @@ public class Signpost extends EditorObject {
         if (LevelManager.getLevel() == null) return;
 
         try {
-            image = getAttribute("image").imageValue(LevelManager.getVersion());
+            image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
             if (image == null) return;
             Color color = getAttribute("colorize").colorValue();
             image = ImageUtility.colorize(image, color);
         } catch (Exception e) {
             // TODO make this cleaner
-            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + (LevelManager.getVersion() == GameVersion.OLD ? "1.3" : "1.5") + ")")) {
-                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + (LevelManager.getVersion() == GameVersion.OLD ? "1.3" : "1.5") + ")");
+            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + LevelManager.getVersion() + ")")) {
+                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + LevelManager.getVersion() + ")");
             }
             image = null;
         }

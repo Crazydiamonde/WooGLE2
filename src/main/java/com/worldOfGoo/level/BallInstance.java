@@ -5,9 +5,9 @@ import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.file.resourceManagers.BallManager;
+import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
@@ -21,6 +21,7 @@ import javafx.scene.paint.Paint;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -88,7 +89,7 @@ public class BallInstance extends EditorObject {
 
     private static _Ball getBall(String type) {
 
-        GameVersion version = LevelManager.getVersion();
+        GameVersion version = LevelManager.getLevel().getVersion();
 
         for (_Ball ball : BallManager.getImportedBalls()) {
             String name = ball.getObjects().get(0).getAttribute("name").stringValue();
@@ -105,11 +106,6 @@ public class BallInstance extends EditorObject {
             return null;
         }
 
-        for (EditorObject resrc : FileManager.commonBallResrcData) {
-            GlobalResourceManager.addResource(resrc, version);
-        }
-
-        ball.makeImages(version);
         ball.setVersion(version);
 
         BallManager.getImportedBalls().add(ball);
@@ -370,138 +366,163 @@ public class BallInstance extends EditorObject {
 
         // TODO build hitbox based on entire bounds of parts
 
-        if (part.getImages().isEmpty()) return;
+        String[] imageStrings = part.getAttribute("image").listValue();
+        if (imageStrings.length == 0) return;
 
-        Image img = part.getImages().get((int)(part.getImages().size() * machine.nextDouble()));
-        if (img != null) addObjectComponent(new ImageComponent() {
-            public double getX() {
+        String imageString = imageStrings[(int)(imageStrings.length * machine.nextDouble())];
 
-                double x = getAttribute("x").doubleValue();
-                double y = -getAttribute("y").doubleValue();
-                double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+        Image img;
+        try {
+            img = ResourceManager.getImage(ball.getResources(), imageString, LevelManager.getLevel().getVersion());
+        } catch (FileNotFoundException e) {
+            img = null;
+        }
 
-                Point2D position = new Point2D(partX, partY);
-                position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
-                position = position.add(x, y);
+        if (img != null) {
+            Image finalImg = img;
+            addObjectComponent(new ImageComponent() {
+                public double getX() {
 
-                return position.getX();
+                    double x = getAttribute("x").doubleValue();
+                    double y = -getAttribute("y").doubleValue();
+                    double angle = -Math.toRadians(getAttribute("angle").doubleValue());
 
-            }
-            public void setX(double x) {
-                setAttribute("x", x - partX);
-            }
-            public double getY() {
+                    Point2D position = new Point2D(partX, partY);
+                    position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
+                    position = position.add(x, y);
 
-                double x = getAttribute("x").doubleValue();
-                double y = -getAttribute("y").doubleValue();
-                double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+                    return position.getX();
 
-                Point2D position = new Point2D(partX, partY);
-                position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
-                position = position.add(x, y);
+                }
+                public void setX(double x) {
+                    setAttribute("x", x - partX);
+                }
+                public double getY() {
 
-                return position.getY();
+                    double x = getAttribute("x").doubleValue();
+                    double y = -getAttribute("y").doubleValue();
+                    double angle = -Math.toRadians(getAttribute("angle").doubleValue());
 
-            }
-            public void setY(double y) {
-                setAttribute("y", -y + partY);
-            }
-            public double getRotation() {
-                return -Math.toRadians(getAttribute("angle").doubleValue());
-            }
-            public void setRotation(double rotation) {
-                setAttribute("angle", -Math.toDegrees(rotation));
-            }
-            public double getScaleX() {
-                return scale;
-            }
-            public double getScaleY() {
-                return scale;
-            }
-            public double getDepth() {
-                return 0.000001;
-            }
-            public Image getImage() {
-                return img;
-            }
-            public boolean isVisible() {
-                return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 2;
-            }
-            public boolean isSelectable() {
-                String partName = part.getAttribute("name").stringValue();
-                return partName.equals("body");
-            }
-            public boolean isResizable() {
-                return false;
-            }
-            public boolean isRotatable() {
-                String partName = part.getAttribute("name").stringValue();
-                return partName.equals("body");
-            }
-        });
+                    Point2D position = new Point2D(partX, partY);
+                    position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
+                    position = position.add(x, y);
 
-        Image pupilImg = part.getPupilImage();
-        if (pupilImg != null) addObjectComponent(new ImageComponent() {
-            public double getX() {
+                    return position.getY();
 
-                double x = getAttribute("x").doubleValue();
-                double y = -getAttribute("y").doubleValue();
-                double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+                }
+                public void setY(double y) {
+                    setAttribute("y", -y + partY);
+                }
+                public double getRotation() {
+                    return -Math.toRadians(getAttribute("angle").doubleValue());
+                }
+                public void setRotation(double rotation) {
+                    setAttribute("angle", -Math.toDegrees(rotation));
+                }
+                public double getScaleX() {
+                    return scale;
+                }
+                public double getScaleY() {
+                    return scale;
+                }
+                public double getDepth() {
+                    return 0.000001;
+                }
+                public Image getImage() {
+                    return finalImg;
+                }
+                public boolean isVisible() {
+                    return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 2;
+                }
+                public boolean isSelectable() {
+                    String partName = part.getAttribute("name").stringValue();
+                    return partName.equals("body");
+                }
+                public boolean isResizable() {
+                    return false;
+                }
+                public boolean isRotatable() {
+                    String partName = part.getAttribute("name").stringValue();
+                    return partName.equals("body");
+                }
+            });
+        }
 
-                Point2D position = new Point2D(partX, partY);
-                position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
-                position = position.add(x, y);
 
-                return position.getX();
+        String[] pupilImageStrings = part.getAttribute("pupil").listValue();
 
-            }
-            public void setX(double x) {
-                setAttribute("x", x - partX);
-            }
-            public double getY() {
+        String pupilImageString = pupilImageStrings[(int)(pupilImageStrings.length * machine.nextDouble())];
 
-                double x = getAttribute("x").doubleValue();
-                double y = -getAttribute("y").doubleValue();
-                double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+        Image pupilImg;
+        try {
+            pupilImg = ResourceManager.getImage(ball.getResources(), pupilImageString, LevelManager.getLevel().getVersion());
+        } catch (FileNotFoundException e) {
+            pupilImg = null;
+        }
+        if (pupilImg != null) {
+            Image finalPupilImg = pupilImg;
+            addObjectComponent(new ImageComponent() {
+                public double getX() {
 
-                Point2D position = new Point2D(partX, partY);
-                position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
-                position = position.add(x, y);
+                    double x = getAttribute("x").doubleValue();
+                    double y = -getAttribute("y").doubleValue();
+                    double angle = -Math.toRadians(getAttribute("angle").doubleValue());
 
-                return position.getY();
+                    Point2D position = new Point2D(partX, partY);
+                    position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
+                    position = position.add(x, y);
 
-            }
-            public void setY(double y) {
-                setAttribute("y", -y + partY);
-            }
-            public double getRotation() {
-                return 0; // ???
-            }
-            public double getScaleX() {
-                return scale;
-            }
-            public double getScaleY() {
-                return scale;
-            }
-            public double getDepth() {
-                return 0.000001;
-            }
-            public Image getImage() {
-                return pupilImg;
-            }
-            public boolean isVisible() {
-                return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 2;
-            }
-            public boolean isSelectable() {
-                return false;
-            }
-            public boolean isResizable() {
-                return false;
-            }
-            public boolean isRotatable() {
-                return false;
-            }
-        });
+                    return position.getX();
+
+                }
+                public void setX(double x) {
+                    setAttribute("x", x - partX);
+                }
+                public double getY() {
+
+                    double x = getAttribute("x").doubleValue();
+                    double y = -getAttribute("y").doubleValue();
+                    double angle = -Math.toRadians(getAttribute("angle").doubleValue());
+
+                    Point2D position = new Point2D(partX, partY);
+                    position = ObjectUtil.rotate(position, angle, new Point2D(0, 0));
+                    position = position.add(x, y);
+
+                    return position.getY();
+
+                }
+                public void setY(double y) {
+                    setAttribute("y", -y + partY);
+                }
+                public double getRotation() {
+                    return 0; // ???
+                }
+                public double getScaleX() {
+                    return scale;
+                }
+                public double getScaleY() {
+                    return scale;
+                }
+                public double getDepth() {
+                    return 0.000001;
+                }
+                public Image getImage() {
+                    return finalPupilImg;
+                }
+                public boolean isVisible() {
+                    return LevelManager.getLevel().getVisibilitySettings().getShowGoos() == 2;
+                }
+                public boolean isSelectable() {
+                    return false;
+                }
+                public boolean isResizable() {
+                    return false;
+                }
+                public boolean isRotatable() {
+                    return false;
+                }
+            });
+        }
 
     }
 

@@ -2,7 +2,14 @@ package com.worldOfGoo.scene;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.editorObjects._Font;
+import com.woogleFX.editorObjects.objectComponents.TextComponent;
+import com.woogleFX.file.resourceManagers.ResourceManager;
+import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
+import com.worldOfGoo.text.TextString;
+
+import java.io.FileNotFoundException;
 
 public class Label extends EditorObject {
 
@@ -22,7 +29,54 @@ public class Label extends EditorObject {
         addAttribute("text",        InputField.TEXT)                            .assertRequired();
         addAttribute("colorize", InputField.COLOR)    .setDefaultValue("255,255,255");
 
+        addObjectComponent(new TextComponent() {
+            @Override
+            public _Font getFont() {
+                try {
+                    return ResourceManager.getFont(LevelManager.getLevel().getResrc(), getAttribute("font").stringValue(), LevelManager.getLevel().getVersion());
+                } catch (FileNotFoundException e) {
+                    return null;
+                }
+            }
 
+            @Override
+            public String getText() {
+                for (EditorObject editorObject : LevelManager.getLevel().getText()) {
+                    if (editorObject instanceof TextString textString) {
+                        if (textString.getAttribute("id").stringValue().equals(getAttribute("text").stringValue())) {
+                            return textString.getAttribute("text").stringValue();
+                        }
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public double getX() {
+                return getAttribute("x").doubleValue();
+            }
+
+            @Override
+            public double getY() {
+                return -getAttribute("y").doubleValue();
+            }
+
+            @Override
+            public double getDepth() {
+                return 0;
+            }
+
+            @Override
+            public double getScale() {
+                return getAttribute("scale").doubleValue();
+            }
+
+            @Override
+            public double getRotation() {
+                return -Math.toRadians(getAttribute("rotation").doubleValue());
+            }
+
+        });
 
         setMetaAttributes(MetaEditorAttribute.parse("id,x,y,rotation,scale,depth,colorize,overlay,screenspace,Text<text,font,align>"));
 

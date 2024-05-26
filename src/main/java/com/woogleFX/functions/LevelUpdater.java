@@ -3,7 +3,9 @@ package com.woogleFX.functions;
 import com.woogleFX.editorObjects.EditorAttribute;
 import com.woogleFX.editorObjects.InputField;
 import com.woogleFX.editorObjects._Ball;
+import com.woogleFX.engine.fx.FXHierarchy;
 import com.woogleFX.engine.fx.FXLevelSelectPane;
+import com.woogleFX.engine.fx.FXPropertiesView;
 import com.woogleFX.engine.fx.FXStage;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.fileExport.GoomodExporter;
@@ -63,7 +65,7 @@ public class LevelUpdater {
     private static boolean verifyEntireLevel(WorldLevel level) {
         return verifyAllObjects(level.getScene()) &&
                 verifyAllObjects(level.getLevel()) &&
-                verifyAllObjects(level.getResources()) &&
+                verifyAllObjects(level.getResrc()) &&
                 verifyAllObjects(level.getText()) &&
                 verifyAllObjects(level.getAddin());
     }
@@ -165,7 +167,7 @@ public class LevelUpdater {
         }
 
         /* Edit every resource */
-        for (EditorObject resource : level.getResources()) {
+        for (EditorObject resource : level.getResrc()) {
 
             if (resource instanceof Resources) {
 
@@ -203,6 +205,14 @@ public class LevelUpdater {
         try {
             nuke(new File(start + "\\res\\levels\\" + level.getLevelName()));
             TabPane levelSelectPane = FXLevelSelectPane.getLevelSelectPane();
+            if (levelSelectPane.getTabs().size() == 1) {
+                FXLevelSelectPane.getLevelSelectPane().setMinHeight(0);
+                FXLevelSelectPane.getLevelSelectPane().setMaxHeight(0);
+                // If all tabs are closed, clear the side pane
+                FXHierarchy.getHierarchy().setRoot(null);
+                // Clear the properties pane too
+                FXPropertiesView.changeTableView(null);
+            }
             levelSelectPane.getTabs().remove(levelSelectPane.getSelectionModel().getSelectedItem());
         } catch (Exception e) {
             Alarms.errorMessage(e);

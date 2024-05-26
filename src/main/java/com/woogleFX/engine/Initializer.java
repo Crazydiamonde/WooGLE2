@@ -2,7 +2,9 @@ package com.woogleFX.engine;
 
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.engine.fx.*;
+import com.woogleFX.file.BaseGameResources;
 import com.woogleFX.file.FileManager;
+import com.woogleFX.file.fileImport.FontReader;
 import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.functions.*;
 import com.woogleFX.file.resourceManagers.BallManager;
@@ -10,6 +12,9 @@ import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
 import com.worldOfGoo.addin.AddinLevelName;
+import com.worldOfGoo.resrc.Font;
+import com.worldOfGoo.resrc.ResrcImage;
+import com.worldOfGoo.resrc.Sound;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,9 +82,9 @@ public class Initializer {
         logger.info("1.3 = " + FileManager.getOldWOGdir());
         logger.info("1.5 = " + FileManager.getNewWOGdir());
 
-        // Import all goo balls and all misc resources from the game files
-        if (!FileManager.getOldWOGdir().isEmpty()) LevelResourceManager.importGameResources(GameVersion.OLD);
-        if (!FileManager.getNewWOGdir().isEmpty()) LevelResourceManager.importGameResources(GameVersion.NEW);
+        BaseGameResources.init();
+
+        GlobalResourceManager.init();
 
         for (int i = 0; i < PaletteManager.getPaletteBalls().size(); i++) {
 
@@ -87,17 +92,14 @@ public class Initializer {
             GameVersion ballVersion = PaletteManager.getPaletteVersions().get(i);
 
             try {
+
                 _Ball ball = FileManager.openBall(ballName, ballVersion);
 
-                for (EditorObject resrc : FileManager.commonBallResrcData) {
-                    GlobalResourceManager.addResource(resrc, ballVersion);
-                }
-
                 if (ball != null) {
-                    ball.makeImages(ballVersion);
                     ball.setVersion(ballVersion);
                     BallManager.getImportedBalls().add(ball);
                 }
+
             } catch (ParserConfigurationException | SAXException | IOException e) {
                 Alarms.errorMessage(e);
             }
@@ -108,7 +110,7 @@ public class Initializer {
 
         try {
             FileManager.openFailedImage();
-        } catch (FileNotFoundException ignored) {
+        } catch (IOException ignored) {
 
         }
 
@@ -128,6 +130,7 @@ public class Initializer {
                 LevelLoader.openLevel(launchArguments[0], GameVersion.OLD);
             }
         }
+        FontReader.read("res\\fonts\\console_2x", GameVersion.NEW);
     }
 
 }

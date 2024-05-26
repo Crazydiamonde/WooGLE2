@@ -19,7 +19,6 @@ module com.example.WOGAnniversaryEditor {
   exports com.woogleFX.editorObjects;
   exports com.woogleFX.functions.undoHandling.userActions;
   exports com.woogleFX.structures.simpleStructures;
-  exports com.woogleFX.file.resourceManagers.resources;
   exports com.woogleFX.engine;
   exports com.woogleFX.engine.fx;
   exports com.woogleFX.file.fileExport;
@@ -27,5 +26,6 @@ module com.example.WOGAnniversaryEditor {
   exports com.woogleFX.file.fileImport;
   exports com.woogleFX.file.resourceManagers;
   exports com.woogleFX.editorObjects.objectComponents;
+  exports com.woogleFX.file.font;
 
 }

@@ -106,9 +106,9 @@ public class FXHierarchy {
             EditorObject rootObject;
             if (t1 == scene) rootObject = worldLevel.getScene().get(0);
             else if (t1 == level) rootObject = worldLevel.getLevel().get(0);
-            else if (t1 == resrc) rootObject =  worldLevel.getResources().get(0);
-            else if (t1 == addin) rootObject = worldLevel.getText().get(0);
-            else if (t1 == text) rootObject = worldLevel.getAddin().get(0);
+            else if (t1 == resrc) rootObject =  worldLevel.getResrc().get(0);
+            else if (t1 == text) rootObject = worldLevel.getText().get(0);
+            else if (t1 == addin) rootObject = worldLevel.getAddin().get(0);
             else return;
 
             hierarchy.setRoot(rootObject.getTreeItem());

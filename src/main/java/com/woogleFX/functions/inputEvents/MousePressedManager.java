@@ -29,7 +29,7 @@ public class MousePressedManager {
         for (EditorObject editorObject : level.getScene()) {
             if (List.of(editorObject.getObjectComponents()).contains(objectComponent)) return editorObject;
         }
-        for (EditorObject editorObject : level.getResources()) {
+        for (EditorObject editorObject : level.getResrc()) {
             if (List.of(editorObject.getObjectComponents()).contains(objectComponent)) return editorObject;
         }
         for (EditorObject editorObject : level.getAddin()) {

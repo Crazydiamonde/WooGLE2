@@ -5,6 +5,7 @@ import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.resourceManagers.GlobalResourceManager;
+import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.structures.GameVersion;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -20,8 +21,8 @@ public class EffectsManager {
         Image strandImage;
 
         try {
-            if (FileManager.hasNewWOG()) strandImage = GlobalResourceManager.getImage(strandImageID, GameVersion.NEW);
-            else strandImage = GlobalResourceManager.getImage(strandImageID, GameVersion.OLD);
+            if (FileManager.hasNewWOG()) strandImage = ResourceManager.getImage(null, strandImageID, GameVersion.NEW);
+            else strandImage = ResourceManager.getImage(null, strandImageID, GameVersion.OLD);
         } catch (FileNotFoundException e) {
             return null;
         }

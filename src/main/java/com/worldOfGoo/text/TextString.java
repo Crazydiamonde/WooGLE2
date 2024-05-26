@@ -5,6 +5,7 @@ import com.woogleFX.editorObjects.InputField;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 public class TextString extends EditorObject {
+
     public TextString(EditorObject _parent) {
         super(_parent, "string", "text\\textstring");
 

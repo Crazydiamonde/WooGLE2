@@ -71,7 +71,7 @@ public class ObjectManager {
 
         level.getScene().remove(item);
         level.getLevel().remove(item);
-        level.getResources().remove(item);
+        level.getResrc().remove(item);
         level.getAddin().remove(item);
         level.getText().remove(item);
 

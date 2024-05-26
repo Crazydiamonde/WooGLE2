@@ -9,6 +9,9 @@ import com.woogleFX.file.resourceManagers.BallManager;
 import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
+import com.worldOfGoo.resrc.Font;
+import com.worldOfGoo.resrc.ResrcImage;
+import com.worldOfGoo.resrc.Sound;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -37,7 +40,7 @@ public class GameResourceManager {
 
         BallManager.getImportedBalls().removeIf(ball -> ball.getVersion() == version);
 
-        LevelResourceManager.importGameResources(version);
+        GlobalResourceManager.init();
 
         for (int i = 0; i < PaletteManager.getPaletteBalls().size(); i++) {
 
@@ -51,12 +54,7 @@ public class GameResourceManager {
                 try {
                     _Ball ball = FileManager.openBall(ballName, ballVersion);
 
-                    for (EditorObject resrc : FileManager.commonBallResrcData) {
-                        GlobalResourceManager.addResource(resrc, ballVersion);
-                    }
-
                     if (ball != null) {
-                        ball.makeImages(ballVersion);
                         ball.setVersion(ballVersion);
                         BallManager.getImportedBalls().add(ball);
                     }

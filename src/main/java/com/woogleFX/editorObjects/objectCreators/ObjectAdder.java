@@ -110,7 +110,7 @@ public class ObjectAdder {
                     "signpost", "Vertex" -> level.getLevelObject();
 
             case "resrcimage", "sound", "setdefaults" ->
-                    level.getResourcesObject().getChildren().get(0);
+                    level.getResrcObject().getChildren().get(0);
 
             case "textstring" -> level.getTextObject();
 
@@ -123,7 +123,7 @@ public class ObjectAdder {
 
         if (parent instanceof Scene) level.getScene().add(obj);
         else if (parent instanceof Level) level.getLevel().add(obj);
-        else if (parent instanceof ResourceManifest) level.getResources().add(obj);
+        else if (parent instanceof ResourceManifest) level.getResrc().add(obj);
         else if (parent instanceof Addin) level.getAddin().add(obj);
         else if (parent instanceof TextStrings) level.getText().add(obj);
 

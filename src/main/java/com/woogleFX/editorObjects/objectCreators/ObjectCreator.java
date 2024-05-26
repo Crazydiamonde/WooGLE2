@@ -35,7 +35,7 @@ public class ObjectCreator {
                     "loopsound", "music", "pipe", "poi", "signpost",
                     "Strand", "targetheight" -> level.getLevelObject();
 
-            case "font" -> level.getResourcesObject();
+            case "font" -> level.getResrcObject();
 
             default -> null;
 
