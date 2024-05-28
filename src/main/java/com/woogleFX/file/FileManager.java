@@ -90,6 +90,7 @@ public class FileManager {
         String editorLocation1;
         try {
             editorLocation1 = new File(SupremeMain.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + "\\";
+            logger.debug(editorLocation1);
         } catch (URISyntaxException ignored) {
             editorLocation1 = "";
         }
