@@ -10,11 +10,11 @@ import com.woogleFX.functions.LevelLoader;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import com.woogleFX.structures.simpleStructures.Position;
 import com.worldOfGoo.ball.BallStrand;
 
-import com.worldOfGoo.resrc.ResrcImage;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -46,8 +46,8 @@ public class Strand extends EditorObject {
     private int strandBallID = 2;
 
 
-    public Strand(EditorObject _parent) {
-        super(_parent, "Strand", "level\\strand");
+    public Strand(EditorObject _parent, GameVersion version) {
+        super(_parent, "Strand", version);
 
         addAttribute("gb1", InputField.GOOBALL_ID).assertRequired();
         addAttribute("gb2", InputField.GOOBALL_ID).assertRequired();
@@ -125,12 +125,11 @@ public class Strand extends EditorObject {
                 _Ball ball;
                 if (strandBallID == 1) ball = goo1.getBall(); else ball = goo2.getBall();
                 if (goo1.getBall() == null || goo2.getBall() == null) return;
-                strandImage = strand.getAttribute("image").imageValue(ball.getResources(), LevelManager.getVersion());
+                strandImage = strand.getAttribute("image").imageValue(ball.getResources(), getVersion());
             } catch (Exception e) {
-                e.printStackTrace();
                 // TODO make this cleaner
-                if (!LevelLoader.failedResources.contains("From Strand: \"" + strand.getAttribute("image").stringValue() + "\" (version " + LevelManager.getVersion() + ")")) {
-                    LevelLoader.failedResources.add("From Strand: \"" + strand.getAttribute("image").stringValue() + "\" (version " + LevelManager.getVersion() + ")");
+                if (!LevelLoader.failedResources.contains("From Strand: \"" + strand.getAttribute("image").stringValue() + "\" (version " + getVersion() + ")")) {
+                    LevelLoader.failedResources.add("From Strand: \"" + strand.getAttribute("image").stringValue() + "\" (version " + getVersion() + ")");
                 }
             }
         }

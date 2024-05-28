@@ -2,11 +2,12 @@ package com.worldOfGoo.ball;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 
 public class Sinanim extends EditorObject {
 
-    public Sinanim(EditorObject _parent) {
-        super(_parent, "sinanim");
+    public Sinanim(EditorObject _parent, GameVersion version) {
+        super(_parent, "sinanim", version);
 
         addAttribute("part",  InputField.ANY).assertRequired();
         addAttribute("state", InputField.ANY).assertRequired();

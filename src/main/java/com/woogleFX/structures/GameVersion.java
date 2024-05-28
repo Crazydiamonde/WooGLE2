@@ -12,4 +12,10 @@ public enum GameVersion {
         return null;
     }
 
+
+    public static final GameVersion[] ALL = new GameVersion[]{
+            OLD,
+            NEW
+    };
+
 }

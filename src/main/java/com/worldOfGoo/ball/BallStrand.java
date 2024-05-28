@@ -2,11 +2,12 @@ package com.worldOfGoo.ball;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 
 public class BallStrand extends EditorObject {
 
-    public BallStrand(EditorObject _parent) {
-        super(_parent, "strand");
+    public BallStrand(EditorObject _parent, GameVersion version) {
+        super(_parent, "strand", version);
 
         addAttribute("type",           InputField.ANY)                     .assertRequired();
         addAttribute("image",          InputField.IMAGE)                   .assertRequired();

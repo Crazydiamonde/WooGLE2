@@ -7,14 +7,15 @@ import com.woogleFX.editorObjects.InputField;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.engine.Depth;
 import com.woogleFX.functions.LevelManager;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Line extends EditorObject {
 
-    public Line(EditorObject _parent) {
-        super(_parent, "line", "scene\\line");
+    public Line(EditorObject _parent, GameVersion version) {
+        super(_parent, "line", version);
 
         addAttribute("id",       InputField.ANY)     .assertRequired();
         addAttribute("static",   InputField.FLAG)    .setDefaultValue("true").assertRequired();

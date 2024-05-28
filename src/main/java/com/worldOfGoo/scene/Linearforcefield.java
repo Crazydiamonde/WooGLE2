@@ -6,13 +6,14 @@ import com.woogleFX.engine.Depth;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.*;
 
 public class Linearforcefield extends EditorObject {
 
-    public Linearforcefield(EditorObject _parent) {
-        super(_parent, "linearforcefield", "scene\\linearforcefield");
+    public Linearforcefield(EditorObject _parent, GameVersion version) {
+        super(_parent, "linearforcefield", version);
 
         addAttribute("id",               InputField.ANY)                                    .assertRequired();
         addAttribute("type",             InputField.ANY)       .setDefaultValue("gravity")  .assertRequired();

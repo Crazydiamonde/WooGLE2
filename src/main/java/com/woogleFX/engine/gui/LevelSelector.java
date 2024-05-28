@@ -29,8 +29,6 @@ public class LevelSelector extends Application {
     public static String selected = "";
     public static Label selectedLabel = null;
 
-    public static File levelDir = null;
-
     @Override
     public void start(Stage stage) {
 
@@ -38,11 +36,7 @@ public class LevelSelector extends Application {
 
         VBox allLevelsBox = new VBox();
 
-        if (version == GameVersion.OLD){
-            levelDir = new File(FileManager.getOldWOGdir() + "\\res\\levels");
-        } else if (version == GameVersion.NEW){
-            levelDir = new File(FileManager.getNewWOGdir() + "\\res\\levels");
-        }
+        File levelDir = new File(FileManager.getGameDir(version) + "\\res\\levels");
 
         ScrollPane realPane = new ScrollPane(allLevelsBox);
 
@@ -63,52 +57,42 @@ public class LevelSelector extends Application {
 
             allLevelsBox.getChildren().clear();
 
-            if (levelDir != null) {
-                File[] levels = levelDir.listFiles();
-                if (levels != null) {
-                    for (File levelFile : levels) {
-                        boolean ok = false;
-                        switch (t1) {
-                            case "Original Levels Only" -> {
-                                for (String levelName : BaseGameResources.LEVELS) {
-                                    if (levelName.equals(levelFile.getName())) {
-                                        ok = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            case "Customizable Levels Only" -> {
-                                ok = true;
-                                for (String levelName : BaseGameResources.LEVELS) {
-                                    if (levelName.equals(levelFile.getName())) {
-                                        ok = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            case "All Levels" -> ok = true;
-                        }
-                        if (ok) {
-                            Label label = new Label(levelFile.getName());
-                            label.setPrefWidth(376);
-                            label.setOnMouseClicked(mouseEvent -> {
-                                if (selectedLabel == label) {
-                                    LevelLoader.openLevel(selected, version);
-                                    stage.close();
-                                    selectedLabel = null;
-                                    selected = "";
-                                    return;
-                                } else if (selectedLabel != null) {
-                                    selectedLabel.setStyle("");
-                                }
-                                label.setStyle("-fx-background-color: #C0E0FFFF");
-                                selectedLabel = label;
-                                selected = label.getText();
-                            });
-                            allLevelsBox.getChildren().add(label);
-                        }
-                    }
+            File[] levels = levelDir.listFiles();
+            if (levels == null) return;
+
+            for (File levelFile : levels) {
+
+                boolean ok = false;
+                switch (t1) {
+                    case "Original Levels Only" -> ok = BaseGameResources.LEVELS.stream().anyMatch(
+                            e -> e.equals(levelFile.getName()));
+                    case "Customizable Levels Only" -> ok = BaseGameResources.LEVELS.stream().noneMatch(
+                            e -> e.equals(levelFile.getName()));
+                    case "All Levels" -> ok = true;
                 }
+                if (!ok) return;
+
+                Label label = new Label(levelFile.getName());
+                label.setPrefWidth(376);
+                label.setOnMouseClicked(mouseEvent -> {
+
+                    if (selectedLabel == label) {
+                        LevelLoader.openLevel(selected, version);
+                        stage.close();
+                        selectedLabel = null;
+                        selected = "";
+                        return;
+                    }
+
+                    if (selectedLabel != null) selectedLabel.setStyle("");
+
+                    label.setStyle("-fx-background-color: #C0E0FFFF");
+                    selectedLabel = label;
+                    selected = label.getText();
+
+                });
+                allLevelsBox.getChildren().add(label);
+
             }
         });
 
@@ -123,12 +107,11 @@ public class LevelSelector extends Application {
         cancelButton.setLayoutY(332);
 
         openButton.setOnAction(actionEvent -> {
-            if (!selected.isEmpty()) {
-                LevelLoader.openLevel(selected, version);
-                stage.close();
-                selectedLabel = null;
-                selected = "";
-            }
+            if (selected.isEmpty()) return;
+            LevelLoader.openLevel(selected, version);
+            stage.close();
+            selectedLabel = null;
+            selected = "";
         });
 
         cancelButton.setOnAction(actionEvent -> stage.close());

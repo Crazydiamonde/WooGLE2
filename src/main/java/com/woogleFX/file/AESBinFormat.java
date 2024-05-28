@@ -2,9 +2,10 @@ package com.woogleFX.file;
 
 import org.bouncycastle.crypto.BlockCipher;
 import org.bouncycastle.crypto.BufferedBlockCipher;
+import org.bouncycastle.crypto.DefaultBufferedBlockCipher;
 import org.bouncycastle.crypto.InvalidCipherTextException;
-import org.bouncycastle.crypto.engines.AESEngine;
-import org.bouncycastle.crypto.modes.CBCBlockCipher;
+import org.bouncycastle.crypto.engines.AESLightEngine;
+import org.bouncycastle.crypto.modes.G3413CBCBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.io.*;
@@ -130,12 +131,13 @@ public class AESBinFormat
         return finalBytes;
     }
 
-    private static BufferedBlockCipher getCipher(boolean forEncryption)
-    {
-        BlockCipher engine = new AESEngine();
-        BufferedBlockCipher cipher = new BufferedBlockCipher(new CBCBlockCipher(engine));
+
+    private static BufferedBlockCipher getCipher(boolean forEncryption) {
+        BlockCipher engine = new AESLightEngine();
+        BufferedBlockCipher cipher = new DefaultBufferedBlockCipher(new G3413CBCBlockCipher(engine));
 
         cipher.init(forEncryption, new KeyParameter(KEY));
         return cipher;
     }
+
 }

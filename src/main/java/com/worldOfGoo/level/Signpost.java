@@ -17,8 +17,8 @@ public class Signpost extends EditorObject {
     private Image image;
 
 
-    public Signpost(EditorObject _parent) {
-        super(_parent, "signpost", "level\\signpost");
+    public Signpost(EditorObject _parent, GameVersion version) {
+        super(_parent, "signpost", version);
 
         addAttribute("name",      InputField.ANY)                                  .assertRequired();
         addAttribute("depth",     InputField.NUMBER).setDefaultValue("0")          .assertRequired();
@@ -101,14 +101,14 @@ public class Signpost extends EditorObject {
         if (LevelManager.getLevel() == null) return;
 
         try {
-            image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
+            image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), getVersion());
             if (image == null) return;
             Color color = getAttribute("colorize").colorValue();
             image = ImageUtility.colorize(image, color);
         } catch (Exception e) {
             // TODO make this cleaner
-            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + LevelManager.getVersion() + ")")) {
-                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + LevelManager.getVersion() + ")");
+            if (!LevelLoader.failedResources.contains("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + getVersion() + ")")) {
+                LevelLoader.failedResources.add("From signpost: \"" + getAttribute("image").stringValue() + "\" (version " + getVersion() + ")");
             }
             image = null;
         }

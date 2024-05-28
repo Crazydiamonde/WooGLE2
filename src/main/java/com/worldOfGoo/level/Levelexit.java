@@ -5,14 +5,15 @@ import com.woogleFX.engine.Depth;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Levelexit extends EditorObject {
 
-    public Levelexit(EditorObject _parent) {
-        super(_parent, "levelexit", "level\\levelexit");
+    public Levelexit(EditorObject _parent, GameVersion version) {
+        super(_parent, "levelexit", version);
 
         addAttribute("id",     InputField.ANY)     .setDefaultValue("theExit").assertRequired();
         addAttribute("pos",    InputField.POSITION).setDefaultValue("0,0")    .assertRequired();

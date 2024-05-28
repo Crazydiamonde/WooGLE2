@@ -11,7 +11,6 @@ import com.woogleFX.functions.undoHandling.userActions.ObjectCreationAction;
 import com.woogleFX.structures.WorldLevel;
 import com.worldOfGoo.level.BallInstance;
 import com.worldOfGoo.level.Strand;
-import com.worldOfGoo.level.Vertex;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 

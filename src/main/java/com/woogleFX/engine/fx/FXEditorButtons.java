@@ -3,9 +3,8 @@ package com.woogleFX.engine.fx;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.engine.SelectionManager;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
+import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.functions.*;
 import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
 import com.woogleFX.file.resourceManagers.BallManager;
@@ -14,9 +13,6 @@ import com.woogleFX.engine.gui.PaletteReconfigurator;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
 import com.worldOfGoo.ball.Part;
-import com.worldOfGoo.resrc.Font;
-import com.worldOfGoo.resrc.ResrcImage;
-import com.worldOfGoo.resrc.Sound;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -28,13 +24,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class FXEditorButtons {
 
@@ -72,18 +65,13 @@ public class FXEditorButtons {
 
 
     private static void setIcon(Button button, String pathString) {
-        try {
-            button.setGraphic(new ImageView(FileManager.getIcon(pathString)));
-        } catch (FileNotFoundException ignored) {
-            button.setGraphic(null);
-        }
+        button.setGraphic(new ImageView(FileManager.getIcon(pathString)));
     }
 
 
 
     public static Button createTemplateForBall(int size, _Ball ball) {
 
-        /*
         double minX = 0;
         double minY = 0;
         double maxX = 0;
@@ -111,58 +99,59 @@ public class FXEditorButtons {
                         ok = true;
                     }
                 }
-                if (ok) {
-                    double lowX;
-                    double highX;
-                    double lowY;
-                    double highY;
+                if (!ok) continue;
 
-                    String x = part.getAttribute("x").stringValue();
-                    String y = part.getAttribute("y").stringValue();
+                double lowX;
+                double highX;
+                double lowY;
+                double highY;
 
-                    double scale = Double.parseDouble(part.getAttribute("scale").stringValue());
+                String x = part.getAttribute("x").stringValue();
+                String y = part.getAttribute("y").stringValue();
 
-                    if (x.contains(",")) {
-                        lowX = Double.parseDouble(x.substring(0, x.indexOf(",")));
-                        highX = Double.parseDouble(x.substring(x.indexOf(",") + 1));
-                    } else {
-                        lowX = Double.parseDouble(x);
-                        highX = lowX;
-                    }
-                    if (y.contains(",")) {
-                        lowY = Double.parseDouble(y.substring(0, y.indexOf(",")));
-                        highY = Double.parseDouble(y.substring(y.indexOf(",") + 1));
-                    } else {
-                        lowY = Double.parseDouble(y);
-                        highY = lowY;
-                    }
+                double scale = Double.parseDouble(part.getAttribute("scale").stringValue());
 
-                    double myX = 0.5 * (highX - lowX) + lowX;
-                    double myY = 0.5 * (highY - lowY) + lowY;
-
-                    if (!part.getImages().isEmpty()) {
-                        Image img = part.getImages().get(0);
-                        if (img != null) {
-                            BufferedImage image = SwingFXUtils.fromFXImage(img, null);
-
-                            double iWidth = image.getWidth() * scale;
-                            double iHeight = image.getHeight() * scale;
-
-                            if (myX - iWidth / 2 < minX) {
-                                minX = myX - iWidth / 2;
-                            }
-                            if (-myY - iHeight / 2 < minY) {
-                                minY = -myY - iHeight / 2;
-                            }
-                            if (myX + iWidth / 2 > maxX) {
-                                maxX = myX + iWidth / 2;
-                            }
-                            if (-myY + iHeight / 2 > maxY) {
-                                maxY = -myY + iHeight / 2;
-                            }
-                        }
-                    }
+                if (x.contains(",")) {
+                    lowX = Double.parseDouble(x.substring(0, x.indexOf(",")));
+                    highX = Double.parseDouble(x.substring(x.indexOf(",") + 1));
+                } else {
+                    lowX = Double.parseDouble(x);
+                    highX = lowX;
                 }
+                if (y.contains(",")) {
+                    lowY = Double.parseDouble(y.substring(0, y.indexOf(",")));
+                    highY = Double.parseDouble(y.substring(y.indexOf(",") + 1));
+                } else {
+                    lowY = Double.parseDouble(y);
+                    highY = lowY;
+                }
+
+                double myX = 0.5 * (highX - lowX) + lowX;
+                double myY = 0.5 * (highY - lowY) + lowY;
+
+                String[] imageStrings = part.getAttribute("image").listValue();
+
+                if (imageStrings.length == 0) continue;
+
+                String imageString = imageStrings[0];
+                Image img;
+                try {
+                    img = ResourceManager.getImage(ball.getResources(), imageString, ball.getVersion());
+                    if (img == null) continue;
+                } catch (FileNotFoundException ignored) {
+                    continue;
+                }
+
+                BufferedImage image = SwingFXUtils.fromFXImage(img, null);
+
+                double iWidth = image.getWidth() * scale;
+                double iHeight = image.getHeight() * scale;
+
+                if (myX - iWidth / 2 < minX) minX = myX - iWidth / 2;
+                if (-myY - iHeight / 2 < minY) minY = -myY - iHeight / 2;
+                if (myX + iWidth / 2 > maxX) maxX = myX + iWidth / 2;
+                if (-myY + iHeight / 2 > maxY) maxY = -myY + iHeight / 2;
+
             }
         }
 
@@ -170,93 +159,106 @@ public class FXEditorButtons {
         double height = maxY - minY;
 
         Button idk = new Button();
+        if (width < 0 || height < 0) return idk;
 
-        if (width > 0 && height > 0) {
+        BufferedImage toWriteOn = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
+        Graphics writeGraphics = toWriteOn.getGraphics();
 
-            BufferedImage toWriteOn = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
-            Graphics writeGraphics = toWriteOn.getGraphics();
+        for (EditorObject editorObject : ball.getObjects()) {
 
-            for (EditorObject editorObject : ball.getObjects()) {
+            String state = "standing";
 
-                String state = "standing";
+            if (editorObject instanceof Part part) {
 
-                if (editorObject instanceof Part part) {
+                boolean ok = false;
 
-                    boolean ok = false;
-
-                    if (part.getAttribute("state").stringValue().isEmpty()) {
-                        ok = true;
-                    } else {
-                        String word = part.getAttribute("state").stringValue();
-                        while (word.contains(",")) {
-                            if (word.substring(0, word.indexOf(",")).equals(state)) {
-                                ok = true;
-                                break;
-                            }
-                            word = word.substring(word.indexOf(",") + 1);
-                        }
-                        if (word.equals(state)) {
+                if (part.getAttribute("state").stringValue().isEmpty()) {
+                    ok = true;
+                } else {
+                    String word = part.getAttribute("state").stringValue();
+                    while (word.contains(",")) {
+                        if (word.substring(0, word.indexOf(",")).equals(state)) {
                             ok = true;
+                            break;
                         }
+                        word = word.substring(word.indexOf(",") + 1);
                     }
-
-                    if (ok && !part.getImages().isEmpty()) {
-                        Image img = part.getImages().get(0);
-
-                        double scale = part.getAttribute("scale").doubleValue();
-
-                        double lowX;
-                        double highX;
-                        double lowY;
-                        double highY;
-
-                        String x = part.getAttribute("x").stringValue();
-                        String y = part.getAttribute("y").stringValue();
-
-                        if (x.contains(",")) {
-                            lowX = Double.parseDouble(x.substring(0, x.indexOf(",")));
-                            highX = Double.parseDouble(x.substring(x.indexOf(",") + 1));
-                        } else {
-                            lowX = Double.parseDouble(x);
-                            highX = lowX;
-                        }
-                        if (y.contains(",")) {
-                            lowY = Double.parseDouble(y.substring(0, y.indexOf(",")));
-                            highY = Double.parseDouble(y.substring(y.indexOf(",") + 1));
-                        } else {
-                            lowY = Double.parseDouble(y);
-                            highY = lowY;
-                        }
-
-                        double myX = 0.5 * (highX - lowX) + lowX;
-                        double myY = 0.5 * (highY - lowY) + lowY;
-
-                        if (myY == 0) {
-                            myY = -0;
-                        }
-
-                        if (img != null) {
-
-                            double screenX = myX + toWriteOn.getWidth() / 2.0 - img.getWidth() * scale / 2;
-                            double screenY = -myY + toWriteOn.getHeight() / 2.0 - img.getHeight() * scale / 2;
-
-                            writeGraphics.drawImage(SwingFXUtils.fromFXImage(img, null), (int) screenX, (int) screenY,
-                                    (int) (img.getWidth() * scale), (int) (img.getHeight() * scale), null);
-
-                            if (part.getPupilImage() != null) {
-                                Image pupilImage = part.getPupilImage();
-
-                                double screenX2 = myX + toWriteOn.getWidth() / 2.0 - pupilImage.getWidth() * scale / 2;
-                                double screenY2 = -myY + toWriteOn.getHeight() / 2.0
-                                        - pupilImage.getHeight() * scale / 2;
-
-                                writeGraphics.drawImage(SwingFXUtils.fromFXImage(pupilImage, null), (int) screenX2,
-                                        (int) screenY2, (int) (pupilImage.getWidth() * scale),
-                                        (int) (pupilImage.getHeight() * scale), null);
-                            }
-                        }
+                    if (word.equals(state)) {
+                        ok = true;
                     }
                 }
+                if (!ok) continue;
+
+                String[] imageStrings = part.getAttribute("image").listValue();
+
+                if (imageStrings.length == 0) continue;
+                String imageString = imageStrings[0];
+                Image img;
+                try {
+                    img = ResourceManager.getImage(ball.getResources(), imageString, ball.getVersion());
+                    if (img == null) continue;
+                } catch (FileNotFoundException ignored) {
+                    continue;
+                }
+
+                double scale = part.getAttribute("scale").doubleValue();
+
+                double lowX;
+                double highX;
+                double lowY;
+                double highY;
+
+                String x = part.getAttribute("x").stringValue();
+                String y = part.getAttribute("y").stringValue();
+
+                if (x.contains(",")) {
+                    lowX = Double.parseDouble(x.substring(0, x.indexOf(",")));
+                    highX = Double.parseDouble(x.substring(x.indexOf(",") + 1));
+                } else {
+                    lowX = Double.parseDouble(x);
+                    highX = lowX;
+                }
+                if (y.contains(",")) {
+                    lowY = Double.parseDouble(y.substring(0, y.indexOf(",")));
+                    highY = Double.parseDouble(y.substring(y.indexOf(",") + 1));
+                } else {
+                    lowY = Double.parseDouble(y);
+                    highY = lowY;
+                }
+
+                double myX = 0.5 * (highX - lowX) + lowX;
+                double myY = 0.5 * (highY - lowY) + lowY;
+
+                if (myY == 0) {
+                    myY = -0;
+                }
+
+                double screenX = myX + toWriteOn.getWidth() / 2.0 - img.getWidth() * scale / 2;
+                double screenY = -myY + toWriteOn.getHeight() / 2.0 - img.getHeight() * scale / 2;
+
+                writeGraphics.drawImage(SwingFXUtils.fromFXImage(img, null), (int) screenX, (int) screenY,
+                        (int) (img.getWidth() * scale), (int) (img.getHeight() * scale), null);
+
+                String[] pupilImageStrings = part.getAttribute("pupil").listValue();
+                if (pupilImageStrings.length == 0) continue;
+
+                String pupilImageString = pupilImageStrings[0];
+                Image pupilImage;
+                try {
+                    pupilImage = ResourceManager.getImage(ball.getResources(), pupilImageString, ball.getVersion());
+                    if (pupilImage == null) continue;
+                } catch (FileNotFoundException ignored) {
+                    continue;
+                }
+
+                double screenX2 = myX + toWriteOn.getWidth() / 2.0 - pupilImage.getWidth() * scale / 2;
+                double screenY2 = -myY + toWriteOn.getHeight() / 2.0
+                        - pupilImage.getHeight() * scale / 2;
+
+                writeGraphics.drawImage(SwingFXUtils.fromFXImage(pupilImage, null), (int) screenX2,
+                        (int) screenY2, (int) (pupilImage.getWidth() * scale),
+                        (int) (pupilImage.getHeight() * scale), null);
+
             }
 
             double scaleFactor = (double) size / Math.max(toWriteOn.getWidth(), toWriteOn.getHeight());
@@ -278,7 +280,8 @@ public class FXEditorButtons {
 
             String name = ball.getObjects().get(0).getAttribute("name").stringValue();
 
-            EditorObject ballInstance = ObjectCreator.create("BallInstance", LevelManager.getLevel().getLevelObject());
+            EditorObject ballInstance = ObjectCreator.create("BallInstance", LevelManager.getLevel().getLevelObject(), ball.getVersion());
+            assert ballInstance != null;
             ballInstance.setAttribute("type", name);
 
             LevelManager.getLevel().getLevel().add(ballInstance);
@@ -287,9 +290,6 @@ public class FXEditorButtons {
 
         });
         return idk;
-
-         */
-        return null;
     }
 
     public static void addBallsTo() {
@@ -299,41 +299,15 @@ public class FXEditorButtons {
 
             GameVersion version = PaletteManager.getPaletteVersions().get(i);
 
-            boolean alreadyHasBall = false;
-            for (_Ball _ball : BallManager.getImportedBalls()) {
-                if (_ball.getObjects().get(0).getAttribute("name").stringValue().equals(paletteBall)) {
-                    alreadyHasBall = true;
-                    break;
-                }
-            }
+            _Ball ball = BallManager.getBall(paletteBall, version);
+            if (ball == null) continue;
 
-            if (!alreadyHasBall) {
-                _Ball _ball;
-                try {
-                    _ball = FileManager.openBall(paletteBall, version);
-                } catch (ParserConfigurationException | SAXException | IOException e) {
-                    Alarms.errorMessage(e);
-                    return;
-                }
-
-                if (_ball != null) {
-                    _ball.setVersion(version);
-                    BallManager.getImportedBalls().add(_ball);
-                }
-            }
-
-            for (_Ball ball : BallManager.getImportedBalls()) {
-
-                if (ball.getObjects().get(0).getAttribute("name").stringValue().equals(paletteBall)
-                        && ball.getVersion() == PaletteManager.getPaletteVersions().get(i)) {
-                    Button button = createTemplateForBall(size, ball);
-                    //button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name").stringValue()));
-                    //if (ball.getVersion() == GameVersion.OLD) {
-                    //    oldGooballsToolbar.getItems().add(button);
-                    //} else {
-                    //    newGooballsToolbar.getItems().add(button);
-                    //}
-                }
+            Button button = createTemplateForBall(size, ball);
+            button.setTooltip(new DelayedTooltip("Add " + ball.getObjects().get(0).getAttribute("name").stringValue()));
+            if (ball.getVersion() == GameVersion.OLD) {
+                oldGooballsToolbar.getItems().add(button);
+            } else {
+                newGooballsToolbar.getItems().add(button);
             }
             i++;
         }
@@ -564,7 +538,7 @@ public class FXEditorButtons {
 
     private static void showHide(ToolBar toolBar) {
 
-        String prefix = "ButtonIcons\\AddObject\\";
+        String prefix = "ButtonIcons\\ShowHide\\";
 
         setIcon(buttonShowHideCamera, prefix + "showhide_cam.png");
         buttonShowHideCamera.setOnAction(e -> VisibilityManager.showHideCameras());
@@ -764,11 +738,11 @@ public class FXEditorButtons {
         buttonPaste.setDisable(!inLevel);
         buttonDelete.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
 
-        boolean hasOld = FileManager.hasOldWOG();
+        boolean hasOld = !FileManager.getGameDir(GameVersion.OLD).isEmpty();
         buttonNewOld.setDisable(!hasOld);
         buttonOpenOld.setDisable(!hasOld);
 
-        boolean hasNew = FileManager.hasNewWOG();
+        boolean hasNew = !FileManager.getGameDir(GameVersion.NEW).isEmpty();
         buttonNewNew.setDisable(!hasNew);
         buttonOpenNew.setDisable(!hasNew);
 

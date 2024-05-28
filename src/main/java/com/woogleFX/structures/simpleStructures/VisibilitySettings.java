@@ -4,56 +4,22 @@ import com.woogleFX.engine.fx.FXEditorButtons;
 import com.woogleFX.file.FileManager;
 import javafx.scene.image.Image;
 
-import java.io.FileNotFoundException;
-
 public class VisibilitySettings {
 
-    private static Image showHideAnim0;
-    private static Image showHideAnim;
-    private static Image showHideCam0;
-    private static Image showHideCam1;
-    private static Image showHideForcefields0;
-    private static Image showHideForcefields1;
-    private static Image showHideGeometry0;
-    private static Image showHideGeometry1;
-    private static Image showHideGoobs0;
-    private static Image showHideGoobs1;
-    private static Image showHideGoobs2;
-    private static Image showHideImages0;
-    private static Image showHideImages1;
-    private static Image showHideLabels0;
-    private static Image showHideLabels1;
-    private static Image showHideParticles0;
-    private static Image showHideParticles1;
-    private static Image showHideBGColor0;
-    private static Image showHideBGColor1;
-
-    static {
-        try {
-            showHideAnim0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim_disabled.png");
-            showHideAnim = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png");
-            showHideCam0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam_disabled.png");
-            showHideCam1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png");
-            showHideForcefields0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields_disabled.png");
-            showHideForcefields1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png");
-            showHideGeometry0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry_disabled.png");
-            showHideGeometry1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png");
-            showHideGoobs0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_disabled.png");
-            showHideGoobs1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_wireframe.png");
-            showHideGoobs2 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png");
-            showHideImages0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images_disabled.png");
-            showHideImages1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png");
-            showHideLabels0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels_disabled.png");
-            showHideLabels1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png");
-            showHideParticles0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles_disabled.png");
-            showHideParticles1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png");
-            showHideBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
-            showHideBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
-        } catch (FileNotFoundException ignored) {
-
-        }
+    private static final Image showHideAnim0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim_disabled.png");
+    private static final Image showHideAnim = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_anim.png");
+    private boolean showAnimations = true;
+    public boolean isShowAnimations() {
+        return showAnimations;
+    }
+    public void setShowAnimations(boolean showAnimations) {
+        this.showAnimations = showAnimations;
+        FXEditorButtons.animGraphic(showAnimations ? showHideAnim : showHideAnim0);
     }
 
+
+    private static final Image showHideCam0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam_disabled.png");
+    private static final Image showHideCam1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_cam.png");
     private boolean showCameras = false;
     public boolean isShowCameras() {
         return showCameras;
@@ -63,6 +29,9 @@ public class VisibilitySettings {
         FXEditorButtons.cameraGraphic(showCameras ? showHideCam1 : showHideCam0);
     }
 
+
+    private static final Image showHideForcefields0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields_disabled.png");
+    private static final Image showHideForcefields1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_forcefields.png");
     private boolean showForcefields = true;
     public boolean isShowForcefields() {
         return showForcefields;
@@ -72,6 +41,9 @@ public class VisibilitySettings {
         FXEditorButtons.forcefieldsGraphic(showForcefields ? showHideForcefields1 : showHideForcefields0);
     }
 
+
+    private static final Image showHideGeometry0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry_disabled.png");
+    private static final Image showHideGeometry1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_geometry.png");
     private int showGeometry = 2;
     public int getShowGeometry() {
         return showGeometry;
@@ -85,6 +57,9 @@ public class VisibilitySettings {
         }
     }
 
+
+    private static final Image showHideImages0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images_disabled.png");
+    private static final Image showHideImages1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_images.png");
     private boolean showGraphics = true;
     public boolean isShowGraphics() {
         return showGraphics;
@@ -94,6 +69,10 @@ public class VisibilitySettings {
         FXEditorButtons.graphicsGraphic(showGraphics ? showHideImages1 : showHideImages0);
     }
 
+
+    private static final Image showHideGoobs0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_disabled.png");
+    private static final Image showHideGoobs1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs_wireframe.png");
+    private static final Image showHideGoobs2 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_goobs.png");
     private int showGoos = 2;
     public int getShowGoos() {
         return showGoos;
@@ -107,6 +86,9 @@ public class VisibilitySettings {
         }
     }
 
+
+    private static final Image showHideParticles0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles_disabled.png");
+    private static final Image showHideParticles1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_particles.png");
     private boolean showParticles = true;
     public boolean isShowParticles() {
         return showParticles;
@@ -116,6 +98,9 @@ public class VisibilitySettings {
         FXEditorButtons.particlesGraphic(showParticles ? showHideParticles1 : showHideParticles0);
     }
 
+
+    private static final Image showHideLabels0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels_disabled.png");
+    private static final Image showHideLabels1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_labels.png");
     private boolean showLabels = true;
     public boolean isShowLabels() {
         return showLabels;
@@ -125,15 +110,9 @@ public class VisibilitySettings {
         FXEditorButtons.labelsGraphic(showLabels ? showHideLabels1 : showHideLabels0);
     }
 
-    private boolean showAnimations = true;
-    public boolean isShowAnimations() {
-        return showAnimations;
-    }
-    public void setShowAnimations(boolean showAnimations) {
-        this.showAnimations = showAnimations;
-        FXEditorButtons.animGraphic(showAnimations ? showHideAnim : showHideAnim0);
-    }
 
+    private static final Image showHideBGColor0 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor_disabled.png");
+    private static final Image showHideBGColor1 = FileManager.getIcon("ButtonIcons\\ShowHide\\showhide_scenebgcolor.png");
     private boolean showSceneBGColor = false;
     public boolean isShowSceneBGColor() {
         return showSceneBGColor;

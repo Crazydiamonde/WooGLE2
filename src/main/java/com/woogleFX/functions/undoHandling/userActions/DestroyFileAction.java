@@ -1,6 +1,5 @@
 package com.woogleFX.functions.undoHandling.userActions;
 
-import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.gui.Alarms;
 
 import java.io.IOException;

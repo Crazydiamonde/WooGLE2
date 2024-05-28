@@ -9,17 +9,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 
 public class BallWriter {
 
     private static final Logger logger = LoggerFactory.getLogger(BallWriter.class);
 
 
-    public static void exportBallAsXML(_Ball ball, String outputPathString, GameVersion version, boolean goomod) throws IOException {
+    public static void saveAsXML(_Ball ball, String outputPathString, GameVersion version, boolean goomod) throws IOException {
         /* General Parts */
         /* Walking Animations */
         /* Attached Animations */
@@ -65,42 +63,26 @@ public class BallWriter {
             Files.createFile(resourcesPath);
         }
 
-        if (version == GameVersion.OLD) {
-            AESBinFormat.encodeFile(new File(ballsPathText), ballXML.getBytes());
-            AESBinFormat.encodeFile(new File(resourcesPathText), resrcXML.getBytes());
-            if (!goomod) {
-                if (Files.exists(Path.of(FileManager.getNewWOGdir() + "\\res\\balls\\" + name))) {
-                    File[] images = new File(FileManager.getNewWOGdir() + "\\res\\balls\\" + name).listFiles();
-                    if (images != null) {
-                        for (File imageFile : images) {
-                            if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
-                                if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
-                                    Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
-                                }
-                            }
-                        }
-                    }
-                }
+        String otherDir = FileManager.getGameDir(version == GameVersion.OLD ? GameVersion.NEW : GameVersion.OLD);
+        AESBinFormat.encodeFile(new File(ballsPathText), ballXML.getBytes());
+        AESBinFormat.encodeFile(new File(resourcesPathText), resrcXML.getBytes());
+
+        if (goomod) return;
+
+        if (!Files.exists(Path.of(otherDir + "\\res\\balls\\" + name))) return;
+
+        File[] images = new File(otherDir + "\\res\\balls\\" + name).listFiles();
+        if (images == null) return;
+
+        for (File imageFile : images) {
+            if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
+                if (Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) continue;
+
+                Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
+
             }
         }
-        if (version == GameVersion.NEW) {
-            Files.write(ballsPath, Collections.singleton(ballXML), StandardCharsets.UTF_8);
-            Files.write(resourcesPath, Collections.singleton(resrcXML), StandardCharsets.UTF_8);
-            if (!goomod) {
-                if (Files.exists(Path.of(FileManager.getOldWOGdir() + "\\res\\balls\\" + name))) {
-                    File[] images = new File(FileManager.getOldWOGdir() + "\\res\\balls\\" + name).listFiles();
-                    if (images != null) {
-                        for (File imageFile : images) {
-                            if (imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".png") || imageFile.getPath().substring(imageFile.getPath().lastIndexOf(".")).equals(".ogg")) {
-                                if (!Files.exists(Path.of(outputPath + "\\" + imageFile.getName()))) {
-                                    Files.copy(imageFile.toPath(), Path.of(outputPath + "\\" + imageFile.getName()));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+
     }
 
 }

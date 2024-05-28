@@ -1,6 +1,7 @@
 package com.woogleFX.file.fileImport;
 
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
+import com.woogleFX.structures.GameVersion;
 import com.worldOfGoo.level.Level;
 import com.worldOfGoo.resrc.ResourceManifest;
 import com.worldOfGoo.scene.Scene;
@@ -21,22 +22,26 @@ public class ObjectXMLParser extends DefaultHandler {
 
     private EditorObject currentObject = null;
 
+
     private final ArrayList<EditorObject> scene;
     private final ArrayList<EditorObject> level;
     private final ArrayList<EditorObject> resrc;
     private final ArrayList<EditorObject> addin;
     private final ArrayList<EditorObject> text;
+    private final GameVersion version;
 
     public ObjectXMLParser(ArrayList<EditorObject> scene,
                            ArrayList<EditorObject> level,
                            ArrayList<EditorObject> resrc,
                            ArrayList<EditorObject> addin,
-                           ArrayList<EditorObject> text) {
+                           ArrayList<EditorObject> text,
+                           GameVersion version) {
         this.scene = scene;
         this.level = level;
         this.resrc = resrc;
         this.addin = addin;
         this.text = text;
+        this.version = version;
     }
 
 
@@ -55,7 +60,7 @@ public class ObjectXMLParser extends DefaultHandler {
             }
         }
 
-        EditorObject obj = ObjectCreator.create(zName, parent);
+        EditorObject obj = ObjectCreator.create(zName, parent, version);
 
         for (int i = 0; i < attributes.getLength(); i++) {
             String attributeName = attributes.getQName(i);

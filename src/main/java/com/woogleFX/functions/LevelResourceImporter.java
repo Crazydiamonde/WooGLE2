@@ -75,7 +75,7 @@ public class LevelResourceImporter {
 
     public static void importImages(WorldLevel level) {
         FileChooser fileChooser = new FileChooser();
-        String wogDir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String wogDir = FileManager.getGameDir(level.getVersion());
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\images\\"));
         List<File> resrcFiles = fileChooser.showOpenMultipleDialog(FXStage.getStage());
 
@@ -101,13 +101,13 @@ public class LevelResourceImporter {
             image = ImageIO.read(in);
             in.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
             return;
         }
 
         String normalizedFilename = resrcFile.getName().split("\\.")[0].replace(' ', '_');
 
-        String dir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String dir = FileManager.getGameDir(level.getVersion());
         String toLevel = "res\\levels\\" + level.getLevelName();
         String pathBase = dir + "\\" + toLevel;
 
@@ -139,7 +139,7 @@ public class LevelResourceImporter {
 
         String id = "IMAGE_SCENE_" + level.getLevelName().toUpperCase() + "_" + normalizedFilename.toUpperCase();
 
-        EditorObject imageResourceObject = ObjectCreator.create("Image", null);
+        EditorObject imageResourceObject = ObjectCreator.create("Image", null, level.getVersion());
         assert imageResourceObject != null;
         addResourceObjectToLevel(level, imageResourceObject, id, path);
 
@@ -158,7 +158,7 @@ public class LevelResourceImporter {
 
     public static void importMusic(WorldLevel level) {
         FileChooser fileChooser = new FileChooser();
-        String wogDir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String wogDir = FileManager.getGameDir(level.getVersion());
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\music"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
@@ -172,7 +172,7 @@ public class LevelResourceImporter {
 
          // If resrcFile is not already present in res\music, copy resrcFile into res\music.
 
-        String dir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String dir = FileManager.getGameDir(level.getVersion());
 
         /* copy file */
         String normalizedFilename = resrcFile.getName().split("\\.")[0].replace(' ', '_');
@@ -189,7 +189,7 @@ public class LevelResourceImporter {
 
         // Add a new sound resource with a default ID and path leading to resrcFile in res\music.
         String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_" + normalizedFilename.toUpperCase();
-        EditorObject soundResourceObject = ObjectCreator.create("Sound", null);
+        EditorObject soundResourceObject = ObjectCreator.create("Sound", null, level.getVersion());
         assert soundResourceObject != null;
         soundResourceObject.setAttribute("id", soundResourceName);
         soundResourceObject.setAttribute("path", soundPath);
@@ -222,7 +222,7 @@ public class LevelResourceImporter {
         }
 
         /* Otherwise, create a new music object set to the sound resource's ID. */
-        EditorObject musicObject = ObjectCreator.create("music", level.getLevelObject());
+        EditorObject musicObject = ObjectCreator.create("music", level.getLevelObject(), level.getVersion());
         musicObject.setAttribute("id", soundResourceName);
         level.getLevel().add(musicObject);
         try {
@@ -238,7 +238,7 @@ public class LevelResourceImporter {
 
     public static void importLoopsound(WorldLevel level) {
         FileChooser fileChooser = new FileChooser();
-        String wogDir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String wogDir = FileManager.getGameDir(level.getVersion());
         fileChooser.setInitialDirectory(new File(wogDir + "\\res\\sounds"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OGG sound file", "*.ogg"));
 
@@ -254,7 +254,7 @@ public class LevelResourceImporter {
 
         // If resrcFile is not already present in res\music, copy resrcFile into res\sounds.
 
-        String dir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String dir = FileManager.getGameDir(level.getVersion());
 
         /* copy file */
         String normalizedFilename = resrcFile.getName().split("\\.")[0].replace(' ', '_');
@@ -271,7 +271,7 @@ public class LevelResourceImporter {
 
         // Add a new sound resource with a default ID and path leading to resrcFile inres\sounds.
         String soundResourceName = "SOUND_LEVEL_" + level.getLevelName().toUpperCase() + "_" + normalizedFilename.toUpperCase();
-        EditorObject soundResourceObject = ObjectCreator.create("Sound", null);
+        EditorObject soundResourceObject = ObjectCreator.create("Sound", null, level.getVersion());
         assert soundResourceObject != null;
         soundResourceObject.setAttribute("id", soundResourceName);
         soundResourceObject.setAttribute("path", soundPath);
@@ -304,7 +304,7 @@ public class LevelResourceImporter {
         }
 
         /* Otherwise, create a new music object set to the sound resource's ID. */
-        EditorObject musicObject = ObjectCreator.create("loopsound", level.getLevelObject());
+        EditorObject musicObject = ObjectCreator.create("loopsound", level.getLevelObject(), level.getVersion());
         musicObject.setAttribute("id", soundResourceName);
         level.getLevel().add(musicObject);
         try {

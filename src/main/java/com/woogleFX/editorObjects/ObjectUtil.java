@@ -18,7 +18,7 @@ public class ObjectUtil {
 
 
     public static EditorObject deepClone(EditorObject editorObject, EditorObject parent) {
-        EditorObject clone = ObjectCreator.create(editorObject.getType(), parent);
+        EditorObject clone = ObjectCreator.create(editorObject.getType(), parent, editorObject.getVersion());
 
         for (EditorAttribute attribute : editorObject.getAttributes()) {
             clone.setAttribute(attribute.getName(), attribute.stringValue());

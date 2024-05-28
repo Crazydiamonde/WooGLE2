@@ -3,6 +3,7 @@ package com.worldOfGoo.particle;
 import com.woogleFX.file.resourceManagers.ParticleManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ public class Particleeffect extends EditorObject {
     }
 
 
-    public Particleeffect(EditorObject _parent) {
-        super(_parent, "particleeffect");
+    public Particleeffect(EditorObject _parent, GameVersion version) {
+        super(_parent, "particleeffect", version);
 
         addAttribute("name", InputField.ANY);
         addAttribute("maxparticles", InputField.NUMBER).setDefaultValue("0");

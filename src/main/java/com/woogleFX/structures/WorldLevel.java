@@ -149,8 +149,8 @@ public class WorldLevel {
     public String getCurrentlySelectedSection() {
         return currentlySelectedSection;
     }
-    public void setCurrentlySelectedSection(String currentlySelectedSection) {
-        this.currentlySelectedSection = currentlySelectedSection;
+    public void setCurrentlySelectedSection(String s) {
+        this.currentlySelectedSection = s;
     }
 
 

@@ -2,12 +2,13 @@ package com.worldOfGoo.addin;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 public class AddinThumbnail extends EditorObject {
 
-    public AddinThumbnail(EditorObject _parent) {
-        super(_parent, "thumbnail", "addin\\addin");
+    public AddinThumbnail(EditorObject _parent, GameVersion version) {
+        super(_parent, "thumbnail", version);
 
         addAttribute("value", InputField.ANY).assertRequired();
         addAttribute("type", InputField.IMAGE_TYPE).assertRequired();

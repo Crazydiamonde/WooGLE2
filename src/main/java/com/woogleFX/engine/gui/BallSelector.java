@@ -75,8 +75,7 @@ public class BallSelector extends Application {
 
         VBox allBallsBox = new VBox();
 
-        String dir = oldVersion == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
-        ballDir = new File(dir + "\\res\\balls");
+        ballDir = new File(FileManager.getGameDir(oldVersion) + "\\res\\balls");
 
         ScrollPane realPane = new ScrollPane(allBallsBox);
 

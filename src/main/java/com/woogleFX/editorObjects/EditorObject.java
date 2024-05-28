@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
-import com.woogleFX.structures.WorldLevel;
 import javafx.scene.control.TreeItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +24,10 @@ public class EditorObject {
     }
 
 
-    private final String icon;
-    public String getIcon() {
-        return icon;
+    /** The version of this object. */
+    private final GameVersion version;
+    public GameVersion getVersion() {
+        return version;
     }
 
 
@@ -43,20 +44,15 @@ public class EditorObject {
             parent.getTreeItem().getChildren().add(row, treeItem);
         }
     }
-    public final void setParent(EditorObject parent) {
-        setParent(parent, parent == null ? 0 : parent.getChildren().size());
+    public final void setParent(EditorObject p) {
+        setParent(p, p == null ? 0 : p.getChildren().size());
     }
 
 
-    public EditorObject(EditorObject _parent, String type, String icon) {
+    public EditorObject(EditorObject _parent, String type, GameVersion version) {
         this.parent = _parent;
         this.type = type;
-        this.icon = icon;
-    }
-
-
-    public EditorObject(EditorObject _parent, String type) {
-        this(_parent, type, null);
+        this.version = version;
     }
 
 
@@ -108,8 +104,8 @@ public class EditorObject {
     public final ArrayList<MetaEditorAttribute> getMetaAttributes() {
         return metaAttributes;
     }
-    public final void setMetaAttributes(ArrayList<MetaEditorAttribute> metaAttributes) {
-        this.metaAttributes = metaAttributes;
+    public final void setMetaAttributes(ArrayList<MetaEditorAttribute> meta) {
+        this.metaAttributes = meta;
     }
 
 

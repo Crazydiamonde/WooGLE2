@@ -77,15 +77,8 @@ public class ResourceManager {
     }
 
 
-    public static boolean updateResource(ArrayList<EditorObject> resources, String id, GameVersion version) {
-        EditorObject resource = findResource(resources, id, version);
-        if (resource != null) return updateResource(resource, version);
-        else return false;
-    }
-
-
     public static boolean updateResource(EditorObject resource, GameVersion version) {
-        String dir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String dir = FileManager.getGameDir(version);
         if (resource instanceof ResrcImage resrcImage) {
             try {
                 resrcImage.setImage(FileManager.openImageFromFilePath(dir + "\\" + resrcImage.getAdjustedPath() + ".png"));

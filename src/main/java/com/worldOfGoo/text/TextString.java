@@ -2,12 +2,13 @@ package com.worldOfGoo.text;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 public class TextString extends EditorObject {
 
-    public TextString(EditorObject _parent) {
-        super(_parent, "string", "text\\textstring");
+    public TextString(EditorObject _parent, GameVersion version) {
+        super(_parent, "string", version);
 
         addAttribute("id", InputField.ANY).assertRequired();
         addAttribute("text", InputField.ANY).assertRequired();

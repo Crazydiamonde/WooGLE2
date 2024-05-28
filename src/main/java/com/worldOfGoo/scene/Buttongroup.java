@@ -2,12 +2,13 @@ package com.worldOfGoo.scene;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 public class Buttongroup extends EditorObject {
     
-    public Buttongroup(EditorObject _parent) {
-        super(_parent, "buttongroup", "scene\\buttongroup");
+    public Buttongroup(EditorObject _parent, GameVersion version) {
+        super(_parent, "buttongroup", version);
 
         addAttribute("id", InputField.ANY)      .setDefaultValue("levelMarkerGroup").assertRequired();
         addAttribute("osx", InputField.POSITION).setDefaultValue("150,1.08")        .assertRequired();

@@ -1,10 +1,6 @@
 package com.woogleFX.functions.undoHandling.userActions;
 
-import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.gui.Alarms;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.functions.LevelResourceManager;
-import com.woogleFX.functions.ObjectManager;
 
 import java.io.IOException;
 import java.nio.file.Files;

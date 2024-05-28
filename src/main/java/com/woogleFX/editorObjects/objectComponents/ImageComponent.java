@@ -6,12 +6,9 @@ import com.woogleFX.engine.Renderer;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.simpleStructures.DragSettings;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
 /** Represents an image component in any object. */

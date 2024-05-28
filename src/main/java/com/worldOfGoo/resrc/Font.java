@@ -3,6 +3,7 @@ package com.worldOfGoo.resrc;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
 import com.woogleFX.editorObjects._Font;
+import com.woogleFX.structures.GameVersion;
 
 public class Font extends EditorObject {
 
@@ -33,8 +34,8 @@ public class Font extends EditorObject {
     }
 
 
-    public Font(EditorObject _parent) {
-        super(_parent, "font");
+    public Font(EditorObject _parent, GameVersion version) {
+        super(_parent, "font", version);
 
         addAttribute("id", InputField.ANY);
         addAttribute("path", InputField.ANY);

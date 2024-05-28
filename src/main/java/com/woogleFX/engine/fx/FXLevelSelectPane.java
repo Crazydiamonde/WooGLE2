@@ -57,6 +57,7 @@ public class FXLevelSelectPane {
                     case "Addin" -> level.getAddinObject();
                     default -> null;
                 };
+                if (rootObject == null) return;
                 FXHierarchy.getHierarchy().setRoot(rootObject.getTreeItem());
 
                 int i = switch (level.getCurrentlySelectedSection()) {

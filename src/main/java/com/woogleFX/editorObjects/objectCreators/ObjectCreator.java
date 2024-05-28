@@ -2,6 +2,7 @@ package com.woogleFX.editorObjects.objectCreators;
 
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.WorldLevel;
 import com.worldOfGoo.addin.*;
 import com.worldOfGoo.ball.*;
@@ -11,13 +12,8 @@ import com.worldOfGoo.resrc.*;
 import com.worldOfGoo.scene.*;
 import com.worldOfGoo.text.TextString;
 import com.worldOfGoo.text.TextStrings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ObjectCreator {
-
-    private static final Logger logger = LoggerFactory.getLogger(ObjectCreator.class);
-
 
     public static EditorObject getDefaultParent(String name) {
 
@@ -44,94 +40,85 @@ public class ObjectCreator {
     }
 
 
-    public static EditorObject create(String _name, EditorObject _parent) {
-
-        boolean shouldStop = _name.startsWith("_");
-        String name = shouldStop ? _name.substring(1) : _name;
-
+    public static EditorObject create(String name, EditorObject _parent, GameVersion version) {
 
         WorldLevel level = LevelManager.getLevel();
 
         EditorObject parent = (_parent != null || level == null) ? _parent : getDefaultParent(name);
 
         EditorObject toAdd = switch (name) {
-            case "addin", "Addin_addin" -> new Addin(parent);
-            case "Addin_id" -> new AddinID(parent);
-            case "Addin_name" -> new AddinName(parent);
-            case "Addin_type" -> new AddinType(parent);
-            case "Addin_version" -> new AddinVersion(parent);
-            case "Addin_description" -> new AddinDescription(parent);
-            case "Addin_author" -> new AddinAuthor(parent);
-            case "Addin_levels" -> new AddinLevels(parent);
-            case "Addin_level" -> new AddinLevel(parent);
-            case "Addin_dir" -> new AddinLevelDir(parent);
-            case "Addin_wtf_name" -> new AddinLevelName(parent);
-            case "Addin_subtitle" -> new AddinLevelSubtitle(parent);
-            case "Addin_ocd" -> new AddinLevelOCD(parent);
-            case "ambientparticleeffect" -> new Ambientparticleeffect(parent);
-            case "axialsinoffset" -> new Axialsinoffset(parent);
-            case "ball" -> new Ball(parent);
-            case "BallInstance" -> new BallInstance(parent);
-            case "ball_particles" -> new BallParticles(parent);
-            case "ball_sound" -> new BallSound(parent);
-            case "button" -> new Button(parent);
-            case "buttongroup" -> new Buttongroup(parent);
-            case "camera" -> new Camera(parent);
-            case "circle" -> new Circle(parent);
-            case "compositegeom" -> new Compositegeom(parent);
-            case "detachstrand" -> new Detachstrand(parent);
-            case "effects" -> new Effects(parent);
-            case "endoncollision" -> new Endoncollision(parent);
-            case "endonmessage" -> new Endonmessage(parent);
-            case "endonnogeom" -> new Endonnogeom(parent);
-            case "fire" -> new Fire(parent);
-            case "font" -> new Font(parent);
-            case "hinge" -> new Hinge(parent);
-            case "label" -> new Label(parent);
-            case "level" -> new Level(parent);
-            case "levelexit" -> new Levelexit(parent);
-            case "line" -> new Line(parent);
-            case "linearforcefield" -> new Linearforcefield(parent);
-            case "loopsound" -> new Loopsound(parent);
-            case "marker" -> new Marker(parent);
-            case "motor" -> new Motor(parent);
-            case "music" -> new Music(parent);
-            case "part" -> new Part(parent);
-            case "particleeffect" -> new Particleeffect(parent);
-            case "particle" -> new _Particle(parent);
-            case "particles" -> new Particles(parent);
-            case "pipe" -> new Pipe(parent);
-            case "poi" -> new Poi(parent);
-            case "rectangle" -> new Rectangle(parent);
-            case "radialforcefield" -> new Radialforcefield(parent);
-            case "ResourceManifest" -> new ResourceManifest(parent);
-            case "Resources" -> new Resources(parent);
-            case "Image" -> new ResrcImage(parent);
-            case "scene" -> new Scene(parent);
-            case "SceneLayer" -> new SceneLayer(parent);
-            case "SetDefaults" -> new SetDefaults(parent);
-            case "shadow" -> new Shadow(parent);
-            case "signpost" -> new Signpost(parent);
-            case "sinanim" -> new Sinanim(parent);
-            case "sinvariance" -> new Sinvariance(parent);
-            case "slider" -> new Slider(parent);
-            case "sound", "Sound" -> new Sound(parent);
-            case "splat" -> new Splat(parent);
-            case "Strand" -> new Strand(parent);
-            case "strand" -> new BallStrand(parent);
-            case "string" -> new TextString(parent);
-            case "strings" -> new TextStrings(parent);
-            case "targetheight" -> new Targetheight(parent);
-            case "Vertex" -> new Vertex(parent);
-            default -> null;
+            case "addin", "Addin_addin" -> new Addin(parent, version);
+            case "Addin_id" -> new AddinID(parent, version);
+            case "Addin_name" -> new AddinName(parent, version);
+            case "Addin_type" -> new AddinType(parent, version);
+            case "Addin_version" -> new AddinVersion(parent, version);
+            case "Addin_description" -> new AddinDescription(parent, version);
+            case "Addin_author" -> new AddinAuthor(parent, version);
+            case "Addin_levels" -> new AddinLevels(parent, version);
+            case "Addin_level" -> new AddinLevel(parent, version);
+            case "Addin_dir" -> new AddinLevelDir(parent, version);
+            case "Addin_wtf_name" -> new AddinLevelName(parent, version);
+            case "Addin_subtitle" -> new AddinLevelSubtitle(parent, version);
+            case "Addin_ocd" -> new AddinLevelOCD(parent, version);
+            case "ambientparticleeffect" -> new Ambientparticleeffect(parent, version);
+            case "axialsinoffset" -> new Axialsinoffset(parent, version);
+            case "ball" -> new Ball(parent, version);
+            case "BallInstance" -> new BallInstance(parent, version);
+            case "ball_particles" -> new BallParticles(parent, version);
+            case "ball_sound" -> new BallSound(parent, version);
+            case "button" -> new Button(parent, version);
+            case "buttongroup" -> new Buttongroup(parent, version);
+            case "camera" -> new Camera(parent, version);
+            case "circle" -> new Circle(parent, version);
+            case "compositegeom" -> new Compositegeom(parent, version);
+            case "detachstrand" -> new Detachstrand(parent, version);
+            case "effects" -> new Effects(parent, version);
+            case "endoncollision" -> new Endoncollision(parent, version);
+            case "endonmessage" -> new Endonmessage(parent, version);
+            case "endonnogeom" -> new Endonnogeom(parent, version);
+            case "fire" -> new Fire(parent, version);
+            case "font" -> new Font(parent, version);
+            case "hinge" -> new Hinge(parent, version);
+            case "label" -> new Label(parent, version);
+            case "level" -> new Level(parent, version);
+            case "levelexit" -> new Levelexit(parent, version);
+            case "line" -> new Line(parent, version);
+            case "linearforcefield" -> new Linearforcefield(parent, version);
+            case "loopsound" -> new Loopsound(parent, version);
+            case "marker" -> new Marker(parent, version);
+            case "motor" -> new Motor(parent, version);
+            case "music" -> new Music(parent, version);
+            case "part" -> new Part(parent, version);
+            case "particleeffect" -> new Particleeffect(parent, version);
+            case "particle" -> new _Particle(parent, version);
+            case "particles" -> new Particles(parent, version);
+            case "pipe" -> new Pipe(parent, version);
+            case "poi" -> new Poi(parent, version);
+            case "rectangle" -> new Rectangle(parent, version);
+            case "radialforcefield" -> new Radialforcefield(parent, version);
+            case "ResourceManifest" -> new ResourceManifest(parent, version);
+            case "Resources" -> new Resources(parent, version);
+            case "Image" -> new ResrcImage(parent, version);
+            case "scene" -> new Scene(parent, version);
+            case "SceneLayer" -> new SceneLayer(parent, version);
+            case "SetDefaults" -> new SetDefaults(parent, version);
+            case "shadow" -> new Shadow(parent, version);
+            case "signpost" -> new Signpost(parent, version);
+            case "sinanim" -> new Sinanim(parent, version);
+            case "sinvariance" -> new Sinvariance(parent, version);
+            case "slider" -> new Slider(parent, version);
+            case "sound", "Sound" -> new Sound(parent, version);
+            case "splat" -> new Splat(parent, version);
+            case "Strand" -> new Strand(parent, version);
+            case "strand" -> new BallStrand(parent, version);
+            case "string" -> new TextString(parent, version);
+            case "strings" -> new TextStrings(parent, version);
+            case "targetheight" -> new Targetheight(parent, version);
+            case "Vertex" -> new Vertex(parent, version);
+            default -> throw new RuntimeException("Attempted to create an invalid object: \"" + name + "\"");
         };
 
-        if (toAdd == null) {
-            logger.error("Attempted to create an invalid object: \"" + name + "\"");
-            return null;
-        }
-
-        if (parent != null && !shouldStop) toAdd.setParent(parent);
+        if (parent != null) toAdd.setParent(parent);
 
         return toAdd;
 

@@ -1,7 +1,6 @@
 package com.woogleFX.editorObjects.objectCreators;
 
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
-import com.woogleFX.engine.fx.FXCanvas;
 import com.woogleFX.engine.fx.FXHierarchy;
 import com.woogleFX.engine.fx.FXPropertiesView;
 import com.woogleFX.engine.SelectionManager;
@@ -68,13 +67,13 @@ public class ObjectAdder {
                 /*
                  * Create a pipe with a vertex at the level exit and at the scene intersection.
                  */
-                EditorObject pipe = ObjectCreator.create("pipe", LevelManager.getLevel().getLevelObject());
-                EditorObject vertex1 = ObjectCreator.create("Vertex", pipe);
+                EditorObject pipe = ObjectCreator.create("pipe", LevelManager.getLevel().getLevelObject(), LevelManager.getLevel().getVersion());
+                EditorObject vertex1 = ObjectCreator.create("Vertex", pipe, LevelManager.getLevel().getVersion());
                 if (vertex1 == null) return;
                 vertex1.setAttribute("x", levelexit.getAttribute("pos").positionValue().getX());
                 vertex1.setAttribute("y", levelexit.getAttribute("pos").positionValue().getY());
 
-                EditorObject vertex2 = ObjectCreator.create("Vertex", pipe);
+                EditorObject vertex2 = ObjectCreator.create("Vertex", pipe, LevelManager.getLevel().getVersion());
                 if (vertex2 == null) return;
                 vertex2.setAttribute("x", closestPoint.getX());
                 vertex2.setAttribute("y", closestPoint.getY());
@@ -119,7 +118,7 @@ public class ObjectAdder {
 
         };
 
-        EditorObject obj = ObjectCreator.create(name, parent);
+        EditorObject obj = ObjectCreator.create(name, parent, level.getVersion());
         adjustObject(obj);
 
         EditorObject absoluteParent = parent;

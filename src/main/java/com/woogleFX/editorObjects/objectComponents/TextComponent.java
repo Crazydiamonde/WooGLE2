@@ -5,13 +5,9 @@ import com.woogleFX.editorObjects._Font;
 import com.woogleFX.editorObjects.objectComponents.generic.RotatableProperty;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.simpleStructures.DragSettings;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;
-
-import javax.imageio.ImageIO;
-import java.io.File;
 
 public abstract class TextComponent extends ObjectComponent implements RotatableProperty {
 
@@ -104,7 +100,7 @@ public abstract class TextComponent extends ObjectComponent implements Rotatable
 
                 if (image != null) graphicsContext.drawImage(image, x + (charOffsetX + accumulatedSpacing) * scale, y + (charOffsetY + ascent + ascentPadding) * scale, image.getWidth() * scale, image.getHeight() * scale);
 
-                accumulatedSpacing += width + spacing + kerning;
+                accumulatedSpacing += (int)(width + spacing + kerning);
 
 
                 i++;

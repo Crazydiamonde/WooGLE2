@@ -2,12 +2,13 @@ package com.worldOfGoo.addin;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 public class AddinDepends extends EditorObject {
 
-    public AddinDepends(EditorObject _parent) {
-        super(_parent, "depends", "addin\\addin");
+    public AddinDepends(EditorObject _parent, GameVersion version) {
+        super(_parent, "depends", version);
 
         addAttribute("ref", InputField.ANY)                    .assertRequired();
         addAttribute("min-version", InputField.NUMBER_POSITIVE).assertRequired();

@@ -258,7 +258,7 @@ public class LevelWriter {
             addinPathText = outputPathString + "\\" + levelName + "." + addinPathText;
             textPathText = outputPathString + "\\" + levelName + "." + textPathText;
         } else {
-            String WoGDir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+            String WoGDir = FileManager.getGameDir(version);
             String initialPath = WoGDir + "\\res\\levels\\" + levelName + "\\goomod";
             addinPathText = initialPath + "\\" + addinPathText;
             textPathText = initialPath + "\\" + textPathText;
@@ -280,20 +280,17 @@ public class LevelWriter {
         if (!Files.exists(addinPath)) Files.createFile(addinPath);
         if (!Files.exists(textPath)) Files.createFile(textPath);
 
-        String otherDir;
-
-        if (version == GameVersion.OLD) {
-            otherDir = FileManager.getNewWOGdir();
+        if (version == GameVersion.OLD && !exportingGoomod) {
             AESBinFormat.encodeFile(new File(scenePathText), levelInformation.scene.getBytes());
             AESBinFormat.encodeFile(new File(levelPathText), levelInformation.level.getBytes());
             AESBinFormat.encodeFile(new File(resrcPathText), levelInformation.resrc.getBytes());
         } else {
-            otherDir = FileManager.getOldWOGdir();
             Files.write(scenePath, Collections.singleton(levelInformation.scene), StandardCharsets.UTF_8);
             Files.write(levelPath, Collections.singleton(levelInformation.level), StandardCharsets.UTF_8);
             Files.write(resrcPath, Collections.singleton(levelInformation.resrc), StandardCharsets.UTF_8);
         }
 
+        String otherDir = FileManager.getGameDir(version == GameVersion.NEW ? GameVersion.OLD : GameVersion.NEW);
         if (!exportingGoomod && Files.exists(Path.of(otherDir + "\\res\\levels\\" + levelName))) {
             File[] images = new File(otherDir + "\\res\\levels\\" + levelName).listFiles();
             if (images != null) for (File imageFile : images) {

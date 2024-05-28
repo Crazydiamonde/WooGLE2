@@ -157,7 +157,7 @@ public class FXPropertiesView {
                         double x = bounds.getMinX();
                         double y = bounds.getMinY() + 18;
 
-                        ContextMenu contextMenu = possibleAttributeValues(this);
+                        ContextMenu contextMenu = possibleAttributeValues(this, LevelManager.getLevel().getVersion());
 
                         if (((VBox)((ScrollPane)contextMenu.getItems().get(0).getGraphic()).getContent()).getChildren().isEmpty()) return;
 
@@ -288,7 +288,7 @@ public class FXPropertiesView {
     }
 
 
-    private static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell) {
+    private static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell, GameVersion version) {
         ContextMenu contextMenu = new ContextMenu();
         EditorAttribute attribute = cell.getTableRow().getItem();
         if (attribute == null) {
@@ -307,7 +307,7 @@ public class FXPropertiesView {
 
                         // Add thumbnail of the image to the menu item
                         try {
-                            ImageView graphic = new ImageView(ResourceManager.getImage(LevelManager.getLevel().getResrc(), resource.getAttribute("id").stringValue(), LevelManager.getVersion()));
+                            ImageView graphic = new ImageView(ResourceManager.getImage(LevelManager.getLevel().getResrc(), resource.getAttribute("id").stringValue(), version));
                             graphic.setFitHeight(30);
                             // Set width depending on height
                             graphic.setFitWidth(graphic.getImage().getWidth() * 30 / graphic.getImage().getHeight());
@@ -331,8 +331,7 @@ public class FXPropertiesView {
                 }
             }
             case BALL -> {
-                String path = LevelManager.getVersion() == GameVersion.NEW ? FileManager.getNewWOGdir()
-                        : FileManager.getOldWOGdir();
+                String path = FileManager.getGameDir(version);
                 File[] ballFiles = new File(path + "\\res\\balls").listFiles();
                 if (ballFiles != null) {
                     for (File ballFile : ballFiles) {

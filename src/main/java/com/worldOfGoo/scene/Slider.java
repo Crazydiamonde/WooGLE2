@@ -2,12 +2,13 @@ package com.worldOfGoo.scene;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 public class Slider extends EditorObject {
 
-    public Slider(EditorObject _parent) {
-        super(_parent, "slider", "scene\\slider");
+    public Slider(EditorObject _parent, GameVersion version) {
+        super(_parent, "slider", version);
 
         addAttribute("body1", InputField.ANY).assertRequired();
         addAttribute("body2", InputField.ANY).assertRequired();

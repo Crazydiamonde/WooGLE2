@@ -7,6 +7,7 @@ import com.woogleFX.engine.Depth;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import com.woogleFX.structures.simpleStructures.Position;
 import javafx.geometry.Point2D;
@@ -21,8 +22,8 @@ public class Rectangle extends EditorObject {
     private Image image;
 
 
-    public Rectangle(EditorObject _parent) {
-        super(_parent, "rectangle", "scene\\rectangle");
+    public Rectangle(EditorObject _parent, GameVersion version) {
+        super(_parent, "rectangle", version);
 
         addAttribute("id",               InputField.ANY)                                   .assertRequired();
         addAttribute("mass",             InputField.NUMBER)     .setDefaultValue("0");
@@ -305,7 +306,7 @@ public class Rectangle extends EditorObject {
 
         try {
             if (!getAttribute("image").stringValue().isEmpty()) {
-                image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
+                image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), getVersion());
             }
         } catch (FileNotFoundException ignored) {
 

@@ -44,7 +44,7 @@ public class GlobalResourceManager {
         allFailedResources.clear();
 
         oldResources.clear();
-        if (FileManager.hasOldWOG()) {
+        if (!FileManager.getGameDir(GameVersion.OLD).isEmpty()) {
             openResources(GameVersion.OLD);
             openParticles(GameVersion.OLD);
             openAnimations(GameVersion.OLD);
@@ -52,7 +52,7 @@ public class GlobalResourceManager {
         }
 
         newResources.clear();
-        if (FileManager.hasNewWOG()) {
+        if (!FileManager.getGameDir(GameVersion.NEW).isEmpty()) {
             openResources(GameVersion.NEW);
             openParticles(GameVersion.NEW);
             openAnimations(GameVersion.NEW);
@@ -116,15 +116,14 @@ public class GlobalResourceManager {
 
 
     private static void openParticles(GameVersion version) {
-
+        ArrayList<EditorObject> particles2;
         try {
-            FileManager.openParticles(version);
+            particles2 = FileManager.openParticles(version);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             Alarms.errorMessage(e);
             return;
         }
 
-        ArrayList<EditorObject> particles2 = FileManager.commonBallData;
         ParticleManager.getParticles().addAll(particles2);
         for (EditorObject particle : particles2) {
             try {
@@ -143,9 +142,7 @@ public class GlobalResourceManager {
 
     private static void openAnimations(GameVersion version) {
 
-        String dir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
-
-        File animationsDirectory = new File(dir + "\\res\\anim");
+        File animationsDirectory = new File(FileManager.getGameDir(version) + "\\res\\anim");
         File[] animationsArray = animationsDirectory.listFiles();
         if (animationsArray == null) return;
 
@@ -178,7 +175,6 @@ public class GlobalResourceManager {
             Alarms.errorMessage(e);
             return;
         }
-        if (textList == null) return;
 
         for (EditorObject text : textList) {
             if (text instanceof TextString) {

@@ -2,12 +2,13 @@ package com.worldOfGoo.resrc;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 public class Resources extends EditorObject {
 
-    public Resources(EditorObject _parent) {
-        super(_parent, "Resources", "resources\\resources");
+    public Resources(EditorObject _parent, GameVersion version) {
+        super(_parent, "Resources", version);
 
         addAttribute("id", InputField.ANY).assertRequired();
 

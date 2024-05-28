@@ -3,7 +3,6 @@ package com.woogleFX.file.fileExport;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -28,11 +27,8 @@ public class ZipUtility {
      *
      * @param listFiles   A collection of files and directories
      * @param destZipFile The path of the destination zip file
-     * @throws FileNotFoundException
-     * @throws IOException
      */
-    public void zip(List<File> listFiles, String destZipFile) throws FileNotFoundException,
-            IOException {
+    public void zip(List<File> listFiles, String destZipFile) throws IOException {
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destZipFile));
         for (File file : listFiles) {
             if (file.isDirectory()) {
@@ -51,12 +47,10 @@ public class ZipUtility {
      * @param folder       the directory to be added
      * @param parentFolder the path of parent directory
      * @param zos          the current zip output stream
-     * @throws FileNotFoundException
-     * @throws IOException
      */
-    private void zipDirectory(File folder, String parentFolder,
-            ZipOutputStream zos) throws FileNotFoundException, IOException {
-        for (File file : folder.listFiles()) {
+    private void zipDirectory(File folder, String parentFolder, ZipOutputStream zos) throws IOException {
+        File[] files = folder.listFiles();
+        if (files != null) for (File file : files) {
             if (file.isDirectory()) {
                 zipDirectory(file, parentFolder + "/" + file.getName(), zos);
                 continue;
@@ -65,7 +59,7 @@ public class ZipUtility {
             BufferedInputStream bis = new BufferedInputStream(
                     new FileInputStream(file));
             byte[] bytesIn = new byte[BUFFER_SIZE];
-            int read = 0;
+            int read;
             while ((read = bis.read(bytesIn)) != -1) {
                 zos.write(bytesIn, 0, read);
             }
@@ -79,15 +73,12 @@ public class ZipUtility {
      *
      * @param file the file to be added
      * @param zos  the current zip output stream
-     * @throws FileNotFoundException
-     * @throws IOException
      */
-    private void zipFile(File file, ZipOutputStream zos)
-            throws FileNotFoundException, IOException {
+    private void zipFile(File file, ZipOutputStream zos) throws IOException {
         zos.putNextEntry(new ZipEntry(file.getName()));
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         byte[] bytesIn = new byte[BUFFER_SIZE];
-        int read = 0;
+        int read;
         while ((read = bis.read(bytesIn)) != -1) {
             zos.write(bytesIn, 0, read);
         }

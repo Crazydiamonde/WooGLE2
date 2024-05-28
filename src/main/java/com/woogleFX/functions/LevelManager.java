@@ -60,13 +60,4 @@ public class LevelManager {
 
     }
 
-
-    private static GameVersion version;
-    public static GameVersion getVersion() {
-        return version;
-    }
-    public static void setVersion(GameVersion version) {
-        LevelManager.version = version;
-    }
-
 }

@@ -4,7 +4,6 @@ import com.woogleFX.editorObjects.EditorAttribute;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
 import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
-import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.engine.fx.FXHierarchy;
 import com.woogleFX.engine.fx.FXPropertiesView;
@@ -12,11 +11,10 @@ import com.woogleFX.file.FileManager;
 import com.woogleFX.functions.undoHandling.UndoManager;
 import com.woogleFX.functions.undoHandling.userActions.HierarchyDragAction;
 import com.woogleFX.structures.WorldLevel;
-import com.worldOfGoo.addin.Addin;
-import com.worldOfGoo.level.Level;
-import com.worldOfGoo.level.Vertex;
+import com.worldOfGoo.addin.*;
+import com.worldOfGoo.level.*;
 import com.worldOfGoo.resrc.*;
-import com.worldOfGoo.scene.Scene;
+import com.worldOfGoo.scene.*;
 import com.worldOfGoo.text.TextStrings;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -28,25 +26,68 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
 public class HierarchyManager {
 
-    public static Image getObjectIcon(EditorObject editorObject) {
-        try {
-            return FileManager.getIcon("ObjectIcons\\" + editorObject.getIcon() + ".png");
-        } catch (FileNotFoundException e) {
-            return null;
-        }
+    public static Image getObjectIcon(String name) {
+
+        String iconName = switch (name) {
+            case "addin", "Addin_addin", "Addin_id", "Addin_name",
+                    "Addin_type", "Addin_version", "Addin_description",
+                    "Addin_author", "Addin_levels", "Addin_level",
+                    "Addin_dir", "Addin_wtf_name",
+                    "Addin_subtitle", "Addin_ocd" -> "addin\\addin";
+            case "BallInstance" -> "level\\BallInstance";
+            case "button" -> "scene\\button";
+            case "buttongroup" -> "scene\\buttongroup";
+            case "camera" -> "level\\camera";
+            case "circle" -> "scene\\circle";
+            case "compositegeom" -> "scene\\compositegeom";
+            case "endoncollision" -> "level\\endoncollision";
+            case "endonmessage" -> "level\\endonmessage";
+            case "endonnogeom" -> "level\\endonnogeom";
+            case "fire" -> "level\\fire";
+            case "font" -> "resrc\\font";
+            case "hinge" -> "scene\\hinge";
+            case "label" -> "scene\\label";
+            case "level" -> "level\\level";
+            case "levelexit" -> "level\\levelexit";
+            case "line" -> "scene\\line";
+            case "linearforcefield" -> "scene\\linearforcefield";
+            case "loopsound" -> "level\\loopsound";
+            case "motor" -> "scene\\motor";
+            case "music" -> "level\\music";
+            case "particles" -> "scene\\particles";
+            case "pipe" -> "level\\pipe";
+            case "poi" -> "level\\poi";
+            case "rectangle" -> "scene\\rectangle";
+            case "radialforcefield" -> "scene\\radialforcefield";
+            case "ResourceManifest" -> "resrc\\resourcemanifest";
+            case "Resources" -> "resrc\\resources";
+            case "Image" -> "resrc\\resrcimage";
+            case "scene" -> "scene\\scene";
+            case "SceneLayer" -> "scene\\SceneLayer";
+            case "SetDefaults" -> "resrc\\setdefaults";
+            case "signpost" -> "level\\signpost";
+            case "slider" -> "scene\\slider";
+            case "Sound" -> "resrc\\sound";
+            case "Strand" -> "level\\Strand";
+            case "string" -> "text\\textstring";
+            case "strings" -> "text\\textstrings";
+            case "targetheight" -> "level\\targetheight";
+            case "Vertex" -> "level\\Vertex";
+            default -> null;
+        };
+        if (iconName == null) return null;
+
+        return FileManager.getIcon("ObjectIcons\\" + iconName + ".png");
+
     }
 
 
     private static int oldDropIndex;
-    public static int getOldDropIndex() {
-        return oldDropIndex;
-    }
     public static void setOldDropIndex(int oldDropIndex) {
         HierarchyManager.oldDropIndex = oldDropIndex;
     }
@@ -92,7 +133,7 @@ public class HierarchyManager {
             if (cell.getTableRow().getItem() != null) {
                 ImageView imageView;
 
-                imageView = new ImageView(getObjectIcon(cell.getTableRow().getItem()));
+                imageView = new ImageView(getObjectIcon(cell.getTableRow().getItem().getType()));
 
                 // If the cell's EditorObject is invalid, display its graphic with a warning
                 // symbol.
@@ -229,12 +270,11 @@ public class HierarchyManager {
                 if (event.getY() + row.getTranslateY() >= 9) {
                     row.setStyle("-fx-border-color: #a0a0ff; -fx-border-width: 0 0 2 0;");
                     row.setTranslateY(1);
-                    row.setPadding(new Insets(0, 0, 0, 0));
                 } else {
                     row.setStyle("-fx-border-color: #a0a0ff; -fx-border-width: 2 0 0 0;");
                     row.setTranslateY(-1);
-                    row.setPadding(new Insets(0, 0, 0, 0));
                 }
+                row.setPadding(new Insets(0.5, 0, -0.5, 0));
 
                 row.toFront();
 
@@ -278,8 +318,7 @@ public class HierarchyManager {
             MenuItem addItemItem = new MenuItem("Add " + childToAdd);
 
             // Attempt to set graphics for this menu item.
-            EditorObject temporaryGraphicObject = ObjectCreator.create("_" + childToAdd, null);
-            if (temporaryGraphicObject != null) addItemItem.setGraphic(new ImageView(getObjectIcon(temporaryGraphicObject)));
+            addItemItem.setGraphic(new ImageView(getObjectIcon(childToAdd)));
 
             // Set the item's action to creating the child, with the object as its parent.
             addItemItem.setOnAction(event -> ObjectAdder.addObject(childToAdd, object));

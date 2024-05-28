@@ -6,6 +6,7 @@ import com.woogleFX.engine.Depth;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -26,8 +27,8 @@ public class Fire extends EditorObject {
     }
 
 
-    public Fire(EditorObject _parent) {
-        super(_parent, "fire", "level\\fire");
+    public Fire(EditorObject _parent, GameVersion version) {
+        super(_parent, "fire", version);
 
         addAttribute("depth",     InputField.NUMBER)   .setDefaultValue("0") .assertRequired();
         addAttribute("particles", InputField.PARTICLES)                      .assertRequired();

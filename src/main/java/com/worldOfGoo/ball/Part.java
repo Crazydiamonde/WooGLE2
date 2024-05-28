@@ -2,14 +2,12 @@ package com.worldOfGoo.ball;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
-import javafx.scene.image.Image;
-
-import java.util.ArrayList;
+import com.woogleFX.structures.GameVersion;
 
 public class Part extends EditorObject {
 
-    public Part(EditorObject _parent) {
-        super(_parent, "part");
+    public Part(EditorObject _parent, GameVersion version) {
+        super(_parent, "part", version);
 
         addAttribute("name",       InputField.ANY)                        .assertRequired();
         addAttribute("layer",      InputField.NUMBER)                     .assertRequired();

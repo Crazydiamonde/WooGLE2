@@ -12,22 +12,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
-
 public class FXMenu {
-
-    private static final MenuBar menuBar = new MenuBar();
-    public static MenuBar getMenuBar() {
-        return menuBar;
-    }
 
 
     private static void setIcon(MenuItem menuItem, String pathString) {
-        try {
-            menuItem.setGraphic(new ImageView(FileManager.getIcon(pathString)));
-        } catch (FileNotFoundException ignored) {
-            menuItem.setGraphic(null);
-        }
+        menuItem.setGraphic(new ImageView(FileManager.getIcon(pathString)));
     }
 
 
@@ -42,7 +31,7 @@ public class FXMenu {
     private static final MenuItem configurePaletteItem = new MenuItem();
     private static final MenuItem quitItem = new MenuItem();
 
-    private static Menu file() {
+    private static void file() {
 
         fileMenu.setText("File");
 
@@ -87,8 +76,6 @@ public class FXMenu {
         quitItem.setOnAction(e -> LevelCloser.resumeLevelClosing());
         fileMenu.getItems().add(quitItem);
 
-        return fileMenu;
-
     }
 
 
@@ -105,7 +92,7 @@ public class FXMenu {
     private static final MenuItem renameLevelItem = new MenuItem();
     private static final MenuItem deleteLevelItem = new MenuItem();
 
-    private static Menu level() {
+    private static void level() {
 
         levelMenu.setText("Level");
 
@@ -157,11 +144,9 @@ public class FXMenu {
         levelMenu.getItems().add(renameLevelItem);
 
         deleteLevelItem.setText("Delete Level");
-        setIcon(deleteLevelItem, prefix + ".png");
+        setIcon(deleteLevelItem, prefix + "delete.png");
         deleteLevelItem.setOnAction(e -> LevelUpdater.deleteLevel(LevelManager.getLevel()));
         levelMenu.getItems().add(deleteLevelItem);
-
-        return levelMenu;
 
     }
 
@@ -175,7 +160,7 @@ public class FXMenu {
     private static final MenuItem pasteItem = new MenuItem();
     private static final MenuItem deleteItem = new MenuItem();
 
-    private static Menu edit() {
+    private static void edit() {
 
         editMenu.setText("Edit");
 
@@ -211,8 +196,6 @@ public class FXMenu {
         deleteItem.setOnAction(e -> ObjectManager.delete(LevelManager.getLevel()));
         editMenu.getItems().add(deleteItem);
 
-        return editMenu;
-
     }
 
 
@@ -225,7 +208,7 @@ public class FXMenu {
     private static final MenuItem setMusicItem = new MenuItem();
     private static final MenuItem setLoopsoundItem = new MenuItem();
 
-    private static Menu resources() {
+    private static void resources() {
 
         resourcesMenu.setText("Resources");
 
@@ -261,16 +244,20 @@ public class FXMenu {
         setLoopsoundItem.setOnAction(e -> LevelResourceImporter.importLoopsound(LevelManager.getLevel()));
         resourcesMenu.getItems().add(setLoopsoundItem);
 
-        return resourcesMenu;
+    }
 
+
+    private static final MenuBar menuBar = new MenuBar(fileMenu, levelMenu, editMenu, resourcesMenu);
+    public static MenuBar getMenuBar() {
+        return menuBar;
     }
 
 
     public static void init() {
-        menuBar.getMenus().add(file());
-        menuBar.getMenus().add(level());
-        menuBar.getMenus().add(edit());
-        menuBar.getMenus().add(resources());
+        file();
+        level();
+        edit();
+        resources();
     }
 
 
@@ -278,11 +265,14 @@ public class FXMenu {
 
         boolean inLevel = LevelManager.getLevel() != null;
 
-        reloadWorldOfGooOldItem.setDisable(!FileManager.hasOldWOG());
-        saveOldBallToNewItem.setDisable(!FileManager.hasOldWOG());
+        boolean missingOldDir = FileManager.getGameDir(GameVersion.OLD).isEmpty();
+        boolean missingNewDir = FileManager.getGameDir(GameVersion.NEW).isEmpty();
 
-        reloadWorldOfGooNewItem.setDisable(!FileManager.hasNewWOG());
-        saveNewBallToOldItem.setDisable(!FileManager.hasNewWOG());
+        reloadWorldOfGooOldItem.setDisable(missingOldDir);
+        saveOldBallToNewItem.setDisable(missingOldDir);
+
+        reloadWorldOfGooNewItem.setDisable(missingNewDir);
+        saveNewBallToOldItem.setDisable(missingNewDir);
 
         for (MenuItem menuItem : levelMenu.getItems()) menuItem.setDisable(!inLevel);
 
@@ -295,13 +285,11 @@ public class FXMenu {
 
         for (MenuItem menuItem : resourcesMenu.getItems()) menuItem.setDisable(!inLevel);
 
-        boolean hasOld = FileManager.hasOldWOG();
-        newLevelOldItem.setDisable(!hasOld);
-        openLevelOldItem.setDisable(!hasOld);
+        newLevelOldItem.setDisable(missingOldDir);
+        openLevelOldItem.setDisable(missingOldDir);
 
-        boolean hasNew = FileManager.hasNewWOG();
-        newLevelNewItem.setDisable(!hasNew);
-        openLevelNewItem.setDisable(!hasNew);
+        newLevelNewItem.setDisable(missingNewDir);
+        openLevelNewItem.setDisable(missingNewDir);
 
     }
 

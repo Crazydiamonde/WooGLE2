@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +23,7 @@ public class FontReader {
 
     public static _Font read(String fontPath, GameVersion version) {
 
-        String dir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String dir = FileManager.getGameDir(version);
 
         String text;
         try {
@@ -74,7 +73,7 @@ public class FontReader {
                 try {
                     image = FileManager.openImageFromFilePath(dir + "\\res\\fonts\\" + imageID + ".png");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("", e);
                     image = null;
                 }
 

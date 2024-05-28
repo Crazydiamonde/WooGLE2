@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -39,39 +38,21 @@ public class FileManager {
 
 
     private static String oldWOGdir = "";
-    public static String getOldWOGdir() {
-        return oldWOGdir;
-    }
     public static void setOldWOGdir(String oldWOGdir) {
-        logger.debug("setting to " + oldWOGdir);
         FileManager.oldWOGdir = oldWOGdir;
     }
 
 
-    private static boolean hasOldWOG = false;
-    public static boolean hasOldWOG() {
-        return hasOldWOG;
-    }
-    public static void setHasOldWOG(boolean hasOldWOG) {
-        FileManager.hasOldWOG = hasOldWOG;
-    }
-
-
     private static String newWOGdir = "";
-    public static String getNewWOGdir() {
-        return newWOGdir;
-    }
     public static void setNewWOGdir(String newWOGdir) {
         FileManager.newWOGdir = newWOGdir;
     }
 
 
-    private static boolean hasNewWOG = false;
-    public static boolean hasNewWOG() {
-        return hasNewWOG;
-    }
-    public static void setHasNewWOG(boolean hasNewWOG) {
-        FileManager.hasNewWOG = hasNewWOG;
+    public static String getGameDir(GameVersion version) {
+        if (version == GameVersion.OLD) return oldWOGdir;
+        if (version == GameVersion.NEW) return newWOGdir;
+        throw new RuntimeException("Invalid game version: " + version);
     }
 
 
@@ -107,14 +88,13 @@ public class FileManager {
         SimpleHandler defaultHandler = new SimpleHandler();
         File properties = new File(editorLocation + "properties.xml");
         if (!properties.exists()) {
-            FileManager.setHasOldWOG(false);
-            FileManager.setOldWOGdir("");
-            FileManager.setHasNewWOG(false);
-            FileManager.setNewWOGdir("");
+            oldWOGdir = "";
+            newWOGdir = "";
             return;
         }
         saxParser.parse(properties, defaultHandler);
     }
+
 
     public static Image openImageFromFilePath(String file_path) throws IOException {
         InputStream inputStream = new FileInputStream(file_path);
@@ -123,8 +103,17 @@ public class FileManager {
         return image;
     }
 
-    public static Image getIcon(String imagePath) throws FileNotFoundException {
-        return new Image(new FileInputStream(editorLocation + imagePath));
+
+    public static Image getIcon(String imagePath) {
+        try {
+            InputStream inputStream = new FileInputStream(editorLocation + imagePath);
+            Image iconImage = new Image(inputStream);
+            inputStream.close();
+            return iconImage;
+        } catch (IOException e) {
+            logger.error("", e);
+            return null;
+        }
     }
 
     private static String bytesToString(byte[] input) {
@@ -140,9 +129,6 @@ public class FileManager {
     }
 
 
-    public static ArrayList<EditorObject> commonBallData;
-    public static ArrayList<EditorObject> commonBallResrcData;
-
     public static WorldLevel openLevel(String levelName, GameVersion version) throws ParserConfigurationException, SAXException, IOException {
 
         LevelManager.setLevel(null);
@@ -154,7 +140,7 @@ public class FileManager {
         ArrayList<EditorObject> text = new ArrayList<>();
 
         SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-        ObjectXMLParser defaultHandler = new ObjectXMLParser(scene, level, resrc, addin, text);
+        ObjectXMLParser defaultHandler = new ObjectXMLParser(scene, level, resrc, addin, text, version);
 
         if (version == GameVersion.OLD) {
 
@@ -171,11 +157,11 @@ public class FileManager {
 
             File addinF = new File(levelDir + ".addin.xml");
             if (addinF.exists()) saxParser.parse(addinF, defaultHandler);
-            else supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName));
+            else supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName, version));
 
             File textF = new File(levelDir + ".text.xml");
             if (textF.exists()) saxParser.parse(textF, defaultHandler);
-            else supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject());
+            else supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject(version));
 
         } else if (version == GameVersion.NEW) {
 
@@ -192,17 +178,18 @@ public class FileManager {
 
             File addinF = new File(levelDir + ".addin.xml");
             if (addinF.exists()) saxParser.parse(addinF, defaultHandler);
-            else supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName));
+            else supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(levelName, version));
 
             File textF = new File(levelDir + ".text.xml");
             if (textF.exists()) saxParser.parse(textF, defaultHandler);
-            else supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject());
+            else supremeAddToList(text, BlankObjectGenerator.generateBlankTextObject(version));
 
         }
 
         return new WorldLevel(scene, level, resrc, addin, text, version);
 
     }
+
 
     public static _Ball openBall(String ballName, GameVersion version) throws ParserConfigurationException, SAXException, IOException {
 
@@ -212,11 +199,13 @@ public class FileManager {
             return null;
         }
 
-        commonBallData = new ArrayList<>();
-        commonBallResrcData = new ArrayList<>();
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
-        BallFileOpener defaultHandler = new BallFileOpener();
+
+        ArrayList<EditorObject> objects = new ArrayList<>();
+        ArrayList<EditorObject> resources = new ArrayList<>();
+
+        BallFileOpener defaultHandler = new BallFileOpener(objects, resources, version);
         if (version == GameVersion.OLD) {
             File ballFile = new File(oldWOGdir + "\\res\\balls\\" + ballName + "\\balls.xml.bin");
             File ballFileR = new File(oldWOGdir + "\\res\\balls\\" + ballName + "\\resources.xml.bin");
@@ -224,7 +213,7 @@ public class FileManager {
             saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
             BallFileOpener.mode = 1;
             saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFileR)))), defaultHandler);
-            return new _Ball(commonBallData, commonBallResrcData);
+            return new _Ball(objects, resources);
         } else if (version == GameVersion.NEW) {
             File ballFile = new File(newWOGdir + "\\res\\balls\\" + ballName + "\\balls.xml");
             File ballFileR = new File(newWOGdir + "\\res\\balls\\" + ballName + "\\resources.xml");
@@ -232,17 +221,22 @@ public class FileManager {
             saxParser.parse(ballFile, defaultHandler);
             BallFileOpener.mode = 1;
             saxParser.parse(ballFileR, defaultHandler);
-            return new _Ball(commonBallData, commonBallResrcData);
+            return new _Ball(objects, resources);
         } else {
             return null;
         }
     }
 
+
     public static ArrayList<EditorObject> openResources(GameVersion version) throws ParserConfigurationException, SAXException, IOException {
-        commonBallResrcData = new ArrayList<>();
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
-        BallFileOpener defaultHandler = new BallFileOpener();
+
+        ArrayList<EditorObject> objects = new ArrayList<>();
+        ArrayList<EditorObject> resources = new ArrayList<>();
+
+        BallFileOpener defaultHandler = new BallFileOpener(objects, resources, version);
         BallFileOpener.mode = 1;
         File ballFile;
         String dir;
@@ -255,33 +249,44 @@ public class FileManager {
             ballFile = new File(dir + "\\properties\\resources.xml");
             saxParser.parse(ballFile, defaultHandler);
         }
-        return commonBallResrcData;
+        return resources;
     }
 
-    public static void openParticles(GameVersion version) throws ParserConfigurationException, SAXException, IOException {
-        commonBallData = new ArrayList<>();
-        commonBallResrcData = new ArrayList<>();
+
+    public static ArrayList<EditorObject> openParticles(GameVersion version) throws ParserConfigurationException, SAXException, IOException {
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
-        BallFileOpener defaultHandler = new BallFileOpener();
+
+        ArrayList<EditorObject> objects = new ArrayList<>();
+        ArrayList<EditorObject> resources = new ArrayList<>();
+
+        BallFileOpener defaultHandler = new BallFileOpener(objects, resources, version);
+
         BallFileOpener.mode = 0;
-        if (version == GameVersion.OLD && hasOldWOG) {
-            File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\fx.xml.bin");
+        if (version == GameVersion.OLD && !oldWOGdir.isEmpty()) {
+            File ballFile = new File(oldWOGdir + "\\properties\\fx.xml.bin");
             saxParser.parse(new InputSource(new StringReader(bytesToString(AESBinFormat.decodeFile(ballFile)))), defaultHandler);
-        } else if (version == GameVersion.NEW && hasNewWOG) {
-            File ballFile2 = new File(FileManager.getNewWOGdir() + "\\properties\\fx.xml");
+        } else if (version == GameVersion.NEW && !newWOGdir.isEmpty()) {
+            File ballFile2 = new File(newWOGdir + "\\properties\\fx.xml");
             saxParser.parse(ballFile2, defaultHandler);
         }
+        return objects;
     }
 
+
     public static ArrayList<EditorObject> openText(GameVersion version) throws ParserConfigurationException, SAXException, IOException {
-        commonBallData = new ArrayList<>();
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
-        BallFileOpener defaultHandler = new BallFileOpener();
+
+        ArrayList<EditorObject> objects = new ArrayList<>();
+        ArrayList<EditorObject> resources = new ArrayList<>();
+
+        BallFileOpener defaultHandler = new BallFileOpener(objects, resources, version);
         BallFileOpener.mode = 0;
-        if (version == GameVersion.OLD && hasOldWOG) {
-            File ballFile = new File(FileManager.getOldWOGdir() + "\\properties\\text.xml.bin");
+        if (version == GameVersion.OLD && !oldWOGdir.isEmpty()) {
+            File ballFile = new File(oldWOGdir + "\\properties\\text.xml.bin");
             byte[] bytes = AESBinFormat.decodeFile(ballFile);
             // If the file starts with EF BB BF, strip these three bytes (not sure why it does this)
             if (bytes[0] == (byte)0xEF && bytes[1] == (byte)0xBB && bytes[2] == (byte)0xBF) {
@@ -291,12 +296,13 @@ public class FileManager {
             }
             String stringBytes = bytesToString(bytes);
             saxParser.parse(new InputSource(new StringReader(stringBytes)), defaultHandler);
-        } else if (version == GameVersion.NEW && hasNewWOG) {
-            File ballFile2 = new File(FileManager.getNewWOGdir() + "\\properties\\text.xml");
+        } else if (version == GameVersion.NEW && !newWOGdir.isEmpty()) {
+            File ballFile2 = new File(newWOGdir + "\\properties\\text.xml");
             saxParser.parse(ballFile2, defaultHandler);
         }
-        return commonBallData;
+        return objects;
     }
+
 
     public static void saveProperties() throws IOException {
         StringBuilder export = new StringBuilder("<properties>\n\n<oldWOG filepath=\"" + oldWOGdir + "\"/>\n<newWOG filepath=\"" + newWOGdir + "\"/>\n<gooBallPalette>\n");
@@ -307,8 +313,5 @@ public class FileManager {
 
         Files.write(Paths.get(editorLocation + "properties.xml"), Collections.singleton(export.toString()), StandardCharsets.UTF_8);
     }
-
-    public static final ArrayList<ArrayList<String>> attributes = new ArrayList<>();
-    public static final ArrayList<String> objectNames = new ArrayList<>();
 
 }

@@ -1,10 +1,10 @@
 package com.worldOfGoo.level;
 
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
-import com.woogleFX.engine.Depth;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 import javafx.scene.paint.Color;
@@ -12,8 +12,8 @@ import javafx.scene.paint.Paint;
 
 public class Vertex extends EditorObject {
 
-    public Vertex(EditorObject _parent) {
-        super(_parent, "Vertex", "level\\vertex");
+    public Vertex(EditorObject _parent, GameVersion version) {
+        super(_parent, "Vertex", version);
 
         addAttribute("x", InputField.NUMBER).setDefaultValue("0").assertRequired();
         addAttribute("y", InputField.NUMBER).setDefaultValue("0").assertRequired();

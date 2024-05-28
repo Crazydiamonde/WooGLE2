@@ -6,6 +6,7 @@ import com.woogleFX.editorObjects._Font;
 import com.woogleFX.editorObjects.objectComponents.TextComponent;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.functions.LevelManager;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import com.worldOfGoo.text.TextString;
 
@@ -13,8 +14,8 @@ import java.io.FileNotFoundException;
 
 public class Label extends EditorObject {
 
-    public Label(EditorObject _parent) {
-        super(_parent, "label", "scene\\label");
+    public Label(EditorObject _parent, GameVersion version) {
+        super(_parent, "label", version);
 
         addAttribute("id",          InputField.ANY)                             .assertRequired();
         addAttribute("depth",       InputField.NUMBER).setDefaultValue("10")    .assertRequired();

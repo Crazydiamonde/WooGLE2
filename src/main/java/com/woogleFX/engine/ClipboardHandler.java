@@ -58,7 +58,7 @@ public class ClipboardHandler {
                     }
 
                     EditorObject parent = okayToBeChild ? level.getSelected().getParent() : null;
-                    object = ObjectCreator.create(currentWord.toString(), parent);
+                    object = ObjectCreator.create(currentWord.toString(), parent, level.getVersion());
                     currentWord = new StringBuilder();
                     settingAttribute = true;
                 } else {

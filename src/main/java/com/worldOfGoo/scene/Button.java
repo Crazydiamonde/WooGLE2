@@ -6,6 +6,7 @@ import com.woogleFX.functions.LevelManager;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 
 import javafx.scene.image.Image;
@@ -17,8 +18,8 @@ public class Button extends EditorObject {
     private Image image;
 
 
-    public Button(EditorObject _parent) {
-        super(_parent, "button", "scene\\button");
+    public Button(EditorObject _parent, GameVersion version) {
+        super(_parent, "button", version);
 
         addAttribute("id",                    InputField.ANY)                                  .assertRequired();
         addAttribute("depth",                 InputField.NUMBER).setDefaultValue("0")          .assertRequired();
@@ -125,7 +126,7 @@ public class Button extends EditorObject {
 
         try {
             if (!getAttribute("up").stringValue().isEmpty()) {
-                image = getAttribute("up").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
+                image = getAttribute("up").imageValue(LevelManager.getLevel().getResrc(), getVersion());
                 image = ImageUtility.colorize(image, getAttribute("colorize").colorValue());
             }
         } catch (FileNotFoundException ignored) {

@@ -2,11 +2,9 @@ package com.worldOfGoo.particle;
 
 import java.util.ArrayList;
 
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.file.resourceManagers.ParticleManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.GameVersion;
 import com.woogleFX.editorObjects.InputField;
 
@@ -20,11 +18,12 @@ public class _Particle extends EditorObject {
     }
 
 
+    // TODO: implement these into the particle system. To be honest, I don't even know what these do
     private final ArrayList<Axialsinoffset> axialsinoffsets = new ArrayList<>();
 
 
-    public _Particle(EditorObject _parent) {
-        super(_parent, "particle");
+    public _Particle(EditorObject _parent, GameVersion version) {
+        super(_parent, "particle", version);
 
         addAttribute("image",        InputField.ANY)                              .assertRequired();
         addAttribute("rotspeed",     InputField.RANGE)   .setDefaultValue("0")    .assertRequired();

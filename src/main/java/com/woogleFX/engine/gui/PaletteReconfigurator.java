@@ -2,15 +2,8 @@ package com.woogleFX.engine.gui;
 
 import com.woogleFX.engine.fx.FXEditorButtons;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.editorObjects._Ball;
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
-import com.woogleFX.file.resourceManagers.BallManager;
 import com.woogleFX.functions.PaletteManager;
-import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
-import com.worldOfGoo.resrc.Font;
-import com.worldOfGoo.resrc.ResrcImage;
-import com.worldOfGoo.resrc.Sound;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -22,9 +15,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,27 +53,21 @@ public class PaletteReconfigurator extends Application {
 
         stage.setTitle("Configure Goo Ball Palette");
 
-        if (FileManager.hasOldWOG()) {
-            Label oldLabel = new Label("Version 1.3 Goo Balls");
-            oldLabel.setStyle("-fx-font-weight: bold");
-            oldVBox.getChildren().add(oldLabel);
-            File[] balls = new File(FileManager.getOldWOGdir() + "\\res\\balls").listFiles();
-            if (balls != null) {
-                for (File ballFile : balls) {
-                    oldVBox.getChildren().add(getBallHBox(ballFile.getName(), GameVersion.OLD));
-                }
-            }
-        }
-        if (FileManager.hasNewWOG()) {
-            Label label = new Label("Version 1.5 Goo Balls");
+        for (GameVersion version : GameVersion.ALL) {
+
+            VBox vBox = (version == GameVersion.OLD) ? oldVBox : newVBox;
+
+            String dir = FileManager.getGameDir(version);
+            if (dir.isEmpty()) continue;
+            File[] balls = new File(dir + "\\res\\balls").listFiles();
+            if (balls == null) continue;
+
+            Label label = new Label("Version 1.3 Goo Balls");
             label.setStyle("-fx-font-weight: bold");
-            newVBox.getChildren().add(label);
-            File[] balls = new File(FileManager.getNewWOGdir() + "\\res\\balls").listFiles();
-            if (balls != null) {
-                for (File ballFile : balls) {
-                    newVBox.getChildren().add(getBallHBox(ballFile.getName(), GameVersion.NEW));
-                }
-            }
+            vBox.getChildren().add(label);
+
+            for (File ballFile : balls) vBox.getChildren().add(getBallHBox(ballFile.getName(), version));
+
         }
 
         ScrollPane pane = new ScrollPane(new HBox(oldVBox, newVBox));
@@ -109,30 +94,9 @@ public class PaletteReconfigurator extends Application {
                     String ballName = label.getText();
                     GameVersion ballVersion = label.getId().equals("1.3") ? GameVersion.OLD : GameVersion.NEW;
 
-                    PaletteManager.addPaletteBall(label.getText());
+                    PaletteManager.addPaletteBall(ballName);
                     PaletteManager.addPaletteVersion(ballVersion);
 
-                    boolean alreadyHasBall = false;
-                    for (_Ball ball : BallManager.getImportedBalls()) {
-                        if (ball.getObjects().get(0).getAttribute("name").stringValue().equals(ballName)) {
-                            alreadyHasBall = true;
-                            break;
-                        }
-                    }
-
-                    if (!alreadyHasBall) {
-                        _Ball ball;
-                        try {
-                            ball = FileManager.openBall(ballName, ballVersion);
-                        } catch (ParserConfigurationException | SAXException | IOException e) {
-                            ball = null;
-                        }
-
-                        if (ball != null) {
-                            ball.setVersion(ballVersion);
-                            BallManager.getImportedBalls().add(ball);
-                        }
-                    }
                 }
             }
 

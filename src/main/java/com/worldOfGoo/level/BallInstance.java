@@ -4,10 +4,10 @@ import com.woogleFX.editorObjects.objectComponents.CircleComponent;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
-import com.woogleFX.file.FileManager;
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.file.resourceManagers.BallManager;
 import com.woogleFX.file.resourceManagers.ResourceManager;
+import com.woogleFX.functions.LevelLoader;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
@@ -18,11 +18,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -37,8 +34,8 @@ public class BallInstance extends EditorObject {
     private final long randomSeed;
 
 
-    public BallInstance(EditorObject _parent) {
-        super(_parent, "BallInstance", "level\\BallInstance");
+    public BallInstance(EditorObject _parent, GameVersion version) {
+        super(_parent, "BallInstance", version);
 
         addAttribute("type",       InputField.BALL)                                         .assertRequired();
         addAttribute("x",          InputField.NUMBER)                                       .assertRequired();
@@ -87,39 +84,16 @@ public class BallInstance extends EditorObject {
     }
 
 
-    private static _Ball getBall(String type) {
-
-        GameVersion version = LevelManager.getLevel().getVersion();
-
-        for (_Ball ball : BallManager.getImportedBalls()) {
-            String name = ball.getObjects().get(0).getAttribute("name").stringValue();
-            if (ball.getVersion() == version && name.equals(type)) {
-                return ball;
-            }
-        }
-
-        _Ball ball;
-        try {
-            ball = FileManager.openBall(type, version);
-            if (ball == null) return null;
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            return null;
-        }
-
-        ball.setVersion(version);
-
-        BallManager.getImportedBalls().add(ball);
-
-        return ball;
-
-    }
-
-
     private void setType(String type) {
 
         if (LevelManager.getLevel() == null) return;
 
-        this.ball = getBall(type);
+        this.ball = BallManager.getBall(type, getVersion());
+        if (ball == null) {
+            if (!LevelLoader.failedResources.contains("Ball: " + getAttribute("type").stringValue() + " (version " + getVersion() + ")")) {
+                LevelLoader.failedResources.add("Ball: " + getAttribute("type").stringValue() + " (version " + getVersion() + ")");
+            }
+        }
 
         String id = getAttribute("id").stringValue();
         for (EditorObject object : LevelManager.getLevel().getLevel()) if (object instanceof Strand strand) {

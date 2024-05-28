@@ -2,18 +2,15 @@ package com.woogleFX.functions;
 
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects.ObjectUtil;
-import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.editorObjects.objectCreators.BlankObjectGenerator;
-import com.woogleFX.file.resourceManagers.BallManager;
 import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.engine.gui.LevelSelector;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.LevelTab;
 import com.woogleFX.structures.WorldLevel;
-import com.worldOfGoo.level.BallInstance;
 import com.worldOfGoo.level.Signpost;
 import com.worldOfGoo.resrc.Resources;
 import com.worldOfGoo.resrc.ResrcImage;
@@ -52,15 +49,15 @@ public class LevelLoader {
         FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
 
         ArrayList<EditorObject> sceneList = new ArrayList<>();
-        sceneList.add(ObjectCreator.create("scene", null));
+        sceneList.add(ObjectCreator.create("scene", null, version));
         ArrayList<EditorObject> levelList = new ArrayList<>();
-        levelList.add(ObjectCreator.create("level", null));
+        levelList.add(ObjectCreator.create("level", null, version));
         ArrayList<EditorObject> resourcesList = new ArrayList<>();
-        resourcesList.add(ObjectCreator.create("ResourceManifest", null));
+        resourcesList.add(ObjectCreator.create("ResourceManifest", null, version));
         ArrayList<EditorObject> addinList = new ArrayList<>();
-        addinList.add(BlankObjectGenerator.generateBlankAddinObject(name));
+        addinList.add(BlankObjectGenerator.generateBlankAddinObject(name, version));
         ArrayList<EditorObject> textList = new ArrayList<>();
-        textList.add(ObjectCreator.create("strings", null));
+        textList.add(ObjectCreator.create("strings", null, version));
 
         WorldLevel level = new WorldLevel(sceneList, levelList, resourcesList, addinList, textList, version);
         level.setLevelName(name);
@@ -82,13 +79,13 @@ public class LevelLoader {
         level.getLevelObject().setAttribute("strandgeom", "false");
         level.getLevelObject().setAttribute("allowskip", "true");
 
-        EditorObject resourcesThing = ObjectCreator.create("Resources", level.getResrcObject());
+        EditorObject resourcesThing = ObjectCreator.create("Resources", level.getResrcObject(), version);
         assert resourcesThing != null;
         resourcesThing.setAttribute("id", "scene_" + level.getLevelName());
         resourcesThing.getTreeItem().setExpanded(true);
         level.getResrc().add(resourcesThing);
 
-        EditorObject linearForceField = ObjectCreator.create("linearforcefield", level.getSceneObject());
+        EditorObject linearForceField = ObjectCreator.create("linearforcefield", level.getSceneObject(), version);
         assert linearForceField != null;
         linearForceField.setAttribute("type", "gravity");
         linearForceField.setAttribute("force", "0,-10");
@@ -96,7 +93,7 @@ public class LevelLoader {
         linearForceField.setAttribute("antigrav", "true");
         level.getScene().add(linearForceField);
 
-        EditorObject lineRight = ObjectCreator.create("line", level.getSceneObject());
+        EditorObject lineRight = ObjectCreator.create("line", level.getSceneObject(), version);
         assert lineRight != null;
         lineRight.setAttribute("id", "right");
         lineRight.setAttribute("anchor", "500,300");
@@ -104,7 +101,7 @@ public class LevelLoader {
         lineRight.setAttribute("tag", "detaching");
         level.getScene().add(lineRight);
 
-        EditorObject lineLeft = ObjectCreator.create("line", level.getSceneObject());
+        EditorObject lineLeft = ObjectCreator.create("line", level.getSceneObject(), version);
         assert lineLeft != null;
         lineLeft.setAttribute("id", "left");
         lineLeft.setAttribute("anchor", "-500,300");
@@ -112,21 +109,21 @@ public class LevelLoader {
         lineLeft.setAttribute("tag", "detaching");
         level.getScene().add(lineLeft);
 
-        EditorObject lineGround = ObjectCreator.create("line", level.getSceneObject());
+        EditorObject lineGround = ObjectCreator.create("line", level.getSceneObject(), version);
         assert lineGround != null;
         lineGround.setAttribute("id", "ground");
         lineGround.setAttribute("anchor", "0,20");
         lineGround.setAttribute("normal", "0,1");
         level.getScene().add(lineGround);
 
-        EditorObject cameraNormal = ObjectCreator.create("camera", level.getLevelObject());
+        EditorObject cameraNormal = ObjectCreator.create("camera", level.getLevelObject(), version);
         assert cameraNormal != null;
         cameraNormal.setAttribute("aspect", "normal");
         cameraNormal.setAttribute("endpos", "0,0");
         cameraNormal.setAttribute("endzoom", "1");
         level.getLevel().add(cameraNormal);
 
-        EditorObject poiNormal = ObjectCreator.create("poi", cameraNormal);
+        EditorObject poiNormal = ObjectCreator.create("poi", cameraNormal, version);
         assert poiNormal != null;
         poiNormal.setAttribute("pos", "0,0");
         poiNormal.setAttribute("zoom", "1");
@@ -134,14 +131,14 @@ public class LevelLoader {
         poiNormal.setAttribute("traveltime", "0");
         level.getLevel().add(poiNormal);
 
-        EditorObject cameraWidescreen = ObjectCreator.create("camera", level.getLevelObject());
+        EditorObject cameraWidescreen = ObjectCreator.create("camera", level.getLevelObject(), version);
         assert cameraWidescreen != null;
         cameraWidescreen.setAttribute("aspect", "widescreen");
         cameraWidescreen.setAttribute("endpos", "0,0");
         cameraWidescreen.setAttribute("endzoom", "1");
         level.getLevel().add(cameraWidescreen);
 
-        EditorObject poiWidescreen = ObjectCreator.create("poi", cameraWidescreen);
+        EditorObject poiWidescreen = ObjectCreator.create("poi", cameraWidescreen, version);
         assert poiWidescreen != null;
         poiWidescreen.setAttribute("pos", "0,0");
         poiWidescreen.setAttribute("zoom", "1");
@@ -149,7 +146,7 @@ public class LevelLoader {
         poiWidescreen.setAttribute("traveltime", "0");
         level.getLevel().add(poiWidescreen);
 
-        EditorObject levelExit = ObjectCreator.create("levelexit", level.getLevelObject());
+        EditorObject levelExit = ObjectCreator.create("levelexit", level.getLevelObject(), version);
         assert levelExit != null;
         levelExit.setAttribute("id", "theExit");
         levelExit.setAttribute("pos", "0,0");
@@ -176,20 +173,10 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
-        LevelTab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
-        FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
-
-        int numTabs = FXLevelSelectPane.getLevelSelectPane().getTabs().size();
-        double tabSize = 1 / (numTabs + 1.0);
-        FXLevelSelectPane.getLevelSelectPane().setTabMaxWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
-        FXLevelSelectPane.getLevelSelectPane().setTabMinWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
-
         LevelUpdater.saveLevel(level);
 
-        level.setLevelTab(levelSelectButton);
-        level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
-        FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
-        LevelManager.onSetLevel(level);
+        finishOpeningLevel(level);
+
     }
 
 
@@ -197,10 +184,10 @@ public class LevelLoader {
 
 
     public static void openLevel(String levelName, GameVersion version) {
+
         // Don't open a level if none selected
-        if (levelName == null || levelName.isEmpty()) {
-            return;
-        }
+        if (levelName == null || levelName.isEmpty()) return;
+
         // Don't open a level if it's already open
         for (Tab tab : FXLevelSelectPane.getLevelSelectPane().getTabs()) {
             if (tab.getText().equals(levelName) && ((LevelTab)tab).getLevel().getVersion() == version) {
@@ -208,9 +195,8 @@ public class LevelLoader {
                 return;
             }
         }
-        failedResources.clear();
 
-        LevelManager.setVersion(version);
+        failedResources.clear();
 
         WorldLevel level;
 
@@ -227,34 +213,6 @@ public class LevelLoader {
 
         FXLevelSelectPane.getLevelSelectPane().setMinHeight(30);
         FXLevelSelectPane.getLevelSelectPane().setMaxHeight(30);
-
-        for (EditorObject object : level.getLevel()) {
-            if (object instanceof BallInstance) {
-                boolean alreadyIn = false;
-                for (_Ball ball : BallManager.getImportedBalls()) {
-                    if (ball.getObjects().get(0).getAttribute("name").stringValue().equals(object.getAttribute("type").stringValue())
-                            && ball.getVersion() == level.getVersion()) {
-                        alreadyIn = true;
-                        break;
-                    }
-                }
-                if (alreadyIn) continue;
-                try {
-
-                    _Ball ball2 = FileManager.openBall(object.getAttribute("type").stringValue(), version);
-
-                    if (ball2 != null) {
-                        ball2.setVersion(version);
-                        BallManager.getImportedBalls().add(ball2);
-                    }
-
-                } catch (ParserConfigurationException | SAXException | IOException e) {
-                    if (!failedResources.contains("Ball: " + object.getAttribute("type").stringValue() + " (version " + version + ")")) {
-                        failedResources.add("Ball: " + object.getAttribute("type").stringValue() + " (version " + version + ")");
-                    }
-                }
-            }
-        }
 
         for (EditorObject object : level.getScene()) {
             object.update();
@@ -275,14 +233,6 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
-        LevelTab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
-        FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
-
-        int numTabs = FXLevelSelectPane.getLevelSelectPane().getTabs().size();
-        double tabSize = 1 / (numTabs + 1.0);
-        FXLevelSelectPane.getLevelSelectPane().setTabMaxWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
-        FXLevelSelectPane.getLevelSelectPane().setTabMinWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
-
         if (!failedResources.isEmpty()) {
             StringBuilder fullError = new StringBuilder();
             for (String resource : failedResources) {
@@ -291,10 +241,8 @@ public class LevelLoader {
             Alarms.loadingResourcesError(fullError.substring(1));
         }
 
-        level.setLevelTab(levelSelectButton);
-        level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
-        FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
-        LevelManager.onSetLevel(level);
+        finishOpeningLevel(level);
+
     }
 
 
@@ -312,7 +260,7 @@ public class LevelLoader {
         FileManager.supremeAddToList(sceneList, ObjectUtil.deepClone(LevelManager.getLevel().getSceneObject(), null));
         FileManager.supremeAddToList(levelList, ObjectUtil.deepClone(LevelManager.getLevel().getLevelObject(), null));
         // Generate new addin object. idk why cloning it doesn't work, but this is arguably better anyway
-        FileManager.supremeAddToList(addinList, BlankObjectGenerator.generateBlankAddinObject(name));
+        FileManager.supremeAddToList(addinList, BlankObjectGenerator.generateBlankAddinObject(name, version));
         FileManager.supremeAddToList(textList, ObjectUtil.deepClone(LevelManager.getLevel().getTextObject(), null));
 
         String oldLevelName = LevelManager.getLevel().getLevelName();
@@ -352,6 +300,22 @@ public class LevelLoader {
         // Add items from the Scene to it
         FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
 
+
+        LevelUpdater.saveLevel(level);
+
+        finishOpeningLevel(level);
+
+    }
+
+
+    public static void cloneLevel() {
+        GameVersion version = LevelManager.getLevel().getVersion();
+        Alarms.askForLevelName("clone", version);
+    }
+
+
+    private static void finishOpeningLevel(WorldLevel level) {
+
         LevelTab levelSelectButton = FXLevelSelectPane.levelSelectButton(level);
         FXLevelSelectPane.getLevelSelectPane().getTabs().add(levelSelectButton);
 
@@ -360,18 +324,12 @@ public class LevelLoader {
         FXLevelSelectPane.getLevelSelectPane().setTabMaxWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
         FXLevelSelectPane.getLevelSelectPane().setTabMinWidth(tabSize * (FXLevelSelectPane.getLevelSelectPane().getWidth() - 15) - 15);
 
-        LevelUpdater.saveLevel(level);
 
         level.setLevelTab(levelSelectButton);
         level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);
         FXLevelSelectPane.getLevelSelectPane().getSelectionModel().select(levelSelectButton);
         LevelManager.onSetLevel(level);
-    }
 
-
-    public static void cloneLevel() {
-        GameVersion version = LevelManager.getVersion();
-        Alarms.askForLevelName("clone", version);
     }
 
 

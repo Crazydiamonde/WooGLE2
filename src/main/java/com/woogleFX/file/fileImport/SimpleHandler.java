@@ -5,9 +5,6 @@ import com.woogleFX.structures.GameVersion;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 public class SimpleHandler extends DefaultHandler {
 
     @Override
@@ -17,16 +14,10 @@ public class SimpleHandler extends DefaultHandler {
                 if (!attributes.getValue(attributes.getIndex("filepath")).isEmpty()) {
                     FileManager.setOldWOGdir(attributes.getValue(attributes.getIndex("filepath")));
                 }
-                if (!FileManager.getOldWOGdir().isEmpty() && Files.exists(Path.of(FileManager.getOldWOGdir()))) {
-                    FileManager.setHasOldWOG(true);
-                }
             }
             case "newWOG" -> {
                 if (!attributes.getValue(attributes.getIndex("filepath")).isEmpty()) {
                     FileManager.setNewWOGdir(attributes.getValue(attributes.getIndex("filepath")));
-                }
-                if (!FileManager.getNewWOGdir().isEmpty() && Files.exists(Path.of(FileManager.getNewWOGdir()))) {
-                    FileManager.setHasNewWOG(true);
                 }
             }
             case "Ball" -> {

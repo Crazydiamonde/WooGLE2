@@ -87,8 +87,7 @@ public class LevelUpdater {
         if (!okayToSave) return false;
 
         try {
-            String dir = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
-            LevelWriter.saveAsXML(level, dir + "\\res\\levels\\" + level.getLevelName(),
+            LevelWriter.saveAsXML(level, FileManager.getGameDir(version) + "\\res\\levels\\" + level.getLevelName(),
                     version, false, true);
             return true;
         } catch (IOException e) {
@@ -116,8 +115,8 @@ public class LevelUpdater {
         if (level.getVersion() == GameVersion.OLD) {
             try {
                 ProcessBuilder processBuilder = new ProcessBuilder(
-                        FileManager.getOldWOGdir() + "\\WorldOfGoo.exe", level.getLevelName());
-                processBuilder.directory(new File(FileManager.getOldWOGdir()));
+                        FileManager.getGameDir(GameVersion.OLD) + "\\WorldOfGoo.exe", level.getLevelName());
+                processBuilder.directory(new File(FileManager.getGameDir(GameVersion.OLD)));
                 processBuilder.start();
             } catch (Exception e) {
                 Alarms.errorMessage(e);
@@ -125,7 +124,7 @@ public class LevelUpdater {
         } else {
 
             // TODO figure something out to play in 1.5
-            Alarms.errorMessage(new RuntimeException("Playing is currently unsupported for 1.5; try 1.3 instead. :("));
+            Alarms.errorMessage(new RuntimeException("Playing is only supported for 1.3. :("));
 
         }
 
@@ -141,7 +140,7 @@ public class LevelUpdater {
 
         logger.info("Renaming " + level.getLevelName() + " to " + text);
 
-        String start = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String start = FileManager.getGameDir(level.getVersion());
 
         /* Change level name in directory */
         File originalLevelDirectory = new File(start + "\\res\\levels\\" + level.getLevelName());
@@ -201,9 +200,8 @@ public class LevelUpdater {
     }
 
     public static void deleteLevelForReal(WorldLevel level) {
-        String start = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
         try {
-            nuke(new File(start + "\\res\\levels\\" + level.getLevelName()));
+            nuke(new File(FileManager.getGameDir(level.getVersion()) + "\\res\\levels\\" + level.getLevelName()));
             TabPane levelSelectPane = FXLevelSelectPane.getLevelSelectPane();
             if (levelSelectPane.getTabs().size() == 1) {
                 FXLevelSelectPane.getLevelSelectPane().setMinHeight(0);
@@ -231,7 +229,7 @@ public class LevelUpdater {
 
     public static void exportLevel(WorldLevel level, boolean includeAddinInfo) {
 
-        String dir = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
+        String dir = FileManager.getGameDir(level.getVersion());
 
         FileChooser fileChooser = new FileChooser();
         if (!Files.exists(Path.of((dir + "\\res\\levels\\" + level.getLevelName() + "\\goomod")))) {
@@ -248,16 +246,19 @@ public class LevelUpdater {
         fileChooser.getExtensionFilters().add(goomodFilter);
         File export = fileChooser.showSaveDialog(FXStage.getStage());
 
+        ArrayList<WorldLevel> levels = new ArrayList<>();
+        levels.add(level);
+
         ArrayList<_Ball> balls = new ArrayList<>();
-        for (EditorObject object : level.getLevel()) {
-            if (object instanceof BallInstance ballInstance) {
-                if (!balls.contains(ballInstance.getBall())) {
-                    balls.add(ballInstance.getBall());
-                }
-            }
-        }
+        for (EditorObject object : level.getLevel()) if (object instanceof BallInstance ballInstance)
+            if (!balls.contains(ballInstance.getBall())) balls.add(ballInstance.getBall());
+
         if (export != null) {
-            GoomodExporter.exportGoomod(export, level, balls, includeAddinInfo);
+            try {
+                GoomodExporter.exportGoomod(export, levels, balls, level.getVersion(), includeAddinInfo);
+            } catch (IOException e) {
+                logger.error("", e);
+            }
         }
     }
 

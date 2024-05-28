@@ -8,8 +8,6 @@ import com.worldOfGoo.level.Levelexit;
 import com.worldOfGoo.resrc.*;
 import com.worldOfGoo.scene.Scene;
 import com.worldOfGoo.text.TextStrings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class XMLUtility {
 

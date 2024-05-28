@@ -2,7 +2,7 @@ package com.woogleFX.file.fileImport;
 import java.util.ArrayList;
 
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
-import com.woogleFX.file.FileManager;
+import com.woogleFX.structures.GameVersion;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -13,62 +13,39 @@ public class BallFileOpener extends DefaultHandler {
 
     public static int mode = 0;
 
-    public static boolean bruhmode = false;
+
+    private final ArrayList<EditorObject> objects;
+    private final ArrayList<EditorObject> resources;
+    private final GameVersion version;
+    public BallFileOpener(ArrayList<EditorObject> objects,
+                          ArrayList<EditorObject> resources,
+                          GameVersion  version) {
+        this.objects = objects;
+        this.resources = resources;
+        this.version = version;
+    }
+
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
-        //logger.debug("Started: " + qName);
-        if (bruhmode) {
-            if (!FileManager.objectNames.contains(qName)) {
-                FileManager.objectNames.add(qName);
-                FileManager.attributes.add(new ArrayList<>());
-                int index = FileManager.objectNames.indexOf(qName);
-                for (int i = 0; i < attributes.getLength(); i++) {
-                    FileManager.attributes.get(index).add(attributes.getQName(i));
-                }
-            } else {
-                int index = FileManager.objectNames.indexOf(qName);
-                for (String attribute : FileManager.attributes.get(index).toArray(new String[0])) {
-                    boolean ok = false;
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        if (attribute.equals(attributes.getQName(i))) {
-                            ok = true;
-                            break;
-                        }
-                    }
-                    if (!ok) {
-                        FileManager.attributes.get(index).remove(attribute);
-                    }
-                }
-                for (int i = 0; i < attributes.getLength(); i++) {
-                    if (!FileManager.attributes.get(index).contains(attributes.getQName(i))) {
-                        FileManager.attributes.get(index).remove(attributes.getQName(i));
-                    }
-                }
-            }
-        } else {
-            if (qName.equals("particles") || qName.equals("sound")) {
-                qName = "ball_" + qName;
-            }
-            EditorObject obj = ObjectCreator.create(qName, parent);
-            for (int i = 0; i < attributes.getLength(); i++) {
-                obj.setAttribute(attributes.getQName(i), attributes.getValue(i));
-            }
-            if (mode == 0) {
-                FileManager.commonBallData.add(obj);
-            } else if (mode == 1) {
-                FileManager.commonBallResrcData.add(obj);
-            }
-            parent = obj;
-        }
+
+        if (qName.equals("particles") || qName.equals("sound")) qName = "ball_" + qName;
+
+        EditorObject obj = ObjectCreator.create(qName, parent, version);
+
+        for (int i = 0; i < attributes.getLength(); i++) obj.setAttribute(attributes.getQName(i), attributes.getValue(i));
+
+        if (mode == 0) objects.add(obj);
+        else if (mode == 1) resources.add(obj);
+
+        parent = obj;
+
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) {
         //logger.debug("Ended: " + qName);
-        if (!bruhmode) {
-            parent = parent.getParent();
-        }
+        parent = parent.getParent();
     }
 
     @Override

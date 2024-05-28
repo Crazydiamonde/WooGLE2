@@ -5,14 +5,15 @@ import com.woogleFX.engine.Depth;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Targetheight extends EditorObject {
 
-    public Targetheight(EditorObject _parent) {
-        super(_parent, "targetheight", "level\\targetheight");
+    public Targetheight(EditorObject _parent, GameVersion version) {
+        super(_parent, "targetheight", version);
 
         addAttribute("y", InputField.NUMBER).setDefaultValue("1000").assertRequired();
 

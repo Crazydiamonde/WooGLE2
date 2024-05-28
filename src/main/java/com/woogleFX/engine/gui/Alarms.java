@@ -238,8 +238,9 @@ public class Alarms {
             case "changename" -> {
                 stage.setTitle("Change Level Name");
                 okButton.setOnAction(event -> {
-                    String start = version == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
-                    for (File levelFile : new File(start + "\\res\\levels").listFiles()) {
+                    File[] allLevels = new File(FileManager.getGameDir(version) + "\\res\\levels").listFiles();
+                    if (allLevels == null) return;
+                    for (File levelFile : allLevels) {
                         if (levelFile.getName().equals(enterNameHere.getText())) {
                             //TODO Display a message saying it's already taken
                             return;
@@ -276,7 +277,6 @@ public class Alarms {
 
         selectOldButton.setOnAction(actionEvent -> {
             if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD, true)) {
-                FileManager.setHasOldWOG(true);
                 Initializer.startWithWorldOfGooVersion();
                 stage.close();
             }
@@ -284,7 +284,6 @@ public class Alarms {
 
         selectNewButton.setOnAction(actionEvent -> {
             if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD, true)) {
-                FileManager.setHasNewWOG(true);
                 Initializer.startWithWorldOfGooVersion();
                 stage.close();
             }

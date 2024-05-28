@@ -3,154 +3,138 @@ package com.woogleFX.file.fileExport;
 import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.file.BaseGameResources;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.WorldLevel;
 import com.worldOfGoo.resrc.ResrcImage;
 import com.worldOfGoo.resrc.Sound;
-import javafx.embed.swing.SwingFXUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class GoomodExporter {
 
-    public static void exportGoomod(File file, WorldLevel level, ArrayList<_Ball> balls, boolean includeAddinInfo) {
-        String start = level.getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
-        // First things first, delete the goomod folder if it exists
-        if (Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod"))) {
-            try {
-                Files.walk(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod"))
-                        .sorted(java.util.Comparator.reverseOrder())
-                        .map(Path::toFile)
-                        .forEach(File::delete);
-            } catch (Exception e) {
-                Alarms.errorMessage(e);
-            }
+    /** Deletes any existing goomod files for a level to make room for the new ones.
+     * @param levelDir The directory of the level. */
+    private static void clearAlreadyExistingGoomodData(String levelDir) throws IOException {
+
+        // Delete the goomod folder if it exists
+        Path goomodFolderPath = Path.of(levelDir + "\\goomod");
+        if (Files.exists(goomodFolderPath)) try (Stream<Path> deleteStream = Files.walk(goomodFolderPath)) {
+            // noinspection ResultOfMethodCallIgnored
+            deleteStream.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
         }
+
         // Delete the goomod zip if it exists
-        if (Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip"))) {
-            try {
-                Files.delete(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip"));
-            } catch (Exception e) {
-                Alarms.errorMessage(e);
-            }
-        }
-        try {
-            LevelWriter.saveAsXML(level, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\levels\\" + level.getLevelName(), level.getVersion(), true, includeAddinInfo);
-        } catch (Exception e) {
-            Alarms.errorMessage(e);
-        }
-        for (EditorObject resource : level.getResrc()) {
-            String resourceNameStripped = resource.getAttribute("path").stringValue();
-            if (resourceNameStripped != null && resourceNameStripped.contains("/")) {
-                resourceNameStripped = resourceNameStripped.substring(0, resourceNameStripped.lastIndexOf("/"));
-            }
-            if (resource instanceof ResrcImage) {
-                if (BaseGameResources.containsImage(resource.getAttribute("path").stringValue())) {
-                    // Skip if base game image
-                    continue;
-                }
-                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped))) {
-                    try {
-                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped));
-                    } catch (Exception e) {
-                        Alarms.errorMessage(e);
-                    }
-                }
-                try {
-                    BufferedImage oldImage = SwingFXUtils.fromFXImage(resource.getAttribute("id").imageValue(level.getResrc(), level.getVersion()), null);
-                    File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").stringValue() + ".png");
-                    ImageIO.write(oldImage, "png", newImageFile);
-                } catch (Exception e) {
-                    Alarms.errorMessage(e);
-                }
-            } else if (resource instanceof Sound) {
-                if (BaseGameResources.containsSound(resource.getAttribute("path").stringValue())) {
-                    // Skip if base game sound
-                    continue;
-                }
-                if (!Files.exists(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped))) {
-                    try {
-                        Files.createDirectories(Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resourceNameStripped));
-                    } catch (Exception e) {
-                        Alarms.errorMessage(e);
-                    }
-                }
-                try {
-                    Files.copy(
-                            Path.of(start + "\\" + resource.getAttribute("path").stringValue() + ".ogg"),
-                            Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path").stringValue() + ".ogg"),
-                            StandardCopyOption.REPLACE_EXISTING
-                    );
-                } catch (Exception e) {
-                    Alarms.errorMessage(e);
-                }
-            }
-        }
+        Path goomodZipPath = Path.of(levelDir + "\\goomod.zip");
+        if (Files.exists(goomodZipPath)) Files.delete(goomodZipPath);
+
+    }
+
+
+    /** Exports a goomod containing the given levels and balls to the given file.
+     * @param file The file at which to save the goomod.
+     * @param levels The levels to put in the goomod.
+     * @param balls The balls to put in the goomod.
+     * @param includeAddinInfo Whether the goomod should include addin info. */
+    public static void exportGoomod(File file, ArrayList<WorldLevel> levels, ArrayList<_Ball> balls,
+                                    GameVersion version, boolean includeAddinInfo) throws IOException {
+
+        String dir = FileManager.getGameDir(version);
+
+        // Store all the data in the first provided level while making the goomod
+        String levelDir = dir + "\\res\\levels\\" + levels.get(0).getLevelName();
+
+        clearAlreadyExistingGoomodData(levelDir);
+
+        for (WorldLevel level : levels) addLevelToGoomod(level, dir, levelDir, includeAddinInfo);
 
         // Keep track of exported balls
         HashSet<String> exportedBalls = new HashSet<>();
         for (_Ball ball : balls) {
-            try {
-                String ballName = ball.getObjects().get(0).getAttribute("name").stringValue();
-                if (exportedBalls.contains(ballName)) {
-                    // Skip if already exported
-                    continue;
-                }
-                if (BaseGameResources.GOO_BALL_TYPES.contains(ballName)) {
-                    // Skip if base game ball
-                    continue;
-                }
-                BallWriter.exportBallAsXML(ball, start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\compile\\res\\balls\\" + ballName, level.getVersion(), true);
-                for (EditorObject resource : ball.getResources()) {
-                    if (resource instanceof ResrcImage resrcImage) {
-                        String realpath = resrcImage.getAdjustedPath();
-                        if (BaseGameResources.containsImage(realpath)) {
-                            // Skip if base game image
-                            continue;
-                        }
-                        // Create subfolder if required
-                        if (realpath.contains("/")) {
-                            realpath = realpath.substring(0, realpath.lastIndexOf("/"));
-                        }
-                        Path subfolder = Path.of(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + realpath);
-                        if (!Files.exists(subfolder)) {
-                            Files.createDirectories(subfolder);
-                        }
-                        //BufferedImage oldImage = SwingFXUtils.fromFXImage(resource.getAttribute("id").imageValue(level.getVersion()), null);
-                        //File newImageFile = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod\\override\\" + resource.getAttribute("path") + ".png");
-                        //ImageIO.write(oldImage, "png", newImageFile);
-                    }
-                }
-                exportedBalls.add(ballName);
-            } catch (Exception e) {
-                Alarms.errorMessage(e);
-            }
+
+            String ballName = ball.getObjects().get(0).getAttribute("name").stringValue();
+            
+            // Skip if in the base game
+            if (BaseGameResources.GOO_BALL_TYPES.contains(ballName)) continue;
+
+            // Skip if already exported
+            if (exportedBalls.contains(ballName)) continue;
+            exportedBalls.add(ballName);
+
+            addBallToGoomod(ball, dir, levelDir);
+
         }
 
-        try {
-            File[] files = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod").listFiles();
-            if (files == null) return;
-            new ZipUtility().zip(new ArrayList<>(List.of(files)), start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
-            File srcGoomod = new File(start + "\\res\\levels\\" + level.getLevelName() + "\\goomod.zip");
-            Files.move(
-                    srcGoomod.toPath(),
-                    file.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-        } catch (IOException e) {
-            Alarms.errorMessage(e);
+        File[] files = new File(levelDir + "\\goomod").listFiles();
+        assert files != null;
+
+        new ZipUtility().zip(new ArrayList<>(List.of(files)), levelDir + "\\goomod.zip");
+
+        File srcGoomod = new File(levelDir + "\\goomod.zip");
+        Files.move(srcGoomod.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+    }
+
+
+    private static void addResourceToGoomod(EditorObject resource, String dir, String levelDir) throws IOException {
+
+        if (!(resource instanceof ResrcImage || resource instanceof Sound)) return;
+
+
+        String notSetDefaultedPath = resource.getAttribute("path").stringValue();
+
+        String path;
+        String extension;
+        if (resource instanceof ResrcImage resrcImage) {
+            extension = ".png";
+            path = resrcImage.getAdjustedPath();
+            // Skip if base game image
+            if (BaseGameResources.containsImage(notSetDefaultedPath)) return;
+        } else {
+            path = ((Sound)resource).getAdjustedPath();
+            extension = ".ogg";
+            // Skip if base game sound
+            if (BaseGameResources.containsSound(notSetDefaultedPath)) return;
         }
+
+        Path resourcePath = Path.of(levelDir + "\\goomod\\override\\" + path);
+
+        if (!Files.exists(resourcePath)) Files.createDirectories(resourcePath);
+
+        Path sourcePath = Path.of(dir + "\\" + path + extension);
+        Path destinationPath = Path.of(levelDir + "\\goomod\\override\\" + path + extension);
+        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+    }
+
+
+    private static void addLevelToGoomod(WorldLevel level, String dir, String levelDir,
+                                         boolean includeAddinInfo) throws IOException {
+
+        String levelDirectory = levelDir + "\\goomod\\compile\\res\\levels\\" + level.getLevelName();
+        LevelWriter.saveAsXML(level, levelDirectory, level.getVersion(), true, includeAddinInfo);
+
+        // Copy resources to the goomod directory
+        for (EditorObject resource : level.getResrc()) addResourceToGoomod(resource, dir, levelDir);
+
+    }
+
+
+    private static void addBallToGoomod(_Ball ball, String dir, String levelDir) throws IOException {
+
+        String ballName = ball.getObjects().get(0).getAttribute("name").stringValue();
+        String ballDirectory = levelDir + "\\goomod\\compile\\res\\balls\\" + ballName;
+        BallWriter.saveAsXML(ball, ballDirectory, ball.getVersion(), true);
+
+        // Copy resources to the goomod directory
+        for (EditorObject resource : ball.getResources()) addResourceToGoomod(resource, dir, levelDir);
+
     }
 
 }

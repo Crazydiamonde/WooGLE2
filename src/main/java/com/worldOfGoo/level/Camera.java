@@ -5,14 +5,15 @@ import com.woogleFX.engine.Depth;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Camera extends EditorObject {
 
-    public Camera(EditorObject _parent) {
-        super(_parent, "camera", "level\\camera");
+    public Camera(EditorObject _parent, GameVersion version) {
+        super(_parent, "camera", version);
 
         addAttribute("aspect",  InputField.ANY)       .setDefaultValue("normal");
         addAttribute("endpos",  InputField.POSITION)  .setDefaultValue("0,0");

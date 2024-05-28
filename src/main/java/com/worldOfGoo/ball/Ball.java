@@ -2,11 +2,12 @@ package com.worldOfGoo.ball;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 
 public class Ball extends EditorObject {
 
-    public Ball(EditorObject _parent) {
-        super(_parent, "ball");
+    public Ball(EditorObject _parent, GameVersion version) {
+        super(_parent, "ball", version);
 
         addAttribute("name",                 InputField.ANY)                                  .assertRequired();
         addAttribute("static",               InputField.ANY);

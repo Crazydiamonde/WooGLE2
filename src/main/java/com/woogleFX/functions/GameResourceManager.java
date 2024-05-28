@@ -2,16 +2,9 @@ package com.woogleFX.functions;
 
 import com.woogleFX.engine.fx.FXEditorButtons;
 import com.woogleFX.engine.fx.FXMenu;
-import com.woogleFX.editorObjects._Ball;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.file.resourceManagers.GlobalResourceManager;
-import com.woogleFX.file.resourceManagers.BallManager;
 import com.woogleFX.engine.gui.Alarms;
-import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
-import com.worldOfGoo.resrc.Font;
-import com.worldOfGoo.resrc.ResrcImage;
-import com.worldOfGoo.resrc.Sound;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -38,31 +31,6 @@ public class GameResourceManager {
             Alarms.errorMessage(e);
         }
 
-        BallManager.getImportedBalls().removeIf(ball -> ball.getVersion() == version);
-
-        GlobalResourceManager.init();
-
-        for (int i = 0; i < PaletteManager.getPaletteBalls().size(); i++) {
-
-            String ballName = PaletteManager.getPaletteBalls().get(i);
-            GameVersion ballVersion = PaletteManager.getPaletteVersions().get(i);
-
-            logger.debug(ballName + ", " + ballVersion);
-
-            if (ballVersion == version) {
-
-                try {
-                    _Ball ball = FileManager.openBall(ballName, ballVersion);
-
-                    if (ball != null) {
-                        ball.setVersion(ballVersion);
-                        BallManager.getImportedBalls().add(ball);
-                    }
-                } catch (ParserConfigurationException | SAXException | IOException e) {
-                    Alarms.errorMessage(e);
-                }
-            }
-        }
     }
 
 
@@ -92,10 +60,10 @@ public class GameResourceManager {
                 }
                 reloadWorldOfGoo(GameVersion.NEW);
             }
-            if(FXEditorButtons.getOldGooballsToolbar() != null) {
+            if (FXEditorButtons.getOldGooballsToolbar() != null) {
                 FXEditorButtons.getOldGooballsToolbar().getItems().clear();
             }
-            if(FXEditorButtons.getNewGooballsToolbar() != null) {
+            if (FXEditorButtons.getNewGooballsToolbar() != null) {
                 FXEditorButtons.getNewGooballsToolbar().getItems().clear();
             }
             if (!editorJustLaunched) FXEditorButtons.addBallsTo();

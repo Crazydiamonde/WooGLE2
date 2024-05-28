@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import com.woogleFX.editorObjects.ImageUtility;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.functions.LevelManager;
+import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.simpleStructures.*;
 
 import com.woogleFX.editorObjects.EditorObject;
@@ -24,8 +25,8 @@ public class SceneLayer extends EditorObject {
     private double animscaley = 1;
 
 
-    public SceneLayer(EditorObject _parent) {
-        super(_parent, "SceneLayer", "scene\\SceneLayer");
+    public SceneLayer(EditorObject _parent, GameVersion version) {
+        super(_parent, "SceneLayer", version);
 
         addAttribute("id",         InputField.ANY);
         addAttribute("name",       InputField.ANY);
@@ -188,7 +189,7 @@ public class SceneLayer extends EditorObject {
 
         try {
             if (!getAttribute("image").stringValue().isEmpty()) {
-                image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), LevelManager.getVersion());
+                image = getAttribute("image").imageValue(LevelManager.getLevel().getResrc(), getVersion());
                 image = ImageUtility.colorize(image, getAttribute("colorize").colorValue());
             }
         } catch (FileNotFoundException ignored) {

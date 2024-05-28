@@ -14,8 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
-import java.io.FileNotFoundException;
-
 public class LevelTab extends Tab {
 
     private final WorldLevel level;
@@ -33,29 +31,13 @@ public class LevelTab extends Tab {
     public static final int UNSAVED_CHANGES = 1;
     public static final int UNSAVED_CHANGES_UNMODIFIABLE = 2;
 
-    private static Image noChangesImageOld;
-    private static Image changesImageOld;
-    private static Image changesUnmodifiableImageOld;
+    private static final Image noChangesImageOld = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_old.png");
+    private static final Image changesImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_old.png");
+    private static final Image changesUnmodifiableImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_old.png");
 
-    private static Image noChangesImageNew;
-    private static Image changesImageNew;
-    private static Image changesUnmodifiableImageNew;
-
-    static {
-        try {
-
-            noChangesImageOld = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_old.png");
-            changesImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_old.png");
-            changesUnmodifiableImageOld = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_old.png");
-
-            noChangesImageNew = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_new.png");
-            changesImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_new.png");
-            changesUnmodifiableImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_new.png");
-
-        } catch (FileNotFoundException ignored) {
-
-        }
-    }
+    private static final Image noChangesImageNew = FileManager.getIcon("ButtonIcons\\Level\\no_unsaved_changes_new.png");
+    private static final Image changesImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_new.png");
+    private static final Image changesUnmodifiableImageNew = FileManager.getIcon("ButtonIcons\\Level\\unsaved_changes_unmodifiable_new.png");
 
 
     public void update(int editingStatus, boolean shouldSelect) {

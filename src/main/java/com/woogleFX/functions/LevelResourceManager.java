@@ -1,7 +1,6 @@
 package com.woogleFX.functions;
 
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
-import com.woogleFX.engine.fx.FXStage;
 import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
@@ -10,24 +9,15 @@ import com.woogleFX.functions.undoHandling.UndoManager;
 import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.functions.undoHandling.userActions.ObjectDestructionAction;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.functions.undoHandling.userActions.AttributeChangeAction;
-import com.woogleFX.functions.undoHandling.userActions.CreateFileAction;
 import com.woogleFX.functions.undoHandling.userActions.ObjectCreationAction;
 import com.woogleFX.structures.WorldLevel;
-import com.worldOfGoo.level.Loopsound;
-import com.worldOfGoo.level.Music;
 import com.worldOfGoo.resrc.Font;
 import com.worldOfGoo.resrc.ResrcImage;
 import com.worldOfGoo.resrc.Sound;
-import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class LevelResourceManager {
@@ -37,7 +27,7 @@ public class LevelResourceManager {
 
     public static void deleteResource(WorldLevel level, String file) {
         String path = new File(file).getName();
-        String startPath = level.getVersion() == GameVersion.NEW ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
+        String startPath = FileManager.getGameDir(level.getVersion());
         File levelFile = new File(startPath + "\\res\\levels\\" + level.getLevelName());
         File[] levelChildren = levelFile.listFiles();
         if (levelChildren != null) {
@@ -83,7 +73,7 @@ public class LevelResourceManager {
     /** Creates a new text resource in the given level. */
     public static void newTextResource(WorldLevel level) {
 
-        EditorObject newTextObject = ObjectCreator.create("string", level.getTextObject());
+        EditorObject newTextObject = ObjectCreator.create("string", level.getTextObject(), level.getVersion());
         ObjectAdder.fixString(newTextObject);
 
         level.getText().add(newTextObject);

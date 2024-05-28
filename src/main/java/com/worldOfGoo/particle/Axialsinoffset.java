@@ -2,11 +2,12 @@ package com.worldOfGoo.particle;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.structures.GameVersion;
 
 public class Axialsinoffset extends EditorObject {
 
-    public Axialsinoffset(EditorObject _parent) {
-        super(_parent, "axialsinoffset");
+    public Axialsinoffset(EditorObject _parent, GameVersion version) {
+        super(_parent, "axialsinoffset", version);
 
         addAttribute("amp",        InputField.RANGE).setDefaultValue("0").assertRequired();
         addAttribute("freq",       InputField.RANGE).setDefaultValue("0").assertRequired();
