@@ -85,7 +85,7 @@ public class EditorObject {
     }
 
 
-    public final EditorAttribute addAttribute(String name, int inputFieldType) {
+    public final EditorAttribute addAttribute(String name, InputField inputFieldType) {
         EditorAttribute[] newAttributes = new EditorAttribute[attributes.length + 1];
         System.arraycopy(attributes, 0, newAttributes, 0, attributes.length);
         EditorAttribute newAttribute = new EditorAttribute(name, inputFieldType);

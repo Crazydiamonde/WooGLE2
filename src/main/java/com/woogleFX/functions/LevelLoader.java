@@ -68,10 +68,94 @@ public class LevelLoader {
         FXMenu.updateAllButtons();
 
         level.getSceneObject().setAttribute("backgroundcolor", "255,255,255");
+        level.getSceneObject().setAttribute("minx", "-500");
+        level.getSceneObject().setAttribute("miny", "0");
+        level.getSceneObject().setAttribute("maxx", "500");
+        level.getSceneObject().setAttribute("maxy", "1000");
+
+        level.getLevelObject().setAttribute("ballsrequired", "1");
+        level.getLevelObject().setAttribute("letterboxed", "false");
+        level.getLevelObject().setAttribute("visualdebug", "false");
+        level.getLevelObject().setAttribute("autobounds", "false");
+        level.getLevelObject().setAttribute("textcolor", "255,255,255");
+        level.getLevelObject().setAttribute("timebugprobability", "0");
+        level.getLevelObject().setAttribute("strandgeom", "false");
+        level.getLevelObject().setAttribute("allowskip", "true");
 
         EditorObject resourcesThing = ObjectCreator.create("Resources", level.getResrcObject());
+        assert resourcesThing != null;
         resourcesThing.setAttribute("id", "scene_" + level.getLevelName());
         resourcesThing.getTreeItem().setExpanded(true);
+        level.getResrc().add(resourcesThing);
+
+        EditorObject linearForceField = ObjectCreator.create("linearforcefield", level.getSceneObject());
+        assert linearForceField != null;
+        linearForceField.setAttribute("type", "gravity");
+        linearForceField.setAttribute("force", "0,-10");
+        linearForceField.setAttribute("dampeningfactor", "0");
+        linearForceField.setAttribute("antigrav", "true");
+        level.getScene().add(linearForceField);
+
+        EditorObject lineRight = ObjectCreator.create("line", level.getSceneObject());
+        assert lineRight != null;
+        lineRight.setAttribute("id", "right");
+        lineRight.setAttribute("anchor", "500,300");
+        lineRight.setAttribute("normal", "-1,0");
+        lineRight.setAttribute("tag", "detaching");
+        level.getScene().add(lineRight);
+
+        EditorObject lineLeft = ObjectCreator.create("line", level.getSceneObject());
+        assert lineLeft != null;
+        lineLeft.setAttribute("id", "left");
+        lineLeft.setAttribute("anchor", "-500,300");
+        lineLeft.setAttribute("normal", "1,0");
+        lineLeft.setAttribute("tag", "detaching");
+        level.getScene().add(lineLeft);
+
+        EditorObject lineGround = ObjectCreator.create("line", level.getSceneObject());
+        assert lineGround != null;
+        lineGround.setAttribute("id", "ground");
+        lineGround.setAttribute("anchor", "0,20");
+        lineGround.setAttribute("normal", "0,1");
+        level.getScene().add(lineGround);
+
+        EditorObject cameraNormal = ObjectCreator.create("camera", level.getLevelObject());
+        assert cameraNormal != null;
+        cameraNormal.setAttribute("aspect", "normal");
+        cameraNormal.setAttribute("endpos", "0,0");
+        cameraNormal.setAttribute("endzoom", "1");
+        level.getLevel().add(cameraNormal);
+
+        EditorObject poiNormal = ObjectCreator.create("poi", cameraNormal);
+        assert poiNormal != null;
+        poiNormal.setAttribute("pos", "0,0");
+        poiNormal.setAttribute("zoom", "1");
+        poiNormal.setAttribute("pause", "0");
+        poiNormal.setAttribute("traveltime", "0");
+        level.getLevel().add(poiNormal);
+
+        EditorObject cameraWidescreen = ObjectCreator.create("camera", level.getLevelObject());
+        assert cameraWidescreen != null;
+        cameraWidescreen.setAttribute("aspect", "widescreen");
+        cameraWidescreen.setAttribute("endpos", "0,0");
+        cameraWidescreen.setAttribute("endzoom", "1");
+        level.getLevel().add(cameraWidescreen);
+
+        EditorObject poiWidescreen = ObjectCreator.create("poi", cameraWidescreen);
+        assert poiWidescreen != null;
+        poiWidescreen.setAttribute("pos", "0,0");
+        poiWidescreen.setAttribute("zoom", "1");
+        poiWidescreen.setAttribute("pause", "0");
+        poiWidescreen.setAttribute("traveltime", "0");
+        level.getLevel().add(poiWidescreen);
+
+        EditorObject levelExit = ObjectCreator.create("levelexit", level.getLevelObject());
+        assert levelExit != null;
+        levelExit.setAttribute("id", "theExit");
+        levelExit.setAttribute("pos", "0,0");
+        levelExit.setAttribute("radius", "75");
+        level.getLevel().add(levelExit);
+
 
         for (EditorObject object : level.getScene()) {
             object.update();

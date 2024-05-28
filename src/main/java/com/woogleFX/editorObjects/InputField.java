@@ -19,77 +19,79 @@ import com.worldOfGoo.scene.Circle;
 import com.worldOfGoo.scene.Compositegeom;
 import com.worldOfGoo.scene.Rectangle;
 
-public class InputField {
+public enum InputField {
 
-    public static final int NULL = -1;
-    public static final int ANY = 0;
-    public static final int ANY_REQUIRED = 1;
-    public static final int NUMBER = 2;
-    public static final int NUMBER_NON_NEGATIVE = 3;
-    public static final int NUMBER_POSITIVE = 4;
-    public static final int NUMBER_ZERO_TO_ONE_INCLUSIVE = 5;
-    public static final int NUMBER_ZERO_TO_ONE_EXCLUSIVE = 6;
-    public static final int POSITION = 7;
-    public static final int IMAGE = 8;
-    public static final int IMAGE_REQUIRED = 9;
-    public static final int COLOR = 10;
-    public static final int ANIMATION = 11;
-    public static final int FLAG = 12;
-    public static final int RANGE = 13;
-    public static final int MATERIAL = 14;
-    public static final int TAG = 15;
-    public static final int GEOMETRY = 16;
-    public static final int TEXT = 17;
-    public static final int PARTICLES = 18;
-    public static final int BALL = 19;
-    public static final int OCD_TYPE = 20;
-    public static final int IMAGE_TYPE = 21;
-    public static final int GOOBALL_ID = 21;
-    public static final int UNIQUE_GOOBALL_ID = 22;
-    public static final int IMAGE_PATH = 23;
-    public static final int SOUND_PATH = 24;
-    public static final int FONT = 25;
+    ANY,
+    ANY_REQUIRED,
+    NUMBER,
+    NUMBER_NON_NEGATIVE,
+    NUMBER_POSITIVE,
+    NUMBER_ZERO_TO_ONE_INCLUSIVE,
+    NUMBER_ZERO_TO_ONE_EXCLUSIVE,
+    POSITION,
+    IMAGE,
+    IMAGE_REQUIRED,
+    COLOR,
+    ANIMATION,
+    FLAG,
+    RANGE,
+    MATERIAL,
+    TAG,
+    GEOMETRY,
+    TEXT,
+    PARTICLES,
+    BALL,
+    OCD_TYPE,
+    IMAGE_TYPE,
+    GOOBALL_ID,
+    UNIQUE_GOOBALL_ID,
+    IMAGE_PATH,
+    SOUND_PATH,
+    FONT,
+    CONTEXT;
 
-    public static final int CONTEXT = 26;
-    //TODO make imagepath and soundpath actual field types and make verifying them possible which is hard because of setdefaults
+    public static boolean verify(EditorObject object, InputField type, String potential) {
 
-    public static boolean verify(EditorObject object, int type, String potential) {
-        if (potential.isEmpty()){
-            return !(type == ANY_REQUIRED || type == IMAGE_REQUIRED);
-        }
+        if (type == null) return true;
+
+        if (potential.isEmpty()) return !(type == ANY_REQUIRED || type == IMAGE_REQUIRED);
+
         switch (type) {
-            case NUMBER:
+            case NUMBER -> {
                 try {
                     Double.parseDouble(potential);
                     return true;
                 } catch (NumberFormatException e) {
                     return false;
                 }
-            case NUMBER_POSITIVE:
+            }
+            case NUMBER_POSITIVE -> {
                 try {
                     return Double.parseDouble(potential) > 0;
                 } catch (NumberFormatException e) {
                     return false;
                 }
-            case NUMBER_NON_NEGATIVE:
+            }
+            case NUMBER_NON_NEGATIVE -> {
                 try {
                     return Double.parseDouble(potential) >= 0;
                 } catch (NumberFormatException e) {
                     return false;
                 }
-            case ANY, ANY_REQUIRED:
+            }
+            case ANY, ANY_REQUIRED -> {
                 return true;
-            case POSITION:
+            }
+            case POSITION -> {
                 try {
                     Position.parse(potential);
                     return true;
                 } catch (NumberFormatException e) {
                     return false;
                 }
-            case IMAGE, IMAGE_REQUIRED:
-
+            }
+            case IMAGE, IMAGE_REQUIRED -> {
                 EditorObject resourceManifest = LevelManager.getLevel().getResrcObject();
-
                 for (EditorObject resrc : LevelManager.getLevel().getResrc()) {
 
                     if (resrc instanceof ResrcImage resrcImage) {
@@ -112,18 +114,22 @@ public class InputField {
                     }
                 }
                 return false;
-            case COLOR:
+            }
+            case COLOR -> {
                 try {
                     Color.parse(potential);
                     return true;
                 } catch (Exception e) {
                     return false;
                 }
-            case ANIMATION:
+            }
+            case ANIMATION -> {
                 return AnimationManager.hasAnimation(potential);
-            case FLAG:
+            }
+            case FLAG -> {
                 return potential.equals("true") || potential.equals("false");
-            case BALL:
+            }
+            case BALL -> {
                 String path = LevelManager.getVersion() == GameVersion.NEW ? FileManager.getNewWOGdir() : FileManager.getOldWOGdir();
                 for (File ballFile : new File(path + "\\res\\balls").listFiles()) {
                     if (ballFile.getName().equals(potential)) {
@@ -131,36 +137,44 @@ public class InputField {
                     }
                 }
                 return false;
-            case TEXT:
+            }
+            case TEXT -> {
                 return true;
-            case PARTICLES:
+            }
+            case PARTICLES -> {
                 for (EditorObject particle : ParticleManager.getParticles()) {
                     if ((particle instanceof Particleeffect || particle instanceof Ambientparticleeffect) && particle.getAttribute("name").stringValue().equals(potential)) {
                         return true;
                     }
                 }
                 return false;
-            case MATERIAL:
+            }
+            case MATERIAL -> {
                 return true;
-            case TAG:
+            }
+            case TAG -> {
                 return true;
-            case OCD_TYPE:
+            }
+            case OCD_TYPE -> {
                 return potential.equals("balls") || potential.equals("moves") || potential.equals("time");
-            case GOOBALL_ID:
+            }
+            case GOOBALL_ID -> {
                 for (EditorObject editorObject : LevelManager.getLevel().getLevel()) {
                     if (editorObject instanceof BallInstance && editorObject.getAttribute("id").stringValue().equals(potential)) {
                         return true;
                     }
                 }
                 return false;
-            case UNIQUE_GOOBALL_ID:
+            }
+            case UNIQUE_GOOBALL_ID -> {
                 for (EditorObject editorObject : LevelManager.getLevel().getLevel()) {
                     if (editorObject instanceof BallInstance && editorObject != object && editorObject.getAttribute("id").stringValue().equals(potential)) {
                         return false;
                     }
                 }
                 return true;
-            case GEOMETRY:
+            }
+            case GEOMETRY -> {
                 for (EditorObject editorObject : LevelManager.getLevel().getScene()) {
                     if (editorObject instanceof Rectangle || editorObject instanceof Circle || editorObject instanceof Compositegeom) {
                         if (editorObject.getAttribute("id").stringValue().equals(potential)) {
@@ -169,25 +183,31 @@ public class InputField {
                     }
                 }
                 return false;
-            case CONTEXT:
+            }
+            case CONTEXT -> {
                 return potential.equals("screen");
-            case FONT:
+            }
+            case FONT -> {
                 return true;
-            case IMAGE_PATH:
+            }
+            case IMAGE_PATH -> {
                 String imageGameDir = LevelManager.getLevel().getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
                 if (object instanceof ResrcImage resrcImage) {
                     return new File(imageGameDir + "\\" + resrcImage.getAdjustedPath() + ".png").exists();
                 } else return false;
-            case SOUND_PATH:
+            }
+            case SOUND_PATH -> {
                 String soundGameDir = LevelManager.getLevel().getVersion() == GameVersion.OLD ? FileManager.getOldWOGdir() : FileManager.getNewWOGdir();
                 if (object instanceof Sound sound) {
-                    return new File(soundGameDir + "\\" + sound.getAdjustedPath() + ".png").exists();
+                    return new File(soundGameDir + "\\" + sound.getAdjustedPath() + ".ogg").exists();
                 } else return false;
-
-            default:
+            }
+            default -> {
                 return false;
+            }
         }
     }
+
 
     public static double getRange(String range, double randomPercentage) {
         double min;
@@ -201,4 +221,5 @@ public class InputField {
         }
         return (max - min) * randomPercentage + min;
     }
+
 }

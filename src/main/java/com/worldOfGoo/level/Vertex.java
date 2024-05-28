@@ -124,6 +124,12 @@ public class Vertex extends EditorObject {
 
 
     @Override
+    public void update() {
+        getParent().update();
+    }
+
+
+    @Override
     public String getName() {
         String x = getAttribute("x").stringValue();
         String y = getAttribute("y").stringValue();

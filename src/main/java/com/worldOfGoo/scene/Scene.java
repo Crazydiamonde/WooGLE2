@@ -40,8 +40,8 @@ public class Scene extends EditorObject {
             }
             public void setY(double y) {
                 double height = getHeight();
-                setAttribute("miny", -(y - height / 2));
-                setAttribute("maxy", -(y + height / 2));
+                setAttribute("miny", -y - height / 2);
+                setAttribute("maxy", -y + height / 2);
             }
             public double getWidth() {
                 double minx = getAttribute("minx").doubleValue();
@@ -60,8 +60,8 @@ public class Scene extends EditorObject {
             }
             public void setHeight(double height) {
                 double y = getY();
-                setAttribute("miny", y - height / 2);
-                setAttribute("maxy", y + height / 2);
+                setAttribute("miny", -y - height / 2);
+                setAttribute("maxy", -y + height / 2);
             }
             public double getDepth() {
                 return Depth.SCENE;

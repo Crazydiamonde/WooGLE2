@@ -6,9 +6,12 @@ import com.woogleFX.engine.Renderer;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.simpleStructures.DragSettings;
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
 /** Represents an image component in any object. */
@@ -85,10 +88,9 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
         t.appendRotation(Math.toDegrees(rotation), x, y);
         graphicsContext.setTransform(t);
 
-        if (isAdditive()) graphicsContext.setGlobalBlendMode(BlendMode.ADD);
-
         graphicsContext.setGlobalAlpha(getAlpha());
 
+        if (isAdditive()) graphicsContext.setGlobalBlendMode(BlendMode.ADD);
         graphicsContext.drawImage(image, x - width / 2.0, y - height / 2.0, width, height);
 
         graphicsContext.restore();

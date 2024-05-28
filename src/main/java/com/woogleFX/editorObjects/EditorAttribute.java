@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class EditorAttribute {
 
-    public static final EditorAttribute NULL = new EditorAttribute(null, InputField.NULL);
+    public static final EditorAttribute NULL = new EditorAttribute(null, null);
 
 
     private final StringProperty name = new SimpleStringProperty();
@@ -92,8 +92,8 @@ public class EditorAttribute {
     }
 
 
-    private final int type;
-    public int getType() {
+    private final InputField type;
+    public InputField getType() {
         return type;
     }
 
@@ -108,7 +108,7 @@ public class EditorAttribute {
     }
 
 
-    public EditorAttribute(String name, int type) {
+    public EditorAttribute(String name, InputField type) {
         this.name.setValue(name);
         this.type = type;
     }

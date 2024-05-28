@@ -11,6 +11,7 @@ import com.woogleFX.structures.WorldLevel;
 import com.worldOfGoo.level.BallInstance;
 import com.worldOfGoo.level.Level;
 import com.worldOfGoo.level.Strand;
+import com.worldOfGoo.level.Vertex;
 import com.worldOfGoo.scene.Scene;
 
 public class ObjectManager {
@@ -58,7 +59,7 @@ public class ObjectManager {
 
             }
 
-        }
+        } else if (object instanceof Vertex vertex) vertex.getParent().update();
 
     }
 
@@ -100,7 +101,7 @@ public class ObjectManager {
 
             }
 
-        }
+        } else if (item instanceof Vertex vertex) vertex.getParent().update();
 
     }
 

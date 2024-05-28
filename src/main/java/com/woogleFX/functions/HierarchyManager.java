@@ -11,6 +11,13 @@ import com.woogleFX.engine.fx.FXPropertiesView;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.functions.undoHandling.UndoManager;
 import com.woogleFX.functions.undoHandling.userActions.HierarchyDragAction;
+import com.woogleFX.structures.WorldLevel;
+import com.worldOfGoo.addin.Addin;
+import com.worldOfGoo.level.Level;
+import com.worldOfGoo.level.Vertex;
+import com.worldOfGoo.resrc.*;
+import com.worldOfGoo.scene.Scene;
+import com.worldOfGoo.text.TextStrings;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -22,6 +29,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 public class HierarchyManager {
@@ -105,8 +113,10 @@ public class HierarchyManager {
                 if (!valid) {
                     ImageView failedImg = new ImageView(FileManager.getFailedImage());
                     cell.setGraphic(new StackPane(imageView, failedImg));
+                    cell.setStyle("-fx-text-fill: red");
                 } else {
                     cell.setGraphic(imageView);
+                    cell.setStyle("-fx-text-fill: black");
                 }
             }
         }
@@ -123,11 +133,32 @@ public class HierarchyManager {
         EditorObject toItem = hierarchy.getTreeItem(toIndex).getValue();
         EditorObject fromItem = hierarchy.getTreeItem(oldDropIndex).getValue();
 
+        EditorObject absoluteParent = fromItem;
+        while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+
+        WorldLevel level = LevelManager.getLevel();
+
+        ArrayList<EditorObject> list;
+        if (absoluteParent instanceof Scene) list = level.getScene();
+        else if (absoluteParent instanceof Level) list = level.getLevel();
+        else if (absoluteParent instanceof ResourceManifest) list = level.getResrc();
+        else if (absoluteParent instanceof Addin) list = level.getAddin();
+        else if (absoluteParent instanceof TextStrings) list = level.getText();
+        else return false;
+
+        int indexOfToItemInList = list.indexOf(toItem);
+
         // YOU CAN'T PUT AN OBJECT INSIDE ITSELF
         if (toItem.getChildren().contains(fromItem)) return false;
 
         // Or inside an object that doesn't have it as a possible child
         if (Stream.of(toItem.getParent().getPossibleChildren()).noneMatch(e -> e.equals(fromItem.getType()))) return false;
+
+        // Or above every SetDefaults (meaning at position 2) if it's a resource
+        if ((fromItem instanceof ResrcImage || fromItem instanceof Sound || fromItem instanceof Font) && toIndex == 2) return false;
+
+        // Or anywhere that would put a resource at position 2 if it's a SetDefaults
+        if (fromItem instanceof SetDefaults && (oldDropIndex == 2 && !(hierarchy.getTreeItem(3).getValue() instanceof SetDefaults))) return false;
 
         // Add the dragged item just above the item that it gets dragged to
         int indexOfToItem = toItem.getParent().getChildren().indexOf(toItem);
@@ -137,7 +168,14 @@ public class HierarchyManager {
 
         fromItem.setParent(toItem.getParent(), indexOfToItem);
 
+        list.remove(fromItem);
+        list.add(indexOfToItemInList, fromItem);
+
+        if (fromItem.getParent() instanceof Resources) LevelManager.getLevel().reAssignSetDefaultsToAllResources();
+        else if (fromItem instanceof Vertex) fromItem.getParent().update();
+
         hierarchy.getSelectionModel().select(toIndex);
+        hierarchy.refresh();
 
         return true;
 
@@ -149,13 +187,14 @@ public class HierarchyManager {
         TreeTableRow<EditorObject> row = new TreeTableRow<>();
 
         row.setOnMousePressed(event -> {
-            if (hierarchy.getTreeItem(row.getIndex()) != null) {
-                SelectionManager.setSelected(hierarchy.getTreeItem(row.getIndex()).getValue());
-                FXPropertiesView.changeTableView(hierarchy.getTreeItem(row.getIndex()).getValue());
-                if (event.getButton().equals(MouseButton.SECONDARY)) {
-                    row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
-                }
-            }
+
+            if (row.getTreeItem() == null) return;
+
+            SelectionManager.setSelected(row.getTreeItem().getValue());
+            FXPropertiesView.changeTableView(row.getTreeItem().getValue());
+
+            if (event.getButton().equals(MouseButton.SECONDARY)) row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
+
         });
 
         row.setOnDragDetected(event -> {

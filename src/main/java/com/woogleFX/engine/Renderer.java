@@ -12,6 +12,7 @@ import com.woogleFX.structures.WorldLevel;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 
@@ -132,6 +133,13 @@ public class Renderer {
             boolean selected = SelectionManager.getSelected() != null && List.of(SelectionManager.getSelected().getObjectComponents()).contains(objectComponent);
 
             objectComponent.draw(graphicsContext, selected);
+
+            // This part is necessary for additive + low opacity rendering to work correctly. :)
+            // ex. GPU bitspew particles in Graphics Processing Unit will have a white background without this
+            // TODO: figure out why this has any effect and come up with a better solution
+            graphicsContext.setGlobalAlpha(1.0);
+            graphicsContext.setFill(Color.TRANSPARENT);
+            graphicsContext.fillRect(0, 0, 1, 1);
 
             graphicsContext.restore();
 

@@ -238,7 +238,7 @@ public class FXMenu {
 
         importImageItem.setText("Import Images...");
         setIcon(importImageItem, prefix + "import_img.png");
-        importImageItem.setOnAction(e -> LevelResourceManager.importImages(LevelManager.getLevel()));
+        importImageItem.setOnAction(e -> LevelResourceImporter.importImages(LevelManager.getLevel()));
         resourcesMenu.getItems().add(importImageItem);
 
         newTextResourceItem.setText("New Text Resource");
@@ -253,12 +253,12 @@ public class FXMenu {
 
         setMusicItem.setText("Set Music...");
         setIcon(setMusicItem, prefix + "import_music.png");
-        setMusicItem.setOnAction(e -> LevelResourceManager.importMusic(LevelManager.getLevel()));
+        setMusicItem.setOnAction(e -> LevelResourceImporter.importMusic(LevelManager.getLevel()));
         resourcesMenu.getItems().add(setMusicItem);
 
         setLoopsoundItem.setText("Set Loop Sound...");
         setIcon(setLoopsoundItem, prefix + "import_soundloop.png");
-        setLoopsoundItem.setOnAction(e -> LevelResourceManager.importLoopsound(LevelManager.getLevel()));
+        setLoopsoundItem.setOnAction(e -> LevelResourceImporter.importLoopsound(LevelManager.getLevel()));
         resourcesMenu.getItems().add(setLoopsoundItem);
 
         return resourcesMenu;

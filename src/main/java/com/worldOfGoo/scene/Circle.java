@@ -24,7 +24,7 @@ public class Circle extends EditorObject {
 
         addAttribute("id",               InputField.ANY)                                   .assertRequired();
         addAttribute("mass",             InputField.NUMBER)     .setDefaultValue("0");
-        addAttribute("static",           InputField.FLAG)       .setDefaultValue("true");
+        addAttribute("static",           InputField.FLAG)       .setDefaultValue("true")   .assertRequired();
         addAttribute("tag",              InputField.TAG);
         addAttribute("material",         InputField.MATERIAL);
         addAttribute("contacts",         InputField.FLAG)       .setDefaultValue("true");

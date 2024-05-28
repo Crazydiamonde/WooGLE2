@@ -5,6 +5,11 @@ import com.woogleFX.functions.HierarchyManager;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.WorldLevel;
+import com.worldOfGoo.addin.Addin;
+import com.worldOfGoo.level.Level;
+import com.worldOfGoo.resrc.ResourceManifest;
+import com.worldOfGoo.scene.Scene;
+import com.worldOfGoo.text.TextStrings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -56,6 +61,15 @@ public class FXHierarchy {
         // properties view.
         hierarchy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) return;
+            else if (newValue.getValue() != null) {
+                EditorObject absoluteParent = newValue.getValue();
+                while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+                if (absoluteParent instanceof Scene) hierarchySwitcherButtons.getSelectionModel().select(0);
+                else if (absoluteParent instanceof Level) hierarchySwitcherButtons.getSelectionModel().select(1);
+                else if (absoluteParent instanceof ResourceManifest) hierarchySwitcherButtons.getSelectionModel().select(2);
+                else if (absoluteParent instanceof TextStrings) hierarchySwitcherButtons.getSelectionModel().select(3);
+                else if (absoluteParent instanceof Addin) hierarchySwitcherButtons.getSelectionModel().select(4);
+            }
             SelectionManager.setSelected(newValue.getValue());
             FXPropertiesView.changeTableView(newValue.getValue());
         });

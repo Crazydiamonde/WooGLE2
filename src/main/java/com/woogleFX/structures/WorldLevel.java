@@ -12,6 +12,7 @@ import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.simpleStructures.LevelTab;
 import com.woogleFX.structures.simpleStructures.VisibilitySettings;
 import com.woogleFX.functions.undoHandling.userActions.UserAction;
+import com.worldOfGoo.level.Signpost;
 import com.worldOfGoo.resrc.Font;
 import com.worldOfGoo.resrc.ResrcImage;
 import com.worldOfGoo.resrc.SetDefaults;
@@ -181,7 +182,7 @@ public class WorldLevel {
         double zoomX = canvasWidth / sceneWidth;
         double zoomY = canvasHeight / sceneHeight;
 
-        zoom = Math.min(zoomX, zoomY);
+        zoom = Math.min(Math.abs(zoomX), Math.abs(zoomY));
 
         offsetX = (offsetX - canvasWidth / 2) * zoom + canvasWidth / 2;
         offsetY = (offsetY - canvasHeight / 2) * zoom + canvasHeight / 2;
@@ -207,6 +208,43 @@ public class WorldLevel {
         for (EditorObject object : addin) object.getTreeItem().setExpanded(true);
         for (EditorObject object : text) object.getTreeItem().setExpanded(true);
 
+        reAssignSetDefaultsToAllResources();
+
+        for (EditorObject editorObject : scene) if (editorObject instanceof Label label) {
+            tryToAddText(label.getAttribute("text").stringValue());
+        }
+
+        for (EditorObject editorObject : level) if (editorObject instanceof Signpost signpost) {
+            tryToAddText(signpost.getAttribute("text").stringValue());
+        }
+
+        cameraToMiddleOfLevel();
+
+    }
+
+
+    private void tryToAddText(String id) {
+        TextString textString;
+        try {
+            textString = ResourceManager.getText(null, id, version);
+        } catch (FileNotFoundException ignored) {
+            return;
+        }
+        boolean notAlreadyHere = false;
+        for (EditorObject object : text) {
+            if (object instanceof TextString) {
+                if (object.getAttribute("id").stringValue().equals(id)) {
+                    notAlreadyHere = true;
+                    break;
+                }
+            }
+        }
+        if (!notAlreadyHere) ObjectUtil.deepClone(textString, text.get(0));
+    }
+
+
+    public void reAssignSetDefaultsToAllResources() {
+
         SetDefaults currentSetDefaults = null;
 
         for (EditorObject editorObject : resrc) {
@@ -224,17 +262,6 @@ public class WorldLevel {
             }
 
         }
-
-        for (EditorObject editorObject : scene) if (editorObject instanceof Label label) {
-            try {
-                TextString textString = ResourceManager.getText(null, label.getAttribute("text").stringValue(), version);
-                text.add(ObjectUtil.deepClone(textString, text.get(0)));
-            } catch (FileNotFoundException ignored) {
-
-            }
-        }
-
-        cameraToMiddleOfLevel();
 
     }
 

@@ -1,5 +1,6 @@
 package com.woogleFX.editorObjects.objectCreators;
 
+import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.engine.fx.FXCanvas;
 import com.woogleFX.engine.fx.FXHierarchy;
 import com.woogleFX.engine.fx.FXPropertiesView;
@@ -121,11 +122,14 @@ public class ObjectAdder {
         EditorObject obj = ObjectCreator.create(name, parent);
         adjustObject(obj);
 
-        if (parent instanceof Scene) level.getScene().add(obj);
-        else if (parent instanceof Level) level.getLevel().add(obj);
-        else if (parent instanceof ResourceManifest) level.getResrc().add(obj);
-        else if (parent instanceof Addin) level.getAddin().add(obj);
-        else if (parent instanceof TextStrings) level.getText().add(obj);
+        EditorObject absoluteParent = parent;
+        while (absoluteParent != null && absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+
+        if (absoluteParent instanceof Scene) level.getScene().add(obj);
+        else if (absoluteParent instanceof Level) level.getLevel().add(obj);
+        else if (absoluteParent instanceof ResourceManifest) level.getResrc().add(obj);
+        else if (absoluteParent instanceof Addin) level.getAddin().add(obj);
+        else if (absoluteParent instanceof TextStrings) level.getText().add(obj);
 
         addAnything(obj);
 
@@ -218,44 +222,32 @@ public class ObjectAdder {
     }
 
 
+    public static void adjustObjectLocation(EditorObject object) {
+
+        // Create the object at the mouse position
+        WorldLevel level = LevelManager.getLevel();
+        double objectX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();
+        double objectY = (SelectionManager.getMouseY() - level.getOffsetY()) / level.getZoom();
+
+        if (object.getObjectComponents().length > 0) {
+            ObjectComponent objectComponent = object.getObjectComponents()[0];
+            objectComponent.setX(objectX);
+            objectComponent.setY(objectY);
+        }
+
+    }
+
+
     private static void adjustObject(EditorObject object) {
-        if (object instanceof BallInstance ballInstance) {
-            ballInstance.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            ballInstance.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Line line) {
-            line.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Rectangle rectangle) {
-            rectangle.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            rectangle.setAttribute("y", -FXCanvas.getScreenCenter().getY());
+
+        adjustObjectLocation(object);
+
+        if (object instanceof Rectangle rectangle) {
             rectangle.setAttribute("static", true);
         } else if (object instanceof Circle circle) {
-            circle.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            circle.setAttribute("y", -FXCanvas.getScreenCenter().getY());
             circle.setAttribute("static", true);
-        } else if (object instanceof SceneLayer sceneLayer) {
-            sceneLayer.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            sceneLayer.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         } else if (object instanceof Compositegeom compositegeom) {
-            compositegeom.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            compositegeom.setAttribute("y", -FXCanvas.getScreenCenter().getY());
             compositegeom.setAttribute("static", true);
-        } else if (object instanceof Hinge hinge) {
-            hinge.setAttribute("anchor", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Vertex vertex) {
-            vertex.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            vertex.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Fire fire) {
-            fire.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            fire.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Linearforcefield linearforcefield) {
-            linearforcefield.setAttribute("center", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Radialforcefield radialforcefield) {
-            radialforcefield.setAttribute("center", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Particles particles) {
-            particles.setAttribute("pos", FXCanvas.getScreenCenter().getX() + "," + -FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Signpost signpost) {
-            signpost.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            signpost.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         } else if (object instanceof TextString textString) {
             textString.setAttribute("id", "TEXT_" + LevelManager.getLevel().getLevelName().toUpperCase() + "_STR0");
             textString.setAttribute("text", "");
@@ -269,20 +261,6 @@ public class ObjectAdder {
         } else if (object instanceof SetDefaults setDefaults) {
             setDefaults.setAttribute("path", "./");
             setDefaults.setAttribute("idprefix", "");
-        } else if (object instanceof Label label) {
-            label.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            label.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Camera camera) {
-            camera.setAttribute("endpos", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Poi poi) {
-            poi.setAttribute("pos", FXCanvas.getScreenCenter().getX() + "," + FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Button button) {
-            button.setAttribute("x", FXCanvas.getScreenCenter().getX());
-            button.setAttribute("y", -FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Targetheight targetheight) {
-            targetheight.setAttribute("pos", FXCanvas.getScreenCenter().getX() + ", " + -FXCanvas.getScreenCenter().getY());
-        } else if (object instanceof Levelexit levelexit) {
-            levelexit.setAttribute("y", -FXCanvas.getScreenCenter().getY());
         }
 
     }

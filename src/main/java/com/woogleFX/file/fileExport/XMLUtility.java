@@ -8,8 +8,15 @@ import com.worldOfGoo.level.Levelexit;
 import com.worldOfGoo.resrc.*;
 import com.worldOfGoo.scene.Scene;
 import com.worldOfGoo.text.TextStrings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class XMLUtility {
+
+    private static String fix(String input) {
+        return input.replace(String.valueOf('"'), "&quot;");
+    }
+
 
     private static void addAttributeToExport(StringBuilder exportBuilder, EditorAttribute attribute, String defaultsPath, String defaultsPrefix, boolean isResource) {
 
@@ -37,12 +44,12 @@ public class XMLUtility {
                     attributeValue = attributeValue.substring(defaultsPath.length());
                 }
             }
-            exportBuilder.append(attributeName).append("=\"").append(attributeValue).append("\" ");
+            exportBuilder.append(attributeName).append("=\"").append(fix(attributeValue)).append("\" ");
         } else {
             if (attribute.stringValue().isEmpty() && attribute.getRequiredInFile()) {
-                exportBuilder.append(attributeName).append("=\"").append(attribute.getDefaultValue()).append("\" ");
+                exportBuilder.append(attributeName).append("=\"").append(fix(attribute.getDefaultValue())).append("\" ");
             } else {
-                exportBuilder.append(attributeName).append("=\"").append(attribute.stringValue()).append("\" ");
+                exportBuilder.append(attributeName).append("=\"").append(fix(attribute.stringValue())).append("\" ");
             }
         }
 

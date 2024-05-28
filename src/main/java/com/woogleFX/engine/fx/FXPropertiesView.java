@@ -36,10 +36,11 @@ public class FXPropertiesView {
 
     public static void init() {
 
-        propertiesView.setPlaceholder(new Label());
+        // This seems to break when the user double-clicks on a hierarchy item with children (like those in "Addin").
+        // TODO: figure out how to fix this or make some equivalent placeholder display
+        //propertiesView.setPlaceholder(new Label());
 
-        // Create the columns the properties view uses (Attribute name and attribute
-        // value).
+        // Create the columns the properties view uses (Attribute name and attribute value).
         TreeTableColumn<EditorAttribute, String> name = new TreeTableColumn<>();
         name.setGraphic(new Label("Name"));
         name.setCellValueFactory(param -> param.getValue().getValue().getNameProperty());
@@ -81,7 +82,7 @@ public class FXPropertiesView {
             row.pressedProperty().addListener((observable, oldValue, newValue) -> {
                 // If we are editing a cell with null content or an uneditable cell, cancel the
                 // edit.
-                if (row.getTreeItem() == null || row.getTreeItem().getValue().getType() == InputField.NULL) {
+                if (row.getTreeItem() == null || row.getTreeItem().getValue().getType() == null) {
                     Platform.runLater(() -> propertiesView.edit(-1, null));
                 }
             });
@@ -176,7 +177,7 @@ public class FXPropertiesView {
 
                     @Override
                     public void commitEdit(String s) {
-                        int type = getTableRow().getItem().getType();
+                        InputField type = getTableRow().getItem().getType();
                         super.commitEdit(InputField.verify(SelectionManager.getSelected(), type, s) ? s : before);
                     }
 
@@ -184,7 +185,7 @@ public class FXPropertiesView {
                 };
 
                 cell.setOnMousePressed(e -> {
-                    cell.startEdit();
+                    if (!cell.isEmpty()) cell.startEdit();
                     e.consume();
                 });
 
@@ -245,6 +246,8 @@ public class FXPropertiesView {
 
     public static TreeItem<EditorAttribute> makePropertiesViewTreeItem(EditorObject object) {
 
+        if (object == null) return null;
+
         // Create the root tree item.
         TreeItem<EditorAttribute> treeItem = new TreeItem<>(EditorAttribute.NULL);
 
@@ -260,7 +263,7 @@ public class FXPropertiesView {
                 // If no such attribute exists, this attribute is instead the name of a category
                 // of attributes.
                 // In this case, create a dummy attribute with no value.
-                attribute = new EditorAttribute(metaEditorAttribute.getName(), InputField.NULL);
+                attribute = new EditorAttribute(metaEditorAttribute.getName(), null);
             }
             TreeItem<EditorAttribute> thisAttribute = new TreeItem<>(attribute);
 
@@ -277,10 +280,13 @@ public class FXPropertiesView {
 
             // Add the attribute's TreeItem as a child of the root's TreeItem.
             treeItem.getChildren().add(thisAttribute);
+
         }
 
         return treeItem;
+
     }
+
 
     private static ContextMenu possibleAttributeValues(TextFieldTreeTableCell<EditorAttribute, String> cell) {
         ContextMenu contextMenu = new ContextMenu();
@@ -292,7 +298,7 @@ public class FXPropertiesView {
         VBox vBox = new VBox();
 
         switch (attribute.getType()) {
-            case InputField.IMAGE, InputField.IMAGE_REQUIRED -> {
+            case IMAGE, IMAGE_REQUIRED -> {
                 for (EditorObject resource : LevelManager.getLevel().getResrc()) {
                     if (resource instanceof ResrcImage) {
                         Button setImageItem = new Button(resource.getAttribute("id").stringValue());
@@ -324,7 +330,7 @@ public class FXPropertiesView {
                     }
                 }
             }
-            case InputField.BALL -> {
+            case BALL -> {
                 String path = LevelManager.getVersion() == GameVersion.NEW ? FileManager.getNewWOGdir()
                         : FileManager.getOldWOGdir();
                 File[] ballFiles = new File(path + "\\res\\balls").listFiles();
@@ -347,7 +353,7 @@ public class FXPropertiesView {
                     }
                 }
             }
-            case InputField.PARTICLES -> {
+            case PARTICLES -> {
                 for (String particleType : ParticleManager.getSortedParticleNames()) {
                     Button setImageItem = new Button(particleType);
 
@@ -409,11 +415,7 @@ public class FXPropertiesView {
 
 
     public static void changeTableView(EditorObject obj) {
-        if (obj == null) {
-            FXPropertiesView.getPropertiesView().setRoot(null);
-        } else {
-            FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(obj));
-        }
+        propertiesView.setRoot(makePropertiesViewTreeItem(obj));
     }
 
 

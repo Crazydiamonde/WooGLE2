@@ -11,6 +11,7 @@ import com.woogleFX.functions.undoHandling.userActions.ObjectCreationAction;
 import com.woogleFX.structures.WorldLevel;
 import com.worldOfGoo.level.BallInstance;
 import com.worldOfGoo.level.Strand;
+import com.worldOfGoo.level.Vertex;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
@@ -46,6 +47,8 @@ public class ClipboardManager {
 
         EditorObject object = ClipboardHandler.importFromClipboardString(clipboard);
         if (object == null) return;
+
+        ObjectAdder.adjustObjectLocation(object);
 
         if (object instanceof BallInstance) {
             ObjectAdder.fixGooBall(object);

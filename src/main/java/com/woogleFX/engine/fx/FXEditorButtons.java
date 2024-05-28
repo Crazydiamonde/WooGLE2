@@ -494,7 +494,7 @@ public class FXEditorButtons {
         toolBar.getItems().add(buttonUpdateLevelResources);
 
         setIcon(buttonImportImages, prefix + "import_img.png");
-        buttonImportImages.setOnAction(e -> LevelResourceManager.importImages(LevelManager.getLevel()));
+        buttonImportImages.setOnAction(e -> LevelResourceImporter.importImages(LevelManager.getLevel()));
         buttonImportImages.setTooltip(new DelayedTooltip("Import Images"));
         toolBar.getItems().add(buttonImportImages);
 
@@ -513,12 +513,12 @@ public class FXEditorButtons {
         toolBar.getItems().add(new Separator());
 
         setIcon(buttonSetMusic, prefix + "import_music.png");
-        buttonSetMusic.setOnAction(e -> LevelResourceManager.importMusic(LevelManager.getLevel()));
+        buttonSetMusic.setOnAction(e -> LevelResourceImporter.importMusic(LevelManager.getLevel()));
         buttonSetMusic.setTooltip(new DelayedTooltip("Set Music"));
         toolBar.getItems().add(buttonSetMusic);
 
         setIcon(buttonSetLoopsound, prefix + "import_soundloop.png");
-        buttonSetLoopsound.setOnAction(e -> LevelResourceManager.importLoopsound(LevelManager.getLevel()));
+        buttonSetLoopsound.setOnAction(e -> LevelResourceImporter.importLoopsound(LevelManager.getLevel()));
         buttonSetLoopsound.setTooltip(new DelayedTooltip("Set Loop Sound"));
         toolBar.getItems().add(buttonSetLoopsound);
 
