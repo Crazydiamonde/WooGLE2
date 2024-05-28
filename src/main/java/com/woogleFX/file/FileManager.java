@@ -1,6 +1,7 @@
 package com.woogleFX.file;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.SupremeMain;
 import com.woogleFX.editorObjects.objectCreators.BlankObjectGenerator;
 import com.woogleFX.file.fileImport.BallFileOpener;
 import com.woogleFX.file.fileImport.ObjectXMLParser;
@@ -83,7 +85,16 @@ public class FileManager {
 
 
     // Editor location should be the current folder
-    private static final String editorLocation = System.getProperty("user.dir") + "\\";
+    private static final String editorLocation;
+    static {
+        String editorLocation1;
+        try {
+            editorLocation1 = new File(SupremeMain.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + "\\";
+        } catch (URISyntaxException ignored) {
+            editorLocation1 = "";
+        }
+        editorLocation = editorLocation1;
+    }
     public static String getEditorLocation() {
         return editorLocation;
     }
