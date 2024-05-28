@@ -275,7 +275,7 @@ public class Alarms {
         Stage stage = new Stage();
 
         selectOldButton.setOnAction(actionEvent -> {
-            if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD)) {
+            if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD, true)) {
                 FileManager.setHasOldWOG(true);
                 Initializer.startWithWorldOfGooVersion();
                 stage.close();
@@ -283,7 +283,7 @@ public class Alarms {
         });
 
         selectNewButton.setOnAction(actionEvent -> {
-            if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD)) {
+            if (GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD, true)) {
                 FileManager.setHasNewWOG(true);
                 Initializer.startWithWorldOfGooVersion();
                 stage.close();

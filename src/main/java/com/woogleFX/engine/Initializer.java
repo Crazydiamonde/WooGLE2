@@ -10,11 +10,15 @@ import com.woogleFX.functions.*;
 import com.woogleFX.file.resourceManagers.BallManager;
 import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.functions.inputEvents.*;
 import com.woogleFX.structures.GameVersion;
 import com.worldOfGoo.addin.AddinLevelName;
 import com.worldOfGoo.resrc.Font;
 import com.worldOfGoo.resrc.ResrcImage;
 import com.worldOfGoo.resrc.Sound;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +75,14 @@ public class Initializer {
         FXLevelSelectPane.init();
         FXMenu.init();
         FXPropertiesView.init();
+
+        // Event handlers
+        FXStage.getStage().addEventFilter(MouseEvent.MOUSE_PRESSED, MousePressedManager::eventMousePressed);
+        FXStage.getStage().addEventFilter(MouseEvent.MOUSE_RELEASED, MouseReleasedManager::eventMouseReleased);
+        FXStage.getStage().addEventFilter(MouseEvent.MOUSE_DRAGGED, MouseDraggedManager::eventMouseDragged);
+        FXStage.getStage().addEventFilter(MouseEvent.MOUSE_MOVED, MouseMovedManager::eventMouseMoved);
+        FXStage.getStage().addEventFilter(KeyEvent.KEY_PRESSED, KeyPressedManager::keyPressed);
+        FXStage.getStage().addEventFilter(ScrollEvent.SCROLL, MouseWheelMovedManager::mouseWheelMoved);
 
     }
 

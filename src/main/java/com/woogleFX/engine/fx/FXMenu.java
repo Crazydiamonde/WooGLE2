@@ -60,12 +60,12 @@ public class FXMenu {
 
         changeGameDirectoryOldItem.setText("Change World of Goo Directory (1.3)...");
         setIcon(changeGameDirectoryOldItem, prefix + "change_world_of_goo_directory_old.png");
-        changeGameDirectoryOldItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD));
+        changeGameDirectoryOldItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(GameVersion.OLD, false));
         fileMenu.getItems().add(changeGameDirectoryOldItem);
 
         changeGameDirectoryNewItem.setText("Change World of Goo Directory (1.5)...");
         setIcon(changeGameDirectoryNewItem, prefix + "change_world_of_goo_directory_new.png");
-        changeGameDirectoryNewItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(GameVersion.NEW));
+        changeGameDirectoryNewItem.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(GameVersion.NEW, false));
         fileMenu.getItems().add(changeGameDirectoryNewItem);
 
         saveOldBallToNewItem.setText("Copy Ball from 1.3 to 1.5");

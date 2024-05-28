@@ -67,7 +67,7 @@ public class GameResourceManager {
 
 
     /** Changes the location of a World of Goo version. */
-    public static boolean changeWorldOfGooDirectory(GameVersion version) {
+    public static boolean changeWorldOfGooDirectory(GameVersion version, boolean editorJustLaunched) {
         FileChooser findWorldOfGoo = new FileChooser();
         findWorldOfGoo.getExtensionFilters()
                 .add(new FileChooser.ExtensionFilter("World of Goo executable", "WorldOfGoo.exe"));
@@ -98,9 +98,9 @@ public class GameResourceManager {
             if(FXEditorButtons.getNewGooballsToolbar() != null) {
                 FXEditorButtons.getNewGooballsToolbar().getItems().clear();
             }
-            FXEditorButtons.addBallsTo();
-            FXEditorButtons.updateAllButtons();
-            FXMenu.updateAllButtons();
+            if (!editorJustLaunched) FXEditorButtons.addBallsTo();
+            if (!editorJustLaunched) FXEditorButtons.updateAllButtons();
+            if (!editorJustLaunched) FXMenu.updateAllButtons();
             return true;
         }
     }

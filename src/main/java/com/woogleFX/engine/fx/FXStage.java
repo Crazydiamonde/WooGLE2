@@ -35,14 +35,6 @@ public class FXStage {
             logger.error("", e);
         }
 
-        // Event handlers
-        stage.addEventFilter(MouseEvent.MOUSE_PRESSED, MousePressedManager::eventMousePressed);
-        stage.addEventFilter(MouseEvent.MOUSE_RELEASED, MouseReleasedManager::eventMouseReleased);
-        stage.addEventFilter(MouseEvent.MOUSE_DRAGGED, MouseDraggedManager::eventMouseDragged);
-        stage.addEventFilter(MouseEvent.MOUSE_MOVED, MouseMovedManager::eventMouseMoved);
-        stage.addEventFilter(KeyEvent.KEY_PRESSED, KeyPressedManager::keyPressed);
-        stage.addEventFilter(ScrollEvent.SCROLL, MouseWheelMovedManager::mouseWheelMoved);
-
         stage.setScene(FXScene.getScene());
 
         stage.setOnCloseRequest(windowEvent -> {
