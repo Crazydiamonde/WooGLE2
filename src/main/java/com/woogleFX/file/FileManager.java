@@ -304,6 +304,29 @@ public class FileManager {
     }
 
 
+    public static ArrayList<EditorObject> openMaterials(GameVersion version) throws ParserConfigurationException, SAXException, IOException {
+
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+
+        ArrayList<EditorObject> objects = new ArrayList<>();
+        ArrayList<EditorObject> resources = new ArrayList<>();
+
+        BallFileOpener defaultHandler = new BallFileOpener(objects, resources, version);
+        BallFileOpener.mode = 0;
+        if (version == GameVersion.OLD && !oldWOGdir.isEmpty()) {
+            File ballFile = new File(oldWOGdir + "\\properties\\materials.xml.bin");
+            byte[] bytes = AESBinFormat.decodeFile(ballFile);
+            String stringBytes = bytesToString(bytes);
+            saxParser.parse(new InputSource(new StringReader(stringBytes)), defaultHandler);
+        } else if (version == GameVersion.NEW && !newWOGdir.isEmpty()) {
+            File ballFile2 = new File(newWOGdir + "\\properties\\materials.xml");
+            saxParser.parse(ballFile2, defaultHandler);
+        }
+        return objects;
+    }
+
+
     public static void saveProperties() throws IOException {
         StringBuilder export = new StringBuilder("<properties>\n\n<oldWOG filepath=\"" + oldWOGdir + "\"/>\n<newWOG filepath=\"" + newWOGdir + "\"/>\n<gooBallPalette>\n");
         for (int i = 0; i < PaletteManager.getPaletteBalls().size(); i++) {

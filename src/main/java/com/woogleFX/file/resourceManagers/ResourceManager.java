@@ -5,6 +5,7 @@ import com.woogleFX.editorObjects._Font;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.fileImport.FontReader;
 import com.woogleFX.structures.GameVersion;
+import com.worldOfGoo.resrc.Material;
 import com.worldOfGoo.resrc.Font;
 import com.worldOfGoo.resrc.ResrcImage;
 import com.worldOfGoo.resrc.Sound;
@@ -23,6 +24,7 @@ public class ResourceManager {
         else if (resource instanceof Sound sound) return sound.getAdjustedID().equals(id);
         else if (resource instanceof Font font) return font.getAdjustedID().equals(id);
         else if (resource instanceof TextString text) return text.getAttribute("id").stringValue().equals(id);
+        else if (resource instanceof Material mat) return mat.getAttribute("id").stringValue().equals(id);
         else return false;
 
     }
@@ -74,6 +76,14 @@ public class ResourceManager {
             return font.getFont();
         }
         else throw new FileNotFoundException("Invalid text resource ID: \"" + id + "\" (version " + version + ")");
+    }
+
+
+    /** Returns a material corresponding with the given ID. */
+    public static Material getMaterial(ArrayList<EditorObject> resources, String id, GameVersion version) throws FileNotFoundException {
+        EditorObject resource = findResource(resources, id, version);
+        if (resource instanceof Material material) return material;
+        else throw new FileNotFoundException("Invalid material resource ID: \"" + id + "\" (version " + version + ")");
     }
 
 

@@ -5,6 +5,7 @@ import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.fileImport.AnimationReader;
 import com.woogleFX.structures.GameVersion;
+import com.worldOfGoo.resrc.Material;
 import com.worldOfGoo.particle._Particle;
 import com.worldOfGoo.resrc.Font;
 import com.worldOfGoo.resrc.ResrcImage;
@@ -49,6 +50,7 @@ public class GlobalResourceManager {
             openParticles(GameVersion.OLD);
             openAnimations(GameVersion.OLD);
             openText(GameVersion.OLD);
+            openMaterials(GameVersion.OLD);
         }
 
         newResources.clear();
@@ -57,6 +59,7 @@ public class GlobalResourceManager {
             openParticles(GameVersion.NEW);
             openAnimations(GameVersion.NEW);
             openText(GameVersion.NEW);
+            openMaterials(GameVersion.NEW);
         }
 
         // Load particle names, remove duplicates, and sort them alphabetically
@@ -179,6 +182,27 @@ public class GlobalResourceManager {
         for (EditorObject text : textList) {
             if (text instanceof TextString) {
                 toAddTo.add(text);
+            }
+        }
+
+    }
+
+
+    private static void openMaterials(GameVersion version) {
+
+        ArrayList<EditorObject> toAddTo = version == GameVersion.OLD ? oldResources : newResources;
+
+        ArrayList<EditorObject> materialList;
+        try {
+            materialList = FileManager.openMaterials(version);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Alarms.errorMessage(e);
+            return;
+        }
+
+        for (EditorObject material : materialList) {
+            if (material instanceof Material) {
+                toAddTo.add(material);
             }
         }
 

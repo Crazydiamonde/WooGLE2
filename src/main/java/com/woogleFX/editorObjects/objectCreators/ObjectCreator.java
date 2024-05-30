@@ -86,6 +86,8 @@ public class ObjectCreator {
             case "linearforcefield" -> new Linearforcefield(parent, version);
             case "loopsound" -> new Loopsound(parent, version);
             case "marker" -> new Marker(parent, version);
+            case "materials" -> new Materials(parent, version);
+            case "material" -> new Material(parent, version);
             case "motor" -> new Motor(parent, version);
             case "music" -> new Music(parent, version);
             case "part" -> new Part(parent, version);

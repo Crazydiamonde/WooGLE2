@@ -1,9 +1,12 @@
 package com.woogleFX.editorObjects;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
+import com.woogleFX.file.BaseGameResources;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.resourceManagers.AnimationManager;
+import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.file.resourceManagers.ParticleManager;
 import com.woogleFX.structures.simpleStructures.Color;
@@ -228,18 +231,25 @@ public enum InputField {
             }
 
             case MATERIAL -> {
-                // TODO: load materials from materials.xml
-                return true;
+                try {
+                    ResourceManager.getMaterial(null, potential, object.getVersion());
+                    return true;
+                } catch (FileNotFoundException ignored) {
+                    return false;
+                }
             }
 
             case TAG -> {
-                // TODO: Check this against all tags
-                return true;
+                return BaseGameResources.TAGS.contains(potential);
             }
 
             case FONT -> {
-                // TODO: Check this against all fonts
-                return true;
+                try {
+                    ResourceManager.getFont(null, potential, object.getVersion());
+                    return true;
+                } catch (FileNotFoundException ignored) {
+                    return false;
+                }
             }
 
             default -> {
