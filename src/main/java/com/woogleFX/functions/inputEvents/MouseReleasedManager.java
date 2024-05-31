@@ -50,18 +50,23 @@ public class MouseReleasedManager {
 
         // Record the changes made to the selected object.
         // Clear all possible redos if changes have been made.
-        if (level.getSelected() != null && level.getSelected() == SelectionManager.getOldSelected() && SelectionManager.getOldAttributes() != null) {
-
-            EditorObject selected = level.getSelected();
+        if (level.getSelected() == SelectionManager.getOldSelected() && SelectionManager.getOldAttributes() != null) {
 
             ArrayList<AttributeChangeAction> attributeChangeActions = new ArrayList<>();
 
-            for (EditorAttribute attribute : selected.getAttributes()) {
-                for (EditorAttribute oldAttribute : SelectionManager.getOldAttributes()) {
-                    if (attribute.getName().equals(oldAttribute.getName()) && !attribute.stringValue().equals(oldAttribute.stringValue())) {
-                        attributeChangeActions.add(new AttributeChangeAction(attribute, oldAttribute.stringValue(), attribute.stringValue()));
+            for (int i = 0; i < level.getSelected().length; i++) {
+
+                EditorObject selected = level.getSelected()[i];
+                EditorAttribute[] oldAttributes = SelectionManager.getOldAttributes()[i];
+
+                for (EditorAttribute attribute : selected.getAttributes()) {
+                    for (EditorAttribute oldAttribute : oldAttributes) {
+                        if (attribute.getName().equals(oldAttribute.getName()) && !attribute.stringValue().equals(oldAttribute.stringValue())) {
+                            attributeChangeActions.add(new AttributeChangeAction(attribute, oldAttribute.stringValue(), attribute.stringValue()));
+                        }
                     }
                 }
+
             }
 
             if (!attributeChangeActions.isEmpty()) UndoManager.registerChange(attributeChangeActions.toArray(new AttributeChangeAction[0]));

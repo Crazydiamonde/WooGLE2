@@ -62,7 +62,7 @@ public class UndoManager {
         for (int i = 0; i < changes.length; i++) inverted[i] = changes[i].getInverse();
         backwardActions.add(inverted);
 
-        for (UserAction userAction : changes) userAction.getInverse().execute();
+        for (int i = changes.length - 1; i >= 0; i--) changes[i].getInverse().execute();
 
         if (level.undoActions.size() == level.getLastSavedUndoPosition()) {
             level.setEditingStatus(LevelTab.NO_UNSAVED_CHANGES, true);

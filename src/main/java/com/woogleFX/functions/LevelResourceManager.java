@@ -78,7 +78,7 @@ public class LevelResourceManager {
 
         level.getText().add(newTextObject);
 
-        SelectionManager.setSelected(newTextObject);
+        level.setSelected(new EditorObject[]{ newTextObject });
 
         int childIndex = level.getTextObject().getChildren().indexOf(newTextObject);
         UndoManager.registerChange(new ObjectCreationAction(newTextObject, childIndex));

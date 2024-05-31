@@ -1,5 +1,6 @@
 package com.woogleFX.functions;
 
+import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.engine.Renderer;
 import com.woogleFX.engine.SelectionManager;
@@ -55,7 +56,10 @@ public class LevelManager {
 
         level.getVisibilitySettings().updateButtons();
 
-        FXPropertiesView.changeTableView(level.getSelected());
+        // TODO: implement multiple-object handling in the properties view. good luck
+        if (level.getSelected().length == 0) FXPropertiesView.changeTableView(new EditorObject[]{});
+        else FXPropertiesView.changeTableView(level.getSelected());
+
         SelectionManager.goToSelectedInHierarchy();
 
     }

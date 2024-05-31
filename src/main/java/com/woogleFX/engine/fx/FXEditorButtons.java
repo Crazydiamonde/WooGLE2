@@ -733,10 +733,10 @@ public class FXEditorButtons {
 
         buttonUndo.setDisable(!inLevel || LevelManager.getLevel().undoActions.isEmpty());
         buttonRedo.setDisable(!inLevel || LevelManager.getLevel().redoActions.isEmpty());
-        buttonCut.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
-        buttonCopy.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
+        buttonCut.setDisable(!inLevel || LevelManager.getLevel().getSelected().length == 0);
+        buttonCopy.setDisable(!inLevel || LevelManager.getLevel().getSelected().length == 0);
         buttonPaste.setDisable(!inLevel);
-        buttonDelete.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
+        buttonDelete.setDisable(!inLevel || LevelManager.getLevel().getSelected().length == 0);
 
         boolean hasOld = !FileManager.getGameDir(GameVersion.OLD).isEmpty();
         buttonNewOld.setDisable(!hasOld);

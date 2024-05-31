@@ -130,7 +130,13 @@ public class Renderer {
 
             graphicsContext.save();
 
-            boolean selected = SelectionManager.getSelected() != null && List.of(SelectionManager.getSelected().getObjectComponents()).contains(objectComponent);
+            boolean selected = false;
+            for (EditorObject selectedObject : worldLevel.getSelected()) {
+                if (List.of(selectedObject.getObjectComponents()).contains(objectComponent)) {
+                    selected = true;
+                    break;
+                }
+            }
 
             objectComponent.draw(graphicsContext, selected);
 

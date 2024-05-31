@@ -90,7 +90,7 @@ public class Alarms {
                     FXLevelSelectPane.getLevelSelectPane().setMinHeight(0);
                     FXLevelSelectPane.getLevelSelectPane().setMaxHeight(0);
                     FXHierarchy.getHierarchy().setRoot(null);
-                    FXPropertiesView.changeTableView(null);
+                    FXPropertiesView.changeTableView(new EditorObject[]{});
                 }
                 Platform.runLater(() -> tab.getTabPane().getTabs().remove(tab));
             } else if (buttonType.equals(ButtonType.CANCEL)) {
@@ -111,7 +111,7 @@ public class Alarms {
                     FXLevelSelectPane.getLevelSelectPane().setMinHeight(0);
                     FXLevelSelectPane.getLevelSelectPane().setMaxHeight(0);
                     FXHierarchy.getHierarchy().setRoot(null);
-                    FXPropertiesView.changeTableView(null);
+                    FXPropertiesView.changeTableView(new EditorObject[]{});
                 }
                 Platform.runLater(() -> {
                     tab.getTabPane().getTabs().remove(tab);

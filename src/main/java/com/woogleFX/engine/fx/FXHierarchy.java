@@ -1,6 +1,5 @@
 package com.woogleFX.engine.fx;
 
-import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.functions.HierarchyManager;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
@@ -60,22 +59,29 @@ public class FXHierarchy {
         // If a cell is clicked from the hierarchy, update the selected object and
         // properties view.
         hierarchy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) return;
-            else if (newValue.getValue() != null) {
-                EditorObject absoluteParent = newValue.getValue();
-                while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
-                if (absoluteParent instanceof Scene) hierarchySwitcherButtons.getSelectionModel().select(0);
-                else if (absoluteParent instanceof Level) hierarchySwitcherButtons.getSelectionModel().select(1);
-                else if (absoluteParent instanceof ResourceManifest) hierarchySwitcherButtons.getSelectionModel().select(2);
-                else if (absoluteParent instanceof TextStrings) hierarchySwitcherButtons.getSelectionModel().select(3);
-                else if (absoluteParent instanceof Addin) hierarchySwitcherButtons.getSelectionModel().select(4);
-            }
-            SelectionManager.setSelected(newValue.getValue());
-            FXPropertiesView.changeTableView(newValue.getValue());
+
+            if (newValue == null || newValue.getValue() == null) return;
+
+            EditorObject absoluteParent = newValue.getValue();
+            while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+            if (absoluteParent instanceof Scene) hierarchySwitcherButtons.getSelectionModel().select(0);
+            else if (absoluteParent instanceof Level) hierarchySwitcherButtons.getSelectionModel().select(1);
+            else if (absoluteParent instanceof ResourceManifest) hierarchySwitcherButtons.getSelectionModel().select(2);
+            else if (absoluteParent instanceof TextStrings) hierarchySwitcherButtons.getSelectionModel().select(3);
+            else if (absoluteParent instanceof Addin) hierarchySwitcherButtons.getSelectionModel().select(4);
+
+            EditorObject[] selectedNow = new EditorObject[hierarchy.getSelectionModel().getSelectedItems().size()];
+            for (int i = 0; i < selectedNow.length; i++) selectedNow[i] = hierarchy.getSelectionModel().getSelectedItems().get(i).getValue();
+            LevelManager.getLevel().setSelected(selectedNow);
+
+            FXPropertiesView.changeTableView(selectedNow);
+
         });
 
         // Make the rows small.
         hierarchy.setFixedCellSize(18);
+
+        hierarchy.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         hierarchy.setRowFactory(treeTableView -> HierarchyManager.createRow(hierarchy));
 

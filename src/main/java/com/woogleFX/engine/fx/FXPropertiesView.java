@@ -25,6 +25,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class FXPropertiesView {
 
@@ -104,7 +105,7 @@ public class FXPropertiesView {
 
                     if (getTableRow().getTreeItem() != null) {
                         EditorAttribute editorAttribute = getTableRow().getTreeItem().getValue();
-                        if (InputField.verify(SelectionManager.getSelected(), editorAttribute.getType(), editorAttribute.stringValue())) {
+                        if (InputField.verify(editorAttribute.getObject(), editorAttribute.getType(), editorAttribute.stringValue())) {
                             setStyle("-fx-text-fill: #000000ff");
                         } else {
                             setStyle("-fx-text-fill: #ff0000ff");
@@ -178,7 +179,8 @@ public class FXPropertiesView {
                     @Override
                     public void commitEdit(String s) {
                         InputField type = getTableRow().getItem().getType();
-                        super.commitEdit(InputField.verify(SelectionManager.getSelected(), type, s) ? s : before);
+                        EditorObject object = getTableRow().getItem().getObject();
+                        super.commitEdit(InputField.verify(object, type, s) ? s : before);
                     }
 
 
@@ -201,12 +203,12 @@ public class FXPropertiesView {
             // Change the actual attribute to reflect the edit.
             EditorAttribute attribute = propertiesView.getTreeItem(e.getTreeTablePosition().getRow()).getValue();
             String oldValue = attribute.stringValue();
-            if (InputField.verify(SelectionManager.getSelected(), attribute.getType(), e.getNewValue())) {
+            if (InputField.verify(attribute.getObject(), attribute.getType(), e.getNewValue())) {
                 attribute.setValue(e.getNewValue());
             }
 
             // If the edit was actually valid:
-            if (e.getNewValue().isEmpty() || InputField.verify(SelectionManager.getSelected(), attribute.getType(), e.getNewValue())) {
+            if (e.getNewValue().isEmpty() || InputField.verify(attribute.getObject(), attribute.getType(), e.getNewValue())) {
 
                 // Push an attribute change to the undo buffer.
                 UndoManager.registerChange(new AttributeChangeAction(attribute, oldValue,
@@ -244,9 +246,14 @@ public class FXPropertiesView {
     }
 
 
-    public static TreeItem<EditorAttribute> makePropertiesViewTreeItem(EditorObject object) {
+    public static TreeItem<EditorAttribute> makePropertiesViewTreeItem(EditorObject[] selectionList) {
 
-        if (object == null) return null;
+        if (selectionList.length == 0) return null;
+
+        EditorObject object = selectionList[0];
+
+        // If some of the objects are of different types, don't fill out the properties view. That would just be weird.
+        if (!Arrays.stream(selectionList).allMatch(e -> e.getType().equals(object.getType()))) return null;
 
         // Create the root tree item.
         TreeItem<EditorAttribute> treeItem = new TreeItem<>(EditorAttribute.NULL);
@@ -263,7 +270,7 @@ public class FXPropertiesView {
                 // If no such attribute exists, this attribute is instead the name of a category
                 // of attributes.
                 // In this case, create a dummy attribute with no value.
-                attribute = new EditorAttribute(metaEditorAttribute.getName(), null);
+                attribute = new EditorAttribute(metaEditorAttribute.getName(), null, object);
             }
             TreeItem<EditorAttribute> thisAttribute = new TreeItem<>(attribute);
 
@@ -413,8 +420,8 @@ public class FXPropertiesView {
     }
 
 
-    public static void changeTableView(EditorObject obj) {
-        propertiesView.setRoot(makePropertiesViewTreeItem(obj));
+    public static void changeTableView(EditorObject[] selectionList) {
+        propertiesView.setRoot(makePropertiesViewTreeItem(selectionList));
     }
 
 

@@ -30,15 +30,6 @@ public class SelectionManager {
     }
 
 
-    public static EditorObject getSelected() {
-        return LevelManager.getLevel().getSelected();
-    }
-    public static void setSelected(EditorObject _selected) {
-        LevelManager.getLevel().setSelected(_selected);
-        goToSelectedInHierarchy();
-    }
-
-
     private static double mouseX = 0;
     public static double getMouseX() {
         return mouseX;
@@ -57,20 +48,20 @@ public class SelectionManager {
     }
 
 
-    private static EditorAttribute[] oldAttributes;
-    public static EditorAttribute[] getOldAttributes() {
+    private static EditorAttribute[][] oldAttributes;
+    public static EditorAttribute[][] getOldAttributes() {
         return oldAttributes;
     }
-    public static void setOldAttributes(EditorAttribute[] _oldAttributes) {
+    public static void setOldAttributes(EditorAttribute[][] _oldAttributes) {
         oldAttributes = _oldAttributes;
     }
 
 
-    private static EditorObject oldSelected;
-    public static EditorObject getOldSelected() {
+    private static EditorObject[] oldSelected;
+    public static EditorObject[] getOldSelected() {
         return oldSelected;
     }
-    public static void setOldSelected(EditorObject oldSelected) {
+    public static void setOldSelected(EditorObject[] oldSelected) {
         SelectionManager.oldSelected = oldSelected;
     }
 
@@ -120,8 +111,8 @@ public class SelectionManager {
 
     public static void goToSelectedInHierarchy() {
 
-        EditorObject selected = LevelManager.getLevel().getSelected();
-        if (selected == null) {
+        EditorObject[] selectedArray = LevelManager.getLevel().getSelected();
+        if (selectedArray.length == 0 || selectedArray[0] == null) {
 
             SplitPane splitPane = FXContainers.getSplitPane();
             double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth() - 6;
@@ -132,20 +123,22 @@ public class SelectionManager {
             return;
         }
 
-        EditorObject absoluteParent = LevelManager.getLevel().getSelected();
+        EditorObject selected = selectedArray[0];
+
+        EditorObject absoluteParent = selected;
         while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
 
-        if (LevelManager.getLevel().getSelected() != null && LevelManager.getLevel().getSelected().getParent() != null) {
+        if (selected.getParent() != null) {
 
             FXHierarchy.getHierarchy().setRoot(absoluteParent.getTreeItem());
             FXHierarchy.getHierarchy().setShowRoot(true);
 
-            switch (LevelManager.getLevel().getSelected().getClass().getPackage().getName()) {
-                case "com.WorldOfGoo.Scene" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(0);
-                case "com.WorldOfGoo.Level" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(1);
-                case "com.WorldOfGoo.Resrc" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(2);
-                case "com.WorldOfGoo.Text" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(3);
-                case "com.WorldOfGoo.Addin" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(4);
+            switch (absoluteParent.getType()) {
+                case "scene" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(0);
+                case "level" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(1);
+                case "resourcemanifest" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(2);
+                case "strings" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(3);
+                case "addin" -> FXHierarchy.getHierarchySwitcherButtons().getSelectionModel().select(4);
             }
         }
     }

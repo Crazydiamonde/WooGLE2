@@ -2,10 +2,12 @@ package com.woogleFX.structures;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.ObjectUtil;
+import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.engine.fx.FXContainers;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.functions.LevelManager;
@@ -133,15 +135,19 @@ public class WorldLevel {
     }
 
 
-    private EditorObject selected = null;
-    public EditorObject getSelected() {
+    private EditorObject[] selected = new EditorObject[]{};
+    public EditorObject[] getSelected() {
         return selected;
     }
-    public void setSelected(EditorObject selected) {
+    public void setSelected(EditorObject[] selected) {
         this.selected = selected;
+        SelectionManager.goToSelectedInHierarchy();
+    }
+    public void clearSelection() {
+        selected = new EditorObject[]{};
     }
     public boolean isSelected(EditorObject editorObject) {
-        return editorObject == selected;
+        return Arrays.stream(selected).anyMatch(e -> e == editorObject);
     }
 
 

@@ -171,7 +171,7 @@ public class LevelLoader {
         FXHierarchy.getHierarchy().setRoot(level.getSceneObject().getTreeItem());
 
         // Add items from the Scene to it
-        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
+        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(new EditorObject[]{ level.getSceneObject() }));
 
         LevelUpdater.saveLevel(level);
 
@@ -231,7 +231,7 @@ public class LevelLoader {
         FXHierarchy.getHierarchy().setRoot(level.getSceneObject().getTreeItem());
 
         // Add items from the Scene to it
-        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
+        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(new EditorObject[]{ level.getSceneObject() }));
 
         if (!failedResources.isEmpty()) {
             StringBuilder fullError = new StringBuilder();
@@ -298,7 +298,7 @@ public class LevelLoader {
         FXHierarchy.getHierarchy().setRoot(level.getSceneObject().getTreeItem());
 
         // Add items from the Scene to it
-        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(level.getSceneObject()));
+        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(new EditorObject[]{ level.getSceneObject() }));
 
 
         LevelUpdater.saveLevel(level);

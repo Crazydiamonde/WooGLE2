@@ -6,9 +6,11 @@ import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.structures.WorldLevel;
 
+import java.util.ArrayList;
+
 public class ClipboardHandler {
 
-    public static EditorObject importFromClipboardString(String clipboard) {
+    public static EditorObject[] importFromClipboardString(String clipboard) {
 
         //WOGEditor:circle<id=wheel;x=2;y=1024.9834;radius=120;material=machine;tag=mostlydeadly>
 
@@ -17,6 +19,13 @@ public class ClipboardHandler {
         StringBuilder currentWord = new StringBuilder();
         String attributeName = "";
         boolean settingAttribute = false;
+
+        EditorObject selected;
+        EditorObject[] selectedList = LevelManager.getLevel().getSelected();
+        if (selectedList.length == 1) selected = selectedList[0];
+        else selected = null;
+
+        ArrayList<EditorObject> selectionBuilder = new ArrayList<>();
 
         for (int i = 0; i < clipboard.length(); i++){
             char part = clipboard.charAt(i);
@@ -31,6 +40,7 @@ public class ClipboardHandler {
                 } else if (part == '>') {
                     settingAttribute = false;
                     object.setAttribute(attributeName, currentWord.toString());
+                    selectionBuilder.add(object);
                     currentWord = new StringBuilder();
                 } else {
                     currentWord.append(part);
@@ -45,11 +55,11 @@ public class ClipboardHandler {
 
                     WorldLevel level = LevelManager.getLevel();
 
-                    boolean okayToBeChild = level.getSelected() != null && level.getSelected().getParent() != null;
+                    boolean okayToBeChild = selected != null && selected.getParent() != null;
 
                     if (okayToBeChild) {
                         okayToBeChild = false;
-                        for (String possibleChild : level.getSelected().getParent().getPossibleChildren()) {
+                        for (String possibleChild : selected.getParent().getPossibleChildren()) {
                             if (possibleChild.contentEquals(currentWord)) {
                                 okayToBeChild = true;
                                 break;
@@ -57,7 +67,7 @@ public class ClipboardHandler {
                         }
                     }
 
-                    EditorObject parent = okayToBeChild ? level.getSelected().getParent() : null;
+                    EditorObject parent = okayToBeChild ? selected.getParent() : null;
                     object = ObjectCreator.create(currentWord.toString(), parent, level.getVersion());
                     currentWord = new StringBuilder();
                     settingAttribute = true;
@@ -67,29 +77,33 @@ public class ClipboardHandler {
             }
         }
 
-        return object;
+        return selectionBuilder.toArray(new EditorObject[0]);
 
     }
 
-    public static String exportToClipBoardString(EditorObject object) {
+    public static String exportToClipBoardString(EditorObject[] selectedList) {
 
         StringBuilder clipboard = new StringBuilder("WOGEditor:");
 
-        clipboard.append(object.getType());
+        for (EditorObject object : selectedList) {
 
-        clipboard.append("<");
+            clipboard.append(object.getType());
 
-        for (int i = 0; i < object.getAttributes().length; i++){
-            EditorAttribute attribute = object.getAttributes()[i];
-            if (attribute.stringValue() != null && !attribute.stringValue().equals(attribute.getDefaultValue()) && !attribute.stringValue().isEmpty()){
-                clipboard.append(attribute.getName()).append("=").append(attribute.stringValue());
-                clipboard.append(";");
+            clipboard.append("<");
+
+            for (int i = 0; i < object.getAttributes().length; i++) {
+                EditorAttribute attribute = object.getAttributes()[i];
+                if (attribute.stringValue() != null && !attribute.stringValue().equals(attribute.getDefaultValue()) && !attribute.stringValue().isEmpty()) {
+                    clipboard.append(attribute.getName()).append("=").append(attribute.stringValue());
+                    clipboard.append(";");
+                }
             }
+
+            clipboard.deleteCharAt(clipboard.length() - 1);
+
+            clipboard.append(">");
+
         }
-
-        clipboard.deleteCharAt(clipboard.length() - 1);
-
-        clipboard.append(">");
 
         return clipboard.toString();
 

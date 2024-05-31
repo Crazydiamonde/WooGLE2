@@ -36,7 +36,7 @@ public class FXLevelSelectPane {
                     // If all tabs are closed, clear the side pane
                     FXHierarchy.getHierarchy().setRoot(null);
                     // Clear the properties pane too
-                    FXPropertiesView.changeTableView(null);
+                    FXPropertiesView.changeTableView(new EditorObject[]{});
                 }
                 tab.getTabPane().getTabs().remove(tab);
             }

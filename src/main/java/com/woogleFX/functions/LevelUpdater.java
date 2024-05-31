@@ -209,7 +209,7 @@ public class LevelUpdater {
                 // If all tabs are closed, clear the side pane
                 FXHierarchy.getHierarchy().setRoot(null);
                 // Clear the properties pane too
-                FXPropertiesView.changeTableView(null);
+                FXPropertiesView.changeTableView(new EditorObject[]{});
             }
             levelSelectPane.getTabs().remove(levelSelectPane.getSelectionModel().getSelectedItem());
         } catch (Exception e) {

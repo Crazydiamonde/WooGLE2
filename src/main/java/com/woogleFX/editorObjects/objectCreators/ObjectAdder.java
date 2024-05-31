@@ -141,8 +141,9 @@ public class ObjectAdder {
 
         FXHierarchy.getHierarchy().getSelectionModel().select(obj.getTreeItem());
         obj.update();
-        SelectionManager.setSelected(obj);
-        FXPropertiesView.changeTableView(LevelManager.getLevel().getSelected());
+        EditorObject[] selected = new EditorObject[]{ obj };
+        LevelManager.getLevel().setSelected(selected);
+        FXPropertiesView.changeTableView(selected);
 
         UndoManager.registerChange(new ObjectCreationAction(obj, obj.getParent().getChildren().indexOf(obj)));
     }

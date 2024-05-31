@@ -278,10 +278,10 @@ public class FXMenu {
 
         undoItem.setDisable(!inLevel || LevelManager.getLevel().undoActions.isEmpty());
         redoItem.setDisable(!inLevel || LevelManager.getLevel().redoActions.isEmpty());
-        cutItem.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
-        copyItem.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
+        cutItem.setDisable(!inLevel || LevelManager.getLevel().getSelected().length == 0);
+        copyItem.setDisable(!inLevel || LevelManager.getLevel().getSelected().length == 0);
         pasteItem.setDisable(!inLevel);
-        deleteItem.setDisable(!inLevel || LevelManager.getLevel().getSelected() == null);
+        deleteItem.setDisable(!inLevel || LevelManager.getLevel().getSelected().length == 0);
 
         for (MenuItem menuItem : resourcesMenu.getItems()) menuItem.setDisable(!inLevel);
 

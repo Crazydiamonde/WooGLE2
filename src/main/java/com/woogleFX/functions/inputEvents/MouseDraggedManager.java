@@ -25,7 +25,7 @@ public class MouseDraggedManager {
 
         SelectionManager.setMouseX(event.getX());
         SelectionManager.setMouseY(event.getY() - FXCanvas.getMouseYOffset());
-        if (level.getSelected() != null && SelectionManager.getDragSettings() != null) {
+        if (level.getSelected().length != 0 && SelectionManager.getDragSettings() != null) {
 
             // Calculate game-relative mouse coordinates.
             double gameRelativeMouseX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();

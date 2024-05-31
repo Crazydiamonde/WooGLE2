@@ -228,14 +228,8 @@ public class HierarchyManager {
         TreeTableRow<EditorObject> row = new TreeTableRow<>();
 
         row.setOnMousePressed(event -> {
-
             if (row.getTreeItem() == null) return;
-
-            SelectionManager.setSelected(row.getTreeItem().getValue());
-            FXPropertiesView.changeTableView(row.getTreeItem().getValue());
-
             if (event.getButton().equals(MouseButton.SECONDARY)) row.setContextMenu(contextMenuForEditorObject(row.getTreeItem().getValue()));
-
         });
 
         row.setOnDragDetected(event -> {

@@ -3,16 +3,20 @@ package com.woogleFX.functions;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.fx.FXHierarchy;
 import com.woogleFX.engine.fx.FXPropertiesView;
-import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.functions.undoHandling.UndoManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.functions.undoHandling.userActions.ObjectDestructionAction;
+import com.woogleFX.functions.undoHandling.userActions.UserAction;
 import com.woogleFX.structures.WorldLevel;
 import com.worldOfGoo.level.BallInstance;
 import com.worldOfGoo.level.Level;
 import com.worldOfGoo.level.Strand;
 import com.worldOfGoo.level.Vertex;
 import com.worldOfGoo.scene.Scene;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ObjectManager {
 
@@ -32,7 +36,7 @@ public class ObjectManager {
             }
         }
 
-        EditorObject absoluteParent = LevelManager.getLevel().getSelected();
+        EditorObject absoluteParent = LevelManager.getLevel().getSelected().length == 0 ? null : LevelManager.getLevel().getSelected()[0];
         if (absoluteParent == null) absoluteParent = ObjectCreator.getDefaultParent(object.getType());
         else while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
 
@@ -108,27 +112,34 @@ public class ObjectManager {
 
     public static void delete(WorldLevel level) {
 
-        EditorObject selected = level.getSelected();
-        if (selected == null) return;
+        ArrayList<UserAction> objectDestructionActions = new ArrayList<>();
 
-        EditorObject parent = selected.getParent();
+        ArrayList<EditorObject> newSelectionBuilder = new ArrayList<>();
+        for (EditorObject selected : level.getSelected()) {
 
-        int row = parent.getChildren().indexOf(selected);
+            EditorObject parent = selected.getParent();
 
-        UndoManager.registerChange(new ObjectDestructionAction(selected, row));
+            int row = parent.getChildren().indexOf(selected);
 
-        deleteItem(level, selected, false);
+            objectDestructionActions.add(new ObjectDestructionAction(selected, row));
 
-        if (row == 0) {
-            selected = parent;
-        } else {
-            selected = parent.getChildren().get(row - 1);
+            deleteItem(level, selected, false);
+
+            EditorObject parentObject = (row == 0) ? parent : parent.getChildren().get(row - 1);
+            if (Arrays.stream(level.getSelected()).noneMatch(e -> e == parentObject)) newSelectionBuilder.add(parentObject);
         }
 
-        SelectionManager.setSelected(selected);
-        FXPropertiesView.changeTableView(selected);
-        // hierarchy.getFocusModel().focus(row);
-        FXHierarchy.getHierarchy().getSelectionModel().select(selected.getTreeItem());
+        UndoManager.registerChange(objectDestructionActions.toArray(new UserAction[0]));
+
+        EditorObject[] newSelected = newSelectionBuilder.toArray(new EditorObject[0]);
+        level.setSelected(newSelected);
+        FXPropertiesView.changeTableView(newSelected);
+        if (newSelected.length != 0) {
+            int[] indices = new int[newSelected.length - 1];
+            for (int i = 0; i < newSelected.length - 1; i++)
+                indices[i] = FXHierarchy.getHierarchy().getRow(newSelected[i + 1].getTreeItem());
+            FXHierarchy.getHierarchy().getSelectionModel().selectIndices(FXHierarchy.getHierarchy().getRow(newSelected[0].getTreeItem()), indices);
+        } else FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
         FXHierarchy.getHierarchy().refresh();
 
     }

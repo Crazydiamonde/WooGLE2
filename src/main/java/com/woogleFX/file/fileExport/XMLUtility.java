@@ -57,7 +57,7 @@ public class XMLUtility {
                 if (!breakValue.isEmpty()) {
                     breakValue = "break=" + breakValue;
                     if (!attribute.stringValue().isEmpty()) breakValue = "," + breakValue;
-                    EditorAttribute secretTagAttribute = new EditorAttribute("tag", InputField.TAG);
+                    EditorAttribute secretTagAttribute = new EditorAttribute("tag", InputField.TAG, object);
                     secretTagAttribute.setValue(attribute.stringValue() + breakValue);
                     addAttributeToExport(exportBuilder, secretTagAttribute);
                     continue;

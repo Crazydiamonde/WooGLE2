@@ -56,7 +56,7 @@ public class MousePressedManager {
         WorldLevel level = LevelManager.getLevel();
         if (level == null) return;
 
-        if (level.getSelected() != null) ifSelectedAlreadyExists(level);
+        if (level.getSelected().length != 0) ifSelectedAlreadyExists(level);
 
         if (event.getY() < FXCanvas.getMouseYOffset()) return;
 
@@ -104,30 +104,45 @@ public class MousePressedManager {
 
         DragSettings dragSettings = tryToSelectSomething(event, level);
         if (dragSettings == DragSettings.NULL) {
-            SelectionManager.setSelected(null);
+            level.clearSelection();
             return;
         }
+        for (EditorObject selected : level.getSelected())
 
-        if (level.getSelected() != null &&
-                level.getSelected().containsObjectPosition(dragSettings.getObjectComponent())) {
+            if (selected.containsObjectPosition(dragSettings.getObjectComponent())) {
 
-            if (!dragSettings.getObjectComponent().isDraggable()) return;
+                if (!dragSettings.getObjectComponent().isDraggable()) return;
 
-            if (dragSettings.getType() == DragSettings.MOVE) FXScene.getScene().setCursor(Cursor.MOVE);
-            SelectionManager.setDragSettings(dragSettings);
+                if (dragSettings.getType() == DragSettings.MOVE) FXScene.getScene().setCursor(Cursor.MOVE);
+                SelectionManager.setDragSettings(dragSettings);
+                return;
 
-        } else {
-
-            EditorObject selected = getEditorObjectThatHasThis(dragSettings.getObjectComponent(), level);
-            if (selected == null) return;
-
-            SelectionManager.setSelected(selected);
-            FXPropertiesView.changeTableView(selected);
-            if (selected.getParent() != null) selected.getParent().getTreeItem().setExpanded(true);
-            FXHierarchy.getHierarchy().getSelectionModel().select(selected.getTreeItem());
-            FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()));
 
         }
+
+        EditorObject selectedObject = getEditorObjectThatHasThis(dragSettings.getObjectComponent(), level);
+        if (selectedObject == null) return;
+
+        EditorObject[] selectedList;
+        if (event.isControlDown()) {
+            selectedList = new EditorObject[level.getSelected().length + 1];
+            System.arraycopy(level.getSelected(), 0, selectedList, 0, level.getSelected().length);
+            selectedList[level.getSelected().length] = selectedObject;
+        } else {
+            selectedList = new EditorObject[]{selectedObject};
+        }
+
+        level.setSelected(selectedList);
+        FXPropertiesView.changeTableView(selectedList);
+        if (selectedObject.getParent() != null) selectedObject.getParent().getTreeItem().setExpanded(true);
+
+        int[] indices = new int[selectedList.length - 1];
+        for (int i = 0; i < indices.length; i++) indices[i] = FXHierarchy.getHierarchy().getRow(selectedList[i + 1].getTreeItem());
+
+        FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
+        FXHierarchy.getHierarchy().getSelectionModel().selectIndices(FXHierarchy.getHierarchy().getRow(selectedList[0].getTreeItem()), indices);
+        FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(selectedObject.getTreeItem()));
+
 
     }
 
@@ -153,20 +168,30 @@ public class MousePressedManager {
 
     private static void updateOldAttributes(WorldLevel level) {
 
-        ArrayList<EditorAttribute> output = new ArrayList<>();
+        EditorAttribute[][] oldAttributes = new EditorAttribute[level.getSelected().length][];
 
-        for (EditorAttribute attribute : level.getSelected().getAttributes()) {
+        for (int i = 0; i < level.getSelected().length; i++) {
 
-            EditorAttribute newAttribute = new EditorAttribute(attribute.getName(), attribute.getType());
+            ArrayList<EditorAttribute> output = new ArrayList<>();
 
-            if (!attribute.getDefaultValue().isEmpty()) newAttribute.setDefaultValue(attribute.getDefaultValue());
-            newAttribute.setValue(attribute.stringValue());
-            if (attribute.getRequiredInFile()) newAttribute.assertRequired();
-            output.add(newAttribute);
+            EditorObject selected = level.getSelected()[i];
+
+            for (EditorAttribute attribute : selected.getAttributes()) {
+
+                EditorAttribute newAttribute = new EditorAttribute(attribute.getName(), attribute.getType(), selected);
+
+                if (!attribute.getDefaultValue().isEmpty()) newAttribute.setDefaultValue(attribute.getDefaultValue());
+                newAttribute.setValue(attribute.stringValue());
+                if (attribute.getRequiredInFile()) newAttribute.assertRequired();
+                output.add(newAttribute);
+
+            }
+
+            oldAttributes[i] = output.toArray(new EditorAttribute[0]);
 
         }
 
-        SelectionManager.setOldAttributes(output.toArray(new EditorAttribute[0]));
+        SelectionManager.setOldAttributes(oldAttributes);
         SelectionManager.setOldSelected(level.getSelected());
 
     }
@@ -177,8 +202,8 @@ public class MousePressedManager {
         double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
-        EditorObject selected = level.getSelected();
-        if (selected != null) for (ObjectComponent objectComponent : selected.getObjectComponents()) {
+        EditorObject[] selectedList = level.getSelected();
+        for (EditorObject selected : selectedList) for (ObjectComponent objectComponent : selected.getObjectComponents()) {
             if (!objectComponent.isVisible()) continue;
             if (!objectComponent.isSelectable()) continue;
             DragSettings dragSettings = objectComponent.mouseIntersectingCorners(mouseX, mouseY);
