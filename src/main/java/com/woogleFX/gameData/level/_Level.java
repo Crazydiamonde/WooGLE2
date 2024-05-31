@@ -9,6 +9,7 @@ import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.engine.fx.FXContainers;
+import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.engine.LevelManager;
 import com.woogleFX.engine.undoHandling.userActions.UserAction;
@@ -143,6 +144,7 @@ public class _Level {
     }
     public void clearSelection() {
         selected = new EditorObject[]{};
+        FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
     }
     public boolean isSelected(EditorObject editorObject) {
         return Arrays.stream(selected).anyMatch(e -> e == editorObject);

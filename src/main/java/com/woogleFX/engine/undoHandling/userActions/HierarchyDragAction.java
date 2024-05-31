@@ -30,6 +30,8 @@ public class HierarchyDragAction extends UserAction {
     public void execute() {
         HierarchyManager.setOldDropIndex(fromPosition);
         HierarchyManager.handleDragDrop(FXHierarchy.getHierarchy(), toPosition);
+        FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
+        FXHierarchy.getHierarchy().getSelectionModel().select(FXHierarchy.getHierarchy().getTreeItem(toPosition));
     }
 
 }

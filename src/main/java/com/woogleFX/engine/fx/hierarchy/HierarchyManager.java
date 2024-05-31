@@ -285,7 +285,11 @@ public class HierarchyManager {
                 boolean completed = handleDragDrop(hierarchy, toIndex);
                 event.setDropCompleted(event.getDragboard().hasString() && completed);
 
-                if (completed) UndoManager.registerChange(new HierarchyDragAction(FXHierarchy.getHierarchy().getTreeItem(oldDropIndex).getValue(), oldDropIndex, toIndex));
+                if (completed) {
+                    hierarchy.getSelectionModel().clearSelection();
+                    hierarchy.getSelectionModel().select(FXHierarchy.getHierarchy().getTreeItem(toIndex));
+                    UndoManager.registerChange(new HierarchyDragAction(FXHierarchy.getHierarchy().getTreeItem(oldDropIndex).getValue(), oldDropIndex, toIndex));
+                }
 
             }
             event.consume();
