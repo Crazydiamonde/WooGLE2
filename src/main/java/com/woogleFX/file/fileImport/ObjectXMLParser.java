@@ -18,11 +18,6 @@ import java.util.ArrayList;
 
 public class ObjectXMLParser extends DefaultHandler {
 
-    public static EditorObject parent = null;
-
-    private EditorObject currentObject = null;
-
-
     private final ArrayList<EditorObject> scene;
     private final ArrayList<EditorObject> level;
     private final ArrayList<EditorObject> resrc;
@@ -45,14 +40,19 @@ public class ObjectXMLParser extends DefaultHandler {
     }
 
 
+    private EditorObject currentObject = null;
+
+
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
         String zName = qName;
 
-        EditorObject absoluteParent2 = parent;
-        while (absoluteParent2 != null && absoluteParent2.getParent() != null) absoluteParent2 = absoluteParent2.getParent();
+        EditorObject parent = currentObject;
 
-        if (absoluteParent2 instanceof Addin) {
+        EditorObject absoluteParent = currentObject;
+        while (absoluteParent != null && absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
+
+        if (absoluteParent instanceof Addin) {
             if (parent instanceof AddinLevel && zName.equals("name")) {
                 zName = "Addin_wtf_" + zName;
             } else {
@@ -60,33 +60,38 @@ public class ObjectXMLParser extends DefaultHandler {
             }
         }
 
-        EditorObject obj = ObjectCreator.create(zName, parent, version);
+        currentObject = ObjectCreator.create(zName, parent, version);
 
         for (int i = 0; i < attributes.getLength(); i++) {
             String attributeName = attributes.getQName(i);
             String attributeValue = attributes.getValue(i);
-            obj.setAttribute(attributeName, attributeValue);
+
+            // handle break (set as tag in game but handled as attribute in editor)
+            if (attributeName.equals("tag")) {
+                String[] tags = attributeValue.split(",");
+                for (String tag : tags) if (tag.startsWith("break=")) {
+                    attributeValue = attributeValue.replace("," + tag, "").replace(tag, "");
+                    currentObject.setAttribute("break", Double.parseDouble(tag.substring(6)));
+                }
+            }
+
+            currentObject.setAttribute(attributeName, attributeValue);
         }
 
-        currentObject = obj;
+        if (absoluteParent == null) absoluteParent = currentObject;
 
-        EditorObject absoluteParent = obj;
-        while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
-
-        if (absoluteParent instanceof Scene)            scene.add(obj);
-        if (absoluteParent instanceof Level)            level.add(obj);
-        if (absoluteParent instanceof ResourceManifest) resrc.add(obj);
-        if (absoluteParent instanceof Addin)            addin.add(obj);
-        if (absoluteParent instanceof TextStrings)      text .add(obj);
-
-        parent = obj;
+        if (absoluteParent instanceof Scene)            scene.add(currentObject);
+        if (absoluteParent instanceof Level)            level.add(currentObject);
+        if (absoluteParent instanceof ResourceManifest) resrc.add(currentObject);
+        if (absoluteParent instanceof Addin)            addin.add(currentObject);
+        if (absoluteParent instanceof TextStrings)      text .add(currentObject);
 
     }
 
 
     @Override
     public void endElement(String uri, String localName, String qName) {
-        parent = parent.getParent();
+        currentObject = currentObject.getParent();
     }
 
 

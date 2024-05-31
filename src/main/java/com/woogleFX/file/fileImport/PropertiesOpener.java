@@ -5,7 +5,7 @@ import com.woogleFX.structures.GameVersion;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class SimpleHandler extends DefaultHandler {
+public class PropertiesOpener extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {

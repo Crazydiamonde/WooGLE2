@@ -5,8 +5,6 @@ import com.woogleFX.file.FileManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.structures.GameVersion;
 import com.woogleFX.structures.WorldLevel;
-import com.worldOfGoo.level.*;
-import com.worldOfGoo.scene.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,67 +43,52 @@ public class LevelWriter {
         ArrayList<EditorObject> dynamicGeometry = new ArrayList<>();
         ArrayList<EditorObject> geometryConstraints = new ArrayList<>();
 
-        for (EditorObject object : worldLevel.getSceneObject().getChildren()) {
-            if (object instanceof Linearforcefield || object instanceof Radialforcefield) {
-                forceFields.add(object);
-            } else if (object instanceof Particles) {
-                particles.add(object);
-            } else if (object instanceof SceneLayer) {
-                sceneLayers.add(object);
-            } else if (object instanceof Buttongroup || object instanceof Button) {
-                buttons.add(object);
-            } else if (object instanceof Label) {
-                labels.add(object);
-            } else if (object instanceof Rectangle ||
-                    object instanceof Circle ||
-                    object instanceof Compositegeom ||
-                    object instanceof Line) {
-                if (!(object instanceof Line) && !object.getAttribute("static").booleanValue()) {
-                    dynamicGeometry.add(object);
-                } else {
-                    staticGeometry.add(object);
-                }
-            } else if (object instanceof Hinge || object instanceof Motor) {
-                geometryConstraints.add(object);
+        for (EditorObject object : worldLevel.getSceneObject().getChildren()) switch (object.getType()) {
+
+            case "linearforcefield", "radialforcefield" -> forceFields.add(object);
+            case "particles" -> particles.add(object);
+            case "SceneLayer" -> sceneLayers.add(object);
+            case "buttongroup", "button" -> buttons.add(object);
+            case "label" -> labels.add(object);
+            case "rectangle", "circle", "compositegeom" -> {
+                if (!object.getAttribute("static").booleanValue()) dynamicGeometry.add(object);
+                else staticGeometry.add(object);
             }
+            case "line" -> staticGeometry.add(object);
+            case "hinge", "motor" -> geometryConstraints.add(object);
+
         }
 
-        String scene = XMLUtility.recursiveXMLExport("", worldLevel.getSceneObject(), 0, false);
-        scene += "\n\t<!-- ForceFields -->\n";
-        for (EditorObject object : forceFields) {
-            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
-        }
-        scene += "\n\t<!-- Particles -->\n";
-        for (EditorObject object : particles) {
-            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
-        }
-        scene += "\n\t<!-- SceneLayers -->\n";
-        for (EditorObject object : sceneLayers) {
-            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
-        }
-        scene += "\n\t<!-- Buttons -->\n";
-        for (EditorObject object : buttons) {
-            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
-        }
-        scene += "\n\t<!-- Labels -->\n";
-        for (EditorObject object : labels) {
-            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
-        }
-        scene += "\n\t<!-- Static Geometry -->\n";
-        for (EditorObject object : staticGeometry) {
-            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
-        }
-        scene += "\n\t<!-- Dynamic Geometry -->\n";
-        for (EditorObject object : dynamicGeometry) {
-            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
-        }
-        scene += "\n\t<!-- Geometry Constraints -->\n";
-        for (EditorObject object : geometryConstraints) {
-            scene = XMLUtility.recursiveXMLExport(scene, object, 1, true) + "\n";
-        }
-        scene += "</scene>";
+        StringBuilder scene = new StringBuilder();
+        scene.append(XMLUtility.XMLExport(worldLevel.getSceneObject()));
 
-        return scene;
+        scene.append("\n\t<!-- ForceFields -->\n");
+        for (EditorObject object : forceFields) scene.append(XMLUtility.XMLExport(object)).append("\n");
+
+        scene.append("\n\t<!-- Particles -->\n");
+        for (EditorObject object : particles) scene.append(XMLUtility.XMLExport(object)).append("\n");
+
+        scene.append("\n\t<!-- SceneLayers -->\n");
+        for (EditorObject object : sceneLayers) scene.append(XMLUtility.XMLExport(object)).append("\n");
+
+        scene.append("\n\t<!-- Buttons -->\n");
+        for (EditorObject object : buttons) scene.append(XMLUtility.XMLExport(object)).append("\n");
+
+        scene.append("\n\t<!-- Labels -->\n");
+        for (EditorObject object : labels) scene.append(XMLUtility.XMLExport(object)).append("\n");
+
+        scene.append("\n\t<!-- Static Geometry -->\n");
+        for (EditorObject object : staticGeometry) scene.append(XMLUtility.XMLExport(object)).append("\n");
+
+        scene.append("\n\t<!-- Dynamic Geometry -->\n");
+        for (EditorObject object : dynamicGeometry) scene.append(XMLUtility.XMLExport(object)).append("\n");
+
+        scene.append("\n\t<!-- Geometry Constraints -->\n");
+        for (EditorObject object : geometryConstraints) scene.append(XMLUtility.XMLExport(object)).append("\n");
+
+        scene.append("</scene>");
+
+        return scene.toString();
 
     }
 
@@ -133,76 +116,54 @@ public class LevelWriter {
         ArrayList<EditorObject> arms = new ArrayList<>();
         ArrayList<EditorObject> levelExit = new ArrayList<>();
 
-        for (EditorObject object : worldLevel.getLevelObject().getChildren()) {
-            if (object instanceof Camera ||
-                    object instanceof Poi) {
-                camera.add(object);
-            } else if (object instanceof Music) {
-                music.add(object);
-            } else if (object instanceof Loopsound) {
-                loopsound.add(object);
-            } else if (object instanceof Fire) {
-                fire.add(object);
-            } else if (object instanceof Signpost) {
-                signposts.add(object);
-            } else if (object instanceof Pipe ||
-                    object instanceof Vertex) {
-                pipes.add(object);
-            } else if (object instanceof BallInstance) {
-                balls.add(object);
-            } else if (object instanceof Strand) {
-                arms.add(object);
-            } else if (object instanceof Levelexit ||
-                    object instanceof Endoncollision ||
-                    object instanceof Endonnogeom ||
-                    object instanceof Endonmessage ||
-                    object instanceof Targetheight) {
-                levelExit.add(object);
-            }
+        for (EditorObject object : worldLevel.getLevelObject().getChildren()) switch (object.getType()) {
+
+            case "camera" -> camera.add(object);
+            case "music" -> music.add(object);
+            case "loopsound" -> loopsound.add(object);
+            case "fire" -> fire.add(object);
+            case "signpost" -> signposts.add(object);
+            case "pipe", "Vertex" -> pipes.add(object);
+            case "BallInstance" -> balls.add(object);
+            case "Strand" -> arms.add(object);
+            case "levelexit", "endoncollision", "endonnogeom",
+                    "endonmessage", "targetheight" -> levelExit.add(object);
+
         }
 
-        String level = XMLUtility.recursiveXMLExport("", worldLevel.getLevelObject(), 0, false);
-        level += "\n\t<!-- Camera -->\n";
-        for (EditorObject object : camera) {
-            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-        }
-        level += "\n\t<!-- Music -->\n";
-        for (EditorObject object : music) {
-            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-        }
-        if (!loopsound.isEmpty()) {
-            level += "\n\t<!-- Loop Sound -->\n";
-            for (EditorObject object : loopsound) {
-                level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-            }
-        }
-        level += "\n\t<!-- Fire -->\n";
-        for (EditorObject object : fire) {
-            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-        }
-        level += "\n\t<!-- Signposts -->\n";
-        for (EditorObject object : signposts) {
-            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-        }
-        level += "\n\t<!-- Pipes -->\n";
-        for (EditorObject object : pipes) {
-            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-        }
-        level += "\n\t<!-- Balls -->\n";
-        for (EditorObject object : balls) {
-            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-        }
-        level += "\n\t<!-- Arms -->\n";
-        for (EditorObject object : arms) {
-            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-        }
-        level += "\n\t<!-- Level Exit -->\n";
-        for (EditorObject object : levelExit) {
-            level = XMLUtility.recursiveXMLExport(level, object, 1, true) + "\n";
-        }
-        level += "\n</level>";
+        StringBuilder level = new StringBuilder();
+        level.append(XMLUtility.XMLExport(worldLevel.getLevelObject()));
 
-        return level;
+        level.append("\n\t<!-- Camera -->\n");
+        for (EditorObject object : camera) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n\t<!-- Music -->\n");
+        for (EditorObject object : music) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n\t<!-- Loop Sound -->\n");
+        for (EditorObject object : loopsound) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n\t<!-- Fire -->\n");
+        for (EditorObject object : fire) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n\t<!-- Signposts -->\n");
+        for (EditorObject object : signposts) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n\t<!-- Pipes -->\n");
+        for (EditorObject object : pipes) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n\t<!-- Balls -->\n");
+        for (EditorObject object : balls) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n\t<!-- Arms -->\n");
+        for (EditorObject object : arms) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n\t<!-- Level Exit -->\n");
+        for (EditorObject object : levelExit) level.append(XMLUtility.XMLExport(object)).append("\n");
+
+        level.append("\n</level>");
+
+        return level.toString();
 
     }
 
@@ -217,10 +178,10 @@ public class LevelWriter {
         String addin = XMLUtility.fullAddinXMLExport("", addinObject, 0);
 
         EditorObject textObject = worldLevel.getTextObject();
-        String text = XMLUtility.recursiveXMLExport("", textObject, 0, true);
+        String text = XMLUtility.XMLExport(textObject);
 
         EditorObject resourcesObject = worldLevel.getResrcObject();
-        String resrc = XMLUtility.recursiveXMLExport("", resourcesObject, 0, true);
+        String resrc = XMLUtility.XMLExport(resourcesObject);
 
         return new LevelInformation(scene, level, resrc, addin, text);
 

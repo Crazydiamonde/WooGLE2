@@ -17,7 +17,7 @@ public class BaseGameResources {
     public static final Set<String> SOUNDS = new HashSet<>();
     public static final Set<String> PARTICLE_FX = new HashSet<>();
     public static final Set<String> TAGS = new HashSet<>(List.of(
-            "ballbuster", "break=1", "deadly", "detaching",
+            "ballbuster", "deadly", "detaching",
             "geomkiller", "mostlydeadly", "nodrag",
             "stopsign", "unwalkable", "walkable"
     ));

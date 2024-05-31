@@ -31,6 +31,7 @@ public class Label extends EditorObject {
         addAttribute("colorize", InputField.COLOR)    .setDefaultValue("255,255,255");
 
         addObjectComponent(new TextComponent() {
+
             @Override
             public _Font getFont() {
                 try {
@@ -75,6 +76,11 @@ public class Label extends EditorObject {
             @Override
             public double getRotation() {
                 return -Math.toRadians(getAttribute("rotation").doubleValue());
+            }
+
+            @Override
+            public boolean isVisible() {
+                return LevelManager.getLevel().getVisibilitySettings().isShowLabels();
             }
 
         });

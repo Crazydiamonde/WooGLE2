@@ -16,7 +16,7 @@ import com.SupremeMain;
 import com.woogleFX.editorObjects.objectCreators.BlankObjectGenerator;
 import com.woogleFX.file.fileImport.BallFileOpener;
 import com.woogleFX.file.fileImport.ObjectXMLParser;
-import com.woogleFX.file.fileImport.SimpleHandler;
+import com.woogleFX.file.fileImport.PropertiesOpener;
 import com.woogleFX.functions.LevelManager;
 import com.woogleFX.functions.PaletteManager;
 import com.woogleFX.structures.GameVersion;
@@ -85,7 +85,7 @@ public class FileManager {
     public static void readWOGdirs() throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
-        SimpleHandler defaultHandler = new SimpleHandler();
+        PropertiesOpener defaultHandler = new PropertiesOpener();
         File properties = new File(editorLocation + "properties.xml");
         if (!properties.exists()) {
             oldWOGdir = "";

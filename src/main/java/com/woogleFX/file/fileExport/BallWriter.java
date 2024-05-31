@@ -28,10 +28,10 @@ public class BallWriter {
 
         //TODO add XML comments to files
 
-        String ballXML = XMLUtility.recursiveXMLExport("", ball.objects.get(0), 0, true);
+        String ballXML = XMLUtility.XMLExport(ball.objects.get(0));
         logger.trace(ballXML);
 
-        String resrcXML = XMLUtility.recursiveXMLExport("", ball.resources.get(0), 0, true);
+        String resrcXML = XMLUtility.XMLExport(ball.resources.get(0));
         logger.trace(resrcXML);
 
         String name = ball.objects.get(0).getAttribute("name").stringValue();
@@ -64,8 +64,13 @@ public class BallWriter {
         }
 
         String otherDir = FileManager.getGameDir(version == GameVersion.OLD ? GameVersion.NEW : GameVersion.OLD);
-        AESBinFormat.encodeFile(new File(ballsPathText), ballXML.getBytes());
-        AESBinFormat.encodeFile(new File(resourcesPathText), resrcXML.getBytes());
+        if (!goomod && version == GameVersion.OLD) {
+            AESBinFormat.encodeFile(new File(ballsPathText), ballXML.getBytes());
+            AESBinFormat.encodeFile(new File(resourcesPathText), resrcXML.getBytes());
+        } else {
+            Files.write(ballsPath, ballXML.getBytes());
+            Files.write(resourcesPath, resrcXML.getBytes());
+        }
 
         if (goomod) return;
 

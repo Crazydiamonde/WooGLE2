@@ -2,6 +2,7 @@ package com.woogleFX.editorObjects;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 import com.woogleFX.file.BaseGameResources;
 import com.woogleFX.file.FileManager;
@@ -240,7 +241,7 @@ public enum InputField {
             }
 
             case TAG -> {
-                return BaseGameResources.TAGS.contains(potential);
+                return Arrays.stream(potential.split(",")).allMatch(BaseGameResources.TAGS::contains);
             }
 
             case FONT -> {
