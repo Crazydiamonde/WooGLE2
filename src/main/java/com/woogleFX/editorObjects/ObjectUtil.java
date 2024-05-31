@@ -1,5 +1,6 @@
 package com.woogleFX.editorObjects;
 
+import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import javafx.geometry.Point2D;
 

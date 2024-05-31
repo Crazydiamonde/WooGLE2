@@ -1,7 +1,7 @@
 package com.woogleFX.engine.fx;
 
 import com.woogleFX.file.FileManager;
-import com.woogleFX.functions.LevelCloser;
+import com.woogleFX.gameData.level.LevelCloser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

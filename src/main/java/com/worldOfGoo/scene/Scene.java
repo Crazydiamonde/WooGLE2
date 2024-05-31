@@ -1,12 +1,12 @@
 package com.worldOfGoo.scene;
 
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
-import com.woogleFX.engine.Depth;
-import com.woogleFX.functions.LevelManager;
+import com.woogleFX.engine.renderer.Depth;
+import com.woogleFX.engine.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.InputField;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
+import com.woogleFX.editorObjects.attributes.InputField;
+import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -129,7 +129,7 @@ public class Scene extends EditorObject {
             }
             public Paint getColor() {
                 if (LevelManager.getLevel().getVisibilitySettings().isShowSceneBGColor()) {
-                    com.woogleFX.structures.simpleStructures.Color backgroundColor = getAttribute("backgroundcolor").colorValue();
+                    com.woogleFX.editorObjects.attributes.dataTypes.Color backgroundColor = getAttribute("backgroundcolor").colorValue();
                     double r = backgroundColor.getR() / 255.0;
                     double g = backgroundColor.getG() / 255.0;
                     double b = backgroundColor.getB() / 255.0;

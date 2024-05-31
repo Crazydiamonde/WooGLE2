@@ -1,10 +1,11 @@
 package com.woogleFX.engine.fx;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.functions.LevelManager;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.engine.gui.Alarms;
-import com.woogleFX.structures.simpleStructures.LevelTab;
-import com.woogleFX.structures.WorldLevel;
+import com.woogleFX.gameData.level.LevelTab;
+import com.woogleFX.gameData.level._Level;
 import javafx.scene.control.TabPane;
 
 public class FXLevelSelectPane {
@@ -15,7 +16,7 @@ public class FXLevelSelectPane {
     }
 
 
-    public static LevelTab levelSelectButton(WorldLevel level) {
+    public static LevelTab levelSelectButton(_Level level) {
 
         // Instantiate the tab.
         LevelTab tab = new LevelTab(level.getLevelName(), level);

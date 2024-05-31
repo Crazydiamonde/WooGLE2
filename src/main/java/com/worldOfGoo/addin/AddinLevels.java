@@ -1,7 +1,7 @@
 package com.worldOfGoo.addin;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.level.GameVersion;
 
 public class AddinLevels extends EditorObject {
 

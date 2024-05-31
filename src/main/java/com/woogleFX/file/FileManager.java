@@ -14,20 +14,21 @@ import javax.xml.parsers.SAXParserFactory;
 
 import com.SupremeMain;
 import com.woogleFX.editorObjects.objectCreators.BlankObjectGenerator;
-import com.woogleFX.file.fileImport.BallFileOpener;
+import com.woogleFX.file.aesEncryption.AESBinFormat;
+import com.woogleFX.gameData.ball.BallFileOpener;
 import com.woogleFX.file.fileImport.ObjectXMLParser;
 import com.woogleFX.file.fileImport.PropertiesOpener;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.functions.PaletteManager;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.gameData.ball.PaletteManager;
+import com.woogleFX.gameData.level.GameVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.woogleFX.editorObjects._Ball;
+import com.woogleFX.gameData.ball._Ball;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.WorldLevel;
+import com.woogleFX.gameData.level._Level;
 
 import javafx.scene.image.Image;
 
@@ -129,7 +130,7 @@ public class FileManager {
     }
 
 
-    public static WorldLevel openLevel(String levelName, GameVersion version) throws ParserConfigurationException, SAXException, IOException {
+    public static _Level openLevel(String levelName, GameVersion version) throws ParserConfigurationException, SAXException, IOException {
 
         LevelManager.setLevel(null);
 
@@ -186,7 +187,7 @@ public class FileManager {
 
         }
 
-        return new WorldLevel(scene, level, resrc, addin, text, version);
+        return new _Level(scene, level, resrc, addin, text, version);
 
     }
 

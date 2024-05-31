@@ -2,11 +2,10 @@ package com.woogleFX.engine;
 
 import com.woogleFX.engine.fx.FXContainers;
 import com.woogleFX.engine.fx.FXEditorButtons;
-import com.woogleFX.engine.fx.FXHierarchy;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.editorObjects.EditorAttribute;
+import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
+import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.simpleStructures.DragSettings;
+import com.woogleFX.editorObjects.DragSettings;
 import javafx.scene.control.SplitPane;
 
 public class SelectionManager {

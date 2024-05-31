@@ -3,9 +3,11 @@ package com.woogleFX.editorObjects;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.woogleFX.editorObjects.attributes.EditorAttribute;
+import com.woogleFX.editorObjects.attributes.InputField;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
+import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 
 import javafx.scene.control.TreeItem;
 import org.slf4j.Logger;

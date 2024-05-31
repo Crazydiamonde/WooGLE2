@@ -1,9 +1,9 @@
 package com.worldOfGoo.resrc;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.InputField;
-import com.woogleFX.editorObjects._Font;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.editorObjects.attributes.InputField;
+import com.woogleFX.gameData.font._Font;
+import com.woogleFX.gameData.level.GameVersion;
 
 public class Font extends EditorObject {
 

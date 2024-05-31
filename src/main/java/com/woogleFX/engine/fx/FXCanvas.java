@@ -1,6 +1,6 @@
 package com.woogleFX.engine.fx;
 
-import com.woogleFX.functions.LevelManager;
+import com.woogleFX.engine.LevelManager;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 

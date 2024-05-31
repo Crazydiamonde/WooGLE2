@@ -1,11 +1,13 @@
 package com.woogleFX.file.fileExport;
 
-import com.woogleFX.editorObjects._Ball;
-import com.woogleFX.file.BaseGameResources;
+import com.woogleFX.gameData.ball.BallWriter;
+import com.woogleFX.gameData.ball._Ball;
+import com.woogleFX.file.resourceManagers.BaseGameResources;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.structures.WorldLevel;
+import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.gameData.level.LevelWriter;
+import com.woogleFX.gameData.level._Level;
 import com.worldOfGoo.resrc.ResrcImage;
 import com.worldOfGoo.resrc.Sound;
 
@@ -42,7 +44,7 @@ public class GoomodExporter {
      * @param levels The levels to put in the goomod.
      * @param balls The balls to put in the goomod.
      * @param includeAddinInfo Whether the goomod should include addin info. */
-    public static void exportGoomod(File file, ArrayList<WorldLevel> levels, ArrayList<_Ball> balls,
+    public static void exportGoomod(File file, ArrayList<_Level> levels, ArrayList<_Ball> balls,
                                     GameVersion version, boolean includeAddinInfo) throws IOException {
 
         String dir = FileManager.getGameDir(version);
@@ -52,7 +54,7 @@ public class GoomodExporter {
 
         clearAlreadyExistingGoomodData(levelDir);
 
-        for (WorldLevel level : levels) addLevelToGoomod(level, dir, levelDir, includeAddinInfo);
+        for (_Level level : levels) addLevelToGoomod(level, dir, levelDir, includeAddinInfo);
 
         // Keep track of exported balls
         HashSet<String> exportedBalls = new HashSet<>();
@@ -114,7 +116,7 @@ public class GoomodExporter {
     }
 
 
-    private static void addLevelToGoomod(WorldLevel level, String dir, String levelDir,
+    private static void addLevelToGoomod(_Level level, String dir, String levelDir,
                                          boolean includeAddinInfo) throws IOException {
 
         String levelDirectory = levelDir + "\\goomod\\compile\\res\\levels\\" + level.getLevelName();

@@ -1,13 +1,13 @@
 package com.worldOfGoo.scene;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.InputField;
-import com.woogleFX.editorObjects._Font;
+import com.woogleFX.editorObjects.attributes.InputField;
+import com.woogleFX.gameData.font._Font;
 import com.woogleFX.editorObjects.objectComponents.TextComponent;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 import com.worldOfGoo.text.TextString;
 
 import java.io.FileNotFoundException;

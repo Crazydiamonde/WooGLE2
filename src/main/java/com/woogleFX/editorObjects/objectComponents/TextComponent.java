@@ -1,10 +1,10 @@
 package com.woogleFX.editorObjects.objectComponents;
 
-import com.woogleFX.editorObjects.Layer;
-import com.woogleFX.editorObjects._Font;
+import com.woogleFX.gameData.font.Layer;
+import com.woogleFX.gameData.font._Font;
 import com.woogleFX.editorObjects.objectComponents.generic.RotatableProperty;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.structures.simpleStructures.DragSettings;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.editorObjects.DragSettings;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Affine;

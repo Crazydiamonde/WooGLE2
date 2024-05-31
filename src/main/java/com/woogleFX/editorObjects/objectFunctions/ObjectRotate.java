@@ -4,7 +4,7 @@ import com.woogleFX.editorObjects.objectComponents.CircleComponent;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
-import com.woogleFX.engine.Renderer;
+import com.woogleFX.engine.renderer.Renderer;
 import com.woogleFX.engine.SelectionManager;
 import javafx.geometry.Point2D;
 

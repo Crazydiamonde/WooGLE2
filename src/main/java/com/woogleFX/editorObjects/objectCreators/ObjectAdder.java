@@ -1,15 +1,15 @@
 package com.woogleFX.editorObjects.objectCreators;
 
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
-import com.woogleFX.engine.fx.FXHierarchy;
+import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.engine.fx.FXPropertiesView;
 import com.woogleFX.engine.SelectionManager;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.functions.ObjectManager;
-import com.woogleFX.functions.undoHandling.UndoManager;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.editorObjects.ObjectManager;
+import com.woogleFX.engine.undoHandling.UndoManager;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.functions.undoHandling.userActions.ObjectCreationAction;
-import com.woogleFX.structures.WorldLevel;
+import com.woogleFX.engine.undoHandling.userActions.ObjectCreationAction;
+import com.woogleFX.gameData.level._Level;
 import com.worldOfGoo.addin.Addin;
 import com.worldOfGoo.level.*;
 import com.worldOfGoo.resrc.ResourceManifest;
@@ -94,7 +94,7 @@ public class ObjectAdder {
 
     public static EditorObject addObject(String name, EditorObject parent) {
 
-        WorldLevel level = LevelManager.getLevel();
+        _Level level = LevelManager.getLevel();
         if (level == null) return null;
 
         if (parent == null) parent = switch (name) {
@@ -225,7 +225,7 @@ public class ObjectAdder {
     public static void adjustObjectLocation(EditorObject object) {
 
         // Create the object at the mouse position
-        WorldLevel level = LevelManager.getLevel();
+        _Level level = LevelManager.getLevel();
         double objectX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();
         double objectY = (SelectionManager.getMouseY() - level.getOffsetY()) / level.getZoom();
 

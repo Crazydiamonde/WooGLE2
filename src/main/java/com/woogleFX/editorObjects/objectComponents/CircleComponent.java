@@ -4,9 +4,9 @@ import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.editorObjects.objectComponents.generic.BorderProperty;
 import com.woogleFX.editorObjects.objectComponents.generic.ColoredProperty;
 import com.woogleFX.editorObjects.objectComponents.generic.RotatableProperty;
-import com.woogleFX.engine.Renderer;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.structures.simpleStructures.DragSettings;
+import com.woogleFX.engine.renderer.Renderer;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.editorObjects.DragSettings;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 

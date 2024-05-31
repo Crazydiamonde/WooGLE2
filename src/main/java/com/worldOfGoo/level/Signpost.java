@@ -2,15 +2,15 @@ package com.worldOfGoo.level;
 
 import com.woogleFX.editorObjects.ImageUtility;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
-import com.woogleFX.functions.LevelLoader;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.level.levelOpening.LevelLoader;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.gameData.level.GameVersion;
 import javafx.scene.image.Image;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.InputField;
-import com.woogleFX.structures.simpleStructures.Color;
-import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
+import com.woogleFX.editorObjects.attributes.InputField;
+import com.woogleFX.editorObjects.attributes.dataTypes.Color;
+import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 
 public class Signpost extends EditorObject {
 

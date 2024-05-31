@@ -2,8 +2,8 @@ package com.woogleFX.engine.gui;
 
 import com.woogleFX.engine.fx.FXEditorButtons;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.functions.PaletteManager;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.ball.PaletteManager;
+import com.woogleFX.gameData.level.GameVersion;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;

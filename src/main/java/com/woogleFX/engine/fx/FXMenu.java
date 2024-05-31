@@ -1,11 +1,19 @@
 package com.woogleFX.engine.fx;
 
+import com.woogleFX.editorObjects.ObjectManager;
+import com.woogleFX.editorObjects.clipboardHandling.ClipboardManager;
+import com.woogleFX.engine.LevelManager;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.functions.*;
-import com.woogleFX.file.resourceManagers.BallManager;
-import com.woogleFX.functions.undoHandling.UndoManager;
+import com.woogleFX.file.resourceManagers.GameResourceManager;
+import com.woogleFX.gameData.ball.BallManager;
+import com.woogleFX.engine.undoHandling.UndoManager;
 import com.woogleFX.engine.gui.PaletteReconfigurator;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.level.LevelCloser;
+import com.woogleFX.gameData.level.LevelResourceImporter;
+import com.woogleFX.gameData.level.LevelResourceManager;
+import com.woogleFX.gameData.level.levelOpening.LevelLoader;
+import com.woogleFX.gameData.level.levelSaving.LevelUpdater;
+import com.woogleFX.gameData.level.GameVersion;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;

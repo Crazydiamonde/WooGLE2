@@ -4,15 +4,21 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.woogleFX.engine.Initializer;
+import com.woogleFX.engine.LevelManager;
 import com.woogleFX.engine.fx.*;
-import com.woogleFX.functions.*;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
+import com.woogleFX.file.resourceManagers.GameResourceManager;
+import com.woogleFX.gameData.level.LevelCloser;
+import com.woogleFX.gameData.level.LevelResourceManager;
+import com.woogleFX.gameData.level.levelOpening.LevelLoader;
+import com.woogleFX.gameData.level.levelSaving.LevelUpdater;
+import com.woogleFX.gameData.level.GameVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.woogleFX.file.FileManager;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.WorldLevel;
+import com.woogleFX.gameData.level._Level;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -79,7 +85,7 @@ public class Alarms {
         alert.show();
     }
 
-    public static void closeTabMessage(Tab tab, WorldLevel level) {
+    public static void closeTabMessage(Tab tab, _Level level) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setHeaderText("Unsaved Changes");
         alert.setContentText("Ignore unsaved changes?");
@@ -99,7 +105,7 @@ public class Alarms {
         });
     }
 
-    public static void closeTabMessage2(Tab tab, WorldLevel level) {
+    public static void closeTabMessage2(Tab tab, _Level level) {
 
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setHeaderText("Unsaved Changes");
@@ -123,7 +129,7 @@ public class Alarms {
         });
     }
 
-    public static void confirmCleanResourcesMessage(WorldLevel level, ArrayList<EditorObject> resourceNames) {
+    public static void confirmCleanResourcesMessage(_Level level, ArrayList<EditorObject> resourceNames) {
 
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setHeaderText("Clean Level Resources");

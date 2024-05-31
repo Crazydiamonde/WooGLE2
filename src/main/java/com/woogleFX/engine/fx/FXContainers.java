@@ -1,6 +1,7 @@
 package com.woogleFX.engine.fx;
 
 import com.woogleFX.engine.SelectionManager;
+import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import javafx.scene.Cursor;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;

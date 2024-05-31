@@ -1,17 +1,17 @@
 package com.woogleFX.engine.fx;
 
-import com.woogleFX.engine.SelectionManager;
+import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.file.resourceManagers.ParticleManager;
-import com.woogleFX.functions.undoHandling.UndoManager;
-import com.woogleFX.editorObjects.EditorAttribute;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.gameData.particle.ParticleManager;
+import com.woogleFX.engine.undoHandling.UndoManager;
+import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.editorObjects.InputField;
-import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
-import com.woogleFX.functions.undoHandling.userActions.AttributeChangeAction;
+import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.editorObjects.attributes.InputField;
+import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
+import com.woogleFX.engine.undoHandling.userActions.AttributeChangeAction;
 import com.worldOfGoo.resrc.ResrcImage;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;

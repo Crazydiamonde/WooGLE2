@@ -1,9 +1,9 @@
 package com.woogleFX.editorObjects.objectCreators;
 
-import com.woogleFX.functions.LevelManager;
+import com.woogleFX.engine.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.structures.WorldLevel;
+import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.gameData.level._Level;
 import com.worldOfGoo.addin.*;
 import com.worldOfGoo.ball.*;
 import com.worldOfGoo.level.*;
@@ -17,7 +17,7 @@ public class ObjectCreator {
 
     public static EditorObject getDefaultParent(String name) {
 
-        WorldLevel level = LevelManager.getLevel();
+        _Level level = LevelManager.getLevel();
 
         return switch(name) {
 
@@ -42,7 +42,7 @@ public class ObjectCreator {
 
     public static EditorObject create(String name, EditorObject _parent, GameVersion version) {
 
-        WorldLevel level = LevelManager.getLevel();
+        _Level level = LevelManager.getLevel();
 
         EditorObject parent = (_parent != null || level == null) ? _parent : getDefaultParent(name);
 

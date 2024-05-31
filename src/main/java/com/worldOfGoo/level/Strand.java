@@ -2,17 +2,17 @@ package com.worldOfGoo.level;
 
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.ObjectUtil;
-import com.woogleFX.editorObjects._Ball;
+import com.woogleFX.gameData.ball._Ball;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
-import com.woogleFX.engine.Renderer;
-import com.woogleFX.file.resourceManagers.BallManager;
-import com.woogleFX.functions.LevelLoader;
-import com.woogleFX.functions.LevelManager;
+import com.woogleFX.engine.renderer.Renderer;
+import com.woogleFX.gameData.ball.BallManager;
+import com.woogleFX.gameData.level.levelOpening.LevelLoader;
+import com.woogleFX.engine.LevelManager;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.InputField;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.structures.simpleStructures.MetaEditorAttribute;
-import com.woogleFX.structures.simpleStructures.Position;
+import com.woogleFX.editorObjects.attributes.InputField;
+import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
+import com.woogleFX.editorObjects.attributes.dataTypes.Position;
 import com.worldOfGoo.ball.BallStrand;
 
 import javafx.geometry.Point2D;

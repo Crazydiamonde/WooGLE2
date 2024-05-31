@@ -1,6 +1,6 @@
 package com.woogleFX.editorObjects.objectComponents;
 
-import com.woogleFX.structures.simpleStructures.DragSettings;
+import com.woogleFX.editorObjects.DragSettings;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 

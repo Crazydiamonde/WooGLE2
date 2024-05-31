@@ -1,10 +1,10 @@
 package com.woogleFX.file.resourceManagers;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects._Font;
+import com.woogleFX.gameData.font._Font;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.file.fileImport.FontReader;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.font.FontReader;
+import com.woogleFX.gameData.level.GameVersion;
 import com.worldOfGoo.resrc.Material;
 import com.worldOfGoo.resrc.Font;
 import com.worldOfGoo.resrc.ResrcImage;

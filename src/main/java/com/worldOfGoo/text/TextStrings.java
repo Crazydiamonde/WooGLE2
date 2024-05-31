@@ -1,7 +1,7 @@
 package com.worldOfGoo.text;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.level.GameVersion;
 
 public class TextStrings extends EditorObject {
 

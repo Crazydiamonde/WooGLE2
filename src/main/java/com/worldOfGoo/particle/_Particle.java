@@ -2,11 +2,11 @@ package com.worldOfGoo.particle;
 
 import java.util.ArrayList;
 
-import com.woogleFX.file.resourceManagers.ParticleManager;
+import com.woogleFX.gameData.particle.ParticleManager;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.editorObjects.attributes.InputField;
 
 import javafx.scene.image.Image;
 

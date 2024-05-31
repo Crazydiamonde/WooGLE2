@@ -2,11 +2,11 @@ package com.woogleFX.engine.gui;
 
 import java.io.File;
 
-import com.woogleFX.file.BaseGameResources;
+import com.woogleFX.file.resourceManagers.BaseGameResources;
 import com.woogleFX.file.FileManager;
 
-import com.woogleFX.functions.LevelLoader;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.level.levelOpening.LevelLoader;
+import com.woogleFX.gameData.level.GameVersion;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

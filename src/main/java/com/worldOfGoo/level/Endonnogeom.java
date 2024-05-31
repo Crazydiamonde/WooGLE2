@@ -1,7 +1,7 @@
 package com.worldOfGoo.level;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.level.GameVersion;
 
 public class Endonnogeom extends EditorObject {
 

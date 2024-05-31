@@ -3,13 +3,15 @@ package com.worldOfGoo.scene;
 import java.io.FileNotFoundException;
 
 import com.woogleFX.editorObjects.ImageUtility;
+import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
-import com.woogleFX.functions.LevelManager;
-import com.woogleFX.structures.GameVersion;
-import com.woogleFX.structures.simpleStructures.*;
+import com.woogleFX.engine.LevelManager;
+import com.woogleFX.gameData.animation.Keyframe;
+import com.woogleFX.gameData.animation.WoGAnimation;
+import com.woogleFX.gameData.level.GameVersion;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.editorObjects.attributes.InputField;
 
 import javafx.scene.image.Image;
 

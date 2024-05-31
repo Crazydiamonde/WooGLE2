@@ -1,8 +1,8 @@
 package com.woogleFX.file.fileExport;
 
-import com.woogleFX.editorObjects.EditorAttribute;
+import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.InputField;
+import com.woogleFX.editorObjects.attributes.InputField;
 import com.worldOfGoo.addin.AddinLevelOCD;
 import com.worldOfGoo.level.Level;
 import com.worldOfGoo.level.Levelexit;

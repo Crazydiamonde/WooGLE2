@@ -1,7 +1,7 @@
 package com.woogleFX.file.fileImport;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.functions.PaletteManager;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.ball.PaletteManager;
+import com.woogleFX.gameData.level.GameVersion;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 

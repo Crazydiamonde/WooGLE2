@@ -1,6 +1,6 @@
 package com.woogleFX.editorObjects;
 
-import com.woogleFX.structures.simpleStructures.Color;
+import com.woogleFX.editorObjects.attributes.dataTypes.Color;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;

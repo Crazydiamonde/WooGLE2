@@ -1,14 +1,16 @@
 package com.woogleFX.engine;
 
 import com.woogleFX.engine.fx.*;
-import com.woogleFX.file.BaseGameResources;
+import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
+import com.woogleFX.engine.gui.EditorWindow;
+import com.woogleFX.file.resourceManagers.BaseGameResources;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.file.fileImport.FontReader;
+import com.woogleFX.gameData.font.FontReader;
 import com.woogleFX.file.resourceManagers.GlobalResourceManager;
-import com.woogleFX.functions.*;
 import com.woogleFX.engine.gui.Alarms;
-import com.woogleFX.functions.inputEvents.*;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.engine.inputEvents.*;
+import com.woogleFX.gameData.level.levelOpening.LevelLoader;
+import com.woogleFX.gameData.level.GameVersion;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;

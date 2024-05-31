@@ -1,7 +1,7 @@
 package com.woogleFX.file.fileImport;
 
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.level.GameVersion;
 import com.worldOfGoo.level.Level;
 import com.worldOfGoo.resrc.ResourceManifest;
 import com.worldOfGoo.scene.Scene;

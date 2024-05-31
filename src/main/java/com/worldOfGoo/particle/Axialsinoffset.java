@@ -1,8 +1,8 @@
 package com.worldOfGoo.particle;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.InputField;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.editorObjects.attributes.InputField;
+import com.woogleFX.gameData.level.GameVersion;
 
 public class Axialsinoffset extends EditorObject {
 

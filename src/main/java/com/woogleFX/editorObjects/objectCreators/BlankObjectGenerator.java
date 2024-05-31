@@ -1,7 +1,7 @@
 package com.woogleFX.editorObjects.objectCreators;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.structures.GameVersion;
+import com.woogleFX.gameData.level.GameVersion;
 
 public class BlankObjectGenerator {
 
