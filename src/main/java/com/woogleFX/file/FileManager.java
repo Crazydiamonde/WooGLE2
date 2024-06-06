@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,6 +73,9 @@ public class FileManager {
         String editorLocation1;
         try {
             editorLocation1 = new File(SupremeMain.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + "\\";
+            if (!Files.exists(Path.of(editorLocation1 + "\\src"))) {
+                editorLocation1 = new File(SupremeMain.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParent() + "\\";
+            }
             logger.debug(editorLocation1);
         } catch (URISyntaxException ignored) {
             editorLocation1 = "";

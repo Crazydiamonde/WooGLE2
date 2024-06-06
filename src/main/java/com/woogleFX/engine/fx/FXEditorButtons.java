@@ -402,6 +402,9 @@ public class FXEditorButtons {
     private static final Button buttonCopy = new Button();
     private static final Button buttonPaste = new Button();
     private static final Button buttonDelete = new Button();
+    public static final Button buttonSelectMoveAndResize = new Button();
+    public static final Button buttonStrandMode = new Button();
+    public static final Button buttonGeometryMode = new Button();
 
     private static void edit(ToolBar toolBar) {
 
@@ -454,6 +457,11 @@ public class FXEditorButtons {
         buttonStrandMode.setTooltip(new DelayedTooltip("Place Strands"));
         toolBar.getItems().add(buttonStrandMode);
 
+        setIcon(buttonGeometryMode, prefix + "strand_mode.png");
+        buttonGeometryMode.setOnAction(e -> SelectionManager.geometryMode());
+        buttonGeometryMode.setTooltip(new DelayedTooltip("Place Geometry"));
+        toolBar.getItems().add(buttonGeometryMode);
+
     }
 
 
@@ -463,8 +471,6 @@ public class FXEditorButtons {
     private static final Button buttonCleanResources = new Button();
     private static final Button buttonSetMusic = new Button();
     private static final Button buttonSetLoopsound = new Button();
-    public static final Button buttonSelectMoveAndResize = new Button();
-    public static final Button buttonStrandMode = new Button();
 
     private static void resources(ToolBar toolBar) {
 

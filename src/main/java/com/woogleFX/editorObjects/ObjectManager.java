@@ -121,11 +121,11 @@ public class ObjectManager {
 
             int row = parent.getChildren().indexOf(selected);
 
-            objectDestructionActions.add(new ObjectDestructionAction(selected, row));
+            objectDestructionActions.add(new ObjectDestructionAction(selected, Math.max(row, 0)));
 
             deleteItem(level, selected, false);
 
-            EditorObject parentObject = (row == 0) ? parent : parent.getChildren().get(row - 1);
+            EditorObject parentObject = (row <= 0) ? parent : parent.getChildren().get(row - 1);
             if (Arrays.stream(level.getSelected()).noneMatch(e -> e == parentObject)) newSelectionBuilder.add(parentObject);
         }
 

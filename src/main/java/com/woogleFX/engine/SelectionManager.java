@@ -10,7 +10,6 @@ import javafx.scene.control.SplitPane;
 
 public class SelectionManager {
 
-
     private static double mouseStartX;
     public static double getMouseStartX() {
         return mouseStartX;
@@ -74,12 +73,11 @@ public class SelectionManager {
     }
 
 
-
     public static final int SELECTION = 0;
     public static final int STRAND = 1;
+    public static final int GEOMETRY = 2;
 
     private static int mode = SELECTION;
-
     public static int getMode() {
         return mode;
     }
@@ -90,15 +88,30 @@ public class SelectionManager {
         FXEditorButtons.buttonSelectMoveAndResize.setStyle("-fx-background-color: #9999ff;");
         // Un-highlight strand button
         FXEditorButtons.buttonStrandMode.setStyle("");
+        // Un-highlight geometry button
+        FXEditorButtons.buttonGeometryMode.setStyle("");
     }
 
     public static void strandMode() {
         mode = STRAND;
-        // Highlight strand button
+        // Highlight strand button blue
         FXEditorButtons.buttonStrandMode.setStyle("-fx-background-color: #9999ff;");
         // Un-highlight selection button
         FXEditorButtons.buttonSelectMoveAndResize.setStyle("");
+        // Un-highlight geometry button
+        FXEditorButtons.buttonGeometryMode.setStyle("");
     }
+
+    public static void geometryMode() {
+        mode = GEOMETRY;
+        // Highlight geometry button blue
+        FXEditorButtons.buttonGeometryMode.setStyle("-fx-background-color: #9999ff;");
+        // Un-highlight selection button
+        FXEditorButtons.buttonSelectMoveAndResize.setStyle("");
+        // Un-highlight strand button
+        FXEditorButtons.buttonStrandMode.setStyle("");
+    }
+
 
     private static EditorObject strand1Gooball;
     public static EditorObject getStrand1Gooball() {

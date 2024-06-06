@@ -1,9 +1,7 @@
 package com.woogleFX.gameData.ball;
 
-import com.woogleFX.gameData.ball._Ball;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.gameData.ball.BallWriter;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.engine.gui.BallSelector;
 import com.woogleFX.gameData.level.GameVersion;
 import javafx.stage.Stage;
@@ -57,7 +55,7 @@ public class BallManager {
             BallWriter.saveAsXML(_ball, dir + "\\res\\balls\\" + ball, newVersion, false);
 
         } catch (Exception e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
         }
 
     }

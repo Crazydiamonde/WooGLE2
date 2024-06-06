@@ -4,6 +4,7 @@ import com.woogleFX.editorObjects.objectFunctions.ObjectDrag;
 import com.woogleFX.editorObjects.objectFunctions.ObjectResize;
 import com.woogleFX.editorObjects.objectFunctions.ObjectRotate;
 import com.woogleFX.editorObjects.objectFunctions.ObjectSetAnchor;
+import com.woogleFX.editorObjects.splineGeom.SplineManager;
 import com.woogleFX.engine.fx.FXCanvas;
 import com.woogleFX.engine.fx.FXPropertiesView;
 import com.woogleFX.engine.renderer.Renderer;
@@ -11,9 +12,12 @@ import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.engine.LevelManager;
 import com.woogleFX.editorObjects.DragSettings;
 import com.woogleFX.gameData.level._Level;
+import javafx.geometry.Point2D;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.transform.Affine;
+
+import java.awt.geom.QuadCurve2D;
 
 public class MouseDraggedManager {
 
@@ -25,11 +29,28 @@ public class MouseDraggedManager {
 
         SelectionManager.setMouseX(event.getX());
         SelectionManager.setMouseY(event.getY() - FXCanvas.getMouseYOffset());
-        if (level.getSelected().length != 0 && SelectionManager.getDragSettings() != null) {
 
-            // Calculate game-relative mouse coordinates.
-            double gameRelativeMouseX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();
-            double gameRelativeMouseY = (SelectionManager.getMouseY() - level.getOffsetY()) / level.getZoom();
+        // Calculate game-relative mouse coordinates.
+        double gameRelativeMouseX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();
+        double gameRelativeMouseY = (SelectionManager.getMouseY() - level.getOffsetY()) / level.getZoom();
+
+        if (SplineManager.getSelectedPoint() != -1) {
+            QuadCurve2D selectedCurve = SplineManager.getSelectedCurve();
+            int selectedPoint = SplineManager.getSelectedPoint();
+            if (selectedCurve != null) {
+                switch (selectedPoint) {
+                    case 0 -> selectedCurve.setCurve(gameRelativeMouseX + SplineManager.getOffsetX(), gameRelativeMouseY + SplineManager.getOffsetY(), selectedCurve.getCtrlX(), selectedCurve.getCtrlY(), selectedCurve.getX2(), selectedCurve.getY2());
+                    case 1 -> selectedCurve.setCurve(selectedCurve.getX1(), selectedCurve.getY1(), gameRelativeMouseX + SplineManager.getOffsetX(), gameRelativeMouseY + SplineManager.getOffsetY(), selectedCurve.getX2(), selectedCurve.getY2());
+                    case 2 -> selectedCurve.setCurve(selectedCurve.getX1(), selectedCurve.getY1(), selectedCurve.getCtrlX(), selectedCurve.getCtrlY(), gameRelativeMouseX + SplineManager.getOffsetX(), gameRelativeMouseY + SplineManager.getOffsetY());
+                };
+            } else {
+                if (selectedPoint == 0) SplineManager.setSplineInitialPoint(new Point2D(gameRelativeMouseX + SplineManager.getOffsetX(), gameRelativeMouseY + SplineManager.getOffsetY()));
+                else if (selectedPoint == 1) SplineManager.setSplineControlPoint(new Point2D(gameRelativeMouseX + SplineManager.getOffsetX(), gameRelativeMouseY + SplineManager.getOffsetY()));
+            }
+
+        }
+
+        if (level.getSelected().length != 0 && SelectionManager.getDragSettings() != null) {
 
             // Update the selected object according to what kind of operation is being
             // performed.

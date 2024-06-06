@@ -2,8 +2,8 @@ package com.woogleFX.file.resourceManagers;
 
 import com.woogleFX.engine.fx.FXEditorButtons;
 import com.woogleFX.engine.fx.FXMenu;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.gameData.ball.PaletteManager;
 import com.woogleFX.gameData.level.GameVersion;
 import javafx.stage.FileChooser;
@@ -29,7 +29,7 @@ public class GameResourceManager {
         try {
             FileManager.readWOGdirs();
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
         }
 
     }
@@ -49,7 +49,7 @@ public class GameResourceManager {
                 try {
                     FileManager.saveProperties();
                 } catch (IOException e) {
-                    Alarms.errorMessage(e);
+                    ErrorAlarm.show(e);
                 }
                 reloadWorldOfGoo(GameVersion.OLD);
             } else {
@@ -57,7 +57,7 @@ public class GameResourceManager {
                 try {
                     FileManager.saveProperties();
                 } catch (IOException e) {
-                    Alarms.errorMessage(e);
+                    ErrorAlarm.show(e);
                 }
                 reloadWorldOfGoo(GameVersion.NEW);
             }

@@ -3,11 +3,12 @@ package com.woogleFX.engine;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.engine.gui.EditorWindow;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
+import com.woogleFX.engine.gui.alarms.MissingWOGAlarm;
 import com.woogleFX.file.resourceManagers.BaseGameResources;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.gameData.font.FontReader;
 import com.woogleFX.file.resourceManagers.GlobalResourceManager;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.engine.inputEvents.*;
 import com.woogleFX.gameData.level.levelOpening.LevelLoader;
 import com.woogleFX.gameData.level.GameVersion;
@@ -39,7 +40,7 @@ public class Initializer {
         try {
             FileManager.readWOGdirs();
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
         }
 
         /* Check that the world of goo directory from properties.txt actually points to a file */
@@ -51,7 +52,7 @@ public class Initializer {
         if (!newGameDir.isEmpty() && !Files.exists(Path.of(newGameDir))) FileManager.setNewWOGdir("");
 
         if (oldGameDir.isEmpty() && newGameDir.isEmpty()) {
-            Alarms.missingWOG();
+            MissingWOGAlarm.show();
         } else {
             startWithWorldOfGooVersion();
         }

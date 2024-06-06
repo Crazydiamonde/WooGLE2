@@ -1,6 +1,7 @@
 package com.woogleFX.engine.gui;
 
 import com.woogleFX.engine.fx.FXEditorButtons;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.gameData.ball.PaletteManager;
 import com.woogleFX.gameData.level.GameVersion;
@@ -107,7 +108,7 @@ public class PaletteReconfigurator extends Application {
             try {
                 FileManager.saveProperties();
             } catch (IOException e) {
-                Alarms.errorMessage(e);
+                ErrorAlarm.show(e);
             }
 
             stage.close();

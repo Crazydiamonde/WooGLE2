@@ -2,6 +2,8 @@ package com.woogleFX.gameData.level.levelSaving;
 
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.attributes.InputField;
+import com.woogleFX.engine.gui.alarms.AskForLevelNameAlarm;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.gameData.ball._Ball;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.engine.fx.FXLevelSelectPane;
@@ -10,7 +12,6 @@ import com.woogleFX.engine.fx.FXStage;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.fileExport.GoomodExporter;
 import com.woogleFX.gameData.level.LevelWriter;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.gameData.level.levelOpening.LevelLoader;
 import com.woogleFX.gameData.level.GameVersion;
@@ -79,7 +80,7 @@ public class LevelUpdater {
         // Check for errors in level objects
         if (!verifyEntireLevel(level)) {
             // Fail to save
-            Alarms.errorMessage("Level could not be verified");
+            ErrorAlarm.show("Level could not be verified");
             okayToSave = false;
         }
 
@@ -92,7 +93,7 @@ public class LevelUpdater {
                     version, false, true);
             return true;
         } catch (IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
             return false;
         }
 
@@ -120,12 +121,12 @@ public class LevelUpdater {
                 processBuilder.directory(new File(FileManager.getGameDir(GameVersion.OLD)));
                 processBuilder.start();
             } catch (Exception e) {
-                Alarms.errorMessage(e);
+                ErrorAlarm.show(e);
             }
         } else {
 
             // TODO figure something out to play in 1.5
-            Alarms.errorMessage(new RuntimeException("Playing is only supported for 1.3. :("));
+            ErrorAlarm.show("Playing is only supported for 1.3. :(");
 
         }
 
@@ -133,7 +134,7 @@ public class LevelUpdater {
 
     public static void renameLevel(_Level level) {
         if (level != null) {
-            Alarms.askForLevelName("changeName", level.getVersion());
+            AskForLevelNameAlarm.show("changeName", level.getVersion());
         }
     }
 
@@ -147,7 +148,7 @@ public class LevelUpdater {
         File originalLevelDirectory = new File(start + "\\res\\levels\\" + level.getLevelName());
         File levelDirectory = new File(start + "\\res\\levels\\" + text);
         if (!originalLevelDirectory.renameTo(levelDirectory)) {
-            Alarms.errorMessage("Could not rename level! (" + level.getLevelName() + " to " + text + ")");
+            ErrorAlarm.show("Could not rename level! (" + level.getLevelName() + " to " + text + ")");
             return;
         }
 
@@ -160,7 +161,7 @@ public class LevelUpdater {
                     && levelPart.getName().startsWith(level.getLevelName())) {
                 if (!levelPart.renameTo(new File(start + "\\res\\levels\\" + text + "\\" + text
                         + levelPart.getName().substring(level.getLevelName().length())))) {
-                    Alarms.errorMessage("Could not rename level! (" + level.getLevelName() + " to " + text + ")");
+                    ErrorAlarm.show("Could not rename level! (" + level.getLevelName() + " to " + text + ")");
                     return;
                 }
             }
@@ -196,7 +197,7 @@ public class LevelUpdater {
 
     public static void deleteLevel(_Level level) {
         if (level != null) {
-            Alarms.askForLevelName("delete", level.getVersion());
+            AskForLevelNameAlarm.show("delete", level.getVersion());
         }
     }
 
@@ -214,7 +215,7 @@ public class LevelUpdater {
             }
             levelSelectPane.getTabs().remove(levelSelectPane.getSelectionModel().getSelectedItem());
         } catch (Exception e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
         }
     }
 
@@ -237,7 +238,7 @@ public class LevelUpdater {
             try {
                 Files.createDirectories(Path.of((dir + "\\res\\levels\\" + level.getLevelName() + "\\goomod")));
             } catch (Exception e) {
-                Alarms.errorMessage(e);
+                ErrorAlarm.show(e);
             }
         }
         fileChooser.setInitialDirectory(new File((dir + "\\res\\levels\\" + level.getLevelName() + "\\goomod")));

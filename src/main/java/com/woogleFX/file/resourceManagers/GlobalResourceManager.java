@@ -1,7 +1,8 @@
 package com.woogleFX.file.resourceManagers;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.engine.gui.Alarms;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
+import com.woogleFX.engine.gui.alarms.LoadingResourcesAlarm;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.gameData.animation.AnimationManager;
 import com.woogleFX.gameData.animation.AnimationReader;
@@ -78,7 +79,7 @@ public class GlobalResourceManager {
             for (String resource : allFailedResources) {
                 fullError.append("\n").append(resource);
             }
-            Alarms.loadingInitialResourcesError(fullError.substring(1));
+            LoadingResourcesAlarm.showInitial(fullError.substring(1));
         }
 
     }
@@ -92,7 +93,7 @@ public class GlobalResourceManager {
         try {
             resources = FileManager.openResources(version);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
             return;
         }
 
@@ -125,7 +126,7 @@ public class GlobalResourceManager {
         try {
             particles2 = FileManager.openParticles(version);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
             return;
         }
 
@@ -177,7 +178,7 @@ public class GlobalResourceManager {
         try {
             textList = FileManager.openText(version);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
             return;
         }
 
@@ -198,7 +199,7 @@ public class GlobalResourceManager {
         try {
             materialList = FileManager.openMaterials(version);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
             return;
         }
 

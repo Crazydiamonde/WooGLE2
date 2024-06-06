@@ -3,7 +3,7 @@ package com.woogleFX.engine.fx;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.LevelManager;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
-import com.woogleFX.engine.gui.Alarms;
+import com.woogleFX.engine.gui.alarms.CloseTabAlarm;
 import com.woogleFX.gameData.level.LevelTab;
 import com.woogleFX.gameData.level._Level;
 import javafx.scene.control.TabPane;
@@ -28,7 +28,7 @@ public class FXLevelSelectPane {
             if (level.getEditingStatus() == LevelTab.UNSAVED_CHANGES) {
                 // Show a dialogue asking the user if they want to close the level without
                 // saving changes first.
-                Alarms.closeTabMessage(tab, level);
+                CloseTabAlarm.show(tab, level);
             } else {
                 // Close the tab.
                 if (tab.getTabPane().getTabs().size() == 1) {

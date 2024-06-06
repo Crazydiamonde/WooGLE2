@@ -66,7 +66,8 @@ public class Ball extends EditorObject {
         addAttribute("fallingattachment",    InputField.ANY);
         addAttribute("spawn",                InputField.ANY);
         addAttribute("autoattach",           InputField.ANY);
-        addAttribute("isantigravunattached", InputField.ANY);
+        addAttribute("isantigravattached",   InputField.FLAG);
+        addAttribute("isantigravunattached", InputField.FLAG);
         addAttribute("popdelay",             InputField.ANY);
         addAttribute("distantsounds",        InputField.ANY);
         addAttribute("flammable",            InputField.ANY);

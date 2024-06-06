@@ -5,7 +5,7 @@ import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.engine.fx.FXStage;
-import com.woogleFX.engine.gui.Alarms;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.resourceManagers.BaseGameResources;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.engine.undoHandling.UndoManager;
@@ -179,7 +179,7 @@ public class LevelResourceImporter {
             try {
                 Files.copy(resrcFile.toPath(), Paths.get(dir + "\\res\\music\\" + resrcFile.getName()));
             } catch (IOException e) {
-                Alarms.errorMessage(e);
+                ErrorAlarm.show(e);
             }
         } else {
             soundPath = "res/music/" + normalizedFilename;
@@ -261,7 +261,7 @@ public class LevelResourceImporter {
             try {
                 Files.copy(resrcFile.toPath(), Paths.get(dir + "\\res\\sounds\\" + resrcFile.getName()));
             } catch (Exception e) {
-                Alarms.errorMessage(e);
+                ErrorAlarm.show(e);
             }
         } else {
             soundPath = "res/sounds/" + normalizedFilename;

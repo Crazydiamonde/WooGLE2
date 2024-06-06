@@ -1,6 +1,6 @@
 package com.woogleFX.engine.undoHandling.userActions;
 
-import com.woogleFX.engine.gui.Alarms;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,7 +28,7 @@ public class DestroyFileAction extends UserAction {
         try {
             Files.delete(Path.of(path));
         } catch (IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
         }
     }
 

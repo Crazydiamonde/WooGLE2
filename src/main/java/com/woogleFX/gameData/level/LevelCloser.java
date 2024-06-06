@@ -2,8 +2,8 @@ package com.woogleFX.gameData.level;
 
 import com.woogleFX.engine.fx.FXLevelSelectPane;
 import com.woogleFX.engine.fx.FXStage;
-import com.woogleFX.engine.gui.Alarms;
-import com.woogleFX.gameData.level.LevelTab;
+import com.woogleFX.engine.gui.alarms.CloseTabAlarm;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import javafx.scene.control.TabPane;
 
 public class LevelCloser {
@@ -16,13 +16,13 @@ public class LevelCloser {
             try {
                 LevelTab levelTab = (LevelTab) levelSelectPane.getTabs().get(levelSelectPane.getTabs().size() - 1);
                 if (levelTab.getLevel().getEditingStatus() == LevelTab.UNSAVED_CHANGES) {
-                    Alarms.closeTabMessage2(levelTab, levelTab.getLevel());
+                    CloseTabAlarm.showClosingEditor(levelTab, levelTab.getLevel());
                 } else {
                     levelTab.getTabPane().getTabs().remove(levelTab);
                     resumeLevelClosing();
                 }
             } catch (Exception e) {
-                Alarms.errorMessage(e);
+                ErrorAlarm.show(e);
             }
         }
     }

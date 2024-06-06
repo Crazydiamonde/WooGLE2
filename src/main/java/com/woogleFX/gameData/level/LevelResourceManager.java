@@ -1,12 +1,13 @@
 package com.woogleFX.gameData.level;
 
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
+import com.woogleFX.engine.gui.alarms.ConfirmCleanResourcesAlarm;
+import com.woogleFX.engine.gui.alarms.LoadingResourcesAlarm;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.editorObjects.ObjectManager;
 import com.woogleFX.engine.undoHandling.UndoManager;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.undoHandling.userActions.ObjectDestructionAction;
 import com.woogleFX.engine.undoHandling.userActions.ObjectCreationAction;
@@ -64,7 +65,7 @@ public class LevelResourceManager {
         }
 
         if (!failedToLoad.toString().isEmpty()) {
-            Alarms.loadingResourcesError(failedToLoad.toString());
+            LoadingResourcesAlarm.show(failedToLoad.toString());
         }
 
     }
@@ -111,7 +112,7 @@ public class LevelResourceManager {
             }
         }
 
-        if (!unused.isEmpty()) Alarms.confirmCleanResourcesMessage(level, unused);
+        if (!unused.isEmpty()) ConfirmCleanResourcesAlarm.show(level, unused);
 
     }
 

@@ -51,6 +51,10 @@ public class Renderer {
             canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
             drawLevelToCanvas(level, canvas);
 
+            if (SelectionManager.getMode() == SelectionManager.GEOMETRY) {
+                EffectsManager.renderCurrentSpline(canvas.getGraphicsContext2D());
+            }
+
         } else {
             clear(canvas);
         }

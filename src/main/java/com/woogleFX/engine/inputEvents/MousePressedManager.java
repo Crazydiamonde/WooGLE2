@@ -1,6 +1,7 @@
 package com.woogleFX.engine.inputEvents;
 
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
+import com.woogleFX.editorObjects.splineGeom.SplineManager;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.engine.renderer.Renderer;
@@ -11,12 +12,14 @@ import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.DragSettings;
 import com.woogleFX.gameData.level._Level;
 import com.worldOfGoo.level.BallInstance;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+import java.awt.geom.QuadCurve2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +66,7 @@ public class MousePressedManager {
 
         if (SelectionManager.getMode() == SelectionManager.SELECTION) manageSelection(event, level);
         else if (SelectionManager.getMode() == SelectionManager.STRAND) tryToPlaceStrand(event, level);
+        else if (SelectionManager.getMode() == SelectionManager.GEOMETRY) manageSplinePlacement(event, level);
 
     }
 
@@ -222,6 +226,58 @@ public class MousePressedManager {
 
         return DragSettings.NULL;
 
+    }
+
+
+    private static void manageSplinePlacement(MouseEvent event, _Level level) {
+
+        double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
+        double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
+
+        int curveCount = SplineManager.getQuadCurveCount();
+        for (int i = 0; i < curveCount; i++) {
+
+            QuadCurve2D splineSegment = SplineManager.getQuadCurve(i);
+
+            if (mouseIntersection(mouseX, mouseY, splineSegment.getX1(), splineSegment.getY1())) {
+                SplineManager.select(splineSegment, 0);
+                return;
+            }
+
+            if (mouseIntersection(mouseX, mouseY, splineSegment.getCtrlX(), splineSegment.getCtrlY())) {
+                SplineManager.select(splineSegment, 1);
+                return;
+            }
+
+            if (mouseIntersection(mouseX, mouseY, splineSegment.getX2(), splineSegment.getY2())) {
+                SplineManager.select(splineSegment, 2);
+                return;
+            }
+
+        }
+
+        Point2D splineInitialPoint = SplineManager.getSplineInitialPoint();
+        if (curveCount == 0 && splineInitialPoint != null && mouseIntersection(mouseX, mouseY, splineInitialPoint.getX(), splineInitialPoint.getY())) {
+            SplineManager.select(null, 0);
+            return;
+        }
+
+        Point2D splineControlPoint = SplineManager.getSplineControlPoint();
+        if (splineControlPoint != null && mouseIntersection(mouseX, mouseY, splineControlPoint.getX(), splineControlPoint.getY())) {
+            SplineManager.select(null, 1);
+            return;
+        }
+
+        SplineManager.select(null, -1);
+
+        SplineManager.addPoint(mouseX, mouseY);
+
+    }
+
+
+    private static boolean mouseIntersection(double mouseX, double mouseY, double x, double y) {
+        double width = 6 / LevelManager.getLevel().getZoom();
+        return Math.hypot(mouseX - x, mouseY - y) < width;
     }
 
 }

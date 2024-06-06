@@ -4,9 +4,11 @@ import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
+import com.woogleFX.engine.gui.alarms.AskForLevelNameAlarm;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
+import com.woogleFX.engine.gui.alarms.LoadingResourcesAlarm;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.editorObjects.objectCreators.BlankObjectGenerator;
-import com.woogleFX.engine.gui.Alarms;
 import com.woogleFX.engine.gui.LevelSelector;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.LevelManager;
@@ -35,7 +37,7 @@ public class LevelLoader {
 
 
     public static void newLevel(GameVersion version) {
-        Alarms.askForLevelName("new", version);
+        AskForLevelNameAlarm.show("new", version);
     }
 
 
@@ -206,7 +208,7 @@ public class LevelLoader {
         try {
             level = FileManager.openLevel(levelName, version);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            Alarms.errorMessage(e);
+            ErrorAlarm.show(e);
             return;
         }
 
@@ -241,7 +243,7 @@ public class LevelLoader {
             for (String resource : failedResources) {
                 fullError.append("\n").append(resource);
             }
-            Alarms.loadingResourcesError(fullError.substring(1));
+            LoadingResourcesAlarm.show(fullError.substring(1));
         }
 
         finishOpeningLevel(level);
@@ -313,7 +315,7 @@ public class LevelLoader {
 
     public static void cloneLevel() {
         GameVersion version = LevelManager.getLevel().getVersion();
-        Alarms.askForLevelName("clone", version);
+        AskForLevelNameAlarm.show("clone", version);
     }
 
 

@@ -1,6 +1,6 @@
 package com.woogleFX.file.resourceManagers;
 
-import com.woogleFX.engine.gui.Alarms;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class BaseGameResources {
             for (int i = 0; i < each.length; i++) each2[i] = each[i].substring(0, each[i].length() - 1);
             set.addAll(List.of(each2));
         } catch (IOException e) {
-            Alarms.errorMessage("Could not load " + file);
+            ErrorAlarm.show("Could not load " + file);
         }
     }
 

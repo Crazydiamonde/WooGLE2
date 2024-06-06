@@ -219,7 +219,12 @@ public enum InputField {
             }
 
             case TEXT -> {
-                return true;
+                try {
+                    ResourceManager.getText(null, potential, object.getVersion());
+                    return true;
+                } catch (FileNotFoundException ignored) {
+                    return false;
+                }
             }
 
             case PARTICLES -> {

@@ -12,6 +12,7 @@ public class BallStrand extends EditorObject {
         addAttribute("type",           InputField.ANY)                     .assertRequired();
         addAttribute("image",          InputField.IMAGE)                   .assertRequired();
         addAttribute("inactiveimage",  InputField.ANY)                     .assertRequired();
+        addAttribute("mass",           InputField.NUMBER);
         addAttribute("springconstmin", InputField.ANY)                     .assertRequired();
         addAttribute("springconstmax", InputField.ANY)                     .assertRequired();
         addAttribute("dampfac",        InputField.ANY)                     .assertRequired();
