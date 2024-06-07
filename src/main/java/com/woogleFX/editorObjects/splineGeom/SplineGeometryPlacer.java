@@ -16,7 +16,7 @@ public class SplineGeometryPlacer {
 
     private static final double STEPS_PER_SPLINE_SEGMENT_LENGTH = 0.0125;
 
-    private static final double TOLERANCE = 2.0;
+    private static final double TOLERANCE = 1.0;
 
 
     private static int getStepCount(double length) {
@@ -332,19 +332,19 @@ public class SplineGeometryPlacer {
 
                 double theta = -Math.PI/2 + Math.atan2(2*C*s+D, 2*A*s+B);
 
-                for (int radius = 16; ; radius++) {
+                for (int radius = 500; radius > 16; radius--) {
 
                     double circleX = stepPoint.getX() + radius * Math.cos(theta);
                     double circleY = stepPoint.getY() + radius * Math.sin(theta);
 
-                    if (circleX < minX || circleY < minY || circleX >= maxX || circleY >= maxY) break;
+                    if (circleX < minX || circleY < minY || circleX >= maxX || circleY >= maxY) continue;
 
                     if (maxRadii[(int)(circleY - minY)][(int)(circleX - minX)] < radius) continue;
 
                     Circle circle = new Circle(circleX, circleY, radius);
                     double satisfaction = getSplineSegmentSatisfaction(splineSegment, new ArrayList<>(List.of(circle)));
 
-                    if (satisfaction > bestSatisfaction - 4) {
+                    if (satisfaction > bestSatisfaction) {
                         bestSatisfaction = satisfaction;
                         bestCircle = circle;
                     }
@@ -368,19 +368,19 @@ public class SplineGeometryPlacer {
 
                 double theta = -Math.PI/2 + Math.atan2(2*C*s+D, 2*A*s+B);
 
-                for (int h = 8; h < 100; h++) {
+                for (int h = 100; h > 8; h--) {
 
-                    double w = h * 4;
+                    double w = h * 3;
 
-                    double rectangleX = stepPoint.getX() + (h/2.0) * Math.cos(theta);
-                    double rectangleY = stepPoint.getY() + (h/2.0) * Math.sin(theta);
+                    double rectangleX = stepPoint.getX() + h/2.0 * Math.cos(theta);
+                    double rectangleY = stepPoint.getY() + h/2.0 * Math.sin(theta);
 
                     if (!isRectangleInsideSpline(rectangleX, rectangleY, w, h, Math.PI/2 + theta)) continue;
 
                     Rectangle rectangle = new Rectangle(rectangleX, rectangleY, w, h, Math.PI/2 + theta);
                     double satisfaction = getSplineSegmentSatisfaction(splineSegment, new ArrayList<>(List.of(rectangle)));
 
-                    if (satisfaction > bestSatisfaction - 4) {
+                    if (satisfaction > bestSatisfaction) {
                         bestSatisfaction = satisfaction;
                         bestRectangle = rectangle;
                     }

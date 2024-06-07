@@ -132,12 +132,14 @@ public class EffectsManager {
         graphicsContext.closePath();
 
         graphicsContext.setStroke(new Color(0.0, 0.25, 1.0, 1.0));
+        graphicsContext.setLineWidth(width * zoom);
         graphicsContext.stroke();
 
         graphicsContext.setFill(new Color(0.0, 0.25, 1.0, 0.25));
         graphicsContext.fill();
 
         graphicsContext.setStroke(Renderer.selectionOutline);
+        graphicsContext.setLineWidth(width);
 
         graphicsContext.strokeOval(firstSegment.getX1() - width/2, firstSegment.getY1() - width/2, width, width);
         for (int i = 0; i < splineSegmentCount; i++) {

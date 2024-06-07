@@ -457,9 +457,9 @@ public class FXEditorButtons {
         buttonStrandMode.setTooltip(new DelayedTooltip("Place Strands"));
         toolBar.getItems().add(buttonStrandMode);
 
-        setIcon(buttonGeometryMode, prefix + "strand_mode.png");
+        setIcon(buttonGeometryMode, prefix + "geometry_mode.png");
         buttonGeometryMode.setOnAction(e -> SelectionManager.geometryMode());
-        buttonGeometryMode.setTooltip(new DelayedTooltip("Place Geometry"));
+        buttonGeometryMode.setTooltip(new DelayedTooltip("[Very Experimental] Build Geometry"));
         toolBar.getItems().add(buttonGeometryMode);
 
     }
