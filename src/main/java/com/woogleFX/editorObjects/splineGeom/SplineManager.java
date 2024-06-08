@@ -64,6 +64,27 @@ public class SplineManager {
     }
 
 
+    public static void addPolygonPoint(double x, double y) {
+        if (splineInitialPoint == null) splineInitialPoint = new Point2D(x, y);
+        else {
+            Point2D initialPoint;
+            if (spline.isEmpty()) {
+                initialPoint = splineInitialPoint;
+            } else {
+                QuadCurve2D lastSplineSegment = spline.get(spline.size() - 1);
+                initialPoint = new Point2D(lastSplineSegment.getX2(), lastSplineSegment.getY2());
+            }
+            Point2D middlePoint = new Point2D((initialPoint.getX() + x) / 2, (initialPoint.getY() + y) / 2);
+            spline.add(new QuadCurve2D.Double(
+                    initialPoint.getX(), initialPoint.getY(),
+                    middlePoint.getX(), middlePoint.getY(),
+                    x, y)
+            );
+            splineControlPoint = null;
+        }
+    }
+
+
     private static QuadCurve2D selectedCurve;
     public static QuadCurve2D getSelectedCurve() {
         return selectedCurve;

@@ -270,7 +270,7 @@ public class MousePressedManager {
 
         SplineManager.select(null, -1);
 
-        SplineManager.addPoint(mouseX, mouseY);
+        SplineManager.addPolygonPoint(mouseX, mouseY);
 
     }
 
