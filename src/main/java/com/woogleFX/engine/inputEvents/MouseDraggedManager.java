@@ -51,7 +51,7 @@ public class MouseDraggedManager {
                             Point2D ctrl1 = SplineManager.getSplinePoint(SplineManager.getSelected1() - 1);
                             SplineManager.setSplinePoint(SplineManager.getSelected1() - 1, ctrl1.getX() + x1 + dX * w1 - lastX, ctrl1.getY() + y1 + dY * w1 - lastY);
                         }
-                        if (SplineManager.getSelected1() != SplineManager.getPointCount() + 1) {
+                        if (SplineManager.getSelected1() != SplineManager.getPointCount() - 1) {
                             Point2D ctrl2 = SplineManager.getSplinePoint(SplineManager.getSelected1() + 1);
                             SplineManager.setSplinePoint(SplineManager.getSelected1() + 1, ctrl2.getX() + x1 + dX * w1 - lastX, ctrl2.getY() + y1 + dY * w1 - lastY);
                         }
@@ -75,7 +75,7 @@ public class MouseDraggedManager {
                             Point2D ctrl1 = SplineManager.getSplinePoint(SplineManager.getSelected2() - 1);
                             SplineManager.setSplinePoint(SplineManager.getSelected2() - 1, ctrl1.getX() + x2 + dX * w2 - lastX, ctrl1.getY() + y2 + dY * w2 - lastY);
                         }
-                        if (SplineManager.getSelected2() != SplineManager.getPointCount() + 1) {
+                        if (SplineManager.getSelected2() != SplineManager.getPointCount() - 1) {
                             Point2D ctrl2 = SplineManager.getSplinePoint(SplineManager.getSelected2() + 1);
                             SplineManager.setSplinePoint(SplineManager.getSelected2() + 1, ctrl2.getX() + x2 + dX * w2 - lastX, ctrl2.getY() + y2 + dY * w2 - lastY);
                         }

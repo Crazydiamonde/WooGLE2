@@ -113,6 +113,16 @@ public class SplineManager {
         return selected1OriginalY;
     }
 
+    private static double selected1ReverseOriginalX;
+    public static double getSelected1ReverseOriginalX() {
+        return selected1ReverseOriginalX;
+    }
+
+    private static double selected1ReverseOriginalY;
+    public static double getSelected1ReverseOriginalY() {
+        return selected1ReverseOriginalY;
+    }
+
 
     private static int selected2;
     public static int getSelected2() {
@@ -127,6 +137,16 @@ public class SplineManager {
     private static double selected2OriginalY;
     public static double getSelected2OriginalY() {
         return selected2OriginalY;
+    }
+
+    private static double selected2ReverseOriginalX;
+    public static double getSelected2ReverseOriginalX() {
+        return selected2ReverseOriginalX;
+    }
+
+    private static double selected2ReverseOriginalY;
+    public static double getSelected2ReverseOriginalY() {
+        return selected2ReverseOriginalY;
     }
 
 
@@ -158,12 +178,26 @@ public class SplineManager {
             selected1 = i;
             selected1OriginalX = spline[i].getX();
             selected1OriginalY = spline[i].getY();
+            if (i % 3 == 1 && i != 1) {
+                selected1ReverseOriginalX = spline[i - 2].getX();
+                selected1ReverseOriginalY = spline[i - 2].getY();
+            } else if (i % 3 == 2 && i != spline.length - 2) {
+                selected1ReverseOriginalX = spline[i + 2].getX();
+                selected1ReverseOriginalY = spline[i + 2].getY();
+            }
         } else selected1 = -1;
 
         if (distance > 0.3) {
             selected2 = i + 1;
             selected2OriginalX = spline[i + 1].getX();
             selected2OriginalY = spline[i + 1].getY();
+            if (i % 3 == 0 && i != 0) {
+                selected2ReverseOriginalX = spline[i - 1].getX();
+                selected2ReverseOriginalY = spline[i - 1].getY();
+            } else if (i % 3 == 1 && i != spline.length - 3) {
+                selected2ReverseOriginalX = spline[i + 3].getX();
+                selected2ReverseOriginalY = spline[i + 3].getY();
+            }
         } else selected2 = -1;
 
         selectedDistance = distance;

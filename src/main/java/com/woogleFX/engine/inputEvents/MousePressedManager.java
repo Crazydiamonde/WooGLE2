@@ -243,7 +243,7 @@ public class MousePressedManager {
                 if (i % 3 != 0) {
                     int otherI = (i % 3 == 1) ? i - 1 : i + 1;
                     Point2D sp2 = SplineManager.getSplinePoint(otherI);
-                    if (splinePoint.getX() == sp2.getX() && splinePoint.getY() == sp2.getY()) {
+                    if (Math.hypot(splinePoint.getX() - sp2.getX(), splinePoint.getY() - sp2.getY()) < 0.00001) {
                         SplineManager.select(otherI, 0);
                         return;
                     }

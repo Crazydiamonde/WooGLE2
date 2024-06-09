@@ -2,6 +2,7 @@ package com.woogleFX.engine.inputEvents;
 
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
+import com.woogleFX.editorObjects.splineGeom.SplineGeometryPlacer;
 import com.woogleFX.editorObjects.splineGeom.SplineManager;
 import com.woogleFX.engine.fx.FXCanvas;
 import com.woogleFX.engine.fx.FXContainers;
@@ -15,6 +16,7 @@ import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.DragSettings;
 import com.woogleFX.engine.undoHandling.userActions.AttributeChangeAction;
+import com.woogleFX.engine.undoHandling.userActions.CreateSplinePointAction;
 import com.woogleFX.engine.undoHandling.userActions.MoveSplinePointAction;
 import com.woogleFX.engine.undoHandling.userActions.UserAction;
 import com.woogleFX.gameData.level._Level;
@@ -125,32 +127,53 @@ public class MouseReleasedManager {
 
                 ArrayList<UserAction> userActions = new ArrayList<>();
 
+                boolean moved = false;
+
                 if (SplineManager.getSelected1() != -1) {
 
                     Point2D p1 = SplineManager.getSplinePoint(SplineManager.getSelected1());
                     if (p1.getX() != SplineManager.getSelected1OriginalX() || p1.getY() != SplineManager.getSelected1OriginalY()) {
+                        moved = true;
                         userActions.add(new MoveSplinePointAction(
                                 SplineManager.getSelected1OriginalX(), SplineManager.getSelected1OriginalY(),
                                 p1.getX(), p1.getY(),
                                 SplineManager.getSelected1()
                         ));
-                        if (SplineManager.getSelected1() != 0) {
-                            Point2D ctrl1 = SplineManager.getSplinePoint(SplineManager.getSelected1() - 1);
-                            if (ctrl1.getX() == p1.getX() && ctrl1.getY() == p1.getY()) {
+                        if (SplineManager.getSelected1() % 3 == 0) {
+                            if (SplineManager.getSelected1() != 0) {
+                                Point2D ctrl1 = SplineManager.getSplinePoint(SplineManager.getSelected1() - 1);
                                 userActions.add(new MoveSplinePointAction(
-                                        SplineManager.getSelected1OriginalX(), SplineManager.getSelected1OriginalY(),
-                                        p1.getX(), p1.getY(),
+                                        ctrl1.getX() - p1.getX() + SplineManager.getSelected1OriginalX(),
+                                        ctrl1.getY() - p1.getY() + SplineManager.getSelected1OriginalY(),
+                                        ctrl1.getX(), ctrl1.getY(),
                                         SplineManager.getSelected1() - 1
                                 ));
                             }
-                        }
-                        if (SplineManager.getSelected1() != SplineManager.getPointCount() - 1) {
-                            Point2D ctrl2 = SplineManager.getSplinePoint(SplineManager.getSelected1() + 1);
-                            if (ctrl2.getX() == p1.getX() && ctrl2.getY() == p1.getY()) {
+                            if (SplineManager.getSelected1() != SplineManager.getPointCount() - 1) {
+                                Point2D ctrl2 = SplineManager.getSplinePoint(SplineManager.getSelected1() + 1);
                                 userActions.add(new MoveSplinePointAction(
-                                        SplineManager.getSelected1OriginalX(), SplineManager.getSelected1OriginalY(),
-                                        p1.getX(), p1.getY(),
+                                        ctrl2.getX() - p1.getX() + SplineManager.getSelected1OriginalX(),
+                                        ctrl2.getY() - p1.getY() + SplineManager.getSelected1OriginalY(),
+                                        ctrl2.getX(), ctrl2.getY(),
                                         SplineManager.getSelected1() + 1
+                                ));
+                            }
+                        } else {
+                            if (SplineManager.getSelected1() % 3 == 1 && SplineManager.getSelected1() != 1) {
+                                Point2D reverseCtrl1 = SplineManager.getSplinePoint(SplineManager.getSelected1() - 2);
+                                userActions.add(new MoveSplinePointAction(
+                                        SplineManager.getSelected1ReverseOriginalX(),
+                                        SplineManager.getSelected1ReverseOriginalY(),
+                                        reverseCtrl1.getX(), reverseCtrl1.getY(),
+                                        SplineManager.getSelected1() - 2
+                                ));
+                            } else if (SplineManager.getSelected1() % 3 == 2 && SplineManager.getSelected1() != SplineManager.getPointCount() - 2) {
+                                Point2D reverseCtrl1 = SplineManager.getSplinePoint(SplineManager.getSelected1() + 2);
+                                userActions.add(new MoveSplinePointAction(
+                                        SplineManager.getSelected1ReverseOriginalX(),
+                                        SplineManager.getSelected1ReverseOriginalY(),
+                                        reverseCtrl1.getX(), reverseCtrl1.getY(),
+                                        SplineManager.getSelected1() + 2
                                 ));
                             }
                         }
@@ -161,34 +184,65 @@ public class MouseReleasedManager {
                 if (SplineManager.getSelected2() != -1) {
 
                     Point2D p2 = SplineManager.getSplinePoint(SplineManager.getSelected2());
-                    if (p2.getX() != SplineManager.getSelected1OriginalX() || p2.getY() != SplineManager.getSelected2OriginalY()) {
+                    if (p2.getX() != SplineManager.getSelected2OriginalX() || p2.getY() != SplineManager.getSelected2OriginalY()) {
+                        moved = true;
                         userActions.add(new MoveSplinePointAction(
                                 SplineManager.getSelected2OriginalX(), SplineManager.getSelected2OriginalY(),
                                 p2.getX(), p2.getY(),
                                 SplineManager.getSelected2()
                         ));
-                        if (SplineManager.getSelected2() != 0) {
-                            Point2D ctrl1 = SplineManager.getSplinePoint(SplineManager.getSelected2() - 1);
-                            if (ctrl1.getX() == p2.getX() && ctrl1.getY() == p2.getY()) {
+                        if (SplineManager.getSelected2() % 3 == 0) {
+                            if (SplineManager.getSelected2() != 0) {
+                                Point2D ctrl1 = SplineManager.getSplinePoint(SplineManager.getSelected2() - 1);
                                 userActions.add(new MoveSplinePointAction(
-                                        SplineManager.getSelected2OriginalX(), SplineManager.getSelected2OriginalY(),
-                                        p2.getX(), p2.getY(),
+                                        ctrl1.getX() - p2.getX() + SplineManager.getSelected2OriginalX(),
+                                        ctrl1.getY() - p2.getY() + SplineManager.getSelected2OriginalY(),
+                                        ctrl1.getX(), ctrl1.getY(),
                                         SplineManager.getSelected2() - 1
                                 ));
                             }
-                        }
-                        if (SplineManager.getSelected2() != SplineManager.getPointCount() - 1) {
-                            Point2D ctrl2 = SplineManager.getSplinePoint(SplineManager.getSelected2() + 1);
-                            if (ctrl2.getX() == p2.getX() && ctrl2.getY() == p2.getY()) {
+                            if (SplineManager.getSelected2() != SplineManager.getPointCount() - 1) {
+                                Point2D ctrl2 = SplineManager.getSplinePoint(SplineManager.getSelected2() + 1);
                                 userActions.add(new MoveSplinePointAction(
-                                        SplineManager.getSelected2OriginalX(), SplineManager.getSelected2OriginalY(),
-                                        p2.getX(), p2.getY(),
+                                        ctrl2.getX() - p2.getX() + SplineManager.getSelected2OriginalX(),
+                                        ctrl2.getY() - p2.getY() + SplineManager.getSelected2OriginalY(),
+                                        ctrl2.getX(), ctrl2.getY(),
                                         SplineManager.getSelected2() + 1
+                                ));
+                            }
+                        } else {
+                            if (SplineManager.getSelected2() % 3 == 1 && SplineManager.getSelected2() != 1) {
+                                Point2D reverseCtrl1 = SplineManager.getSplinePoint(SplineManager.getSelected2() - 2);
+                                userActions.add(new MoveSplinePointAction(
+                                        SplineManager.getSelected2ReverseOriginalX(),
+                                        SplineManager.getSelected2ReverseOriginalY(),
+                                        reverseCtrl1.getX(), reverseCtrl1.getY(),
+                                        SplineManager.getSelected2() - 2
+                                ));
+                            } else if (SplineManager.getSelected2() % 3 == 2 && SplineManager.getSelected2() != SplineManager.getPointCount() - 2) {
+                                Point2D reverseCtrl1 = SplineManager.getSplinePoint(SplineManager.getSelected2() + 2);
+                                userActions.add(new MoveSplinePointAction(
+                                        SplineManager.getSelected2ReverseOriginalX(),
+                                        SplineManager.getSelected2ReverseOriginalY(),
+                                        reverseCtrl1.getX(), reverseCtrl1.getY(),
+                                        SplineManager.getSelected2() + 2
                                 ));
                             }
                         }
                     }
 
+                }
+
+                if (!moved) {
+
+                    int selected1 = SplineManager.getSelected1() != -1 ? SplineManager.getSelected1() : SplineManager.getSelected2();
+                    double amt = SplineManager.getSelectedDistance();
+                    if (amt != 0) {
+                        Point2D p2D = SplineGeometryPlacer.getPointOnSplineSegment(SplineManager.getQuadCurve(selected1 / 3 * 2 + (int)(amt * 2)), amt < 0.5 ? 2 * amt : 2 * amt - 1);
+                        SplineManager.addPoint(p2D.getX(), p2D.getY(), p2D.getX(), p2D.getY(), p2D.getX(), p2D.getY(), selected1 + 2);
+
+                        userActions.add(new CreateSplinePointAction(p2D.getX(), p2D.getY(), p2D.getX(), p2D.getY(), p2D.getX(), p2D.getY(), selected1 + 2));
+                    }
 
                 }
 
