@@ -27,7 +27,7 @@ public class Rectangle extends EditorObject {
 
         addAttribute("id",               InputField.ANY)                                   .assertRequired();
         addAttribute("mass",             InputField.NUMBER)     .setDefaultValue("0");
-        addAttribute("static",           InputField.FLAG)       .setDefaultValue("true")   .assertRequired();
+        addAttribute("static",           InputField.FLAG);
         addAttribute("tag",              InputField.TAG);
         addAttribute("material",         InputField.MATERIAL);
         addAttribute("image",            InputField.IMAGE);

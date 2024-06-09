@@ -20,6 +20,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -182,7 +184,6 @@ public class FXPropertiesView {
                         EditorObject object = getTableRow().getItem().getObject();
                         super.commitEdit(InputField.verify(object, type, s) ? s : before);
                     }
-
 
                 };
 

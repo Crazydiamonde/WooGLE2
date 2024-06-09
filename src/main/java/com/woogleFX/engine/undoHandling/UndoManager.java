@@ -59,7 +59,7 @@ public class UndoManager {
         UserAction[] changes = forwardActions.pop();
 
         UserAction[] inverted = new UserAction[changes.length];
-        for (int i = 0; i < changes.length; i++) inverted[i] = changes[i].getInverse();
+        for (int i = 0; i < changes.length; i++) inverted[i] = changes[changes.length - i - 1].getInverse();
         backwardActions.add(inverted);
 
         for (int i = changes.length - 1; i >= 0; i--) changes[i].getInverse().execute();

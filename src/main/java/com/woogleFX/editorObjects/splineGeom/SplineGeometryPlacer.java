@@ -4,23 +4,22 @@ import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.LevelManager;
 import com.woogleFX.engine.undoHandling.UndoManager;
+import com.woogleFX.engine.undoHandling.userActions.DeleteSplinePointAction;
 import com.woogleFX.engine.undoHandling.userActions.ObjectCreationAction;
 import com.woogleFX.engine.undoHandling.userActions.UserAction;
+import javafx.geometry.Point2D;
 
-import java.awt.geom.Point2D;
 import java.awt.geom.QuadCurve2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SplineGeometryPlacer {
 
-    private static final double STEPS_PER_SPLINE_SEGMENT_LENGTH = 0.0125;
-
     private static final double TOLERANCE = 0.001;
 
 
     private static int getStepCount(double length) {
-        return (int)(length * 500);
+        return (int)(length * 20 + 10);
     }
 
 
@@ -66,7 +65,7 @@ public class SplineGeometryPlacer {
     }
 
 
-    private static double getSplineSegmentLength(QuadCurve2D splineSegment) {
+    public static double getSplineSegmentLength(QuadCurve2D splineSegment) {
 
         double x1 = splineSegment.getX1();
         double y1 = splineSegment.getY1();
@@ -98,7 +97,7 @@ public class SplineGeometryPlacer {
     }
 
 
-    private static Point2D getPointOnSplineSegment(QuadCurve2D splineSegment, double s) {
+    public static Point2D getPointOnSplineSegment(QuadCurve2D splineSegment, double s) {
 
         double x1 = splineSegment.getX1();
         double y1 = splineSegment.getY1();
@@ -110,7 +109,7 @@ public class SplineGeometryPlacer {
         double x = s*s*(x1 - 2*x2 + x3) + s*(2*x2 - 2*x1) + x1;
         double y = s*s*(y1 - 2*y2 + y3) + s*(2*y2 - 2*y1) + y1;
 
-        return new Point2D.Double(x, y);
+        return new Point2D(x, y);
 
     }
 
@@ -140,8 +139,8 @@ public class SplineGeometryPlacer {
 
         Point2D splinePoint = getPointOnSplineSegment(splineSegment, s);
 
-        double x1 = splinePoint.getX() + 0.1 * Math.cos(forwardAngle + Math.PI/2) - 0.1 * Math.sin(forwardAngle + Math.PI/2);
-        double y1 = splinePoint.getY() + 0.1 * Math.sin(forwardAngle + Math.PI/2) + 0.1 * Math.cos(forwardAngle + Math.PI/2);
+        double x1 = splinePoint.getX() + 0.000001 * Math.cos(forwardAngle + Math.PI/2) - 0.000001 * Math.sin(forwardAngle + Math.PI/2);
+        double y1 = splinePoint.getY() + 0.000001 * Math.sin(forwardAngle + Math.PI/2) + 0.000001 * Math.cos(forwardAngle + Math.PI/2);
 
         if (isPointInsideSpline(x1, y1)) return forwardAngle + Math.PI/2;
         else return forwardAngle - Math.PI/2;
@@ -197,7 +196,7 @@ public class SplineGeometryPlacer {
 
     private static double getSplineSegmentSatisfaction(QuadCurve2D splineSegment, ArrayList<Geometry> geometryList) {
 
-        int numSteps = getStepCount(getSplineSegmentLength(splineSegment));
+        int numSteps = getStepCount(getSplineSegmentLength(splineSegment) * 4);
 
         double satisfiedPointCount = 0;
 
@@ -314,19 +313,19 @@ public class SplineGeometryPlacer {
 
     private static boolean isRectangleInsideSpline(double x, double y, double w, double h, double r) {
 
-        for (double s = 0; s < 1; s += 0.01) {
+        for (double s = 0; s < 1; s += 0.025) {
 
-            double x1 = x + w*s/2 * Math.cos(r) - h/2 * Math.sin(r);
-            double y1 = y + h/2 * Math.cos(r) + w*s/2 * Math.sin(r);
+            double x1 = x + w/2 * Math.cos(r) - h*s/2 * Math.sin(r);
+            double y1 = y + h*s/2 * Math.cos(r) + w/2 * Math.sin(r);
 
-            double x2 = x - w/2 * Math.cos(r) - h*s/2 * Math.sin(r);
-            double y2 = y + h*s/2 * Math.cos(r) - w/2 * Math.sin(r);
+            double x2 = x - w*s/2 * Math.cos(r) - h/2 * Math.sin(r);
+            double y2 = y + h/2 * Math.cos(r) - w*s/2 * Math.sin(r);
 
-            double x3 = x + w/2 * Math.cos(r) + h*s/2 * Math.sin(r);
-            double y3 = y - h*s/2 * Math.cos(r) + w/2 * Math.sin(r);
+            double x3 = x + w*s/2 * Math.cos(r) + h/2 * Math.sin(r);
+            double y3 = y - h/2 * Math.cos(r) + w*s/2 * Math.sin(r);
 
-            double x4 = x - w*s/2 * Math.cos(r) + h/2 * Math.sin(r);
-            double y4 = y - h/2 * Math.cos(r) - w*s/2 * Math.sin(r);
+            double x4 = x - w/2 * Math.cos(r) + h*s/2 * Math.sin(r);
+            double y4 = y - h*s/2 * Math.cos(r) - w/2 * Math.sin(r);
 
             if (
                 !isPointInsideSpline(x1, y1) ||
@@ -334,6 +333,19 @@ public class SplineGeometryPlacer {
                 !isPointInsideSpline(x3, y3) ||
                 !isPointInsideSpline(x4, y4)
             ) return false;
+
+        }
+
+        return true;
+
+    }
+
+
+    private static boolean isCircleInsideSpline(double x, double y, double r) {
+
+        for (double theta = 0; theta < 6.283; theta += 0.001) {
+
+            if (!isPointInsideSpline(x + r * Math.cos(theta), y + r * Math.sin(theta))) return false;
 
         }
 
@@ -363,8 +375,6 @@ public class SplineGeometryPlacer {
 
         numCompleted = 0;
 
-        double[][] maxRadii = getMaxRadii(splineBounds);
-
         for (int splineSegmentIndex = 0; splineSegmentIndex < splineSegmentCount; splineSegmentIndex++) {
             allGeometryList.add(new ArrayList<>());
             int finalSplineSegmentIndex = splineSegmentIndex;
@@ -386,7 +396,7 @@ public class SplineGeometryPlacer {
                     (y3 - splineBounds.minY) / size
             );
 
-            new Thread(() -> fillSplineSegmentWithGeometry(newSplineSegment, maxRadii, allGeometryList.get(finalSplineSegmentIndex))).start();
+            new Thread(() -> fillSplineSegmentWithGeometry(newSplineSegment, allGeometryList.get(finalSplineSegmentIndex))).start();
         }
 
         while (numCompleted < splineSegmentCount) Thread.onSpinWait();
@@ -394,16 +404,46 @@ public class SplineGeometryPlacer {
         ArrayList<Geometry> separated = new ArrayList<>();
         for (ArrayList<Geometry> list : allGeometryList) separated.addAll(list);
 
+        /*
+        for (int splineSegmentIndex = 0; splineSegmentIndex < splineSegmentCount; splineSegmentIndex++) {
+            allGeometryList.add(new ArrayList<>());
+            QuadCurve2D splineSegment = SplineManager.getQuadCurve(splineSegmentIndex);
+
+            double x1 = splineSegment.getX1();
+            double y1 = splineSegment.getY1();
+            double x2 = splineSegment.getCtrlX();
+            double y2 = splineSegment.getCtrlY();
+            double x3 = splineSegment.getX2();
+            double y3 = splineSegment.getY2();
+
+            QuadCurve2D newSplineSegment = new QuadCurve2D.Double(
+                    (x1 - splineBounds.minX) / size,
+                    (y1 - splineBounds.minY) / size,
+                    (x2 - splineBounds.minX) / size,
+                    (y2 - splineBounds.minY) / size,
+                    (x3 - splineBounds.minX) / size,
+                    (y3 - splineBounds.minY) / size
+            );
+
+            int stepSize = getStepCount(getSplineSegmentLength(newSplineSegment));
+            for (int i = 0; i < stepSize; i++) {
+                double s = (double) i / stepSize;
+                separated.add(new Circle(getPointOnSplineSegment(newSplineSegment, s).getX(), getPointOnSplineSegment(newSplineSegment, s).getY(), 0.001));
+            }
+
+        }
+         */
+
         addGeometryAsEditorObjects(separated, splineBounds);
 
     }
 
 
-    private static void fillSplineSegmentWithGeometry(QuadCurve2D splineSegment, double[][] maxRadii, ArrayList<Geometry> allGeometryList) {
+    private static void fillSplineSegmentWithGeometry(QuadCurve2D splineSegment, ArrayList<Geometry> allGeometryList) {
 
         int numSteps = getStepCount(getSplineSegmentLength(splineSegment));
 
-        Circle[] circles = getCircles(splineSegment, maxRadii);
+        Circle[] circles = getCircles(splineSegment);
 
         Rectangle[] rectangles = getRectangles(splineSegment);
 
@@ -458,69 +498,7 @@ public class SplineGeometryPlacer {
     }
 
 
-    private static double[][] getMaxRadii(Bounds splineBounds) {
-
-        int splineSegmentCount = SplineManager.getQuadCurveCount();
-
-        double width = splineBounds.maxX - splineBounds.minX;
-        double height = splineBounds.maxY - splineBounds.minY;
-
-        double size = Math.max(width, height);
-
-        double[][] maxRadii = new double[101][101];
-
-        for (double y = 0; y <= 1; y += 0.01) {
-            for (double x = 0; x <= 1; x += 0.01) {
-
-                if (!isPointInsideSpline(x, y)) continue;
-
-                double minRadius = Double.POSITIVE_INFINITY;
-
-                for (int splineSegmentIndex = 0; splineSegmentIndex < splineSegmentCount; splineSegmentIndex++) {
-
-                    QuadCurve2D splineSegment = SplineManager.getQuadCurve(splineSegmentIndex);
-
-                    double x1 = splineSegment.getX1();
-                    double y1 = splineSegment.getY1();
-                    double x2 = splineSegment.getCtrlX();
-                    double y2 = splineSegment.getCtrlY();
-                    double x3 = splineSegment.getX2();
-                    double y3 = splineSegment.getY2();
-
-                    QuadCurve2D newSplineSegment = new QuadCurve2D.Double(
-                            (x1 - splineBounds.minX) / size,
-                            (y1 - splineBounds.minY) / size,
-                            (x2 - splineBounds.minX) / size,
-                            (y2 - splineBounds.minY) / size,
-                            (x3 - splineBounds.minX) / size,
-                            (y3 - splineBounds.minY) / size
-                    );
-
-                    int numSteps = getStepCount(getSplineSegmentLength(newSplineSegment));
-
-                    for (int stepIndex = 0; stepIndex < numSteps; stepIndex++) {
-
-                        double s = (double) stepIndex / numSteps;
-                        Point2D stepPoint = getPointOnSplineSegment(newSplineSegment, s);
-
-                        double distance = Math.hypot(stepPoint.getX() - x, stepPoint.getY() - y);
-                        if (distance < minRadius) minRadius = distance;
-
-                    }
-
-                }
-
-                maxRadii[(int)(y * 100)][(int)(x * 100)] = minRadius;
-
-            }
-        }
-
-        return maxRadii;
-
-    }
-
-
-    private static Circle[] getCircles(QuadCurve2D splineSegment, double[][] maxRadii) {
+    private static Circle[] getCircles(QuadCurve2D splineSegment) {
 
         int numSteps = getStepCount(getSplineSegmentLength(splineSegment));
 
@@ -536,15 +514,15 @@ public class SplineGeometryPlacer {
 
             double theta = getInwardAngleOnSplineSegment(splineSegment, s);
 
-            for (double radius = 1; radius > 0; radius -= 0.01) {
+            for (double radius = 0.01; radius < 1; radius += 0.01) {
 
-                double circleX = stepPoint.getX() + radius * Math.cos(theta);
-                double circleY = stepPoint.getY() + radius * Math.sin(theta);
+                double circleX = stepPoint.getX() + (radius + 0.0001) * Math.cos(theta);
+                double circleY = stepPoint.getY() + (radius + 0.0001) * Math.sin(theta);
 
 
                 if (circleX < 0 || circleY < 0 || circleX >= 1 || circleY >= 1) continue;
 
-                if (maxRadii[(int)(circleY * 100)][(int)(circleX * 100)] < radius) continue;
+                if (!isCircleInsideSpline(circleX, circleY, radius)) break;
 
                 Circle circle = new Circle(circleX, circleY, radius);
                 double satisfaction = getSplineSegmentSatisfaction(splineSegment, new ArrayList<>(List.of(circle)));
@@ -582,14 +560,16 @@ public class SplineGeometryPlacer {
             double forwardAngle = getForwardAngleOnSplineSegment(splineSegment, s);
             double theta = getInwardAngleOnSplineSegment(splineSegment, s);
 
-            for (double h = 1; h > 0; h -= 0.01) {
+            for (double h = 0.01; h < 0.333; h += 0.01) {
 
                 double w = h * 3;
 
-                double rectangleX = stepPoint.getX() + (h/2.0 + 0.0000000000001) * Math.cos(theta);
-                double rectangleY = stepPoint.getY() + (h/2.0 + 0.0000000000001) * Math.sin(theta);
+                double rectangleX = stepPoint.getX() + (h/2.0 + 0.000000001) * Math.cos(theta);
+                double rectangleY = stepPoint.getY() + (h/2.0 + 0.000000001) * Math.sin(theta);
 
-                if (!isRectangleInsideSpline(rectangleX, rectangleY, w, h, forwardAngle)) continue;
+                if (!isRectangleInsideSpline(rectangleX, rectangleY, w, h, forwardAngle)) {
+                    break;
+                }
 
                 Rectangle rectangle = new Rectangle(rectangleX, rectangleY, w, h, forwardAngle);
                 double satisfaction = getSplineSegmentSatisfaction(splineSegment, new ArrayList<>(List.of(rectangle)));
@@ -619,22 +599,36 @@ public class SplineGeometryPlacer {
 
         ArrayList<UserAction> undoBuilder = new ArrayList<>();
 
+        for (int i = SplineManager.getPointCount() - 4; i >= 0; i -= 3) {
+            Point2D p0 = i == 0 ? SplineManager.getSplinePoint(i) : SplineManager.getSplinePoint(i - 2);
+            Point2D p1 =  i == 0 ? SplineManager.getSplinePoint(i) : SplineManager.getSplinePoint(i - 1);
+            Point2D p2 = SplineManager.getSplinePoint(i);
+            undoBuilder.add(new DeleteSplinePointAction(p0.getX(), p0.getY(), p1.getX(), p1.getY(), p2.getX(), p2.getY(), i));
+        }
+
+        EditorObject compositegeom = ObjectCreator.create("compositegeom", LevelManager.getLevel().getSceneObject(), LevelManager.getLevel().getVersion());
+        compositegeom.setAttribute("x", splineBounds.minX + width / 2);
+        compositegeom.setAttribute("y", -splineBounds.minY - height / 2);
+        LevelManager.getLevel().getScene().add(compositegeom);
+
+        undoBuilder.add(new ObjectCreationAction(compositegeom, LevelManager.getLevel().getSceneObject().getChildren().indexOf(compositegeom)));
+
         for (Geometry geometry : geometryList) {
 
             EditorObject geometryObject;
 
             if (geometry instanceof Circle circle) {
 
-                geometryObject = ObjectCreator.create("circle", LevelManager.getLevel().getSceneObject(), LevelManager.getLevel().getVersion());
-                geometryObject.setAttribute("x", circle.x * size + splineBounds.minX);
-                geometryObject.setAttribute("y", -circle.y * size - splineBounds.minY);
+                geometryObject = ObjectCreator.create("circle", compositegeom, LevelManager.getLevel().getVersion());
+                geometryObject.setAttribute("x", circle.x * size + splineBounds.minX - compositegeom.getAttribute("x").doubleValue());
+                geometryObject.setAttribute("y", -circle.y * size - splineBounds.minY - compositegeom.getAttribute("y").doubleValue());
                 geometryObject.setAttribute("radius", circle.radius * size);
 
             } else if (geometry instanceof Rectangle rectangle) {
 
-                geometryObject = ObjectCreator.create("rectangle", LevelManager.getLevel().getSceneObject(), LevelManager.getLevel().getVersion());
-                geometryObject.setAttribute("x", rectangle.x * size + splineBounds.minX);
-                geometryObject.setAttribute("y", -rectangle.y * size - splineBounds.minY);
+                geometryObject = ObjectCreator.create("rectangle", compositegeom, LevelManager.getLevel().getVersion());
+                geometryObject.setAttribute("x", rectangle.x * size + splineBounds.minX - compositegeom.getAttribute("x").doubleValue());
+                geometryObject.setAttribute("y", -rectangle.y * size - splineBounds.minY - compositegeom.getAttribute("y").doubleValue());
                 geometryObject.setAttribute("width", rectangle.width * size);
                 geometryObject.setAttribute("height", rectangle.height * size);
                 geometryObject.setAttribute("rotation", -rectangle.rotation);
@@ -643,13 +637,13 @@ public class SplineGeometryPlacer {
 
             LevelManager.getLevel().getScene().add(geometryObject);
 
-            undoBuilder.add(new ObjectCreationAction(geometryObject, LevelManager.getLevel().getSceneObject().getChildren().indexOf(geometryObject)));
+            undoBuilder.add(new ObjectCreationAction(geometryObject, compositegeom.getChildren().indexOf(geometryObject)));
 
         }
 
-        ArrayList<UserAction> reverse = new ArrayList<>();
-        for (int i = undoBuilder.size() - 1; i >= 0; i--) reverse.add(undoBuilder.get(i));
-        UndoManager.registerChange(reverse.toArray(new UserAction[0]));
+        UndoManager.registerChange(undoBuilder.toArray(new UserAction[0]));
+
+        SplineManager.clear();
 
     }
 

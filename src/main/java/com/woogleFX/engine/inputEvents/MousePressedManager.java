@@ -1,6 +1,7 @@
 package com.woogleFX.engine.inputEvents;
 
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
+import com.woogleFX.editorObjects.splineGeom.SplineGeometryPlacer;
 import com.woogleFX.editorObjects.splineGeom.SplineManager;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
@@ -10,6 +11,8 @@ import com.woogleFX.engine.LevelManager;
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.DragSettings;
+import com.woogleFX.engine.undoHandling.UndoManager;
+import com.woogleFX.engine.undoHandling.userActions.CreateSplinePointAction;
 import com.woogleFX.gameData.level._Level;
 import com.worldOfGoo.level.BallInstance;
 import javafx.geometry.Point2D;
@@ -234,43 +237,47 @@ public class MousePressedManager {
         double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
-        int curveCount = SplineManager.getQuadCurveCount();
-        for (int i = 0; i < curveCount; i++) {
+        for (int i = 0; i < SplineManager.getPointCount(); i++) {
+            Point2D splinePoint = SplineManager.getSplinePoint(i);
+            if (mouseIntersection(mouseX, mouseY, splinePoint.getX(), splinePoint.getY())) {
+                if (i % 3 != 0) {
+                    int otherI = (i % 3 == 1) ? i - 1 : i + 1;
+                    Point2D sp2 = SplineManager.getSplinePoint(otherI);
+                    if (splinePoint.getX() == sp2.getX() && splinePoint.getY() == sp2.getY()) {
+                        SplineManager.select(otherI, 0);
+                        return;
+                    }
+                }
+                SplineManager.select(i, 0);
+                return;
+            }
+        }
 
+        for (int i = 0; i < SplineManager.getQuadCurveCount(); i++) {
             QuadCurve2D splineSegment = SplineManager.getQuadCurve(i);
-
-            if (mouseIntersection(mouseX, mouseY, splineSegment.getX1(), splineSegment.getY1())) {
-                SplineManager.select(splineSegment, 0);
-                return;
+            double length = SplineGeometryPlacer.getSplineSegmentLength(splineSegment);
+            for (int j = 0; j < length; j++) {
+                double s = j / length;
+                Point2D p = SplineGeometryPlacer.getPointOnSplineSegment(splineSegment, s);
+                if (Math.hypot(p.getX() - mouseX, p.getY() - mouseY) < 4) {
+                    SplineManager.select((i / 2) * 3 + 1, (s + i % 2) / 2);
+                    return;
+                }
             }
-
-            if (mouseIntersection(mouseX, mouseY, splineSegment.getCtrlX(), splineSegment.getCtrlY())) {
-                SplineManager.select(splineSegment, 1);
-                return;
-            }
-
-            if (mouseIntersection(mouseX, mouseY, splineSegment.getX2(), splineSegment.getY2())) {
-                SplineManager.select(splineSegment, 2);
-                return;
-            }
-
         }
 
-        Point2D splineInitialPoint = SplineManager.getSplineInitialPoint();
-        if (curveCount == 0 && splineInitialPoint != null && mouseIntersection(mouseX, mouseY, splineInitialPoint.getX(), splineInitialPoint.getY())) {
-            SplineManager.select(null, 0);
-            return;
+        SplineManager.select(-1, -1);
+
+        if (SplineManager.getPointCount() == 0) {
+            UndoManager.registerChange(new CreateSplinePointAction(0, 0, 0, 0, mouseX, mouseY, 0));
+            SplineManager.addPoint(0, 0, 0, 0, mouseX, mouseY, 0);
+        } else {
+            int i = SplineManager.getPointCount() + 2;
+            Point2D p0 = SplineManager.getSplinePoint(SplineManager.getPointCount() - 1);
+            UndoManager.registerChange(new CreateSplinePointAction(p0.getX(), p0.getY(), mouseX, mouseY, mouseX, mouseY, i));
+            SplineManager.addPoint(p0.getX(), p0.getY(), mouseX, mouseY, mouseX, mouseY, i);
         }
 
-        Point2D splineControlPoint = SplineManager.getSplineControlPoint();
-        if (splineControlPoint != null && mouseIntersection(mouseX, mouseY, splineControlPoint.getX(), splineControlPoint.getY())) {
-            SplineManager.select(null, 1);
-            return;
-        }
-
-        SplineManager.select(null, -1);
-
-        SplineManager.addPolygonPoint(mouseX, mouseY);
 
     }
 

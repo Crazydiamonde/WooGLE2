@@ -3,6 +3,7 @@ package com.woogleFX.engine.undoHandling.userActions;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.LevelManager;
 import com.woogleFX.editorObjects.ObjectManager;
+import com.woogleFX.engine.SelectionManager;
 
 public class ObjectDestructionAction extends UserAction {
 
@@ -22,6 +23,7 @@ public class ObjectDestructionAction extends UserAction {
     @Override
     public void execute() {
         ObjectManager.deleteItem(LevelManager.getLevel(), getObject(), false);
+        SelectionManager.selectionMode();
     }
 
 }

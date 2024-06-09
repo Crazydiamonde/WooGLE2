@@ -96,58 +96,70 @@ public class EffectsManager {
 
         double width = 6 / zoom;
 
-        graphicsContext.setLineWidth(width);
+        graphicsContext.setLineWidth(width * zoom);
+        if (SplineManager.getPointCount() > 1) {
 
-        Point2D splineControlPoint = SplineManager.getSplineControlPoint();
-        if (splineControlPoint != null) {
-            graphicsContext.strokeOval(splineControlPoint.getX() - width/2, splineControlPoint.getY() - width/2, width, width);
-        }
+            graphicsContext.beginPath();
 
-        if (SplineManager.getQuadCurveCount() == 0) {
+            QuadCurve2D firstSegment = SplineManager.getQuadCurve(0);
+            graphicsContext.moveTo(firstSegment.getX1(), firstSegment.getY1());
 
-            Point2D splineInitialPoint = SplineManager.getSplineInitialPoint();
-            if (splineInitialPoint != null) {
-                graphicsContext.setStroke(Renderer.selectionOutline);
-                graphicsContext.strokeOval(splineInitialPoint.getX() - width/2, splineInitialPoint.getY() - width/2, width, width);
+            int splineSegmentCount = SplineManager.getQuadCurveCount();
+            for (int i = 0; i < splineSegmentCount; i++) {
+                QuadCurve2D splineSegment = SplineManager.getQuadCurve(i);
+                graphicsContext.quadraticCurveTo(
+                        splineSegment.getCtrlX(), splineSegment.getCtrlY(),
+                        splineSegment.getX2(), splineSegment.getY2()
+                );
             }
 
-            graphicsContext.restore();
-            return;
+            graphicsContext.setStroke(new Color(0.0, 0.25, 1.0, 1.0));
+            graphicsContext.stroke();
+
+            graphicsContext.setFill(new Color(0.0, 0.25, 1.0, 0.25));
+            graphicsContext.fill();
+
+            graphicsContext.setStroke(Renderer.selectionOutline);
+            graphicsContext.setLineWidth(width * zoom / 2);
+            for (int i = 0; i < splineSegmentCount; i++) {
+
+                Point2D sp1 = SplineManager.getSplinePoint((i / 2) * 3);
+                double x1 = sp1.getX();
+                double y1 = sp1.getY();
+
+                Point2D ctrl1 = SplineManager.getSplinePoint((i / 2) * 3 + 1);
+                double ctrlX1 = ctrl1.getX();
+                double ctrlY1 = ctrl1.getY();
+
+                Point2D ctrl2 = SplineManager.getSplinePoint((i / 2) * 3 + 2);
+                double ctrlX2 = ctrl2.getX();
+                double ctrlY2 = ctrl2.getY();
+
+                double x2 = (ctrlX1 + ctrlX2) / 2;
+                double y2 = (ctrlY1 + ctrlY2) / 2;
+
+                Point2D sp2 = SplineManager.getSplinePoint((i / 2) * 3 + 3);
+                double x3 = sp2.getX();
+                double y3 = sp2.getY();
+
+                graphicsContext.strokeLine(x1, y1, ctrlX1, ctrlY1);
+                graphicsContext.strokeLine(ctrlX2, ctrlY2, x3, y3);
+
+            }
+
         }
-
-        graphicsContext.beginPath();
-
-        QuadCurve2D firstSegment = SplineManager.getQuadCurve(0);
-        graphicsContext.moveTo(firstSegment.getX1(), firstSegment.getY1());
-
-        int splineSegmentCount = SplineManager.getQuadCurveCount();
-        for (int i = 0; i < splineSegmentCount; i++) {
-            QuadCurve2D splineSegment = SplineManager.getQuadCurve(i);
-            graphicsContext.quadraticCurveTo(
-                    splineSegment.getCtrlX(), splineSegment.getCtrlY(),
-                    splineSegment.getX2(), splineSegment.getY2()
-            );
-        }
-
-        graphicsContext.closePath();
-
-        graphicsContext.setStroke(new Color(0.0, 0.25, 1.0, 1.0));
-        graphicsContext.setLineWidth(width * zoom);
-        graphicsContext.stroke();
-
-        graphicsContext.setFill(new Color(0.0, 0.25, 1.0, 0.25));
-        graphicsContext.fill();
 
         graphicsContext.setStroke(Renderer.selectionOutline);
         graphicsContext.setLineWidth(width);
 
-        graphicsContext.strokeOval(firstSegment.getX1() - width/2, firstSegment.getY1() - width/2, width, width);
-        for (int i = 0; i < splineSegmentCount; i++) {
-            QuadCurve2D splineSegment = SplineManager.getQuadCurve(i);
-
-            graphicsContext.strokeOval(splineSegment.getCtrlX() - width/2, splineSegment.getCtrlY() - width/2, width, width);
-            graphicsContext.strokeOval(splineSegment.getX2() - width/2, splineSegment.getY2() - width/2, width, width);
-
+        for (int i = 0; i < SplineManager.getPointCount(); i++) {
+            Point2D splinePoint = SplineManager.getSplinePoint(i);
+            graphicsContext.strokeOval(splinePoint.getX() - width/2, splinePoint.getY() - width/2, width, width);
+            if (i == SplineManager.getSelected1() || i == SplineManager.getSelected2()) {
+                graphicsContext.setLineWidth(1 / zoom);
+                graphicsContext.strokeRect(splinePoint.getX() - width/2 - 4/zoom, splinePoint.getY() - width/2 - 4/zoom, width + 8 / zoom, width + 8 / zoom);
+                graphicsContext.setLineWidth(width);
+            }
         }
 
         graphicsContext.restore();
