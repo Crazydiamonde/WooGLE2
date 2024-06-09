@@ -9,6 +9,7 @@ import com.woogleFX.engine.LevelManager;
 import com.woogleFX.editorObjects.DragSettings;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.StrokeLineCap;
 
 /** Represents a rectangle component in any object. */
 public abstract class RectangleComponent extends ObjectComponent
@@ -36,6 +37,16 @@ public abstract class RectangleComponent extends ObjectComponent
     }
 
 
+    public double getHorizontalEdgeSize() {
+        return getEdgeSize();
+    }
+
+
+    public double getVerticalEdgeSize() {
+        return getEdgeSize();
+    }
+
+
     @Override
     public void draw(GraphicsContext graphicsContext, boolean selected) {
 
@@ -47,35 +58,36 @@ public abstract class RectangleComponent extends ObjectComponent
 
         Point2D center = new Point2D(x, y);
 
-        double woag = Math.min(Math.min(getEdgeSize(), Math.abs(width) / 2), Math.abs(height) / 2) / 2;
+        double woag1 = Math.min(Math.min(getHorizontalEdgeSize(), Math.abs(width) / 2), Math.abs(height) / 2) / 2;
+        double woag2 = Math.min(Math.min(getVerticalEdgeSize(), Math.abs(width) / 2), Math.abs(height) / 2) / 2;
 
         double offsetX = LevelManager.getLevel().getOffsetX();
         double offsetY = LevelManager.getLevel().getOffsetY();
         double zoom = LevelManager.getLevel().getZoom();
 
-        Point2D topLeft = new Point2D(x - width / 2 + woag, y - height / 2 + woag);
+        Point2D topLeft = new Point2D(x - width / 2 + woag2, y - height / 2 + woag1);
         topLeft = ObjectUtil.rotate(topLeft, rotation, center);
         topLeft = topLeft.multiply(zoom).add(offsetX, offsetY);
 
-        Point2D topRight = new Point2D(x + width / 2 - woag, y - height / 2 + woag);
+        Point2D topRight = new Point2D(x + width / 2 - woag2, y - height / 2 + woag1);
         topRight = ObjectUtil.rotate(topRight, rotation, center);
         topRight = topRight.multiply(zoom).add(offsetX, offsetY);
 
-        Point2D bottomLeft = new Point2D(x - width / 2 + woag, y + height / 2 - woag);
+        Point2D bottomLeft = new Point2D(x - width / 2 + woag2, y + height / 2 - woag1);
         bottomLeft = ObjectUtil.rotate(bottomLeft, rotation, center);
         bottomLeft = bottomLeft.multiply(zoom).add(offsetX, offsetY);
 
-        Point2D bottomRight = new Point2D(x + width / 2 - woag, y + height / 2 - woag);
+        Point2D bottomRight = new Point2D(x + width / 2 - woag2, y + height / 2 - woag1);
         bottomRight = ObjectUtil.rotate(bottomRight, rotation, center);
         bottomRight = bottomRight.multiply(zoom).add(offsetX, offsetY);
-
-        Point2D topRight2 = new Point2D(x + width / 2, y - height / 2);
-        topRight2 = ObjectUtil.rotate(topRight2, rotation, center);
-        topRight2 = topRight2.multiply(zoom).add(offsetX, offsetY);
 
         Point2D topLeft2 = new Point2D(x - width / 2, y - height / 2);
         topLeft2 = ObjectUtil.rotate(topLeft2, rotation, center);
         topLeft2 = topLeft2.multiply(zoom).add(offsetX, offsetY);
+
+        Point2D topRight2 = new Point2D(x + width / 2, y - height / 2);
+        topRight2 = ObjectUtil.rotate(topRight2, rotation, center);
+        topRight2 = topRight2.multiply(zoom).add(offsetX, offsetY);
 
         Point2D bottomLeft2 = new Point2D(x - width / 2, y + height / 2);
         bottomLeft2 = ObjectUtil.rotate(bottomLeft2, rotation, center);
@@ -94,10 +106,15 @@ public abstract class RectangleComponent extends ObjectComponent
 
         graphicsContext.setStroke(getBorderColor());
 
-        graphicsContext.setLineWidth(2 * woag * zoom);
-        if (getEdgeSize() != 0) {
+        if (getHorizontalEdgeSize() != 0) {
+            graphicsContext.setLineWidth(2 * woag1 * zoom);
+            graphicsContext.setLineCap(StrokeLineCap.BUTT);
             graphicsContext.strokeLine(topRight.getX(), topRight.getY(), topLeft.getX(), topLeft.getY());
             graphicsContext.strokeLine(bottomLeft.getX(), bottomLeft.getY(), bottomRight.getX(), bottomRight.getY());
+        }
+        if (getVerticalEdgeSize() != 0) {
+            graphicsContext.setLineWidth(2 * woag2 * zoom);
+            graphicsContext.setLineCap(StrokeLineCap.BUTT);
             graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
             graphicsContext.strokeLine(bottomRight.getX(), bottomRight.getY(), topRight.getX(), topRight.getY());
         }
@@ -162,6 +179,9 @@ public abstract class RectangleComponent extends ObjectComponent
         double mX = rotated.getX();
         double mY = rotated.getY();
 
+        double edgeSizeH = getHorizontalEdgeSize();
+        double edgeSizeV = getVerticalEdgeSize();
+
         if (
                 mX < x - width / 2 ||
                 mX > x + width / 2 ||
@@ -170,10 +190,10 @@ public abstract class RectangleComponent extends ObjectComponent
         ) return DragSettings.NULL;
 
         if (isEdgeOnly() && (
-                mX > x - width / 2 + getEdgeSize() &&
-                mX < x + width / 2 - getEdgeSize() &&
-                mY > y - height / 2 + getEdgeSize() &&
-                mY < y + height / 2 - getEdgeSize()
+                mX > x - width / 2 + edgeSizeV &&
+                mX < x + width / 2 - edgeSizeV &&
+                mY > y - height / 2 + edgeSizeH &&
+                mY < y + height / 2 - edgeSizeH
         )) return DragSettings.NULL;
 
         DragSettings dragSettings = new DragSettings(isDraggable() ? DragSettings.MOVE : DragSettings.NONE, this);

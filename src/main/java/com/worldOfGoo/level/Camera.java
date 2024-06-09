@@ -62,6 +62,9 @@ public class Camera extends EditorObject {
             public double getEdgeSize() {
                 return 1.0;
             }
+            public double getHorizontalEdgeSize() {
+                return getHeight() / 8.0;
+            }
             public Paint getBorderColor() {
                 return new Color(0.0, 0.5, 0.5, 1.0);
             }
