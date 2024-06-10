@@ -109,14 +109,48 @@ public abstract class RectangleComponent extends ObjectComponent
         if (getHorizontalEdgeSize() != 0) {
             graphicsContext.setLineWidth(2 * woag1 * zoom);
             graphicsContext.setLineCap(StrokeLineCap.BUTT);
-            graphicsContext.strokeLine(topRight.getX(), topRight.getY(), topLeft.getX(), topLeft.getY());
-            graphicsContext.strokeLine(bottomLeft.getX(), bottomLeft.getY(), bottomRight.getX(), bottomRight.getY());
+
+            Point2D topLeftH = new Point2D(x - width / 2, y - height / 2 + woag1);
+            topLeftH = ObjectUtil.rotate(topLeftH, rotation, center);
+            topLeftH = topLeftH.multiply(zoom).add(offsetX, offsetY);
+
+            Point2D topRightH = new Point2D(x + width / 2, y - height / 2 + woag1);
+            topRightH = ObjectUtil.rotate(topRightH, rotation, center);
+            topRightH = topRightH.multiply(zoom).add(offsetX, offsetY);
+
+            Point2D bottomLeftH = new Point2D(x - width / 2, y + height / 2 - woag1);
+            bottomLeftH = ObjectUtil.rotate(bottomLeftH, rotation, center);
+            bottomLeftH = bottomLeftH.multiply(zoom).add(offsetX, offsetY);
+
+            Point2D bottomRightH = new Point2D(x + width / 2, y + height / 2 - woag1);
+            bottomRightH = ObjectUtil.rotate(bottomRightH, rotation, center);
+            bottomRightH = bottomRightH.multiply(zoom).add(offsetX, offsetY);
+
+            graphicsContext.strokeLine(topRightH.getX(), topRightH.getY(), topLeftH.getX(), topLeftH.getY());
+            graphicsContext.strokeLine(bottomLeftH.getX(), bottomLeftH.getY(), bottomRightH.getX(), bottomRightH.getY());
         }
         if (getVerticalEdgeSize() != 0) {
             graphicsContext.setLineWidth(2 * woag2 * zoom);
             graphicsContext.setLineCap(StrokeLineCap.BUTT);
-            graphicsContext.strokeLine(topLeft.getX(), topLeft.getY(), bottomLeft.getX(), bottomLeft.getY());
-            graphicsContext.strokeLine(bottomRight.getX(), bottomRight.getY(), topRight.getX(), topRight.getY());
+
+            Point2D topLeftV = new Point2D(x - width / 2 + woag2, y - height / 2);
+            topLeftV = ObjectUtil.rotate(topLeftV, rotation, center);
+            topLeftV = topLeftV.multiply(zoom).add(offsetX, offsetY);
+
+            Point2D topRightV = new Point2D(x + width / 2 - woag2, y - height / 2);
+            topRightV = ObjectUtil.rotate(topRightV, rotation, center);
+            topRightV = topRightV.multiply(zoom).add(offsetX, offsetY);
+
+            Point2D bottomLeftV = new Point2D(x - width / 2 + woag2, y + height / 2);
+            bottomLeftV = ObjectUtil.rotate(bottomLeftV, rotation, center);
+            bottomLeftV = bottomLeftV.multiply(zoom).add(offsetX, offsetY);
+
+            Point2D bottomRightV = new Point2D(x + width / 2 - woag2, y + height / 2);
+            bottomRightV = ObjectUtil.rotate(bottomRightV, rotation, center);
+            bottomRightV = bottomRightV.multiply(zoom).add(offsetX, offsetY);
+
+            graphicsContext.strokeLine(bottomLeftV.getX(), bottomLeftV.getY(), topLeftV.getX(), topLeftV.getY());
+            graphicsContext.strokeLine(topRightV.getX(), topRightV.getY(), bottomRightV.getX(), bottomRightV.getY());
         }
 
         if (selected) {

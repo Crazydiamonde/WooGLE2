@@ -60,7 +60,7 @@ public class Camera extends EditorObject {
                 setAttribute("endzoom", 525 / height);
             }
             public double getEdgeSize() {
-                return 1.0;
+                return 4.0;
             }
             public double getHorizontalEdgeSize() {
                 return getHeight() / 8.0;
