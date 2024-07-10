@@ -110,7 +110,6 @@ public class Initializer {
                 LevelLoader.openLevel(launchArguments[0], GameVersion.OLD);
             }
         }
-        FontReader.read("res\\fonts\\console_2x", GameVersion.NEW);
 
     }
 

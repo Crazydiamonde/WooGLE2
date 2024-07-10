@@ -245,7 +245,10 @@ public class _Level {
                 }
             }
         }
-        if (!notAlreadyHere) ObjectUtil.deepClone(textString, text.get(0));
+        if (!notAlreadyHere) {
+            ObjectUtil.deepClone(textString, text.get(0));
+            text.add(textString);
+        }
     }
 
 
