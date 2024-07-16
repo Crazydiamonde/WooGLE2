@@ -143,7 +143,7 @@ public class HierarchyManager {
 
                 for (EditorAttribute attribute : editorObject.getAttributes()) {
                     if (attribute.stringValue().isEmpty()) {
-                        if (!InputField.verify(editorObject, attribute.getType(), attribute.getDefaultValue()) && attribute.getRequiredInFile()) return;
+                        if (!InputField.verify(editorObject, attribute.getType(), attribute.getDefaultValue()) && attribute.getRequiredInFile()) valid = false;
                     } else if (!InputField.verify(editorObject, attribute.getType(), attribute.actualValue())) {
                         valid = false;
                     }

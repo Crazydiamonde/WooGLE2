@@ -26,7 +26,7 @@ public class Buttongroup extends EditorObject {
 
     @Override
     public String[] getPossibleChildren() {
-        return new String[]{"Button"};
+        return new String[]{"button"};
     }
 
 }
