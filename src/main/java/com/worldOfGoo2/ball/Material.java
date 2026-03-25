@@ -1,12 +1,12 @@
 package com.worldOfGoo2.ball;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 
 public class Material extends EditorObject {
 
-    public Material(EditorObject parent) {
-        super(parent, "Ball_Material", GameVersion.VERSION_WOG2);
+    public Material(EditorObject parent, GameVersion version) {
+        super(parent, version);
     }
 
 }

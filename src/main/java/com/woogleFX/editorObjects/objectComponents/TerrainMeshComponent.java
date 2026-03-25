@@ -1,35 +1,31 @@
 package com.woogleFX.editorObjects.objectComponents;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.assets.wog2.WOG2TerrainType.WOG2TerrainType;
 import com.woogleFX.editorObjects.attributes.dataTypes.Position;
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.engine.fx.editorButtons.FXEditorButtons;
-import com.woogleFX.engine.fx.editorButtons.FXEditorButtons_ShowHide;
-import com.woogleFX.gameData.level.WOG2Level;
-import com.woogleFX.gameData.terrainTypes.TerrainTypeManager;
+import com.woogleFX.assets.wog2.WOG2Level.WOG2Level;
 import com.worldOfGoo2.level._2_Level_BallInstance;
-import com.worldOfGoo2.level._2_Level_Strand;
+import com.worldOfGoo2.level.Strand;
 import com.worldOfGoo2.level._2_Level_TerrainGroup;
 import com.worldOfGoo2.terrain.BaseSettings;
-import com.worldOfGoo2.terrain._2_Terrain_TerrainType;
 import com.worldOfGoo2.util.TerrainHelper;
 
 import javafx.scene.image.Image;
 
-public class TerrainMeshComponent extends MeshComponent {
-    private _2_Level_Strand[] strands;
-    private _2_Level_BallInstance[] balls;
-    private _2_Level_TerrainGroup terrainGroup;
-    private Image image;
-    private BaseSettings baseSettings;
+public abstract class TerrainMeshComponent extends MeshComponent {
+    private final Strand[] strands;
+    private final _2_Level_BallInstance[] balls;
+    private final _2_Level_TerrainGroup terrainGroup;
+    private final Image image;
+    private final BaseSettings baseSettings;
     
-    public TerrainMeshComponent(_2_Level_TerrainGroup terrainGroup, _2_Level_Strand[] strands,
-            _2_Level_BallInstance[] balls) {
+    public TerrainMeshComponent(_2_Level_TerrainGroup terrainGroup, Strand[] strands,
+                                _2_Level_BallInstance[] balls) {
+        super(terrainGroup);
+
         this.strands = strands;
         this.balls = balls;
         this.terrainGroup = terrainGroup;
@@ -37,7 +33,7 @@ public class TerrainMeshComponent extends MeshComponent {
         image = TerrainHelper.buildTerrainImage(terrainGroup);
 
         String terrainType = terrainGroup.getAttribute("typeUuid").stringValue();
-        _2_Terrain_TerrainType terrain = TerrainTypeManager.getTerrainType(terrainType);
+        EditorObject terrain = WOG2TerrainType.assetSelector.openInstance(terrainType, terrainGroup.getVersion()).getTerrainType();
         baseSettings = (BaseSettings) terrain.getChildren("baseSettings").get(0);
     }
 
@@ -49,7 +45,7 @@ public class TerrainMeshComponent extends MeshComponent {
         Set<Integer> existingTriHashes = new HashSet<>();
         
         for (int i = 0; i < strands.length; i++) {
-            _2_Level_Strand strand = strands[i];
+            Strand strand = strands[i];
             
             for (int j = 0; j < balls.length; j++) {
                 _2_Level_BallInstance ballInstance = balls[j];
@@ -76,7 +72,7 @@ public class TerrainMeshComponent extends MeshComponent {
         
         // Merge triangles into bigger polygons
         ArrayList<ArrayList<_2_Level_BallInstance>> mergedPolygons = new ArrayList<>();
-        while (tris.size() > 0) {
+        while (!tris.isEmpty()) {
             ArrayList<_2_Level_BallInstance> polygon = new ArrayList<>(Arrays.asList(tris.remove(tris.size() - 1)));
             
             boolean addedVertices;
@@ -97,8 +93,7 @@ public class TerrainMeshComponent extends MeshComponent {
         }
         
         // Create polygons by walking gooballs' contours
-        Face[] faces = mergedPolygons.stream().map(this::createPolygon).toArray(Face[]::new);
-        return faces;
+        return mergedPolygons.stream().map(this::createPolygon).toArray(Face[]::new);
     }
     
     private Face createPolygon(List<_2_Level_BallInstance> vertices) {
@@ -194,20 +189,31 @@ public class TerrainMeshComponent extends MeshComponent {
 
     @Override
     public double getDepth() {
-        // TODO: fix this
-        return ((WOG2Level)AssetManager.getAsset()).getLevel().getChildren("terrainGroups").indexOf(terrainGroup) * -0.0001 + (!terrainGroup.getAttribute("foreground").booleanValue() || !terrainGroup.getAttribute("collision").booleanValue() ? -1 : 0) * 10000;
+        // TODO2: fix this
+        try {
+            return ((WOG2Level) AssetManager.getAsset()).getLevel().getChildren("terrainGroups").indexOf(terrainGroup) * -0.0001 + (!terrainGroup.getAttribute("foreground").booleanValue() || !terrainGroup.getAttribute("collision").booleanValue() ? -1 : 0) * 10000;
+        } catch (ConcurrentModificationException e) {
+            return 0;
+        }
     }
 
     @Override
     public boolean isVisible() {
 
-        if (AssetManager.getAsset().getVisibilitySettings().getShowGoos() != 2) return false;
+        if (AssetManager.getVisibility("goos") != 2) return false;
 
         if (!(AssetManager.getAsset() instanceof WOG2Level level)) return false;
 
-        int terrainGroupId = level.getLevel().getChildren("terrainGroups").indexOf(terrainGroup);
-        if (terrainGroupId < 0 || terrainGroupId >= FXEditorButtons_ShowHide.comboBoxList.size()) return true;
-        else return FXEditorButtons_ShowHide.comboBoxList.get(terrainGroupId);
+        try {
+            int terrainGroupId = level.getLevel().getChildren("terrainGroups").indexOf(terrainGroup);
+            //if (terrainGroupId < 0 || terrainGroupId >= FXEditorButtons_ShowHide.comboBoxList.size()) return true;
+            //else return FXEditorButtons_ShowHide.comboBoxList.get(terrainGroupId);
+            return true;
+        } catch (ConcurrentModificationException e) {
+            return false;
+        }
 
     }
+
+
 }

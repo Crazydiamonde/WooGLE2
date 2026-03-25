@@ -1,45 +1,55 @@
 package com.woogleFX.engine.gui;
 
-import com.woogleFX.editorObjects.Asset;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.gameData.level.levelOpening.AssetLoader;
+import com.woogleFX.assets.Asset;
+import com.woogleFX.engine.AssetManager;
+import com.woogleFX.engine.fx.assetSelectPane.FXAssetSelectPane;
+import com.woogleFX.engine.fx.editorButtons.FXEditorButtons;
+import com.woogleFX.engine.fx.menu.FXMenu;
+import com.woogleFX.assets.GameVersion;
+import com.woogleFX.assets.AssetLoader;
+import com.woogleFX.file.FileManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public abstract class AssetSelector extends Application {
+public abstract class AssetSelector<T extends Asset> extends Application {
 
-    private final GameVersion version;
-    public GameVersion getVersion() {
-        return version;
+    private final Map<Pair<String, GameVersion>, T> importedAssets = new HashMap<>();
+
+
+    private final String title;
+    public String getTitle() {
+        return title;
     }
-    public AssetSelector(GameVersion version) {
-        this.version = version;
+    public AssetSelector(String title) {
+        this.title = title;
     }
+
 
     private Label selectedLabel;
 
 
-    private void rebuildAssetSelectBox(VBox assetSelectBox, ArrayList<Label> labels, String searchField, int filterState) {
+    private void rebuildAssetSelectBox(VBox assetSelectBox, ArrayList<Label> labels, String searchField, int filterState, GameVersion version) {
 
         assetSelectBox.getChildren().clear();
 
         int i = 0;
         for (Label label : labels) {
             if (label.getText().toLowerCase().contains(searchField.toLowerCase()) || searchField.isEmpty()) {
-                if (filterState == 0 && !isOriginal(label.getText())) continue;
-                if (filterState == 1 && isOriginal(label.getText())) continue;
+                if (filterState == 0 && !isOriginal(label.getText(), version)) continue;
+                if (filterState == 1 && isOriginal(label.getText(), version)) continue;
                 assetSelectBox.getChildren().add(label);
                 if (i % 2 == 0) {
                     label.setStyle("-fx-background-color: #f0f0f0");
@@ -57,78 +67,181 @@ public abstract class AssetSelector extends Application {
     }
 
 
-    private void buildStage(Stage stage) {
+    private void buildStage(Stage stage, GameVersion version, boolean forNew) {
 
-        VBox assetSelectBox = new VBox();
+        VBox allEncompassingBox = new VBox();
 
-        ArrayList<Label> labels = new ArrayList<>();
+        if (forNew) {
 
-        TextField searchField = new TextField();
-        searchField.setPrefWidth(200);
+            TextField enterNameField = new TextField();
 
+            Button doneButton = new Button("Done");
 
-        ComboBox<String> filter = new ComboBox<>();
+            doneButton.setOnAction(actionEvent -> {
+                // TODO: check if an asset with this name already exists
+                String name = enterNameField.getText();
+                T newAsset = newInstance(name, version);
+                AssetManager.setAsset(newAsset);
+                FXEditorButtons.updateAllButtons();
+                FXMenu.updateAllButtons();
+                FXAssetSelectPane.getAssetSelectPane().setMinHeight(30);
+                FXAssetSelectPane.getAssetSelectPane().setMaxHeight(30);
+                AssetLoader.finishOpeningAsset(newAsset);
 
-        filter.getItems().addAll("Original Only", "Customizable Only", "All Assets");
+                stage.close();
 
-        filter.getSelectionModel().selectedIndexProperty().addListener((observableValue, s, t1) ->
-                rebuildAssetSelectBox(assetSelectBox, labels, searchField.getText(), t1.intValue()));
-        filter.getSelectionModel().select(2);
-
-        List<String> items = getItems();
-        for (String item : items) {
-            Label label = new Label(item);
-
-            label.setOnMouseClicked(event -> {
-                if (label == selectedLabel) {
-                    AssetLoader.openAsset(this, label.getText());
-                    stage.close();
-                } else {
-                    if (selectedLabel != null) selectedLabel.setStyle(selectedLabel.getId());
-                    selectedLabel = label;
-                    label.setStyle("-fx-background-color: #C0E0FFFF");
-                }
             });
 
-            labels.add(label);
+            allEncompassingBox.getChildren().addAll(enterNameField, doneButton);
+
+            stage.setTitle("Set Name for New " + getTitle() + "...");
+
+        } else {
+
+            VBox assetSelectBox = new VBox();
+
+            ArrayList<Label> labels = new ArrayList<>();
+
+            TextField searchField = new TextField();
+
+
+            ComboBox<String> filter = new ComboBox<>();
+
+            filter.getItems().addAll("Original Only", "Customizable Only", "All Assets");
+
+            filter.getSelectionModel().selectedIndexProperty().addListener((observableValue, s, t1) ->
+                    rebuildAssetSelectBox(assetSelectBox, labels, searchField.getText(), t1.intValue(), version));
+            filter.getSelectionModel().select(2);
+
+            Button illDoItMyself = new Button("...");
+            illDoItMyself.setOnAction(actionEvent -> {
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(new File(FileManager.getGameDir(version)));
+                fileChooser.getExtensionFilters().add(getCustomExtensionFilter(version));
+                File file = fileChooser.showOpenDialog(new Stage());
+                if (file == null) return;
+
+                // TODO: support directories for levels
+
+                AssetLoader.openAsset(this, file, getNameFromFile(file, version), version);
+
+                stage.close();
+
+            });
+
+
+            List<String> items = getItems(version);
+            for (String item : items) {
+                Label label = new Label(item);
+
+                label.setOnMouseClicked(event -> {
+                    if (label == selectedLabel) {
+                        File file = getDefaultFileForName(item, version);
+                        AssetLoader.openAsset(this, file, label.getText(), version);
+                        stage.close();
+                    } else {
+                        if (selectedLabel != null) selectedLabel.setStyle(selectedLabel.getId());
+                        selectedLabel = label;
+                        label.setStyle("-fx-background-color: #C0E0FFFF");
+                    }
+                });
+
+                labels.add(label);
+            }
+
+            searchField.textProperty().addListener((observableValue, string, t1) -> rebuildAssetSelectBox(assetSelectBox, labels, t1, filter.getSelectionModel().getSelectedIndex(), version));
+            rebuildAssetSelectBox(assetSelectBox, labels, "", filter.getSelectionModel().getSelectedIndex(), version);
+
+            ScrollPane scrollPane = new ScrollPane(assetSelectBox);
+            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+            HBox hBox = new HBox(searchField, filter, illDoItMyself);
+
+            allEncompassingBox.getChildren().addAll(hBox, scrollPane);
+
+            searchField.prefWidthProperty().bind(hBox.widthProperty().subtract(filter.widthProperty()).subtract(illDoItMyself.widthProperty()));
+
+            stage.setTitle("Select " + getTitle() + "...");
+
         }
 
-        searchField.textProperty().addListener((observableValue, string, t1) -> rebuildAssetSelectBox(assetSelectBox, labels, t1, filter.getSelectionModel().getSelectedIndex()));
-        rebuildAssetSelectBox(assetSelectBox, labels, "", filter.getSelectionModel().getSelectedIndex());
-
-        ScrollPane scrollPane = new ScrollPane(assetSelectBox);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
-        HBox hBox = new HBox(searchField, filter);
-
-        VBox allEncompassingBox = new VBox(hBox, scrollPane);
-
         stage.setScene(new Scene(allEncompassingBox, 400, 375));
-
-        stage.setTitle("Select " + getTitle() + "...");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
 
-        searchField.prefWidthProperty().bind(hBox.widthProperty().subtract(filter.widthProperty()));
-        System.out.println(hBox.getWidth() - filter.getWidth());
-
     }
 
     @Override
-    public void start(Stage stage) {
-        buildStage(stage);
+    public void start(Stage stage) throws Exception {
+
     }
 
 
-    public abstract String getTitle();
+    public void start(Stage stage, GameVersion version, boolean forNew) {
+        buildStage(stage, version, forNew);
+    }
 
-    public abstract List<String> getItems();
 
-    public abstract boolean isOriginal(String item);
+    public abstract List<String> getItems(GameVersion version);
 
-    public abstract Asset newInstance(String name);
+    public abstract boolean isOriginal(String item, GameVersion version);
 
-    public abstract Asset openInstance(String name);
+    protected abstract T secretNewInstance(String name, GameVersion version);
+
+    protected abstract T secretOpenInstance(File file, String name, GameVersion version);
+
+
+    protected abstract FileChooser.ExtensionFilter getCustomExtensionFilter(GameVersion version);
+
+    protected abstract File getDefaultFileForName(String name, GameVersion version);
+
+    protected abstract String getNameFromFile(File file, GameVersion version);
+
+
+    public final T newInstance(String name, GameVersion version) {
+        T asset = secretNewInstance(name, version);
+        if (asset == null) return null;
+
+        asset.setName(name);
+        asset.load();
+        // Get the default file for this asset using its asset selector
+        AssetSelector<?> assetSelector;
+        try {
+            assetSelector = (AssetSelector<?>) asset.getClass().getField("assetSelector").get(asset);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        asset.setFile(assetSelector.getDefaultFileForName(name, version));
+        // Save the asset so it appears in the file structure
+        asset.save(asset.getFile());
+        importedAssets.put(new Pair<>(name, version), asset);
+        return asset;
+    }
+
+
+    public final T openInstance(File file, String name, GameVersion version) {
+        T importedAsset = importedAssets.get(new Pair<>(name, version));
+        if (importedAsset != null) return importedAsset;
+
+        T asset = secretOpenInstance(file, name, version);
+        if (asset == null) return null;
+
+        asset.setName(name);
+        asset.setFile(file);
+        importedAssets.put(new Pair<>(name, version), asset);
+        return asset;
+    }
+
+
+    public final T openInstance(String name, GameVersion version) {
+        return openInstance(getDefaultFileForName(name, version), name, version);
+    }
+
+
+    public final void removeImportedAsset(Asset asset) {
+        importedAssets.remove(new Pair<>(asset.getName(), asset.getVersion()));
+    }
 
 }

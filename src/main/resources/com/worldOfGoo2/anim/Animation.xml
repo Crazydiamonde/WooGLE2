@@ -1,0 +1,12 @@
+<AttributeManifest localName="Animation">
+
+    <attributes>
+        <EditorAttribute name="fps" type="NUMBER"/>
+        <EditorAttribute name="states" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.anim.State"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="fps"/>
+    </metaAttributes>
+
+</AttributeManifest>

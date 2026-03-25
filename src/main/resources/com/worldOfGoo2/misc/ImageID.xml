@@ -1,0 +1,11 @@
+<AttributeManifest localName="ImageID">
+
+    <attributes>
+        <EditorAttribute name="imageId" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="imageId"/>
+    </metaAttributes>
+
+</AttributeManifest>

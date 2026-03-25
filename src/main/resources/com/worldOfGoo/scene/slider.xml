@@ -1,0 +1,27 @@
+<AttributeManifest localName="slider">
+
+    <attributes>
+        <EditorAttribute name="body1"   type="_1_GEOMETRY"                    required="true"/>
+        <EditorAttribute name="body2"   type="_1_GEOMETRY"                    required="true"/>
+        <EditorAttribute name="axis"    type="_1_POSITION" defaultValue="1,0" required="true"/>
+        <EditorAttribute name="bounce"  type="_1_NUMBER"/>
+        <EditorAttribute name="histop"  type="_1_NUMBER"/>
+        <EditorAttribute name="lostop"  type="_1_NUMBER"/>
+        <EditorAttribute name="stopcfm" type="_1_NUMBER"/>
+        <EditorAttribute name="stoperp" type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="body1"/>
+        <MetaEditorAttribute name="body2"/>
+        <MetaEditorAttribute name="axis"/>
+        <MetaEditorAttribute name="Slider" openByDefault="true">
+            <MetaEditorAttribute name="bounce"/>
+            <MetaEditorAttribute name="histop"/>
+            <MetaEditorAttribute name="lostop"/>
+            <MetaEditorAttribute name="stopcfm"/>
+            <MetaEditorAttribute name="stoperp"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

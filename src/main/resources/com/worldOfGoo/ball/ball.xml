@@ -1,0 +1,168 @@
+<AttributeManifest localName="ball">
+
+    <attributes>
+        <EditorAttribute name="name"                 type="STRING" required="true"/>
+        <EditorAttribute name="static"               type="BOOLEAN"/>
+        <EditorAttribute name="shape"                type="_1_BALL_SHAPE" defaultValue="circle,36,0.25" required="true"/>
+        <EditorAttribute name="mass"                 type="_1_NUMBER" required="true"/>
+        <EditorAttribute name="towermass"            type="_1_NUMBER"/>
+        <EditorAttribute name="strands"              type="_1_INTEGER_NON_NEGATIVE" required="true"/>
+        <EditorAttribute name="walkspeed"            type="_1_NUMBER" required="true"/>
+        <EditorAttribute name="climbspeed"           type="_1_NUMBER"/>
+        <EditorAttribute name="speedvariance"        type="_1_NUMBER" required="true"/>
+        <EditorAttribute name="draggable"            type="BOOLEAN"/>
+        <EditorAttribute name="detachable"           type="BOOLEAN"/>
+        <EditorAttribute name="autobounds"           type="BOOLEAN"/>
+        <EditorAttribute name="grumpy"               type="BOOLEAN"/>
+        <EditorAttribute name="suckable"             type="BOOLEAN"/>
+        <EditorAttribute name="sticky"               type="BOOLEAN"/>
+        <EditorAttribute name="stuckattachment"      type="BOOLEAN"/>
+        <EditorAttribute name="invulnerable"         type="BOOLEAN"/>
+        <EditorAttribute name="antigrav"             type="_1_NUMBER"/>
+        <EditorAttribute name="decay"                type="_1_NUMBER"/>
+        <EditorAttribute name="dampening"            type="_1_NUMBER"/>
+        <EditorAttribute name="collideattached"      type="BOOLEAN"/>
+        <EditorAttribute name="statescales"          type="_1_LIST_NUMBER"/>
+        <EditorAttribute name="jump"                 type="_1_NUMBER"/>
+        <EditorAttribute name="maxattachspeed"       type="_1_NUMBER"/>
+        <EditorAttribute name="jumponwakeup"         type="BOOLEAN"/>
+        <EditorAttribute name="staticwhensleeping"   type="BOOLEAN"/>
+        <EditorAttribute name="collidewithattached"  type="BOOLEAN"/>
+        <EditorAttribute name="climber"              type="BOOLEAN"/>
+        <EditorAttribute name="material"             type="_1_MATERIAL"/>
+        <EditorAttribute name="contains"             type="_1_BALL_CONTAINS"/>
+        <EditorAttribute name="popsound"             type="_1_SOUND"/>
+        <EditorAttribute name="popduration"          type="_1_NUMBER"/>
+        <EditorAttribute name="popparticles"         type="_1_PARTICLES"/>
+        <EditorAttribute name="isbehindstrands"      type="BOOLEAN"/>
+        <EditorAttribute name="wakedist"             type="_1_NUMBER"/>
+        <EditorAttribute name="blinkcolor"           type="_1_COLOR"/>
+        <EditorAttribute name="hideeyes"             type="BOOLEAN"/>
+        <EditorAttribute name="alwayslookatmouse"    type="BOOLEAN"/>
+        <EditorAttribute name="autoboundsunattached" type="BOOLEAN"/>
+        <EditorAttribute name="burntime"             type="_1_NUMBER"/>
+        <EditorAttribute name="detonateforce"        type="_1_NUMBER"/>
+        <EditorAttribute name="detonateradius"       type="_1_NUMBER"/>
+        <EditorAttribute name="walkforce"            type="_1_NUMBER"/>
+        <EditorAttribute name="fling"                type="BOOLEAN"/>
+        <EditorAttribute name="explosionparticles"   type="_1_PARTICLES"/>
+        <EditorAttribute name="dragmass"             type="_1_NUMBER"/>
+        <EditorAttribute name="autodisable"          type="BOOLEAN"/>
+        <EditorAttribute name="hingedrag"            type="BOOLEAN"/>
+        <EditorAttribute name="attenuationselect"    type="_1_ATTENUATION"/>
+        <EditorAttribute name="attenuationdeselect"  type="_1_ATTENUATION"/>
+        <EditorAttribute name="attenuationdrop"      type="_1_ATTENUATION"/>
+        <EditorAttribute name="attenuationdrag"      type="_1_ATTENUATION"/>
+        <EditorAttribute name="stacking"             type="BOOLEAN"/>
+        <EditorAttribute name="stickyattached"       type="BOOLEAN"/>
+        <EditorAttribute name="stickyunattached"     type="BOOLEAN"/>
+        <EditorAttribute name="fallingattachment"    type="BOOLEAN"/>
+        <EditorAttribute name="spawn"                type="_1_BALL_SPAWN"/>
+        <EditorAttribute name="autoattach"           type="BOOLEAN"/>
+        <EditorAttribute name="isantigravattached"   type="BOOLEAN"/>
+        <EditorAttribute name="isantigravunattached" type="BOOLEAN"/>
+        <EditorAttribute name="popdelay"             type="_1_NUMBER"/>
+        <EditorAttribute name="distantsounds"        type="BOOLEAN"/>
+        <EditorAttribute name="flammable"            type="BOOLEAN"/>
+    </attributes>
+
+    <metaAttributes>
+
+        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="shape"/>
+        <MetaEditorAttribute name="mass"/>
+        <MetaEditorAttribute name="strands"/>
+        <MetaEditorAttribute name="material"/>
+        <MetaEditorAttribute name="towermass"/>
+
+        <MetaEditorAttribute name="Behavior" openByDefault="false">
+            <MetaEditorAttribute name="jump"/>
+            <MetaEditorAttribute name="climber"/>
+            <MetaEditorAttribute name="antigrav"/>
+            <MetaEditorAttribute name="isantigravattached"/>
+            <MetaEditorAttribute name="isantigravunattached"/>
+            <MetaEditorAttribute name="static"/>
+            <MetaEditorAttribute name="staticwhensleeping"/>
+            <MetaEditorAttribute name="jumponwakeup"/>
+            <MetaEditorAttribute name="autoattach"/>
+            <MetaEditorAttribute name="maxattachspeed"/>
+        </MetaEditorAttribute>
+
+        <MetaEditorAttribute name="Movement" openByDefault="false">
+
+        </MetaEditorAttribute>
+
+        <MetaEditorAttribute name="Player Interaction" openByDefault="false">
+
+        </MetaEditorAttribute>
+
+        <MetaEditorAttribute name="Level Interaction" openByDefault="false">
+
+        </MetaEditorAttribute>
+
+        <MetaEditorAttribute name="Goo Interaction" openByDefault="false">
+
+        </MetaEditorAttribute>
+
+        <MetaEditorAttribute name="Burning" openByDefault="false">
+
+        </MetaEditorAttribute>
+
+        <MetaEditorAttribute name="Mom / Pop" openByDefault="false">
+
+        </MetaEditorAttribute>
+
+        <MetaEditorAttribute name="Cosmetic" openByDefault="false">
+
+        </MetaEditorAttribute>
+
+        <MetaEditorAttribute name="walkspeed"/>
+        <MetaEditorAttribute name="climbspeed"/>
+        <MetaEditorAttribute name="speedvariance"/>
+        <MetaEditorAttribute name="draggable"/>
+        <MetaEditorAttribute name="detachable"/>
+        <MetaEditorAttribute name="autobounds"/>
+        <MetaEditorAttribute name="grumpy"/>
+        <MetaEditorAttribute name="suckable"/>
+        <MetaEditorAttribute name="sticky"/>
+        <MetaEditorAttribute name="stuckattachment"/>
+        <MetaEditorAttribute name="invulnerable"/>
+        <MetaEditorAttribute name="decay"/>
+        <MetaEditorAttribute name="dampening"/>
+        <MetaEditorAttribute name="collideattached"/>
+        <MetaEditorAttribute name="statescales"/>
+        <MetaEditorAttribute name="collidewithattached"/>
+        <MetaEditorAttribute name="contains"/>
+        <MetaEditorAttribute name="popsound"/>
+        <MetaEditorAttribute name="popduration"/>
+        <MetaEditorAttribute name="popparticles"/>
+        <MetaEditorAttribute name="isbehindstrands"/>
+        <MetaEditorAttribute name="wakedist"/>
+        <MetaEditorAttribute name="blinkcolor"/>
+        <MetaEditorAttribute name="hideeyes"/>
+        <MetaEditorAttribute name="alwayslookatmouse"/>
+        <MetaEditorAttribute name="autoboundsunattached"/>
+        <MetaEditorAttribute name="burntime"/>
+        <MetaEditorAttribute name="detonateforce"/>
+        <MetaEditorAttribute name="detonateradius"/>
+        <MetaEditorAttribute name="walkforce"/>
+        <MetaEditorAttribute name="fling"/>
+        <MetaEditorAttribute name="explosionparticles"/>
+        <MetaEditorAttribute name="dragmass"/>
+        <MetaEditorAttribute name="autodisable"/>
+        <MetaEditorAttribute name="hingedrag"/>
+        <MetaEditorAttribute name="attenuationselect"/>
+        <MetaEditorAttribute name="attenuationdeselect"/>
+        <MetaEditorAttribute name="attenuationdrop"/>
+        <MetaEditorAttribute name="attenuationdrag"/>
+        <MetaEditorAttribute name="stacking"/>
+        <MetaEditorAttribute name="stickyattached"/>
+        <MetaEditorAttribute name="stickyunattached"/>
+        <MetaEditorAttribute name="fallingattachment"/>
+        <MetaEditorAttribute name="spawn"/>
+        <MetaEditorAttribute name="popdelay"/>
+        <MetaEditorAttribute name="distantsounds"/>
+        <MetaEditorAttribute name="flammable"/>
+    </metaAttributes>
+
+</AttributeManifest>

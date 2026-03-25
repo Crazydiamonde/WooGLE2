@@ -2,8 +2,8 @@
 
     <attributes>
         <EditorAttribute name="material" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.ball.Material"/>
-        <EditorAttribute name="collisionHeight" type="_2_STRING"/>
-        <EditorAttribute name="edgeCollisionHeight" type="_2_STRING"/>
+        <EditorAttribute name="collisionHeight" type="STRING"/>
+        <EditorAttribute name="edgeCollisionHeight" type="STRING"/>
     </attributes>
 
 </AttributeManifest>

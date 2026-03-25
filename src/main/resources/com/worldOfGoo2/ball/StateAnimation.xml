@@ -1,11 +1,11 @@
-<AttributeManifest>
+<AttributeManifest localName="StateAnimation">
 
     <attributes>
         <EditorAttribute name="partAnimations" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.ball.PartAnimation"/>
         <EditorAttribute name="states" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.ball.State"/>
-        <EditorAttribute name="frequenceyVarianceMagnitude" type="_2_NUMBER"/>
-        <EditorAttribute name="amplitudeVarianceMagnitude" type="_2_NUMBER"/>
-        <EditorAttribute name="phaseShiftVarianceMagnitude" type="_2_NUMBER"/>
+        <EditorAttribute name="frequenceyVarianceMagnitude" type="NUMBER"/>
+        <EditorAttribute name="amplitudeVarianceMagnitude" type="NUMBER"/>
+        <EditorAttribute name="phaseShiftVarianceMagnitude" type="NUMBER"/>
     </attributes>
 
     <metaAttributes>

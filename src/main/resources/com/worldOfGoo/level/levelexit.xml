@@ -1,0 +1,17 @@
+<AttributeManifest localName="levelexit">
+
+    <attributes>
+        <EditorAttribute name="id"     type="STRING"      defaultValue="theExit" required="true"/>
+        <EditorAttribute name="pos"    type="_1_POSITION" defaultValue="0,0"     required="true"/>
+        <EditorAttribute name="radius" type="_1_NUMBER"   defaultValue="75"      required="true"/>
+        <EditorAttribute name="filter" type="STRING"                             required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="pos"/>
+        <MetaEditorAttribute name="radius"/>
+        <MetaEditorAttribute name="filter"/>
+    </metaAttributes>
+
+</AttributeManifest>

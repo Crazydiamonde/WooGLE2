@@ -5,6 +5,7 @@ import com.woogleFX.engine.fx.assetSelectPane.FXAssetSelectPane;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchySwitcherButtons;
 import com.woogleFX.engine.fx.menu.FXMenu;
+import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
 import javafx.scene.Cursor;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
@@ -48,6 +49,7 @@ public class FXContainers {
         StackPane pane = new StackPane(thingPane, new Pane(FXCanvas.getCanvas()));
         Separator separator = new Separator();
         viewPane.getChildren().addAll(FXHierarchySwitcherButtons.getHierarchySwitcherButtons(), FXHierarchy.getHierarchy(), separator, FXPropertiesView.getPropertiesView());
+        FXPropertiesView.getPropertiesView().prefWidthProperty().bind(FXHierarchy.getHierarchy().widthProperty());
         separator.hoverProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1) {
                 FXScene.getScene().setCursor(Cursor.N_RESIZE);

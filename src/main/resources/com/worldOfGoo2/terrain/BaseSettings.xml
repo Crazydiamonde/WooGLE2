@@ -1,21 +1,21 @@
 <AttributeManifest localName="BaseSettings">
 
     <attributes>
-        <EditorAttribute name="canBeStained" type="_2_STRING"/>
-        <EditorAttribute name="metersToUv" type="_2_STRING"/>
-        <EditorAttribute name="cliffDecorationValue" type="_2_STRING"/>
-        <EditorAttribute name="lowPoly" type="_2_STRING"/>
-        <EditorAttribute name="lowPolyNormalBlend" type="_2_STRING"/>
-        <EditorAttribute name="lowPolyNormalBlendFixZ" type="_2_STRING"/>
-        <EditorAttribute name="fixSubdivisionLevelIndex" type="_2_STRING"/>
-        <EditorAttribute name="mesh3DWrapFactor" type="_2_STRING"/>
-        <EditorAttribute name="boundaryNormalScale" type="_2_STRING"/>
-        <EditorAttribute name="renderMeshEdgeNormalOffset" type="_2_STRING"/>
-        <EditorAttribute name="image" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="overlayImage" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
+        <EditorAttribute name="canBeStained" type="STRING"/>
+        <EditorAttribute name="metersToUv" type="STRING"/>
+        <EditorAttribute name="cliffDecorationValue" type="STRING"/>
+        <EditorAttribute name="lowPoly" type="STRING"/>
+        <EditorAttribute name="lowPolyNormalBlend" type="STRING"/>
+        <EditorAttribute name="lowPolyNormalBlendFixZ" type="STRING"/>
+        <EditorAttribute name="fixSubdivisionLevelIndex" type="STRING"/>
+        <EditorAttribute name="mesh3DWrapFactor" type="STRING"/>
+        <EditorAttribute name="boundaryNormalScale" type="STRING"/>
+        <EditorAttribute name="renderMeshEdgeNormalOffset" type="STRING"/>
+        <EditorAttribute name="image" type="STRING" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="overlayImage" type="STRING" childAlias="com.worldOfGoo2.misc.ImageID"/>
         <EditorAttribute name="material" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.ball.Material"/>
-        <EditorAttribute name="shaderType" type="_2_STRING" childAlias="com.worldOfGoo2.level._2_Level_UserVariable"/>
-        <EditorAttribute name="baseShaderUniforms" type="_2_STRING" childAlias="com.worldOfGoo2.terrain.BaseShaderUniform"/>
+        <EditorAttribute name="shaderType" type="STRING" childAlias="com.worldOfGoo2.level.UserVariable"/>
+        <EditorAttribute name="baseShaderUniforms" type="STRING" childAlias="com.worldOfGoo2.terrain.BaseShaderUniform"/>
     </attributes>
 
 </AttributeManifest>

@@ -1,0 +1,43 @@
+<AttributeManifest localName="level">
+
+    <attributes>
+        <EditorAttribute name="ballsrequired"      type="_1_NUMBER"                            required="true"/>
+        <EditorAttribute name="letterboxed"        type="BOOLEAN"   defaultValue="false"       required="true"/>
+        <EditorAttribute name="visualdebug"        type="BOOLEAN"   defaultValue="false"       required="true"/>
+        <EditorAttribute name="autobounds"         type="BOOLEAN"   defaultValue="false"       required="true"/>
+        <EditorAttribute name="textcolor"          type="_1_COLOR"  defaultValue="255,255,255" required="true"/>
+        <EditorAttribute name="texteffects"        type="BOOLEAN"/>
+        <EditorAttribute name="timebugprobability" type="_1_NUMBER"                            required="true"/>
+        <EditorAttribute name="strandgeom"         type="BOOLEAN"   defaultValue="false"/>
+        <EditorAttribute name="allowskip"          type="BOOLEAN"   defaultValue="true"/>
+        <EditorAttribute name="cursor1color"       type="_1_COLOR"/>
+        <EditorAttribute name="cursor2color"       type="_1_COLOR"/>
+        <EditorAttribute name="cursor3color"       type="_1_COLOR"/>
+        <EditorAttribute name="cursor4color"       type="_1_COLOR"/>
+        <EditorAttribute name="retrytime"          type="_1_NUMBER"/>
+        <EditorAttribute name="zoomoutlimit"       type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="ballsrequired"/>
+        <MetaEditorAttribute name="timebugprobability"/>
+        <MetaEditorAttribute name="textcolor"/>
+        <MetaEditorAttribute name="retrytime"/>
+        <MetaEditorAttribute name="zoomoutlimit"/>
+        <MetaEditorAttribute name="Flags" openByDefault="false">
+            <MetaEditorAttribute name="letterboxed"/>
+            <MetaEditorAttribute name="visualdebug"/>
+            <MetaEditorAttribute name="autobounds"/>
+            <MetaEditorAttribute name="strandgeom"/>
+            <MetaEditorAttribute name="allowskip"/>
+            <MetaEditorAttribute name="texteffects"/>
+        </MetaEditorAttribute>
+        <MetaEditorAttribute name="Cursor Colors" openByDefault="false">
+            <MetaEditorAttribute name="cursor1color"/>
+            <MetaEditorAttribute name="cursor2color"/>
+            <MetaEditorAttribute name="cursor3color"/>
+            <MetaEditorAttribute name="cursor4color"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

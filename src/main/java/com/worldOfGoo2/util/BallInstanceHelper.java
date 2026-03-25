@@ -9,22 +9,20 @@ import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.engine.fx.editorButtons.FXEditorButtons_ShowHide;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.gameData.ball.AtlasManager;
-import com.woogleFX.gameData.ball._2Ball;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.wog2.WOG2Ball.WOG2Ball;
+import com.woogleFX.assets.GameVersion;
 import com.worldOfGoo2.ball.Image;
 import com.worldOfGoo2.ball.Part;
 import com.worldOfGoo2.level._2_Level_BallInstance;
-import com.worldOfGoo2.misc._2_ImageID;
+import com.worldOfGoo2.misc.ImageID;
 import javafx.embed.swing.SwingFXUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -110,8 +108,8 @@ public class BallInstanceHelper {
                     } catch (NumberFormatException ignored) {
                         typeEnum = 0;
                     }
-                };
-                
+                }
+
                 object.setAttribute2(realName, typeEnum);
             }
 
@@ -129,7 +127,7 @@ public class BallInstanceHelper {
             state = "4";
         }
 
-        ArrayList<EditorObject> states = part.getChildren("states");
+        List<EditorObject> states = part.getChildren("states");
         if (states.isEmpty()) return true;
         else for (EditorObject stateObject : states) {
             if (stateObject.getAttribute("ballState").stringValue().equals(state)) return true;
@@ -139,41 +137,33 @@ public class BallInstanceHelper {
     }
 
 
-    private static BufferedImage getPartImageWoG2(_2Ball ball, Part part, Random machine) {
+    private static BufferedImage getPartImageWoG2(WOG2Ball ball, Part part, Random machine) {
 
         ArrayList<Image> images = new ArrayList<>();
         for (EditorObject editorObject : part.getChildren()) if (editorObject instanceof Image ball_image) images.add(ball_image);
-        if (images.size() == 0) return null;
+        if (images.isEmpty()) return null;
 
         String imageString = images.get((int)(images.size() * machine.nextDouble())).getChildren().get(0).getAttribute("imageId").stringValue();
 
-        BufferedImage image = AtlasManager.atlas.get(imageString);
-        if (image == null) {
-            try {
-                image = SwingFXUtils.fromFXImage(ResourceManager.getImage(ball.getResources(), imageString, GameVersion.VERSION_WOG2), null);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return image;
+        return SwingFXUtils.fromFXImage(ResourceManager.getImage(ball.getResources(), imageString, GameVersion.VERSION_WOG2), null);
 
     }
 
 
-    private static BufferedImage getPartPupilImageWoG2(Part part, Random machine) {
+    private static javafx.scene.image.Image getPartPupilImageWoG2(Part part, Random machine) {
 
-        ArrayList<_2_ImageID> pupilImages = new ArrayList<>();
-        for (EditorObject editorObject : part.getChildren()) if (editorObject instanceof _2_ImageID ball_image) pupilImages.add(ball_image);
-        if (pupilImages.size() == 0) return null;
+        ArrayList<ImageID> pupilImages = new ArrayList<>();
+        for (EditorObject editorObject : part.getChildren()) if (editorObject instanceof ImageID ball_image) pupilImages.add(ball_image);
+        if (pupilImages.isEmpty()) return null;
 
         String pupilImageString = pupilImages.get((int)(pupilImages.size() * machine.nextDouble())).getAttribute("imageId").stringValue();
 
-        return AtlasManager.atlas.get(pupilImageString);
+        return ResourceManager.getImage(null, pupilImageString, GameVersion.VERSION_WOG2);
 
     }
 
 
-    public static javafx.scene.image.Image createBallImageWoG2(_2_Level_BallInstance ballInstance, _2Ball ball, double _scaleX, double _scaleY, Random machine) {
+    public static javafx.scene.image.Image createBallImageWoG2(_2_Level_BallInstance ballInstance, WOG2Ball ball, double _scaleX, double _scaleY, Random machine) {
 
         ArrayList<Part> parts = new ArrayList<>();
         for (EditorObject child : ball.getObjects()) if (child instanceof Part part) parts.add(part);
@@ -192,7 +182,7 @@ public class BallInstanceHelper {
         double bodyMaxX = Double.NEGATIVE_INFINITY;
         double bodyMaxY = Double.NEGATIVE_INFINITY;
 
-        String bodyPartID = ball.getObjects().get(0).getChildren("bodyPart")
+        String bodyPartID = ball.getBall().getChildren("bodyPart")
                 .get(0).getAttribute("partName").stringValue();
 
         record PartPosition(double x, double y, double scaleX, double scaleY, BufferedImage image) {
@@ -204,7 +194,7 @@ public class BallInstanceHelper {
         boolean thereWasABody = false;
         for (Part part : parts) {
 
-            double sizeVariance = ball.getObjects().get(0).getAttribute("sizeVariance").doubleValue();
+            double sizeVariance = ball.getBall().getAttribute("sizeVariance").doubleValue();
 
             Random machine2 = new Random(1);
             machine2.nextDouble();
@@ -228,9 +218,9 @@ public class BallInstanceHelper {
             if ((ballInstance == null || part2CanBeUsed(ballInstance, part)))
                 partPositions.add(new PartPosition(partX, partY, scaleX, scaleY, partImage));
 
-            BufferedImage pupilImage = getPartPupilImageWoG2(part, machine);
+            javafx.scene.image.Image pupilImage = getPartPupilImageWoG2(part, machine);
             if (pupilImage != null && (ballInstance == null || part2CanBeUsed(ballInstance, part)))
-                partPositions.add(new PartPosition(partX, partY, scaleX, scaleY, pupilImage));
+                partPositions.add(new PartPosition(partX, partY, scaleX, scaleY, SwingFXUtils.fromFXImage(pupilImage, null)));
 
             double partImageMinX = partX - partImage.getWidth() * scaleX / 2.0;
             double partImageMinY = partY - partImage.getHeight() * scaleY / 2.0;
@@ -300,14 +290,14 @@ public class BallInstanceHelper {
 
     public static ArrayList<ObjectComponent> generateBallObjectComponents(_2_Level_BallInstance ballInstance) {
 
-        _2Ball ball = ballInstance.getBall();
+        WOG2Ball ball = ballInstance.getBall();
 
         ArrayList<ObjectComponent> objectComponents = new ArrayList<>();
 
         if (ball != null) {
 
             ArrayList<Image> images = new ArrayList<>();
-            for (EditorObject editorObject : ball.getObjects()) if (editorObject instanceof Part && editorObject.getAttribute("name").stringValue().equals(ball.getObjects().get(0).getChildren("bodyPart").get(0).getAttribute("partName").stringValue())) for (EditorObject child : editorObject.getChildren())
+            for (EditorObject editorObject : ball.getObjects()) if (editorObject instanceof Part && editorObject.getAttribute("name").stringValue().equals(ball.getBall().getChildren("bodyPart").get(0).getAttribute("partName").stringValue())) for (EditorObject child : editorObject.getChildren())
                 if (child instanceof Image ball_image) images.add(ball_image);
 
             double _scaleX = 1;
@@ -316,21 +306,14 @@ public class BallInstanceHelper {
 
                 String imageString = images.get(0).getChildren().get(0).getAttribute("imageId").stringValue();
 
-                BufferedImage image = AtlasManager.atlas.get(imageString);
-                if (image == null) {
-                    try {
-                        image = SwingFXUtils.fromFXImage(ResourceManager.getImage(ball.getResources(), imageString, GameVersion.VERSION_WOG2), null);
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                javafx.scene.image.Image image = ResourceManager.getImage(ball.getResources(), imageString, GameVersion.VERSION_WOG2);
                 if (image == null) return objectComponents;
 
-                int _width = image.getWidth();
-                int _height = image.getHeight();
+                int _width = (int)image.getWidth();
+                int _height = (int)image.getHeight();
 
-                double width = ball.getObjects().get(0).getAttribute("width").doubleValue();
-                double height = ball.getObjects().get(0).getAttribute("height").doubleValue();
+                double width = ball.getBall().getAttribute("width").doubleValue();
+                double height = ball.getBall().getAttribute("height").doubleValue();
 
                 _scaleX = width / _width;
                 _scaleY = height / _height;
@@ -341,7 +324,7 @@ public class BallInstanceHelper {
 
             double final_scaleX = _scaleX;
             double final_scaleY = _scaleY;
-            objectComponents.add(new ImageComponent() {
+            objectComponents.add(new ImageComponent(ballInstance) {
                 @Override
                 public double getX() {
                     return ballInstance.getPosition().getX();
@@ -384,7 +367,7 @@ public class BallInstanceHelper {
                 }
                 @Override
                 public boolean isVisible() {
-                    return !ballInstance.getAttribute("type").stringValue().equals("Terrain") && AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 2;
+                    return !ballInstance.getAttribute("type").stringValue().equals("Terrain") && AssetManager.getVisibility("goos") == 2;
                 }
                 @Override
                 public boolean isResizable() {
@@ -393,13 +376,13 @@ public class BallInstanceHelper {
             });
 
         }
-        boolean isCircle = ball == null || !ball.getObjects().get(0).getChildren("shape").get(0).getAttribute("ballShape").stringValue().equals("1");
+        boolean isCircle = ball == null || !ball.getBall().getChildren("shape").get(0).getAttribute("ballShape").stringValue().equals("1");
 
         if (isCircle) {
 
             if (ballInstance.getAttribute("type").stringValue().equals("Terrain")) {
 
-                objectComponents.add(new CircleComponent() {
+                objectComponents.add(new CircleComponent(ballInstance) {
                     @Override
                     public double getX() {
                         return ballInstance.getPosition().getX();
@@ -446,8 +429,8 @@ public class BallInstanceHelper {
                     }
                     @Override
                     public boolean isVisible() {
-                        if (AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 0) return false;
-                        return (ball == null || ballInstance.getAttribute("type").stringValue().equals("Terrain") && ballInstance.visibilityFunction()) || AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 1 || (ballInstance.getAttribute("type").stringValue().equals("Terrain") && FXEditorButtons_ShowHide.comboBoxSelected == ballInstance.getAttribute("terrainGroup").intValue());
+                        if (AssetManager.getVisibility("goos") == 0) return false;
+                        return true;//(ball == null || ballInstance.getAttribute("type").stringValue().equals("Terrain") && ballInstance.visibilityFunction()) || AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 1 || (ballInstance.getAttribute("type").stringValue().equals("Terrain") && FXEditorButtons_ShowHide.comboBoxSelected == ballInstance.getAttribute("terrainGroup").intValue());
                     }
                     @Override
                     public boolean isRotatable() {
@@ -460,7 +443,7 @@ public class BallInstanceHelper {
                 });
 
             }
-            objectComponents.add(new CircleComponent() {
+            objectComponents.add(new CircleComponent(ballInstance) {
                 @Override
                 public double getX() {
                     return ballInstance.getPosition().getX();
@@ -505,6 +488,8 @@ public class BallInstanceHelper {
                     if (ball == null) {
                         return new javafx.scene.paint.Color(0.5, 0.25, 0.25, 1.0);
                     } else {
+                        return new javafx.scene.paint.Color(0.5, 0.25, 0.25, 1.0);
+                        /*
                         if (ballInstance.getAttribute("type").stringValue().equals("Terrain") && FXEditorButtons_ShowHide.comboBoxSelected == ballInstance.getAttribute("terrainGroup").intValue() && FXEditorButtons_ShowHide.comboBoxSelected != -1) {
                             if (FXEditorButtons_ShowHide.comboBoxList.get(FXEditorButtons_ShowHide.comboBoxSelected)) {
                                 return new javafx.scene.paint.Color(1.0 ,0.0, 1.0, 1);
@@ -518,6 +503,8 @@ public class BallInstanceHelper {
                                 return new javafx.scene.paint.Color(0.5, 0.5, 0.5, 1);
                             }
                         }
+
+                         */
                     }
                 }
                 @Override
@@ -535,8 +522,8 @@ public class BallInstanceHelper {
                 }
                 @Override
                 public boolean isVisible() {
-                    if (AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 0) return false;
-                    return (ball == null || ballInstance.getAttribute("type").stringValue().equals("Terrain") && ballInstance.visibilityFunction()) || AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 1 || (ballInstance.getAttribute("type").stringValue().equals("Terrain") && FXEditorButtons_ShowHide.comboBoxSelected == ballInstance.getAttribute("terrainGroup").intValue());
+                    if (AssetManager.getVisibility("goos") == 0) return false;
+                    return (ball == null || ballInstance.getAttribute("type").stringValue().equals("Terrain") && ballInstance.visibilityFunction()) || AssetManager.getVisibility("goos") == 1 || (ballInstance.getAttribute("type").stringValue().equals("Terrain"));// && FXEditorButtons_ShowHide.comboBoxSelected == ballInstance.getAttribute("terrainGroup").intValue());
                 }
                 @Override
                 public boolean isResizable() {
@@ -551,7 +538,7 @@ public class BallInstanceHelper {
 
         }
 
-        else objectComponents.add(new RectangleComponent() {
+        else objectComponents.add(new RectangleComponent(ballInstance) {
             @Override
             public double getX() {
                 return ballInstance.getPosition().getX();
@@ -627,7 +614,7 @@ public class BallInstanceHelper {
 
             @Override
             public boolean isVisible() {
-                return (ball == null || ballInstance.getAttribute("type").stringValue().equals("Terrain") && ballInstance.visibilityFunction()) || AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 1;
+                return (ball == null || ballInstance.getAttribute("type").stringValue().equals("Terrain") && ballInstance.visibilityFunction()) || AssetManager.getVisibility("goos") == 1;
             }
 
             @Override

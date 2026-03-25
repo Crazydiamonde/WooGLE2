@@ -1,0 +1,23 @@
+<AttributeManifest localName="Point">
+
+    <attributes>
+        <EditorAttribute name="position" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="type" type="STRING"/>
+        <EditorAttribute name="rotation" type="STRING"/>
+        <EditorAttribute name="radius" type="STRING"/>
+        <EditorAttribute name="userValue" type="STRING"/>
+        <EditorAttribute name="x" type="STRING"/>
+        <EditorAttribute name="y" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="position"/>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="rotation"/>
+        <MetaEditorAttribute name="radius"/>
+        <MetaEditorAttribute name="userValue"/>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+    </metaAttributes>
+
+</AttributeManifest>

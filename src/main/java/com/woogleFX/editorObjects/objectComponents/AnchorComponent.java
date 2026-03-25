@@ -1,5 +1,6 @@
 package com.woogleFX.editorObjects.objectComponents;
 
+import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.editorObjects.objectComponents.generic.ColoredProperty;
 import com.woogleFX.engine.renderer.Renderer;
@@ -12,13 +13,15 @@ import javafx.scene.canvas.GraphicsContext;
  * Note that objects with an anchor have their own unrelated positions. */
 public abstract class AnchorComponent extends ObjectComponent implements ColoredProperty {
 
+    public AnchorComponent(EditorObject editorObject) {
+        super(editorObject);
+    }
+
     /** Returns the X component of the anchor. */
     public abstract double getAnchorX();
 
-
     /** Returns the Y component of the anchor. */
     public abstract double getAnchorY();
-
 
     /** Sets both the X and Y components of the anchor.
      * This needs to be done for both at once because of normalized anchors like those in Line.
@@ -28,13 +31,11 @@ public abstract class AnchorComponent extends ObjectComponent implements Colored
 
     }
 
-
     /** Returns the width of the anchor line. */
     public abstract double getLineWidth();
 
-
     @Override
-    public void draw(GraphicsContext graphicsContext, boolean selected) {
+    public void draw(GraphicsContext graphicsContext) {
 
         double x = getX();
         double y = getY();
@@ -44,8 +45,6 @@ public abstract class AnchorComponent extends ObjectComponent implements Colored
         double offsetX = AssetManager.getAsset().getOffsetX();
         double offsetY = AssetManager.getAsset().getOffsetY();
         double zoom = AssetManager.getAsset().getZoom();
-
-        double angle = Renderer.angleTo(new Point2D(0, 0), new Point2D(anchorX, anchorY));
 
         graphicsContext.setStroke(getColor());
         graphicsContext.setLineWidth(zoom * getLineWidth());
@@ -59,32 +58,37 @@ public abstract class AnchorComponent extends ObjectComponent implements Colored
 
         }
 
-        if (selected) {
-
-            graphicsContext.setStroke(Renderer.selectionOutline);
-            graphicsContext.setLineWidth(1);
-            graphicsContext.setLineDashes(3);
-
-            double forceMagnitude = Math.hypot(anchorX, anchorY);
-
-            Point2D forceRight = new Point2D(x + forceMagnitude, y);
-
-            forceRight = ObjectUtil.rotate(forceRight, angle, new Point2D(x, y));
-
-            forceRight = forceRight.multiply(zoom).add(offsetX, offsetY);
-
-            graphicsContext.setLineDashes(0);
-
-            graphicsContext.setLineWidth(1);
-            if (forceMagnitude != 0) {
-                graphicsContext.strokeRect(forceRight.getX() - 4, forceRight.getY() - 4, 8, 8);
-            }
-
-        }
-
 
     }
 
+    @Override
+    public void drawSelectionOutline(GraphicsContext graphicsContext) {
+
+        double x = getX();
+        double y = getY();
+        double anchorX = getAnchorX();
+        double anchorY = getAnchorY();
+
+        double offsetX = AssetManager.getAsset().getOffsetX();
+        double offsetY = AssetManager.getAsset().getOffsetY();
+        double zoom = AssetManager.getAsset().getZoom();
+
+        double angle = Renderer.angleTo(new Point2D(0, 0), new Point2D(anchorX, anchorY));
+
+        double forceMagnitude = Math.hypot(anchorX, anchorY);
+
+        Point2D forceRight = new Point2D(x + forceMagnitude, y);
+
+        forceRight = ObjectUtil.rotate(forceRight, angle, new Point2D(x, y));
+
+        forceRight = forceRight.multiply(zoom).add(offsetX, offsetY);
+
+        graphicsContext.setStroke(Renderer.selectionOutline);
+        graphicsContext.setLineDashes(0);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.strokeRect(forceRight.getX() - 4, forceRight.getY() - 4, 8, 8);
+
+    }
 
     @Override
     public DragSettings mouseIntersection(double mouseX, double mouseY) {
@@ -104,15 +108,13 @@ public abstract class AnchorComponent extends ObjectComponent implements Colored
 
         if (rotatedMouse.getX() > x - drawWidth / 2 && rotatedMouse.getX() < x + forceMagnitude + drawWidth / 2 && rotatedMouse.getY() > y - drawWidth / 2 && rotatedMouse.getY() < y + drawWidth / 2) {
             DragSettings anchorSettings = new DragSettings(DragSettings.MOVE, this);
-            anchorSettings.setInitialSourceX(mouseX - x);
-            anchorSettings.setInitialSourceY(mouseY - y);
+            anchorSettings.setInitialSource(new Point2D(mouseX - x, mouseY - y));
             return anchorSettings;
         } else {
             return DragSettings.NULL;
         }
 
     }
-
 
     @Override
     public DragSettings mouseIntersectingCorners(double mouseX, double mouseY) {
@@ -134,8 +136,7 @@ public abstract class AnchorComponent extends ObjectComponent implements Colored
                 rotated.getY() > right.getY() - 4 / AssetManager.getAsset().getZoom() &&
                 rotated.getY() < right.getY() + 4 / AssetManager.getAsset().getZoom()) {
             DragSettings anchorSettings = new DragSettings(DragSettings.SETANCHOR, this);
-            anchorSettings.setInitialSourceX(mouseX - anchorX);
-            anchorSettings.setInitialSourceY(mouseY - anchorY);
+            anchorSettings.setInitialSource(new Point2D(mouseX - anchorX, mouseY - anchorY));
             return anchorSettings;
         } else return DragSettings.NULL;
 

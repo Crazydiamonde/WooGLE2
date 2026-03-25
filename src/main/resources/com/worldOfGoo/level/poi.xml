@@ -1,0 +1,17 @@
+<AttributeManifest localName="poi">
+
+    <attributes>
+        <EditorAttribute name="pos"        type="_1_POSITION" defaultValue="0,0" required="true"/>
+        <EditorAttribute name="traveltime" type="_1_NUMBER"   defaultValue="3"   required="true"/>
+        <EditorAttribute name="pause"      type="_1_NUMBER"   defaultValue="0"   required="true"/>
+        <EditorAttribute name="zoom"       type="_1_NUMBER"   defaultValue="1"   required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="pos"/>
+        <MetaEditorAttribute name="traveltime"/>
+        <MetaEditorAttribute name="pause"/>
+        <MetaEditorAttribute name="zoom"/>
+    </metaAttributes>
+
+</AttributeManifest>

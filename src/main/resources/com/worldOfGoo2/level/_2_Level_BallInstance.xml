@@ -3,28 +3,28 @@
     <attributes>
         <EditorAttribute name="typeEnum" type="_2_BALL_TYPE"/>
         <EditorAttribute name="uid" type="_2_UID"/>
-        <EditorAttribute name="pos" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="angle" type="_2_NUMBER"/>
+        <EditorAttribute name="pos" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="angle" type="NUMBER"/>
         <EditorAttribute name="terrainGroup" type="_2_TERRAIN_GROUP_TYPE_INDEX" defaultValue="-1" required="true"/>
-        <EditorAttribute name="discovered" type="_2_BOOLEAN" defaultValue="true"/>
-        <EditorAttribute name="floatingWhileAsleep" type="_2_BOOLEAN"/>
-        <EditorAttribute name="interactive" type="_2_BOOLEAN"/>
-        <EditorAttribute name="wakeWithLiquid" type="_2_BOOLEAN"/>
-        <EditorAttribute name="exitPipeAlert" type="_2_BOOLEAN"/>
-        <EditorAttribute name="affectsAutoBounds" type="_2_BOOLEAN"/>
-        <EditorAttribute name="launcherLifespanMin" type="_2_NUMBER"/>
-        <EditorAttribute name="launcherLifespanMax" type="_2_NUMBER"/>
-        <EditorAttribute name="launcherForceFactor" type="_2_NUMBER"/>
-        <EditorAttribute name="launcherCanUseBalls" type="_2_BOOLEAN"/>
-        <EditorAttribute name="launcherKnockbackFactor" type="_2_NUMBER"/>
-        <EditorAttribute name="launcherMaxActive" type="_2_NUMBER"/>
+        <EditorAttribute name="discovered" type="BOOLEAN" defaultValue="true"/>
+        <EditorAttribute name="floatingWhileAsleep" type="BOOLEAN"/>
+        <EditorAttribute name="interactive" type="BOOLEAN"/>
+        <EditorAttribute name="wakeWithLiquid" type="BOOLEAN"/>
+        <EditorAttribute name="exitPipeAlert" type="BOOLEAN"/>
+        <EditorAttribute name="affectsAutoBounds" type="BOOLEAN"/>
+        <EditorAttribute name="launcherLifespanMin" type="NUMBER"/>
+        <EditorAttribute name="launcherLifespanMax" type="NUMBER"/>
+        <EditorAttribute name="launcherForceFactor" type="NUMBER"/>
+        <EditorAttribute name="launcherCanUseBalls" type="BOOLEAN"/>
+        <EditorAttribute name="launcherKnockbackFactor" type="NUMBER"/>
+        <EditorAttribute name="launcherMaxActive" type="NUMBER"/>
         <EditorAttribute name="launcherBallTypeToGenerate" type="_2_BALL_TYPE"/>
-        <EditorAttribute name="thrustForce" type="_2_NUMBER"/>
-        <EditorAttribute name="maxVelocity" type="_2_NUMBER"/>
-        <EditorAttribute name="stiffness" type="_2_NUMBER"/>
-        <EditorAttribute name="filled" type="_2_BOOLEAN"/>
-        <EditorAttribute name="detonationRadius" type="_2_NUMBER"/>
-        <EditorAttribute name="detonationForce" type="_2_NUMBER"/>
+        <EditorAttribute name="thrustForce" type="NUMBER"/>
+        <EditorAttribute name="maxVelocity" type="NUMBER"/>
+        <EditorAttribute name="stiffness" type="NUMBER"/>
+        <EditorAttribute name="filled" type="BOOLEAN"/>
+        <EditorAttribute name="detonationRadius" type="NUMBER"/>
+        <EditorAttribute name="detonationForce" type="NUMBER"/>
     </attributes>
 
     <metaAttributes>

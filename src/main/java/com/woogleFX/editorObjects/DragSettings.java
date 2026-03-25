@@ -1,6 +1,7 @@
 package com.woogleFX.editorObjects;
 
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
+import javafx.geometry.Point2D;
 
 public class DragSettings {
 
@@ -31,58 +32,57 @@ public class DragSettings {
         this.objectComponent = objectComponent;
     }
 
-
-    private double anchorX;
-    public double getAnchorX() {
-        return anchorX;
+    private Point2D[] originalPositions;
+    public Point2D[] getOriginalPositions() {
+        return originalPositions;
     }
-    public void setAnchorX(double anchorX) {
-        this.anchorX = anchorX;
-    }
-
-
-    private double anchorY;
-    public double getAnchorY() {
-        return anchorY;
-    }
-    public void setAnchorY(double anchorY) {
-        this.anchorY = anchorY;
+    public void setOriginalPositions(Point2D[] originalPositions) {
+        this.originalPositions = originalPositions;
     }
 
 
-    private double initialSourceX;
-    public double getInitialSourceX() {
-        return initialSourceX;
+    private Point2D[] originalSizes;
+    public Point2D[] getOriginalSizes() {
+        return originalSizes;
     }
-    public void setInitialSourceX(double initialSourceX) {
-        this.initialSourceX = initialSourceX;
-    }
-
-
-    private double initialSourceY;
-    public double getInitialSourceY() {
-        return initialSourceY;
-    }
-    public void setInitialSourceY(double initialSourceY) {
-        this.initialSourceY = initialSourceY;
+    public void setOriginalSizes(Point2D[] originalSizes) {
+        this.originalSizes = originalSizes;
     }
 
 
-    private double initialScaleX = 1;
-    public double getInitialScaleX() {
-        return initialScaleX;
+    private double[] originalRotations;
+    public double[] getOriginalRotations() {
+        return originalRotations;
     }
-    public void setInitialScaleX(double initialScaleX) {
-        this.initialScaleX = initialScaleX;
+    public void setOriginalRotations(double[] originalRotations) {
+        this.originalRotations = originalRotations;
     }
 
 
-    private double initialScaleY = 1;
-    public double getInitialScaleY() {
-        return initialScaleY;
+    private Point2D anchor;
+    public Point2D getAnchor() {
+        return anchor;
     }
-    public void setInitialScaleY(double initialScaleY) {
-        this.initialScaleY = initialScaleY;
+    public void setAnchor(Point2D anchor) {
+        this.anchor = anchor;
+    }
+
+
+    private Point2D initialSource;
+    public Point2D getInitialSource() {
+        return initialSource;
+    }
+    public void setInitialSource(Point2D initialSource) {
+        this.initialSource = initialSource;
+    }
+
+
+    private Point2D initialScale = new Point2D(1, 1);
+    public Point2D getInitialScale() {
+        return initialScale;
+    }
+    public void setInitialScale(Point2D initialScale) {
+        this.initialScale = initialScale;
     }
 
 
@@ -92,6 +92,15 @@ public class DragSettings {
     }
     public void setRotateAngleOffset(double rotateAngleOffset) {
         this.rotateAngleOffset = rotateAngleOffset;
+    }
+
+
+    private double opacity = 1.0;
+    public double getOpacity() {
+        return opacity;
+    }
+    public void setOpacity(double opacity) {
+        this.opacity = opacity;
     }
 
 }

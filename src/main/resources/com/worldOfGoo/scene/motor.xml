@@ -1,0 +1,15 @@
+<AttributeManifest localName="motor">
+
+    <attributes>
+        <EditorAttribute name="body"     type="_1_GEOMETRY"                    required="true"/>
+        <EditorAttribute name="speed"    type="_1_NUMBER" defaultValue="-0.01" required="true"/>
+        <EditorAttribute name="maxforce" type="_1_NUMBER" defaultValue="20"    required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="body"/>
+        <MetaEditorAttribute name="speed"/>
+        <MetaEditorAttribute name="maxforce"/>
+    </metaAttributes>
+
+</AttributeManifest>

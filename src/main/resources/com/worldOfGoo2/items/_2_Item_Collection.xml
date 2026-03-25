@@ -1,5 +1,8 @@
 <AttributeManifest localName="Items">
     <attributes>
-        <EditorAttribute name="items" type="_2_STRING" childAlias="com.worldOfGoo2.items._2_Item"/>
+        <EditorAttribute name="items" type="STRING" childAlias="com.worldOfGoo2.items._2_Item"/>
     </attributes>
+    <metaAttributes>
+
+    </metaAttributes>
 </AttributeManifest>

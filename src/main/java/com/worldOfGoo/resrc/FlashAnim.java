@@ -1,12 +1,10 @@
 package com.worldOfGoo.resrc;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.attributes.InputField;
-import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 import com.woogleFX.gameData.animation.SimpleBinAnimation;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 
-public class FlashAnim extends EditorObject {
+public class FlashAnim extends EditorObject implements ResourceInterface {
 
     private SimpleBinAnimation animation;
     public SimpleBinAnimation getAnimation() {
@@ -17,6 +15,9 @@ public class FlashAnim extends EditorObject {
     }
 
     private SetDefaults setDefaults;
+    public SetDefaults getSetDefaults() {
+        return setDefaults;
+    }
     public void setSetDefaults(SetDefaults setDefaults) {
         this.setDefaults = setDefaults;
     }
@@ -35,18 +36,8 @@ public class FlashAnim extends EditorObject {
 
 
     public FlashAnim(EditorObject _parent, GameVersion version) {
-        super(_parent, "Image", version);
-
-        addAttribute("id",   InputField._1_STRING).assertRequired();
-        addAttribute("path", InputField._1_IMAGE_PATH).assertRequired();
-
-        // extra attribute from 1.5
-        addAttribute("atlasid", InputField._1_STRING);
-
-        setMetaAttributes(MetaEditorAttribute.parse("id,path,"));
-
+        super(_parent, version);
     }
-
 
     @Override
     public String getName() {

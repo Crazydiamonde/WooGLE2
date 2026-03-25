@@ -1,20 +1,16 @@
 package com.worldOfGoo.level;
 
+import com.woogleFX.assets.Asset;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.ObjectUtil;
-import com.woogleFX.gameData.ball._Ball;
+import com.woogleFX.assets.wog1.ball.WOG1Ball;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.engine.renderer.Renderer;
-import com.woogleFX.gameData.ball.BallManager;
-import com.woogleFX.gameData.level.WOG1Level;
-import com.woogleFX.gameData.level.levelOpening.AssetLoader;
+import com.woogleFX.assets.AssetLoader;
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.editorObjects.attributes.InputField;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
+import com.woogleFX.assets.GameVersion;
 import com.woogleFX.editorObjects.attributes.dataTypes.Position;
-import com.worldOfGoo.ball.BallStrand;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -23,8 +19,8 @@ import javafx.scene.paint.Paint;
 
 public class Strand extends EditorObject {
 
-    private BallStrand strand;
-    public void setStrand(BallStrand strand) {
+    private com.worldOfGoo.ball.strand strand;
+    public void setStrand(com.worldOfGoo.ball.strand strand) {
         this.strand = strand;
     }
 
@@ -33,12 +29,18 @@ public class Strand extends EditorObject {
 
 
     private BallInstance goo1 = null;
+    public BallInstance getGoo1() {
+        return goo1;
+    }
     public void setGoo1(BallInstance goo1) {
         this.goo1 = goo1;
     }
 
 
     private BallInstance goo2 = null;
+    public BallInstance getGoo2() {
+        return goo2;
+    }
     public void setGoo2(BallInstance goo2) {
         this.goo2 = goo2;
     }
@@ -48,18 +50,17 @@ public class Strand extends EditorObject {
 
 
     public Strand(EditorObject _parent, GameVersion version) {
-        super(_parent, "Strand", version);
+        super(_parent, version);
+    }
 
-        addAttribute("gb1", InputField._1_GOOBALL_ID).assertRequired();
-        addAttribute("gb2", InputField._1_GOOBALL_ID).assertRequired();
-
-        setMetaAttributes(MetaEditorAttribute.parse("gb1,gb2,"));
+    @Override
+    public void onLoaded(Asset asset) {
+        super.onLoaded(asset);
 
         getAttribute("gb1").addChangeListener(((observable, oldValue, newValue) -> addPartAsObjectPosition()));
         getAttribute("gb2").addChangeListener(((observable, oldValue, newValue) -> addPartAsObjectPosition()));
 
     }
-
 
     @Override
     public String getName() {
@@ -71,27 +72,24 @@ public class Strand extends EditorObject {
 
     private boolean setStrand(String type) {
 
-        for (_Ball ball : BallManager.getImportedBalls()) {
-            String ballType = ball.getObjects().get(0).getAttribute("name").stringValue();
-            if (ballType.equals(type)) {
-                for (EditorObject object : ball.getObjects()) if (object instanceof BallStrand strand2) {
-                    this.strand = strand2;
-                    return true;
-                }
-            }
+        WOG1Ball ball = WOG1Ball.assetSelector.openInstance(type, getVersion());
+        if (ball == null) return false;
+
+        for (EditorObject object : ball.getObjects()) if (object instanceof com.worldOfGoo.ball.strand strand2) {
+            this.strand = strand2;
+            return true;
         }
 
         return false;
 
     }
 
-
     @Override
     public void update() {
 
         if (AssetManager.getAsset() == null) return;
 
-        for (EditorObject obj : ((WOG1Level) AssetManager.getAsset()).getLevel()) if (obj instanceof BallInstance ballInstance) {
+        for (EditorObject obj : AssetManager.getAsset().getObjects()) if (obj instanceof BallInstance ballInstance) {
 
             String id = ballInstance.getAttribute("id").stringValue();
             String gb1 = getAttribute("gb1").stringValue();
@@ -123,12 +121,12 @@ public class Strand extends EditorObject {
 
         if (strand != null) {
             try {
-                _Ball ball;
+                WOG1Ball ball;
                 if (strandBallID == 1) ball = goo1.getBall(); else ball = goo2.getBall();
                 if (goo1.getBall() == null || goo2.getBall() == null) return;
                 strandImage = strand.getAttribute("image").imageValue(ball.getResources(), getVersion());
             } catch (Exception e) {
-                // TODO make this cleaner
+                // TODO: make this cleaner
                 if (!AssetLoader.failedResources.contains("From Strand: \"" + strand.getAttribute("image").stringValue() + "\" (version " + getVersion() + ")")) {
                     AssetLoader.failedResources.add("From Strand: \"" + strand.getAttribute("image").stringValue() + "\" (version " + getVersion() + ")");
                 }
@@ -224,7 +222,7 @@ public class Strand extends EditorObject {
             update();
         }
 
-        if (strandImage != null) addObjectComponent(new ImageComponent() {
+        if (strandImage != null) addObjectComponent(new ImageComponent(this) {
             public double getX() {
                 double x1 = goo1.getAttribute("x").doubleValue();
                 double x2 = goo2.getAttribute("x").doubleValue();
@@ -268,7 +266,7 @@ public class Strand extends EditorObject {
                 return 0.00000001;
             }
             public boolean isVisible() {
-                return AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 2;
+                return AssetManager.getVisibility("goos") == 2;
             }
             public boolean isDraggable() {
                 return false;
@@ -281,7 +279,7 @@ public class Strand extends EditorObject {
             }
         });
 
-        addObjectComponent(new RectangleComponent() {
+        addObjectComponent(new RectangleComponent(this) {
 
             public double getX() {
 
@@ -295,11 +293,14 @@ public class Strand extends EditorObject {
                 double y2 = -goo2.getAttribute("y").doubleValue();
                 double rotation2 = -Math.toRadians(goo2.getAttribute("angle").doubleValue());
 
-                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(goo1.getBall().getShapeSize(), goo1.getBall().getShapeSize2());
-                boolean circle1 = goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
+                // TODO:
+                double shapeSize1 = Double.parseDouble(goo1.getBall().getBall().getAttribute("shape").listValue()[1]);
+                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(shapeSize1, shapeSize1);
+                boolean circle1 = true;//goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
 
-                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(goo2.getBall().getShapeSize(), goo2.getBall().getShapeSize2());
-                boolean circle2 = goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
+                double shapeSize2 = Double.parseDouble(goo1.getBall().getBall().getAttribute("shape").listValue()[1]);
+                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(shapeSize2, shapeSize2);
+                boolean circle2 = true;//goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
 
                 double theta = Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
 
@@ -336,11 +337,14 @@ public class Strand extends EditorObject {
                 double y2 = -goo2.getAttribute("y").doubleValue();
                 double rotation2 = -Math.toRadians(goo2.getAttribute("angle").doubleValue());
 
-                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(goo1.getBall().getShapeSize(), goo1.getBall().getShapeSize2());
-                boolean circle1 = goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
+                // TODO:
+                double shapeSize1 = Double.parseDouble(goo1.getBall().getBall().getAttribute("shape").listValue()[1]);
+                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(shapeSize1, shapeSize1);
+                boolean circle1 = true;//goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
 
-                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(goo2.getBall().getShapeSize(), goo2.getBall().getShapeSize2());
-                boolean circle2 = goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
+                double shapeSize2 = Double.parseDouble(goo1.getBall().getBall().getAttribute("shape").listValue()[1]);
+                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(shapeSize2, shapeSize2);
+                boolean circle2 = true;//goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
 
                 double theta = Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
 
@@ -393,11 +397,14 @@ public class Strand extends EditorObject {
                 double y2 = -goo2.getAttribute("y").doubleValue();
                 double rotation2 = -Math.toRadians(goo2.getAttribute("angle").doubleValue());
 
-                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(goo1.getBall().getShapeSize(), goo1.getBall().getShapeSize2());
-                boolean circle1 = goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
+                // TODO:
+                double shapeSize1 = Double.parseDouble(goo1.getBall().getBall().getAttribute("shape").listValue()[1]);
+                Position size1 = goo1.getBall() == null ? new Position(30, 30) : new Position(shapeSize1, shapeSize1);
+                boolean circle1 = true;//goo1.getBall() == null || goo1.getBall().getShapeType().equals("circle");
 
-                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(goo2.getBall().getShapeSize(), goo2.getBall().getShapeSize2());
-                boolean circle2 = goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
+                double shapeSize2 = Double.parseDouble(goo1.getBall().getBall().getAttribute("shape").listValue()[1]);
+                Position size2 = goo2.getBall() == null ? new Position(30, 30) : new Position(shapeSize2, shapeSize2);
+                boolean circle2 = true;//goo2.getBall() == null || goo2.getBall().getShapeType().equals("circle");
 
                 double theta = Renderer.angleTo(new Point2D(x1, y1), new Point2D(x2, y2));
 
@@ -451,7 +458,7 @@ public class Strand extends EditorObject {
             }
 
             public boolean isVisible() {
-                return AssetManager.getAsset().getVisibilitySettings().getShowGoos() == 1;
+                return AssetManager.getVisibility("goos") == 1;
             }
             public boolean isDraggable() {
                 return false;

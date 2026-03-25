@@ -1,12 +1,23 @@
 package com.woogleFX.editorObjects.objectComponents;
 
 import com.woogleFX.editorObjects.DragSettings;
+import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.engine.renderer.Depth;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /** The base for any object component.
  * Has a position, depth, and visibility options. */
 public abstract class ObjectComponent {
+
+    private final EditorObject editorObject;
+    public final EditorObject getEditorObject() {
+        return editorObject;
+    }
+    public ObjectComponent(EditorObject editorObject) {
+        this.editorObject = editorObject;
+    }
+
 
     public static boolean rectangleIntersection(double mouseX, double mouseY, Point2D point, double distance) {
 
@@ -45,6 +56,11 @@ public abstract class ObjectComponent {
     public abstract double getDepth();
 
 
+    public Depth.Layer getGlobalLayer() {
+        return Depth.Layer.DEFAULT;
+    }
+
+
     /** Returns whether this component is visible. */
     public boolean isVisible() {
         return true;
@@ -75,7 +91,10 @@ public abstract class ObjectComponent {
     }
 
 
-    public abstract void draw(GraphicsContext graphicsContext, boolean selected);
+    public abstract void draw(GraphicsContext graphicsContext);
+
+
+    public abstract void drawSelectionOutline(GraphicsContext graphicsContext);
 
 
     public abstract DragSettings mouseIntersection(double mouseX, double mouseY);

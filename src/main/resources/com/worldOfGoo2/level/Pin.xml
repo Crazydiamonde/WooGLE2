@@ -1,0 +1,19 @@
+<AttributeManifest localName="Pin">
+
+    <attributes>
+        <EditorAttribute name="uid" type="_2_UID"/>
+        <EditorAttribute name="pos" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="damping" type="NUMBER"/>
+        <EditorAttribute name="limitVelocity" type="BOOLEAN"/>
+        <EditorAttribute name="maxVelocity" type="NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="uid"/>
+        <MetaEditorAttribute name="pos"/>
+        <MetaEditorAttribute name="damping"/>
+        <MetaEditorAttribute name="limitVelocity"/>
+        <MetaEditorAttribute name="maxVelocity"/>
+    </metaAttributes>
+
+</AttributeManifest>

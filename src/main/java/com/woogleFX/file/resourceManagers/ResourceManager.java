@@ -9,15 +9,14 @@ import com.woogleFX.gameData.animation.SimpleBinAnimation;
 import com.woogleFX.gameData.font._Font;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.gameData.font.FontReader;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 import com.worldOfGoo.resrc.*;
-import com.worldOfGoo.text.TextString;
+import com.worldOfGoo.text.string;
 import com.worldOfGoo2.items._2_Item;
 import com.worldOfGoo2.terrain._2_Terrain_Collection;
 import com.worldOfGoo2.terrain._2_Terrain_TerrainType;
 import com.worldOfGoo2.util.ItemHelper;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -33,12 +32,9 @@ public class ResourceManager {
 
     private static boolean checkSingleResource(EditorObject resource, String id) {
 
-        if (resource instanceof ResrcImage resrcImage) return resrcImage.getAdjustedID().equals(id);
-        else if (resource instanceof Sound sound) return sound.getAdjustedID().equals(id);
-        else if (resource instanceof Font font) return font.getAdjustedID().equals(id);
-        else if (resource instanceof FlashAnim flashAnim) return flashAnim.getAdjustedID().equals(id);
-        else if (resource instanceof TextString text) return text.getAttribute("id").stringValue().equals(id);
-        else if (resource instanceof Material mat) return mat.getAttribute("id").stringValue().equals(id);
+        if (resource instanceof ResourceInterface resourceInterface) return resourceInterface.getAdjustedID().equals(id);
+        else if (resource instanceof string text) return text.getAttribute("id").stringValue().equals(id);
+        else if (resource instanceof material mat) return mat.getAttribute("id").stringValue().equals(id);
         else if (resource instanceof _2_Item item) return item.getAttribute("uuid").stringValue().equals(id);
         if (resource instanceof _2_Terrain_TerrainType terrainTerrainType)
             return terrainTerrainType.getAttribute("name").stringValue().equals(id);
@@ -49,12 +45,12 @@ public class ResourceManager {
     /** Attempts to locate a resource with the given ID from the given resources.
      * Looks in the given level's resources first, then checks the global resources.
      * Returns null if there isn't any resource with the given ID. */
-    private static EditorObject findResource(ArrayList<EditorObject> resources, String id, GameVersion version) {
+    public static ResourceInterface findResource(Resources resources, String id, GameVersion version) {
 
-        if (resources != null) for (EditorObject resource : resources)
-            if (checkSingleResource(resource, id)) return resource;
+        if (resources != null) for (EditorObject resource : resources.getChildren())
+            if (checkSingleResource(resource, id)) return (ResourceInterface) resource;
 
-        Map<String, EditorObject> globalResources;
+        Map<String, ResourceInterface> globalResources;
         if (version == GameVersion.VERSION_WOG1_OLD) globalResources = GlobalResourceManager.getOldResources();
         else if (version == GameVersion.VERSION_WOG1_NEW) globalResources = GlobalResourceManager.getNewResources();
         else globalResources = GlobalResourceManager.getSequelResources();
@@ -65,21 +61,26 @@ public class ResourceManager {
 
 
     /** Returns an image corresponding with the given ID. */
-    public static Image getImage(ArrayList<EditorObject> resources, String id, GameVersion version) throws FileNotFoundException {
-        EditorObject resource = findResource(resources, id, version);
-        if (resource instanceof ResrcImage resrcImage) {
-            if (resrcImage.getImage() == null) updateResource(resrcImage, version);
-            return resrcImage.getImage();
+    public static javafx.scene.image.Image getImage(Resources resources, String id, GameVersion version) {
+        if (AtlasManager.atlas.containsKey(id) && version == GameVersion.VERSION_WOG2) {
+            return AtlasManager.atlas.get(id);
         }
-        else throw new FileNotFoundException("Invalid image resource ID: \"" + id + "\" (version " + version + ")");
+        ResourceInterface resource = findResource(resources, id, version);
+        if (resource instanceof Image image) {
+            if (image.getImage() == null) updateResource(image, version);
+            return image.getImage();
+        }
+        else return null;
     }
 
 
     /** Returns a font corresponding with the given ID. */
-    public static TextString getText(ArrayList<EditorObject> resources, String id, GameVersion version) throws FileNotFoundException {
-        EditorObject resource = findResource(resources, id, version);
-        if (resource instanceof TextString textString) return textString;
-        else throw new FileNotFoundException("Invalid text resource ID: \"" + id + "\" (version " + version + ")");
+    public static string getText(Resources resources, String id, GameVersion version) {
+        ResourceInterface resource = findResource(resources, id, version);
+        if (resource instanceof string string) {
+            return string;
+        }
+        else return null;
     }
 
 
@@ -108,7 +109,7 @@ public class ResourceManager {
                 ItemHelper.terrainTypeNameMap.put(item.getAttribute("uuid").stringValue(), item.getAttribute("name").stringValue());
             }
             for (EditorObject item : items) {
-                GlobalResourceManager.getSequelResources().put(item.getAttribute("uuid").stringValue(), item);
+                GlobalResourceManager.getSequelResources().put(item.getAttribute("uuid").stringValue(), (ResourceInterface) item);
             }
         } catch (IOException e) {
             ErrorAlarm.show(e);
@@ -117,45 +118,45 @@ public class ResourceManager {
 
 
     /** Returns a font corresponding with the given ID. */
-    public static _Font getFont(ArrayList<EditorObject> resources, String id, GameVersion version) throws FileNotFoundException {
-        EditorObject resource = findResource(resources, id, version);
-        if (resource instanceof Font font) {
+    public static _Font getFont(Resources resources, String id, GameVersion version) {
+        ResourceInterface resource = findResource(resources, id, version);
+        if (resource instanceof font font) {
             if (font.getFont() == null) updateResource(font, version);
             return font.getFont();
         }
-        else throw new FileNotFoundException("Invalid text resource ID: \"" + id + "\" (version " + version + ")");
+        else return null;
     }
 
 
     /** Returns a flash animation corresponding with the given ID. */
-    public static SimpleBinAnimation getFlashAnim(ArrayList<EditorObject> resources, String id, GameVersion version) throws FileNotFoundException {
-        EditorObject resource = findResource(resources, id, version);
+    public static SimpleBinAnimation getFlashAnim(Resources resources, String id, GameVersion version) {
+        ResourceInterface resource = findResource(resources, id, version);
         if (resource instanceof FlashAnim font) {
             if (font.getAnimation() == null) updateResource(font, version);
             return font.getAnimation();
         }
-        else throw new FileNotFoundException("Invalid text resource ID: \"" + id + "\" (version " + version + ")");
+        else return null;
     }
 
 
     /** Returns a material corresponding with the given ID. */
-    public static Material getMaterial(ArrayList<EditorObject> resources, String id, GameVersion version) throws FileNotFoundException {
-        EditorObject resource = findResource(resources, id, version);
-        if (resource instanceof Material material) return material;
+    public static material getMaterial(Resources resources, String id, GameVersion version) throws FileNotFoundException {
+        ResourceInterface resource = findResource(resources, id, version);
+        if (resource instanceof material material) return material;
         else throw new FileNotFoundException("Invalid material resource ID: \"" + id + "\" (version " + version + ")");
     }
 
 
     public static boolean updateResource(EditorObject resource, GameVersion version) {
         String dir = FileManager.getGameDir(version);
-        if (resource instanceof ResrcImage resrcImage) {
+        if (resource instanceof Image image) {
             try {
-                if (Files.exists(Path.of(dir + "/" + resrcImage.getAdjustedPath() + ".png"))) {
-                    resrcImage.setImage(FileManager.openImageFromFilePath(dir + "/" + resrcImage.getAdjustedPath() + ".png"));
-                } else if (Files.exists(Path.of(dir + "/" + resrcImage.getAdjustedPath() + ".image"))) {
-                    BufferedImage maybe = ImageIO.read(new File(dir + "/" + resrcImage.getAdjustedPath() + ".image"));
-                    if (maybe != null) resrcImage.setImage(SwingFXUtils.toFXImage(maybe, null));
-                    else resrcImage.setImage(SwingFXUtils.toFXImage(KTXFileManager.readKTXImage(Path.of(dir + "/" + resrcImage.getAdjustedPath() + ".image")), null));
+                if (Files.exists(Path.of(dir + "/" + image.getAdjustedPath() + ".png"))) {
+                    image.setImage(FileManager.openImageFromFilePath(dir + "/" + image.getAdjustedPath() + ".png"));
+                } else if (Files.exists(Path.of(dir + "/" + image.getAdjustedPath() + ".image"))) {
+                    BufferedImage maybe = ImageIO.read(new File(dir + "/" + image.getAdjustedPath() + ".image"));
+                    if (maybe != null) image.setImage(SwingFXUtils.toFXImage(maybe, null));
+                    else image.setImage(SwingFXUtils.toFXImage(KTXFileManager.readKTXImage(Path.of(dir + "/" + image.getAdjustedPath() + ".image")), null));
                 }
                 return true;
             } catch (IOException ignored) {
@@ -168,10 +169,10 @@ public class ResourceManager {
             return true;
         } else if (resource instanceof Sound sound) {
             return true;
-        } else if (resource instanceof TextString textString) {
+        } else if (resource instanceof string string) {
             //textResource.setText("");
             return true;
-        } else if (resource instanceof Font font) {
+        } else if (resource instanceof font font) {
             font.setFont(FontReader.read(font.getAdjustedPath(), version));
             return true;
         } else return false;

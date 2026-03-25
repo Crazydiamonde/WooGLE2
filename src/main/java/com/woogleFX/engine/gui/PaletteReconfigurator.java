@@ -1,10 +1,13 @@
 package com.woogleFX.engine.gui;
 
+import com.woogleFX.assets.wog1.level.WOG1LevelGUI;
+import com.woogleFX.engine.AssetManager;
+import com.woogleFX.engine.fx.editorButtons.FXBallPaletteManager;
 import com.woogleFX.engine.fx.editorButtons.FXEditorButtons;
 import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.gameData.ball.PaletteManager;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.engine.fx.PaletteManager;
+import com.woogleFX.assets.GameVersion;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -105,10 +108,8 @@ public class PaletteReconfigurator extends Application {
                 }
             }
 
-            FXEditorButtons.getOldGooballsToolbar().getItems().clear();
-            FXEditorButtons.getNewGooballsToolbar().getItems().clear();
-            FXEditorButtons.getSequelGooballsToolbar().getItems().clear();
-            FXEditorButtons.addBallsTo();
+            FXBallPaletteManager.regeneratePalettes();
+            WOG1LevelGUI.refreshBallPalette(AssetManager.getAsset().getVersion());
 
             try {
                 FileManager.saveProperties();

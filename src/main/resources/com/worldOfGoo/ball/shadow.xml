@@ -1,0 +1,13 @@
+<AttributeManifest localName="shadow">
+
+    <attributes>
+        <EditorAttribute name="image" type="STRING" required="true"/>
+        <EditorAttribute name="additive" type="BOOLEAN"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="image"/>
+        <MetaEditorAttribute name="additive"/>
+    </metaAttributes>
+
+</AttributeManifest>

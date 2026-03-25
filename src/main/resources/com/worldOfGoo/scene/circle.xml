@@ -1,0 +1,45 @@
+<AttributeManifest localName="circle">
+
+    <attributes>
+        <EditorAttribute name="id"               type="STRING"                          required="true"/>
+        <EditorAttribute name="mass"             type="_1_NUMBER"   defaultValue="0"/>
+        <EditorAttribute name="static"           type="BOOLEAN"/>
+        <EditorAttribute name="tag"              type="_1_TAG"/>
+        <EditorAttribute name="material"         type="_1_MATERIAL"/>
+        <EditorAttribute name="contacts"         type="BOOLEAN"     defaultValue="true"/>
+        <EditorAttribute name="x"                type="_1_NUMBER"   defaultValue="0"    required="true"/>
+        <EditorAttribute name="y"                type="_1_NUMBER"   defaultValue="0"    required="true"/>
+        <EditorAttribute name="radius"           type="_1_NUMBER"   defaultValue="75"   required="true"/>
+        <EditorAttribute name="break"            type="_1_NUMBER"/>
+        <EditorAttribute name="image"            type="_1_IMAGE"/>
+        <EditorAttribute name="imagepos"         type="_1_POSITION"/>
+        <EditorAttribute name="imagerot"         type="_1_NUMBER"/>
+        <EditorAttribute name="imagescale"       type="_1_POSITION" defaultValue="1,1"/>
+        <EditorAttribute name="rotspeed"         type="_1_NUMBER"/>
+        <EditorAttribute name="nogeomcollisions" type="BOOLEAN"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+        <MetaEditorAttribute name="radius"/>
+        <MetaEditorAttribute name="Geometry" openByDefault="true">
+            <MetaEditorAttribute name="static"/>
+            <MetaEditorAttribute name="mass"/>
+            <MetaEditorAttribute name="material"/>
+            <MetaEditorAttribute name="tag"/>
+            <MetaEditorAttribute name="break"/>
+            <MetaEditorAttribute name="rotspeed"/>
+            <MetaEditorAttribute name="contacts"/>
+            <MetaEditorAttribute name="nogeomcollisions"/>
+        </MetaEditorAttribute>
+        <MetaEditorAttribute name="Image" openByDefault="true">
+            <MetaEditorAttribute name="image"/>
+            <MetaEditorAttribute name="imagepos"/>
+            <MetaEditorAttribute name="imagerot"/>
+            <MetaEditorAttribute name="imagescale"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

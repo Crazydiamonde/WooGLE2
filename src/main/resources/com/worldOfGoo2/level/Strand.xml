@@ -1,0 +1,17 @@
+<AttributeManifest localName="Strand">
+
+    <attributes>
+        <EditorAttribute name="ball1UID" type="_2_BALL_UID"/>
+        <EditorAttribute name="ball2UID" type="_2_BALL_UID"/>
+        <EditorAttribute name="type" type="_2_BALL_TYPE" defaultValue="1" required="true"/>
+        <EditorAttribute name="filled" type="BOOLEAN"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="ball1UID"/>
+        <MetaEditorAttribute name="ball2UID"/>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="filled"/>
+    </metaAttributes>
+
+</AttributeManifest>

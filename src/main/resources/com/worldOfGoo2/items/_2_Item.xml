@@ -1,49 +1,49 @@
 <AttributeManifest localName="Item">
 
     <attributes>
-        <EditorAttribute name="name" type="_2_STRING" required="true"/>
+        <EditorAttribute name="name" type="STRING" required="true"/>
         <EditorAttribute name="uuid" type="_2_UUID" required="true"/>
         <EditorAttribute name="type" type="_2_ITEM_TYPE" required="true"/>
-        <EditorAttribute name="category" type="_2_STRING" required="true"/>
-        <EditorAttribute name="layer" type="_2_NUMBER"/>
-        <EditorAttribute name="minDepth" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxDepth" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="sortOffset" type="_2_NUMBER"/>
-        <EditorAttribute name="radiusOverride" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="canRotate" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="uniformScale" type="_2_BOOLEAN"/>
-        <EditorAttribute name="canBeCopied" type="_2_BOOLEAN"/>
-        <EditorAttribute name="canTriggerEndOfLevel" type="_2_BOOLEAN"/>
-        <EditorAttribute name="variations" type="_2_BOOLEAN"/>
-        <EditorAttribute name="useLighting" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="castShadow" type="_2_BOOLEAN"/>
-        <EditorAttribute name="checkVisibility" type="_2_BOOLEAN"/>
-        <EditorAttribute name="color" type="_2_NUMBER"/>
-        <EditorAttribute name="animationName" type="_2_STRING"/>
-        <EditorAttribute name="animationAlias" type="_2_STRING"/>
-        <EditorAttribute name="animationSpeed" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="animationInNormalizedTime" type="_2_NUMBER"/>
-        <EditorAttribute name="animationPlayNormalizedTimeRange" type="_2_CHILD" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="animationLocalPosition" type="_2_CHILD" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="animationLocalScale" type="_2_CHILD" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="animationRotation" type="_2_NUMBER"/>
-        <EditorAttribute name="userValue1" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="userValue2" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="snapObjectIndex" type="_2_NUMBER"/>
-        <EditorAttribute name="destroyForce" type="_2_NUMBER"/>
-        <EditorAttribute name="objects" type="_2_CHILD" childAlias="com.worldOfGoo2.items._2_Item_Object" required="true"/>
-        <EditorAttribute name="alternates" type="_2_STRING" childAlias="com.worldOfGoo2.items._2_Item_Alternates" required="true"/>
-        <EditorAttribute name="userVariables" type="_2_CHILD" childAlias="com.worldOfGoo2.items._2_Item_UserVariable" required="true"/>
-        <EditorAttribute name="snapPoints" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="limits" type="_2_CHILD" childAlias="com.worldOfGoo2.items._2_Item_Limit" required="true"/>
-        <EditorAttribute name="sound" type="_2_CHILD" childAlias="com.worldOfGoo2.items._2_Item_Sound"/>
-        <EditorAttribute name="laserSettings" type="_2_CHILD" childAlias="com.worldOfGoo2.items._2_Item_LaserSettings"/>
-        <EditorAttribute name="buoyant" type="_2_STRING"/>
-        <EditorAttribute name="animation" type="_2_STRING"/>
-        <EditorAttribute name="animationLoop" type="_2_STRING"/>
-        <EditorAttribute name="canExplode" type="_2_STRING"/>
-        <EditorAttribute name="destructionSound" type="_2_CHILD" childAlias="com.worldOfGoo2.misc._2_SoundID"/>
-        <EditorAttribute name="destructionEffect" type="_2_STRING"/>
+        <EditorAttribute name="category" type="STRING" required="true"/>
+        <EditorAttribute name="layer" type="NUMBER"/>
+        <EditorAttribute name="minDepth" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxDepth" type="NUMBER" required="true"/>
+        <EditorAttribute name="sortOffset" type="NUMBER"/>
+        <EditorAttribute name="radiusOverride" type="NUMBER" required="true"/>
+        <EditorAttribute name="canRotate" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="uniformScale" type="BOOLEAN"/>
+        <EditorAttribute name="canBeCopied" type="BOOLEAN"/>
+        <EditorAttribute name="canTriggerEndOfLevel" type="BOOLEAN"/>
+        <EditorAttribute name="variations" type="BOOLEAN"/>
+        <EditorAttribute name="useLighting" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="castShadow" type="BOOLEAN"/>
+        <EditorAttribute name="checkVisibility" type="BOOLEAN"/>
+        <EditorAttribute name="color" type="NUMBER"/>
+        <EditorAttribute name="animationName" type="STRING"/>
+        <EditorAttribute name="animationAlias" type="STRING"/>
+        <EditorAttribute name="animationSpeed" type="NUMBER" required="true"/>
+        <EditorAttribute name="animationInNormalizedTime" type="NUMBER"/>
+        <EditorAttribute name="animationPlayNormalizedTimeRange" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="animationLocalPosition" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="animationLocalScale" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="animationRotation" type="NUMBER"/>
+        <EditorAttribute name="userValue1" type="NUMBER" required="true"/>
+        <EditorAttribute name="userValue2" type="NUMBER" required="true"/>
+        <EditorAttribute name="snapObjectIndex" type="NUMBER"/>
+        <EditorAttribute name="destroyForce" type="NUMBER"/>
+        <EditorAttribute name="objects" type="_2_CHILD" childAlias="com.worldOfGoo2.items._Object" required="true"/>
+        <EditorAttribute name="alternates" type="STRING" childAlias="com.worldOfGoo2.items.Alternates" required="true"/>
+        <EditorAttribute name="userVariables" type="_2_CHILD" childAlias="com.worldOfGoo2.items.UserVariable" required="true"/>
+        <EditorAttribute name="snapPoints" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="limits" type="_2_CHILD" childAlias="com.worldOfGoo2.items.Limit" required="true"/>
+        <EditorAttribute name="sound" type="_2_CHILD" childAlias="com.worldOfGoo2.items.Sound"/>
+        <EditorAttribute name="laserSettings" type="_2_CHILD" childAlias="com.worldOfGoo2.items.LaserSettings"/>
+        <EditorAttribute name="buoyant" type="STRING"/>
+        <EditorAttribute name="animation" type="STRING"/>
+        <EditorAttribute name="animationLoop" type="STRING"/>
+        <EditorAttribute name="canExplode" type="STRING"/>
+        <EditorAttribute name="destructionSound" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.SoundID"/>
+        <EditorAttribute name="destructionEffect" type="STRING"/>
     </attributes>
 
 </AttributeManifest>

@@ -9,7 +9,7 @@ import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.engine.undoHandling.UndoManager;
 import com.woogleFX.engine.undoHandling.userActions.DeleteSplinePointAction;
 import com.woogleFX.engine.undoHandling.userActions.UserAction;
-import com.woogleFX.gameData.level.levelSaving.AssetUpdater;
+import com.woogleFX.assets.AssetUpdater;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;

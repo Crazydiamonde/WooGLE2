@@ -1,39 +1,39 @@
 <AttributeManifest localName="BaseShaderUniform">
 
     <attributes>
-        <EditorAttribute name="_stainFactorScale" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_stainStartOffset" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_staintStepStart" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_staintStepEnd" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_staintStartScale" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_stainHeightOffset" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_stainHeightStartOffset" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_stainUScale" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_stainVScale" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_alpha" type="_2_STRING"/>
-        <EditorAttribute name="unused1" type="_2_STRING"/>
-        <EditorAttribute name="unused2" type="_2_STRING"/>
-        <EditorAttribute name="_stainRandomOffset1" type="_2_STRING" childAlias="com.worldOfGoo2.environments._2_Environment_StableFluidsBloomFactor"/>
-        <EditorAttribute name="_stainRandomOffset2" type="_2_STRING" childAlias="com.worldOfGoo2.environments._2_Environment_StableFluidsBloomFactor"/>
-        <EditorAttribute name="_stainRandomOffset3" type="_2_STRING" childAlias="com.worldOfGoo2.environments._2_Environment_StableFluidsBloomFactor"/>
-        <EditorAttribute name="edgeUvCenter" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="_edgeUvSize" type="_2_STRING"/>
-        <EditorAttribute name="_alphaThreshold" type="_2_STRING"/>
-        <EditorAttribute name="_alpha" type="_2_STRING"/>
-        <EditorAttribute name="_laserU" type="_2_STRING"/>
-        <EditorAttribute name="_laserV" type="_2_STRING"/>
-        <EditorAttribute name="stainVScale" type="_2_STRING"/>
-        <EditorAttribute name="_bloomFactor" type="_2_STRING"/>
-        <EditorAttribute name="_overlayScale" type="_2_STRING"/>
-        <EditorAttribute name="_overlayAlpha" type="_2_STRING"/>
-        <EditorAttribute name="_group" type="_2_STRING"/>
-        <EditorAttribute name="_lightingSettings" type="_2_STRING" childAlias="com.worldOfGoo2.environments._2_Environment_StableFluidsBloomFactor"/>
-        <EditorAttribute name="_stainBlend" type="_2_STRING" childAlias="com.worldOfGoo2.environments._2_Environment_StableFluidsBloomFactor"/>
-        <EditorAttribute name="_colorR" type="_2_STRING"/>
-        <EditorAttribute name="_colorG" type="_2_STRING"/>
-        <EditorAttribute name="_colorB" type="_2_STRING"/>
-        <EditorAttribute name="unusedVector9" type="_2_STRING" childAlias="com.worldOfGoo2.environments._2_Environment_StableFluidsBloomFactor"/>
-        <EditorAttribute name="_gradientStartEnd_ZW" type="_2_STRING" childAlias="com.worldOfGoo2.environments._2_Environment_StableFluidsBloomFactor"/>
+        <EditorAttribute name="_stainFactorScale" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_stainStartOffset" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_staintStepStart" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_staintStepEnd" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_staintStartScale" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_stainHeightOffset" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_stainHeightStartOffset" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_stainUScale" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_stainVScale" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_alpha" type="STRING"/>
+        <EditorAttribute name="unused1" type="STRING"/>
+        <EditorAttribute name="unused2" type="STRING"/>
+        <EditorAttribute name="_stainRandomOffset1" type="STRING" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
+        <EditorAttribute name="_stainRandomOffset2" type="STRING" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
+        <EditorAttribute name="_stainRandomOffset3" type="STRING" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
+        <EditorAttribute name="edgeUvCenter" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="_edgeUvSize" type="STRING"/>
+        <EditorAttribute name="_alphaThreshold" type="STRING"/>
+        <EditorAttribute name="_alpha" type="STRING"/>
+        <EditorAttribute name="_laserU" type="STRING"/>
+        <EditorAttribute name="_laserV" type="STRING"/>
+        <EditorAttribute name="stainVScale" type="STRING"/>
+        <EditorAttribute name="_bloomFactor" type="STRING"/>
+        <EditorAttribute name="_overlayScale" type="STRING"/>
+        <EditorAttribute name="_overlayAlpha" type="STRING"/>
+        <EditorAttribute name="_group" type="STRING"/>
+        <EditorAttribute name="_lightingSettings" type="STRING" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
+        <EditorAttribute name="_stainBlend" type="STRING" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
+        <EditorAttribute name="_colorR" type="STRING"/>
+        <EditorAttribute name="_colorG" type="STRING"/>
+        <EditorAttribute name="_colorB" type="STRING"/>
+        <EditorAttribute name="unusedVector9" type="STRING" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
+        <EditorAttribute name="_gradientStartEnd_ZW" type="STRING" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
     </attributes>
 
 </AttributeManifest>

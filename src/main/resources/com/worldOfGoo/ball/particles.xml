@@ -1,0 +1,15 @@
+<AttributeManifest localName="particles">
+
+    <attributes>
+        <EditorAttribute name="id" type="STRING" required="true"/>
+        <EditorAttribute name="states" type="STRING" required="true"/>
+        <EditorAttribute name="overball" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="states"/>
+        <MetaEditorAttribute name="overball"/>
+    </metaAttributes>
+
+</AttributeManifest>

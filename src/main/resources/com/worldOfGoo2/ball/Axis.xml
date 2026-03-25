@@ -1,5 +1,7 @@
-<AttributeManifest>
+<AttributeManifest localName="Axis">
     <attributes>
-        <EditorAttribute name="axis" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="axis" type="NUMBER" required="true"/>
     </attributes>
+    <metaAttributes>
+    </metaAttributes>
 </AttributeManifest>

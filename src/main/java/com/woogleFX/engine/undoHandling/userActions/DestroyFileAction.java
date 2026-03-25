@@ -8,18 +8,18 @@ import java.nio.file.Path;
 
 public class DestroyFileAction extends UserAction {
 
+    private final String source;
     private final String path;
-    private final byte[] contents;
-    public DestroyFileAction(String path, byte[] contents) {
+    public DestroyFileAction(String source, String path) {
         super(null);
+        this.source = source;
         this.path = path;
-        this.contents = contents;
     }
 
 
     @Override
     public UserAction getInverse() {
-        return new CreateFileAction(path, contents);
+        return new CreateFileAction(source, path);
     }
 
 

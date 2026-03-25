@@ -1,0 +1,11 @@
+<AttributeManifest localName="targetheight">
+
+    <attributes>
+        <EditorAttribute name="y" type="_1_NUMBER" defaultValue="1000" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="y"/>
+    </metaAttributes>
+
+</AttributeManifest>

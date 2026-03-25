@@ -1,8 +1,8 @@
 package com.woogleFX.engine.gui.alarms;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.gameData.level.LevelResourceManager;
-import com.woogleFX.gameData.level._Level;
+import com.woogleFX.assets.Asset;
+import com.woogleFX.file.resourceManagers.LevelResourceManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class ConfirmCleanResourcesAlarm {
 
-    public static void show(_Level level, ArrayList<EditorObject> resourceNames) {
+    public static void show(Asset level, ArrayList<EditorObject> resourceNames) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("Clean Level Resources");

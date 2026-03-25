@@ -1,42 +1,42 @@
 <AttributeManifest localName="Level">
 
     <attributes>
-        <EditorAttribute name="version" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="version" type="NUMBER" required="true"/>
         <EditorAttribute name="type" type="_2_LEVEL_TYPE" required="true"/>
-        <EditorAttribute name="forceFadeEOL" type="_2_BOOLEAN"/>
+        <EditorAttribute name="forceFadeEOL" type="BOOLEAN"/>
         <EditorAttribute name="skin" type="_2_SKIN"/>
         <EditorAttribute name="uuid" type="_2_UUID" required="true"/>
-        <EditorAttribute name="title" type="_2_STRING" required="true"/>
+        <EditorAttribute name="title" type="STRING" required="true"/>
         <EditorAttribute name="gameLevel" type="_2_GAME_LEVEL"/>
         <EditorAttribute name="startingUID" type="_2_UID"/>
         <EditorAttribute name="island" type="_2_ISLAND_ID"/>
-        <EditorAttribute name="environmentId" type="_2_NUMBER" defaultValue = "" required="true"/>
+        <EditorAttribute name="environmentId" type="NUMBER" defaultValue = "" required="true"/>
         <EditorAttribute name="backgroundId" type="_2_BACKGROUND_ID" defaultValue = "" required="true"/>
-        <EditorAttribute name="gravity" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Point" required="true"/>
-        <EditorAttribute name="boundsTopRight" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Point" required="true"/>
-        <EditorAttribute name="boundsBottomLeft" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Point" required="true"/>
-        <EditorAttribute name="initialCameraPos" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Point" required="true"/>
-        <EditorAttribute name="initialCameraZoom" type="_2_NUMBER" defaultValue = "1" required="true"/>
-        <EditorAttribute name="cameraAutoBounds" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="ballsRateRequired" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="gravity" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="boundsTopRight" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="boundsBottomLeft" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="initialCameraPos" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="initialCameraZoom" type="NUMBER" defaultValue = "1" required="true"/>
+        <EditorAttribute name="cameraAutoBounds" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="ballsRateRequired" type="NUMBER" required="true"/>
         <EditorAttribute name="musicId" type="_2_MUSIC_ID" defaultValue = "" required="true"/>
         <EditorAttribute name="ambienceId" type="_2_AMBIENCE_ID" defaultValue = "" required="true"/>
-        <EditorAttribute name="musicOffset" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="ambienceOffset" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="liquidScale" type="_2_NUMBER"/>
-        <EditorAttribute name="pretickSeconds" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="conduitSuckVolume" type="_2_NUMBER"/>
-        <EditorAttribute name="fireSfxVolume" type="_2_NUMBER"/>
+        <EditorAttribute name="musicOffset" type="NUMBER" required="true"/>
+        <EditorAttribute name="ambienceOffset" type="NUMBER" required="true"/>
+        <EditorAttribute name="liquidScale" type="NUMBER"/>
+        <EditorAttribute name="pretickSeconds" type="NUMBER" required="true"/>
+        <EditorAttribute name="conduitSuckVolume" type="NUMBER"/>
+        <EditorAttribute name="fireSfxVolume" type="NUMBER"/>
         <EditorAttribute name="balls" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level._2_Level_BallInstance" required="true"/>
-        <EditorAttribute name="strands" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level._2_Level_Strand" required="true"/>
+        <EditorAttribute name="strands" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level.Strand" required="true"/>
         <EditorAttribute name="terrainGroups" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level._2_Level_TerrainGroup" required="true"/>
         <EditorAttribute name="items" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level._2_Level_Item" required="true"/>
-        <EditorAttribute name="pins" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level._2_Level_Pin" required="true"/>
-        <EditorAttribute name="initialCameraKeyframes" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level._2_Level_CameraKeyFrame" required="true"/>
-        <EditorAttribute name="terrainBalls" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.level._2_Level_TerrainBall"  required="true"/>
+        <EditorAttribute name="pins" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level.Pin" required="true"/>
+        <EditorAttribute name="initialCameraKeyframes" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level.CameraKeyFrame" required="true"/>
+        <EditorAttribute name="terrainBalls" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.level.TerrainBall" required="true"/>
         <EditorAttribute name="levelEnvironmentEffects" type="_2_LIST_STRING" required="true"/>
-        <EditorAttribute name="enableTimeBugs" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="timebugMoves" type="_2_NUMBER" />
+        <EditorAttribute name="enableTimeBugs" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="timebugMoves" type="NUMBER" />
     </attributes>
 
     <metaAttributes>

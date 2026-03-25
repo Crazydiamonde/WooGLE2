@@ -1,0 +1,17 @@
+<AttributeManifest localName="State">
+
+    <attributes>
+        <EditorAttribute name="globalIdHash" type="NUMBER"/>
+        <EditorAttribute name="localIdHash" type="NUMBER"/>
+        <EditorAttribute name="startingFrame" type="NUMBER"/>
+        <EditorAttribute name="duration" type="NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="globalIdHash"/>
+        <MetaEditorAttribute name="localIdHash"/>
+        <MetaEditorAttribute name="startingFrame"/>
+        <MetaEditorAttribute name="duration"/>
+    </metaAttributes>
+
+</AttributeManifest>

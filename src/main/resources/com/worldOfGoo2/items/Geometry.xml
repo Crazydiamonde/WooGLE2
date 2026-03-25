@@ -1,0 +1,33 @@
+<AttributeManifest localName="Geometry">
+
+    <attributes>
+        <EditorAttribute name="type" type="NUMBER" required="true"/>
+        <EditorAttribute name="width" type="NUMBER" required="true"/>
+        <EditorAttribute name="height" type="NUMBER" required="true"/>
+        <EditorAttribute name="radius" type="NUMBER" required="true"/>
+        <EditorAttribute name="density" type="NUMBER" required="true"/>
+        <EditorAttribute name="offset" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="rotation" type="NUMBER" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="normal" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="isSensor" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="friction" type="NUMBER" required="true"/>
+        <EditorAttribute name="bounciness" type="NUMBER" required="true"/>
+        <EditorAttribute name="points" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="width"/>
+        <MetaEditorAttribute name="height"/>
+        <MetaEditorAttribute name="radius"/>
+        <MetaEditorAttribute name="density"/>
+        <MetaEditorAttribute name="offset"/>
+        <MetaEditorAttribute name="rotation"/>
+        <MetaEditorAttribute name="normal"/>
+        <MetaEditorAttribute name="isSensor"/>
+        <MetaEditorAttribute name="friction"/>
+        <MetaEditorAttribute name="bounciness"/>
+        <MetaEditorAttribute name="points"/>
+    </metaAttributes>
+
+</AttributeManifest>

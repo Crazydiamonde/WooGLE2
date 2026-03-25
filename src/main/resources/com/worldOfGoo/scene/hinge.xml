@@ -1,0 +1,27 @@
+<AttributeManifest localName="hinge">
+
+    <attributes>
+        <EditorAttribute name="body1"   type="_1_GEOMETRY"                    required="true"/>
+        <EditorAttribute name="body2"   type="_1_GEOMETRY"/>
+        <EditorAttribute name="anchor"  type="_1_POSITION" defaultValue="0,0" required="true"/>
+        <EditorAttribute name="lostop"  type="_1_NUMBER"/>
+        <EditorAttribute name="histop"  type="_1_NUMBER"/>
+        <EditorAttribute name="bounce"  type="_1_NUMBER"/>
+        <EditorAttribute name="stopcfm" type="_1_NUMBER"/>
+        <EditorAttribute name="stoperp" type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="body1"/>
+        <MetaEditorAttribute name="body2"/>
+        <MetaEditorAttribute name="anchor"/>
+        <MetaEditorAttribute name="hinge" openByDefault="true">
+            <MetaEditorAttribute name="lostop"/>
+            <MetaEditorAttribute name="histop"/>
+            <MetaEditorAttribute name="bounce"/>
+            <MetaEditorAttribute name="stopcfm"/>
+            <MetaEditorAttribute name="stoperp"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

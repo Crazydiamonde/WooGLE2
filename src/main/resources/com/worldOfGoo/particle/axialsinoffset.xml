@@ -1,0 +1,17 @@
+<AttributeManifest localName="axialsinoffset">
+
+    <attributes>
+        <EditorAttribute name="amp" type="_1_RANGE" defaultValue="0" required="true"/>
+        <EditorAttribute name="freq" type="_1_RANGE" defaultValue="0" required="true"/>
+        <EditorAttribute name="phaseshift" type="_1_RANGE" defaultValue="0" required="true"/>
+        <EditorAttribute name="axis" type="STRING" defaultValue="x" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="amp"/>
+        <MetaEditorAttribute name="freq"/>
+        <MetaEditorAttribute name="phaseshift"/>
+        <MetaEditorAttribute name="axis"/>
+    </metaAttributes>
+
+</AttributeManifest>

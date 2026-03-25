@@ -1,0 +1,11 @@
+<AttributeManifest localName="LiquidType">
+
+    <attributes>
+        <EditorAttribute name="liquidType" type="NUMBER" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="liquidType"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -1,10 +1,10 @@
 <AttributeManifest localName="GodRaySettings">
 
     <attributes>
-        <EditorAttribute name="probability" type="_2_STRING"/>
-        <EditorAttribute name="lightAngleLimit" type="_2_STRING"/>
-        <EditorAttribute name="edgeAngleLimit" type="_2_STRING"/>
-        <EditorAttribute name="minLighting" type="_2_STRING"/>
+        <EditorAttribute name="probability" type="STRING"/>
+        <EditorAttribute name="lightAngleLimit" type="STRING"/>
+        <EditorAttribute name="edgeAngleLimit" type="STRING"/>
+        <EditorAttribute name="minLighting" type="STRING"/>
     </attributes>
 
 </AttributeManifest>

@@ -1,8 +1,10 @@
 package com.worldOfGoo2.level;
 
+import com.woogleFX.assets.wog2.WOG2Item.WOG2Item;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.ImageUtility;
 import com.woogleFX.editorObjects._2_Positionable;
+import com.woogleFX.assets.Asset;
 import com.woogleFX.editorObjects.attributes.AttributeAdapter;
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.attributes.InputField;
@@ -13,30 +15,22 @@ import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.objectComponents.TextComponent;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.engine.fx.FXPropertiesView;
+import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
 import com.woogleFX.engine.renderer.Depth;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.gameData.animation.AnimationManager;
-import com.woogleFX.gameData.animation.Keyframe;
 import com.woogleFX.gameData.animation.SimpleBinAnimation;
-import com.woogleFX.gameData.animation.WoGAnimation;
 import com.woogleFX.gameData.font._Font;
-import com.woogleFX.gameData.items.ItemManager;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 import com.worldOfGoo2.items._2_Item;
-import com.worldOfGoo2.items._2_Item_Object;
+import com.worldOfGoo2.items._Object;
 import com.worldOfGoo2.util.BallInstanceHelper;
 import com.worldOfGoo2.util.BinAnimationHelper;
 import com.worldOfGoo2.util.ItemHelper;
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class _2_Level_Item extends _2_Positionable {
 
@@ -51,7 +45,7 @@ public class _2_Level_Item extends _2_Positionable {
 
     public EditorAttribute getUserVariable(String name) {
         for (EditorObject child : getChildren())
-            if (child instanceof _2_Level_UserVariable && child.getName().equals(name))
+            if (child instanceof UserVariable && child.getName().equals(name))
                 return child.getAttribute("value");
         return null;
     }
@@ -60,8 +54,8 @@ public class _2_Level_Item extends _2_Positionable {
     private final AttributeAdapter[] attributeAdapters2;
 
 
-    public _2_Level_Item(EditorObject parent) {
-        super(parent, "Item", GameVersion.VERSION_WOG2);
+    public _2_Level_Item(EditorObject parent, GameVersion version) {
+        super(parent, version);
 
         addAttributeAdapter("scale", AttributeAdapter.pointAttributeAdapter(this, "scale", "scale"));
 
@@ -80,13 +74,13 @@ public class _2_Level_Item extends _2_Positionable {
             @Override
             public void setValue(String value) {
                 temp.setValue(value);
-                _2_Item item1 = ItemManager.getItem(value);
+                _2_Item item1 = (_2_Item) WOG2Item.assetSelector.openInstance(value, GameVersion.VERSION_WOG2).getItem();
                 if (item1 == null) return;
                 setAttribute2("type", item1.getAttribute("uuid").stringValue());
                 updateImage();
                 refreshUserVariables();
-                if (AssetManager.getAsset().getSelected().length > 0 && _2_Level_Item.this == AssetManager.getAsset().getSelected()[0]) {
-                    FXPropertiesView.changeTableView(AssetManager.getAsset().getSelected());
+                if (Arrays.stream(getObjectComponents()).anyMatch(e -> AssetManager.getAsset().isSelected(e))) {
+                    FXPropertiesView.changeTableView(AssetManager.getAsset().getSelectedObjects());
                 }
             }
 
@@ -98,8 +92,8 @@ public class _2_Level_Item extends _2_Positionable {
 
 
     @Override
-    public void onLoaded() {
-        super.onLoaded();
+    public void onLoaded(Asset asset) {
+        super.onLoaded(asset);
 
         EditorObject scale = getChildren("scale").get(0);
         scale.getAttribute("x").addChangeListener((observable, oldValue, newValue) ->
@@ -148,17 +142,19 @@ public class _2_Level_Item extends _2_Positionable {
 
         int i = 0;
         for (EditorObject ignored : item.getChildren("userVariables")) {
-            EditorObject userVariable2 = ObjectCreator.create2(_2_Level_UserVariable.class, this, "userVariables", GameVersion.VERSION_WOG2);
+            EditorObject userVariable2 = ObjectCreator.create(UserVariable.class, this, "userVariables", GameVersion.VERSION_WOG2);
             if (i < values.size()) userVariable2.setAttribute("value", values.get(i));
             i++;
         }
 
-        ArrayList<EditorObject> userVariables = getItem().getChildren("userVariables");
+        List<EditorObject> userVariables = getItem().getChildren("userVariables");
         
         i = 0;
         for (EditorObject child : getChildren("userVariables")) {
-            
-            addAttribute(child.getName(), InputField._2_CHILD_HIDDEN);
+
+            EditorAttribute[] newAttributes = new EditorAttribute[getAttributes().length + 1];
+            System.arraycopy(getAttributes(), 0, newAttributes, 0, getAttributes().length);
+            newAttributes[getAttributes().length] = new EditorAttribute(child.getName(), InputField._2_CHILD_HIDDEN, this);
             
             if (userVariables.get(i).getAttribute("type").intValue() == 4) {
                 EditorAttribute attribute = new EditorAttribute(child.getName(), InputField._2_BALL_TYPE_USERVAR, child);
@@ -175,7 +171,7 @@ public class _2_Level_Item extends _2_Positionable {
                 addAttributeAdapter(child.getName(), new AttributeAdapter(child.getName()) {
                     @Override
                     public EditorAttribute getValue() {
-                        EditorAttribute editorAttribute = new EditorAttribute(child.getName(), InputField._2_STRING, obj);
+                        EditorAttribute editorAttribute = new EditorAttribute(child.getName(), InputField.STRING, obj);
                         editorAttribute.setValue(child.getAttribute("value").stringValue());
                         return editorAttribute;
                     }
@@ -217,51 +213,6 @@ public class _2_Level_Item extends _2_Positionable {
         }
     }
 
-
-    public void updateWithAnimation(WoGAnimation animation, float timer) {
-        double animspeed = getAttribute("animspeed").doubleValue();
-        double animdelay = getAttribute("animdelay").doubleValue();
-        double goodTimer = (timer * animspeed - animdelay);
-        if (goodTimer >= 0) {
-            goodTimer %= animation.getFrameTimes()[animation.getFrameTimes().length - 1];
-        } else {
-            while (goodTimer < 0){
-                goodTimer += animation.getFrameTimes()[animation.getFrameTimes().length - 1];
-            }
-        }
-        for (int i2 : new int[]{ 0, 1, 2 }) {
-            if (animation.getTransformFrames()[i2].length == 0) continue;
-            int i = 0;
-            for (int i3 = 0; i3 < animation.getFrameTimes().length; i3++) {
-                if (goodTimer < animation.getFrameTimes()[i3] && animation.getTransformFrames()[i2][i3] != null) {
-                    break;
-                } else if (animation.getTransformFrames()[i2][i3] != null) {
-                    i = i3;
-                }
-            }
-            Keyframe currentFrame = animation.getTransformFrames()[i2][i];
-            Keyframe nextFrame;
-            int nextIndex = currentFrame.getNextFrameIndex();
-            if (currentFrame.getNextFrameIndex() == -1){
-                nextIndex = 0;
-                nextFrame = currentFrame;
-            } else {
-                nextFrame = animation.getTransformFrames()[i2][currentFrame.getNextFrameIndex()];
-            }
-            float timerInterpolateValue = reverseInterpolate(animation.getFrameTimes()[i], animation.getFrameTimes()[nextIndex], (float)goodTimer);
-            //if (i2 == 0) {
-            //    animscalex = lerp(currentFrame.getX(), nextFrame.getX(), timerInterpolateValue);
-            //    animscaley = lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
-            //} else if (i2 == 1) {
-            //    animrotation = lerp(currentFrame.getAngle(), nextFrame.getAngle(), timerInterpolateValue);
-            //} else {
-            //    animx = lerp(currentFrame.getX(), nextFrame.getX(), timerInterpolateValue);
-            //    animy = lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
-            //}
-        }
-    }
-
-
     @Override
     public void update() {
         updateImage();
@@ -273,20 +224,20 @@ public class _2_Level_Item extends _2_Positionable {
         if (AssetManager.getAsset() == null) return;
 
         if (!getAttribute2("type").stringValue().isEmpty()) {
-            item = ItemManager.getItem(getAttribute("type").stringValue());
+            item = (_2_Item)WOG2Item.assetSelector.openInstance(getAttribute2("type").stringValue(), GameVersion.VERSION_WOG2).getItem();
             refreshObjectPositions();
         }
 
     }
 
 
-    private static ArrayList<_2_Item_Object> orderPartsByLayer(ArrayList<EditorObject> objects) {
+    private static ArrayList<_Object> orderPartsByLayer(ArrayList<EditorObject> objects) {
 
-        ArrayList<_2_Item_Object> orderedParts = new ArrayList<>();
+        ArrayList<_Object> orderedParts = new ArrayList<>();
 
         for (EditorObject EditorObject : objects) {
 
-            if (EditorObject instanceof _2_Item_Object part) {
+            if (EditorObject instanceof _Object part) {
 
                 double layer = part.getAttribute("depthOffset").doubleValue();
                 int i = 0;
@@ -311,14 +262,20 @@ public class _2_Level_Item extends _2_Positionable {
 
         boolean ok = false;
         if (item != null) {
-            for (_2_Item_Object part : orderPartsByLayer(item.getChildren())) {
+            for (_Object part : orderPartsByLayer(item.getChildren())) {
                 if (addPartAsObjectPosition(part)) ok = true;
             }
         }
 
         if (!ok) {
 
-            addObjectComponent(new TextComponent() {
+            addObjectComponent(new TextComponent(this) {
+
+                @Override
+                public Paint getColor() {
+                    return javafx.scene.paint.Color.WHITE;
+                }
+
                 @Override
                 public _Font getFont() {
                     return null;
@@ -351,7 +308,7 @@ public class _2_Level_Item extends _2_Positionable {
 
                 @Override
                 public boolean isVisible() {
-                    return shouldShow() && AssetManager.getAsset().getVisibilitySettings().isShowGraphics();
+                    return shouldShow() && AssetManager.getVisibility("graphics") == 1;
                 }
 
                 @Override
@@ -364,7 +321,7 @@ public class _2_Level_Item extends _2_Positionable {
                     return false;
                 }
             });
-            addObjectComponent(new CircleComponent() {
+            addObjectComponent(new CircleComponent(this) {
                 @Override
                 public Paint getColor() {
                     return new javafx.scene.paint.Color(1.0, 1.0, 1.0, 1.0);
@@ -417,7 +374,7 @@ public class _2_Level_Item extends _2_Positionable {
 
                 @Override
                 public boolean isVisible() {
-                    return shouldShow() && AssetManager.getAsset().getVisibilitySettings().isShowGraphics();
+                    return shouldShow() && AssetManager.getVisibility("graphics") == 1;
                 }
 
                 @Override
@@ -430,7 +387,7 @@ public class _2_Level_Item extends _2_Positionable {
                     return false;
                 }
             });
-            addObjectComponent(new CircleComponent() {
+            addObjectComponent(new CircleComponent(this) {
                 @Override
                 public Paint getColor() {
                     return new javafx.scene.paint.Color(1.0, 1.0, 1.0, 1.0);
@@ -483,7 +440,7 @@ public class _2_Level_Item extends _2_Positionable {
 
                 @Override
                 public boolean isVisible() {
-                    return shouldShow() && AssetManager.getAsset().getVisibilitySettings().isShowGraphics();
+                    return shouldShow() && AssetManager.getVisibility("graphics") == 1;
                 }
 
                 @Override
@@ -503,17 +460,67 @@ public class _2_Level_Item extends _2_Positionable {
 
             String animation = getItem().getAttribute("animationName").stringValue();
             if (!animation.isEmpty()) {
-                try {
-                    SimpleBinAnimation flashAnim = ResourceManager.getFlashAnim(null, animation, GameVersion.VERSION_WOG2);
-                    BinAnimationHelper.addBinAnimationAsObjectPositions(this, flashAnim, getItem().getAttribute("animationAlias").stringValue());
-                } catch (FileNotFoundException e) {
-                    logger.error("", e);
-                }
+                SimpleBinAnimation flashAnim = ResourceManager.getFlashAnim(null, animation, GameVersion.VERSION_WOG2);
+                if (flashAnim != null) BinAnimationHelper.addBinAnimationAsObjectPositions(this, flashAnim, getItem().getAttribute("animationAlias").stringValue(), new BinAnimationHelper.BinAnimationInterface() {
+                    public double getX() {
+                        double localX = item.getChild("animationLocalPosition").getAttribute("x").doubleValue();
+                        double localY = -item.getChild("animationLocalPosition").getAttribute("y").doubleValue();
+                        double scaleX = getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue();
+                        double scaleY = getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue();
+                        double rotation = -getAttribute("rotation").doubleValue();
+                        return getPosition().getX() + localX * scaleX * Math.cos(rotation) - localY * scaleY * Math.sin(rotation);
+                    }
+                    public void setX(double x) {
+                        double localX = item.getChild("animationLocalPosition").getAttribute("x").doubleValue();
+                        double localY = -item.getChild("animationLocalPosition").getAttribute("y").doubleValue();
+                        double scaleX = getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue();
+                        double scaleY = getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue();
+                        double rotation = -getAttribute("rotation").doubleValue();
+                        setPosition(x - localX * scaleX * Math.cos(rotation) + localY * scaleY * Math.sin(rotation), getPosition().getY());
+                    }
+                    public double getY() {
+                        double localX = item.getChild("animationLocalPosition").getAttribute("x").doubleValue();
+                        double localY = -item.getChild("animationLocalPosition").getAttribute("y").doubleValue();
+                        double scaleX = getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue();
+                        double scaleY = getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue();
+                        double rotation = -getAttribute("rotation").doubleValue();
+                        return -getPosition().getY() + localX * scaleX * Math.sin(rotation) + localY * scaleY * Math.cos(rotation);
+                    }
+                    public void setY(double y) {
+                        double localX = item.getChild("animationLocalPosition").getAttribute("x").doubleValue();
+                        double localY = -item.getChild("animationLocalPosition").getAttribute("y").doubleValue();
+                        double scaleX = getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue();
+                        double scaleY = getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue();
+                        double rotation = -getAttribute("rotation").doubleValue();
+                        setPosition(getPosition().getX(), -y + localX * scaleX * Math.sin(rotation) + localY * scaleY * Math.cos(rotation));
+                    }
+                    public double getScaleX() {
+                        return getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue() * 0.01;
+                    }
+                    public void setScaleX(double scaleX) {
+                        getChild("scale").setAttribute("x", scaleX / (item.getChild("animationLocalScale").getAttribute("x").doubleValue() * 0.01));
+                    }
+                    public double getScaleY() {
+                        return getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue() * 0.01;
+                    }
+                    public void setScaleY(double scaleY) {
+                        getChild("scale").setAttribute("y", scaleY / (item.getChild("animationLocalScale").getAttribute("y").doubleValue() * 0.01));
+                    }
+                    public double getRotation() {
+                        return -getAttribute("rotation").doubleValue() - item.getAttribute("animationRotation").doubleValue();
+                    }
+                    public void setRotation(double rotation) {
+                        setAttribute("rotation", -rotation - item.getAttribute("animationRotation").doubleValue());
+                    }
+                    public double getDepth() {
+                        return getAttribute("depth").doubleValue();
+                    }
+                });
             } else {
                 String animationAlias = getItem().getAttribute("animationAlias").stringValue();
-                if (!animationAlias.isEmpty()) {
-                    System.out.println(animationAlias);
-                    for (SimpleBinAnimation binAnimation : AnimationManager.getBinAnimations()) {
+                if (false && !animationAlias.isEmpty()) {
+                    /* // TODO2:
+                    for (SimpleBinAnimation binAnimation : AnimationManager.getBinAnimations()) if (animation.isEmpty() || binAnimation.name.equals(animation)) {
                         int i1 = 0;
                         for (SimpleBinAnimation.SimpleBinAnimationState ignored : binAnimation.states) {
                             if (binAnimation.stateAliasStringTableIndices.length <= i1) break;
@@ -523,13 +530,69 @@ public class _2_Level_Item extends _2_Positionable {
                                 stringBuilder.append((char) binAnimation.stringTable[byteIndex]);
                                 byteIndex++;
                             }
-                            if (stringBuilder.toString().equals(animationAlias)) {
-                                BinAnimationHelper.addBinAnimationAsObjectPositions(this, binAnimation, animationAlias);
+                            if (ignored.globalIdHash == 403081035) {
+                                BinAnimationHelper.addBinAnimationAsObjectPositions(this, binAnimation, "squidbody", new BinAnimationHelper.BinAnimationInterface() {
+                                    public double getX() {
+                                        double localX = item.getChild("animationLocalPosition").getAttribute("x").doubleValue();
+                                        double localY = -item.getChild("animationLocalPosition").getAttribute("y").doubleValue();
+                                        double scaleX = getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue();
+                                        double scaleY = getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue();
+                                        double rotation = -getAttribute("rotation").doubleValue();
+                                        return getPosition().getX() + localX * scaleX * Math.cos(rotation) - localY * scaleY * Math.sin(rotation);
+                                    }
+                                    public void setX(double x) {
+                                        double localX = item.getChild("animationLocalPosition").getAttribute("x").doubleValue();
+                                        double localY = -item.getChild("animationLocalPosition").getAttribute("y").doubleValue();
+                                        double scaleX = getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue();
+                                        double scaleY = getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue();
+                                        double rotation = -getAttribute("rotation").doubleValue();
+                                        setPosition(x - localX * scaleX * Math.cos(rotation) + localY * scaleY * Math.sin(rotation), getPosition().getY());
+                                    }
+                                    public double getY() {
+                                        double localX = item.getChild("animationLocalPosition").getAttribute("x").doubleValue();
+                                        double localY = -item.getChild("animationLocalPosition").getAttribute("y").doubleValue();
+                                        double scaleX = getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue();
+                                        double scaleY = getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue();
+                                        double rotation = -getAttribute("rotation").doubleValue();
+                                        return -getPosition().getY() + localX * scaleX * Math.sin(rotation) + localY * scaleY * Math.cos(rotation);
+                                    }
+                                    public void setY(double y) {
+                                        double localX = item.getChild("animationLocalPosition").getAttribute("x").doubleValue();
+                                        double localY = -item.getChild("animationLocalPosition").getAttribute("y").doubleValue();
+                                        double scaleX = getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue();
+                                        double scaleY = getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue();
+                                        double rotation = -getAttribute("rotation").doubleValue();
+                                        setPosition(getPosition().getX(), -y + localX * scaleX * Math.sin(rotation) - localY * scaleY * Math.cos(rotation));
+                                    }
+                                    public double getScaleX() {
+                                        return getChild("scale").getAttribute("x").doubleValue() * item.getChild("animationLocalScale").getAttribute("x").doubleValue() * 0.01;
+                                    }
+                                    public void setScaleX(double scaleX) {
+                                        getChild("scale").setAttribute("x", scaleX / (item.getChild("animationLocalScale").getAttribute("x").doubleValue() * 0.01));
+                                    }
+                                    public double getScaleY() {
+                                        return getChild("scale").getAttribute("y").doubleValue() * item.getChild("animationLocalScale").getAttribute("y").doubleValue() * 0.01;
+                                    }
+                                    public void setScaleY(double scaleY) {
+                                        getChild("scale").setAttribute("y", scaleY / (item.getChild("animationLocalScale").getAttribute("y").doubleValue() * 0.01));
+                                    }
+                                    public double getRotation() {
+                                        return -getAttribute("rotation").doubleValue() - item.getAttribute("animationRotation").doubleValue();
+                                    }
+                                    public void setRotation(double rotation) {
+                                        setAttribute("rotation", -rotation - item.getAttribute("animationRotation").doubleValue());
+                                    }
+                                    public double getDepth() {
+                                        return getAttribute("depth").doubleValue();
+                                    }
+                                });
                                 break;
                             }
                             i1++;
                         }
                     }
+
+                     */
                 }
             }
 
@@ -538,7 +601,7 @@ public class _2_Level_Item extends _2_Positionable {
     }
 
 
-    private boolean addPartAsObjectPosition(_2_Item_Object part) {
+    private boolean addPartAsObjectPosition(_Object part) {
 
         double partX = (item.getAttribute("variations").booleanValue()) ? 0 : part.getChildren("position").get(0).getAttribute("x").doubleValue();
         double partY = (item.getAttribute("variations").booleanValue()) ? 0 : -part.getChildren("position").get(0).getAttribute("y").doubleValue();
@@ -546,9 +609,13 @@ public class _2_Level_Item extends _2_Positionable {
         double partScaleY = part.getChildren("scale").get(0).getAttribute("y").doubleValue();
         double partRotation = part.getAttribute("rotation").doubleValue();
 
-        // TODO build hitbox based on entire bounds of parts
+        // TODO2: build hitbox based on entire bounds of parts
 
-        Image img = part.getImage();
+        Image img = null;
+
+        if (!part.getAttribute("name").stringValue().isEmpty()) {
+            img = ResourceManager.getImage(null, part.getAttribute("name").stringValue(), GameVersion.VERSION_WOG2);
+        }
 
         if (img != null) {
             double partPivotX = (part.getChildren("pivot").get(0).getAttribute("x").doubleValue() - 0.5) * img.getWidth() * 0.01;
@@ -558,7 +625,7 @@ public class _2_Level_Item extends _2_Positionable {
 
             Image finalImg = ImageUtility.colorize(img, new Color((int)((color & 0xFF000000L) >> 24), (int)((color & 0xFF0000) >> 16), (int)((color & 0xFF00) >> 8), (int)(color & 0xFF)));
 
-            addObjectComponent(new ImageComponent() {
+            addObjectComponent(new ImageComponent(this) {
                 @Override
                 public double getX() {
                     double scaleX = getAttribute("scale").positionValue().getX();
@@ -653,14 +720,14 @@ public class _2_Level_Item extends _2_Positionable {
                 }
                 @Override
                 public boolean isVisible() {
-                    if (!AssetManager.getAsset().getVisibilitySettings().isShowGraphics()) return false;
+                    if (AssetManager.getVisibility("graphics") == 0) return false;
                     if (!shouldShow()) return false;
                     if (getAttribute("forcedRandomizationIndex").intValue() == -1) return true;
                     if (true) return item.getChildren("objects").indexOf(part) == getAttribute("forcedRandomizationIndex").intValue();
                     if (randomizationIndices.get(part.getAttribute("randomizationGroup").intValue()) == null) return false;
                     if (part.getAttribute("randomizationGroup").intValue() == getAttribute("forcedRandomizationIndex").intValue()) {
                         int index = 0;
-                        for (EditorObject child : getChildren()) if (child instanceof _2_Item_Object && child.getAttribute("randomizationGroup").intValue() == getAttribute("forcedRandomizationIndex").intValue()) {
+                        for (EditorObject child : getChildren()) if (child instanceof _Object && child.getAttribute("randomizationGroup").intValue() == getAttribute("forcedRandomizationIndex").intValue()) {
                             if (child == part) break;
                             index++;
                         }
@@ -692,10 +759,6 @@ public class _2_Level_Item extends _2_Positionable {
 
 
     public boolean shouldShow() {
-
-        String type = getAttribute("type").stringValue();
-        if (type.equals("LinearForceField")) return AssetManager.getAsset().getVisibilitySettings().isShowForcefields();
-
         return true;
 
     }

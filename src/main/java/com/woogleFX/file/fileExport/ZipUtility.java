@@ -28,44 +28,11 @@ public class ZipUtility {
      * @param listFiles   A collection of files and directories
      * @param destZipFile The path of the destination zip file
      */
-    public void zip(List<File> listFiles, String destZipFile) throws IOException {
+    public void zip(File root, List<File> listFiles, String destZipFile) throws IOException {
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destZipFile));
-        for (File file : listFiles) {
-            if (file.isDirectory()) {
-                zipDirectory(file, file.getName(), zos);
-            } else {
-                zipFile(file, zos);
-            }
-        }
+        for (File file : listFiles) zipFile(root, file, zos);
         zos.flush();
         zos.close();
-    }
-
-    /**
-     * Adds a directory to the current zip output stream
-     *
-     * @param folder       the directory to be added
-     * @param parentFolder the path of parent directory
-     * @param zos          the current zip output stream
-     */
-    private void zipDirectory(File folder, String parentFolder, ZipOutputStream zos) throws IOException {
-        File[] files = folder.listFiles();
-        if (files != null) for (File file : files) {
-            if (file.isDirectory()) {
-                zipDirectory(file, parentFolder + "/" + file.getName(), zos);
-                continue;
-            }
-            zos.putNextEntry(new ZipEntry(parentFolder + "/" + file.getName()));
-            BufferedInputStream bis = new BufferedInputStream(
-                    new FileInputStream(file));
-            byte[] bytesIn = new byte[BUFFER_SIZE];
-            int read;
-            while ((read = bis.read(bytesIn)) != -1) {
-                zos.write(bytesIn, 0, read);
-            }
-            bis.close();
-            zos.closeEntry();
-        }
     }
 
     /**
@@ -74,15 +41,19 @@ public class ZipUtility {
      * @param file the file to be added
      * @param zos  the current zip output stream
      */
-    private void zipFile(File file, ZipOutputStream zos) throws IOException {
-        zos.putNextEntry(new ZipEntry(file.getName()));
-        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-        byte[] bytesIn = new byte[BUFFER_SIZE];
-        int read;
-        while ((read = bis.read(bytesIn)) != -1) {
-            zos.write(bytesIn, 0, read);
+    private void zipFile(File root, File file, ZipOutputStream zos) throws IOException {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files == null) return;
+            for (File child : files) zipFile(root, child, zos);
+        } else {
+            zos.putNextEntry(new ZipEntry(file.getPath().substring(root.getPath().length() + 1)));
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+            byte[] bytesIn = new byte[BUFFER_SIZE];
+            int read;
+            while ((read = bis.read(bytesIn)) != -1) zos.write(bytesIn, 0, read);
+            bis.close();
+            zos.closeEntry();
         }
-        bis.close();
-        zos.closeEntry();
     }
 }

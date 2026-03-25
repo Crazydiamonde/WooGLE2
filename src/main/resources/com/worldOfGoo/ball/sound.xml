@@ -1,0 +1,13 @@
+<AttributeManifest localName="sound">
+
+    <attributes>
+        <EditorAttribute name="event" type="STRING"                 required="true"/>
+        <EditorAttribute name="id" type="_1_SOUND"  defaultValue="" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="event"/>
+        <MetaEditorAttribute name="id"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -1,0 +1,36 @@
+<AttributeManifest localName="Object">
+
+    <attributes>
+        <EditorAttribute name="name" type="STRING" required="true"/>
+        <EditorAttribute name="randomizationGroup" type="NUMBER" required="true"/>
+        <EditorAttribute name="position" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="rotation" type="NUMBER" required="true"/>
+        <EditorAttribute name="scale" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="color" type="NUMBER" defaultValue="4294967295"/>
+        <EditorAttribute name="depthOffset" type="NUMBER" required="true"/>
+        <EditorAttribute name="sortOffset" type="NUMBER"/>
+        <EditorAttribute name="imageBlendingType" type="NUMBER" required="true"/>
+        <EditorAttribute name="pivot" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="rotationSpeed" type="NUMBER" required="true"/>
+        <EditorAttribute name="invisible" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="clickable" type="BOOLEAN"/>
+        <EditorAttribute name="stableFluidsDensityFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="dynamicLightingFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="flipHorizontal" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="flipVertical" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="ignoreScale" type="BOOLEAN"/>
+        <EditorAttribute name="shaderFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="enableWind" type="BOOLEAN"/>
+        <EditorAttribute name="windFactor" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="stencilMode" type="NUMBER"/>
+        <EditorAttribute name="stencilMask" type="NUMBER"/>
+        <EditorAttribute name="alphaTestValue" type="NUMBER"/>
+        <EditorAttribute name="body" type="_2_CHILD" childAlias="com.worldOfGoo2.items.Body" required="true"/>
+        <EditorAttribute name="colorFx" type="_2_CHILD" childAlias="com.worldOfGoo2.items.ColorFX"/>
+        <EditorAttribute name="particleEffects" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.items.ParticleEffect" required="true"/>
+        <EditorAttribute name="points" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.items.Point" required="true"/>
+        <EditorAttribute name="imageAlpha" type="NUMBER" defaultValue="1"/>
+        <EditorAttribute name="animationObjectName" type="STRING"/>
+    </attributes>
+
+</AttributeManifest>

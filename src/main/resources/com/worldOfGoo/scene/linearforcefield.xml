@@ -1,0 +1,41 @@
+<AttributeManifest localName="linearforcefield">
+
+    <attributes>
+        <EditorAttribute name="id"                        type="STRING"                             required="true"/>
+        <EditorAttribute name="type"                      type="STRING"      defaultValue="gravity" required="true"/>
+        <EditorAttribute name="center"                    type="_1_POSITION" defaultValue="0,0"     required="true"/>
+        <EditorAttribute name="width"                     type="_1_NUMBER"   defaultValue="0"/>
+        <EditorAttribute name="height"                    type="_1_NUMBER"   defaultValue="0"/>
+        <EditorAttribute name="force"                     type="_1_POSITION" defaultValue="0,-10"   required="true"/>
+        <EditorAttribute name="dampeningfactor"           type="_1_NUMBER"   defaultValue="0"       required="true"/>
+        <EditorAttribute name="rotationaldampeningfactor" type="_1_NUMBER"/>
+        <EditorAttribute name="antigrav"                  type="BOOLEAN"     defaultValue="false"   required="true"/>
+        <EditorAttribute name="geomonly"                  type="BOOLEAN"                            required="true"/>
+        <EditorAttribute name="enabled"                   type="BOOLEAN"     defaultValue="true"    required="true"/>
+        <EditorAttribute name="water"                     type="BOOLEAN"     defaultValue="false"/>
+        <EditorAttribute name="color"                     type="_1_COLOR"/>
+        <EditorAttribute name="depth"                     type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="center"/>
+        <MetaEditorAttribute name="width"/>
+        <MetaEditorAttribute name="height"/>
+        <MetaEditorAttribute name="Force Field" openByDefault="true">
+            <MetaEditorAttribute name="type"/>
+            <MetaEditorAttribute name="force"/>
+            <MetaEditorAttribute name="dampeningfactor"/>
+            <MetaEditorAttribute name="rotationaldampeningfactor"/>
+            <MetaEditorAttribute name="antigrav"/>
+            <MetaEditorAttribute name="geomonly"/>
+            <MetaEditorAttribute name="enabled"/>
+        </MetaEditorAttribute>
+        <MetaEditorAttribute name="Water" openByDefault="true">
+            <MetaEditorAttribute name="water"/>
+            <MetaEditorAttribute name="color"/>
+            <MetaEditorAttribute name="depth"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

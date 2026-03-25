@@ -1,12 +1,12 @@
 package com.worldOfGoo2.ball;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 
 public class SoundEvent extends EditorObject {
 
-    public SoundEvent(EditorObject parent) {
-        super(parent, "SoundEvent", GameVersion.VERSION_WOG2);
+    public SoundEvent(EditorObject parent, GameVersion version) {
+        super(parent, version);
     }
 
 }

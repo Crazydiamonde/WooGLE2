@@ -1,32 +1,57 @@
 package com.woogleFX.editorObjects.objectFunctions;
 
-import com.woogleFX.editorObjects.objectComponents.CircleComponent;
-import com.woogleFX.editorObjects.objectComponents.ImageComponent;
+import com.woogleFX.editorObjects.DragSettings;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
-import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
+import com.woogleFX.editorObjects.objectComponents.generic.RotatableProperty;
+import com.woogleFX.engine.AssetManager;
 import com.woogleFX.engine.renderer.Renderer;
-import com.woogleFX.engine.SelectionManager;
 import javafx.geometry.Point2D;
 
 public class ObjectRotate {
 
-    public static void rotateFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY, double rotateAngleOffset) {
+    public static void rotateFromMouse(Point2D mousePos, DragSettings dragSettings) {
 
-        ObjectComponent objectComponent = SelectionManager.getDragSettings().getObjectComponent();
+        ObjectComponent objectComponent = dragSettings.getObjectComponent();
 
         Point2D object = new Point2D(objectComponent.getX(), objectComponent.getY());
 
-        Point2D source = new Point2D(dragSourceX, dragSourceY);
-        Point2D mouse = new Point2D(mouseX, mouseY);
-
-        double angleToSource = Renderer.angleTo(object, source);
-        double angleToMouse = Renderer.angleTo(object, mouse);
+        double angleToSource = Renderer.angleTo(object, dragSettings.getInitialSource());
+        double angleToMouse = Renderer.angleTo(object, mousePos);
 
         double deltaAngle = angleToMouse - angleToSource;
 
-        if (objectComponent instanceof RectangleComponent RC) RC.setRotation(deltaAngle + rotateAngleOffset);
-        else if (objectComponent instanceof ImageComponent IC) IC.setRotation(deltaAngle + rotateAngleOffset);
-        else if (objectComponent instanceof CircleComponent CC) CC.setRotation(deltaAngle + rotateAngleOffset);
+        int selectedI = 0;
+        for (ObjectComponent objectComponent1 : AssetManager.getAsset().getSelectedComponents()) {
+            if (objectComponent1 == objectComponent) break;
+            selectedI++;
+        }
+
+        double deltaRotation = 0;
+        if (objectComponent instanceof RotatableProperty) {
+            deltaRotation = deltaAngle + dragSettings.getRotateAngleOffset() - dragSettings.getOriginalRotations()[selectedI];
+        }
+
+
+        double realOriginalX = dragSettings.getOriginalPositions()[selectedI].getX();
+        double realOriginalY = dragSettings.getOriginalPositions()[selectedI].getY();
+
+        for (int i = 0; i < AssetManager.getAsset().getSelectedComponents().length; i++) {
+            ObjectComponent objectComponent1 = AssetManager.getAsset().getSelectedComponents()[i];
+
+            double dx = dragSettings.getOriginalPositions()[i].getX() - realOriginalX;
+            double dy = dragSettings.getOriginalPositions()[i].getY() - realOriginalY;
+
+            double rotatedDX = dx * Math.cos(deltaAngle) - dy * Math.sin(deltaAngle);
+            double rotatedDY = dx * Math.sin(deltaAngle) + dy * Math.cos(deltaAngle);
+
+            objectComponent1.setX(realOriginalX + rotatedDX);
+            objectComponent1.setY(realOriginalY + rotatedDY);
+
+            if (objectComponent1 instanceof RotatableProperty rotatableProperty) {
+                rotatableProperty.setRotation(dragSettings.getOriginalRotations()[i] + deltaRotation);
+            }
+
+        }
 
     }
 

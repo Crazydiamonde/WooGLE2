@@ -1,12 +1,12 @@
 package com.worldOfGoo2.terrain;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 
 public class TopSettings extends EditorObject {
 
-    public TopSettings(EditorObject parent) {
-        super(parent, "TopSettings", GameVersion.VERSION_WOG2);
+    public TopSettings(EditorObject parent, GameVersion version) {
+        super(parent, GameVersion.VERSION_WOG2);
     }
 
 }

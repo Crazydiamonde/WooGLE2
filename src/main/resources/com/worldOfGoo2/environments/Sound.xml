@@ -1,0 +1,13 @@
+<AttributeManifest localName="Sound">
+
+    <attributes>
+        <EditorAttribute name="reverbWet" type="STRING"/>
+        <EditorAttribute name="lowPassWet" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="reverbWet"/>
+        <MetaEditorAttribute name="lowPassWet"/>
+    </metaAttributes>
+
+</AttributeManifest>

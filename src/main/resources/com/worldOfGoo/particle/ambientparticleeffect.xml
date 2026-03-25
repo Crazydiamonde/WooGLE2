@@ -1,0 +1,13 @@
+<AttributeManifest localName="ambientparticleeffect">
+
+    <attributes>
+        <EditorAttribute name="name" type="STRING"/>
+        <EditorAttribute name="maxparticles" type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="maxparticles"/>
+    </metaAttributes>
+
+</AttributeManifest>

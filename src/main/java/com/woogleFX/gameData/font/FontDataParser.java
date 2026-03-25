@@ -32,7 +32,8 @@ public class FontDataParser {
             FontData fontData = recursiveParse(text, ParseMode.FULL_ARGUMENT);
 
             // Add the received font data to the currentCommandBuilder.
-            if (fontData != null) currentCommandBuilder.add(fontData);
+            //System.out.println("data: \"" + fontData + "\" " + (fontData != null ? fontData.getClass() : ""));
+            if (fontData != null && (!(fontData instanceof FontKeyword string && string.getKeyword().isEmpty()))) currentCommandBuilder.add(fontData);
 
             // If the current command ended:
             if (commandEndFlag) {
@@ -94,7 +95,7 @@ public class FontDataParser {
                 case '"' -> {
 
                     // If the string was already within double quotes, terminate the string.
-                    if (currentQuoteStatus == QuoteStatus.WITHIN_DOUBLE_QUOTES) {
+                    if (currentQuoteStatus == QuoteStatus.WITHIN_DOUBLE_QUOTES && (dataBuilder.isEmpty() || dataBuilder.charAt(dataBuilder.length() - 1) != '\\')) {
                         currentQuoteStatus = QuoteStatus.NONE;
                         return new FontString(dataBuilder.toString());
                     }
@@ -107,7 +108,7 @@ public class FontDataParser {
                 case '\'' -> {
 
                     // If the string was already within single quotes, terminate the string.
-                    if (currentQuoteStatus == QuoteStatus.WITHIN_SINGLE_QUOTES) {
+                    if (currentQuoteStatus == QuoteStatus.WITHIN_SINGLE_QUOTES && (dataBuilder.isEmpty() || dataBuilder.charAt(dataBuilder.length() - 1) != '\\')) {
                         currentQuoteStatus = QuoteStatus.NONE;
                         return new FontString(dataBuilder.toString());
                     }
@@ -192,6 +193,7 @@ public class FontDataParser {
                     dataBuilder = new StringBuilder();
 
                     // Parse the data and add it to the list.
+                    if (data.isEmpty()) break;
                     FontData fontData = parseSingleStringForData(data);
                     listDataBuilder.add(fontData);
 
@@ -209,12 +211,13 @@ public class FontDataParser {
                         return new FontList(fontDataArray);
                     } else {
                         String data = dataBuilder.toString();
+                        //if (data.isEmpty()) break;
                         return parseSingleStringForData(data);
                     }
 
                 }
 
-                case '\n', ' ' -> {
+                case '\n', '\r', ' ' -> {
                     // End an argument.
 
                     // If the data builder has no data, don't do anything.
@@ -231,7 +234,9 @@ public class FontDataParser {
                 default -> {
 
                     // Check for ZERO WIDTH NO-BREAK SPACE and carriage return and exlude them.
-                    if (c == 0xFEFF || c == 0xD) break;
+                    if (c == 0xFEFF) break;
+
+                    // if (!"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-.".contains(String.valueOf(c))) break;
 
                     dataBuilder.append(c);
                 }
@@ -263,6 +268,7 @@ public class FontDataParser {
                 return new FontDouble(doubleData);
             } catch (NumberFormatException alsoIgnored) {
                 // The only other thing it could be is a keyword, so a FontKeyword is returned instead.
+                //System.out.println(currentIndex + ", " + string);
                 return new FontKeyword(string);
             }
         }

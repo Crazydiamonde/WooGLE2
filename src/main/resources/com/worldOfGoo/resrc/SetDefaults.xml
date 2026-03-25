@@ -1,0 +1,13 @@
+<AttributeManifest localName="SetDefaults">
+
+    <attributes>
+        <EditorAttribute name="path"     type="STRING" defaultValue="./" required="true"/>
+        <EditorAttribute name="idprefix" type="STRING" defaultValue=""   required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="path"/>
+        <MetaEditorAttribute name="idprefix"/>
+    </metaAttributes>
+
+</AttributeManifest>

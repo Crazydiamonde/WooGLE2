@@ -1,0 +1,13 @@
+<AttributeManifest localName="Vertex">
+
+    <attributes>
+        <EditorAttribute name="x" type="_1_NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="y" type="_1_NUMBER" defaultValue="0" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+    </metaAttributes>
+
+</AttributeManifest>

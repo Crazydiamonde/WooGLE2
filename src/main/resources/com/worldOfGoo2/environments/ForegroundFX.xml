@@ -1,0 +1,35 @@
+<AttributeManifest localName="ForegroundFX">
+
+    <attributes>
+        <EditorAttribute name="layerRed" type="STRING"/>
+        <EditorAttribute name="layerGreen" type="STRING"/>
+        <EditorAttribute name="layerBlue" type="STRING"/>
+        <EditorAttribute name="layerOp" type="STRING"/>
+        <EditorAttribute name="layerEnabled" type="STRING"/>
+        <EditorAttribute name="layerK" type="STRING"/>
+        <EditorAttribute name="brightness" type="STRING"/>
+        <EditorAttribute name="contrast" type="STRING"/>
+        <EditorAttribute name="exposure" type="STRING"/>
+        <EditorAttribute name="saturation" type="STRING"/>
+        <EditorAttribute name="levelBlack" type="STRING"/>
+        <EditorAttribute name="levelWhite" type="STRING"/>
+        <EditorAttribute name="mode" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="layerRed"/>
+        <MetaEditorAttribute name="layerGreen"/>
+        <MetaEditorAttribute name="layerBlue"/>
+        <MetaEditorAttribute name="layerOp"/>
+        <MetaEditorAttribute name="layerEnabled"/>
+        <MetaEditorAttribute name="layerK"/>
+        <MetaEditorAttribute name="brightness"/>
+        <MetaEditorAttribute name="contrast"/>
+        <MetaEditorAttribute name="exposure"/>
+        <MetaEditorAttribute name="saturation"/>
+        <MetaEditorAttribute name="levelBlack"/>
+        <MetaEditorAttribute name="levelWhite"/>
+        <MetaEditorAttribute name="mode"/>
+    </metaAttributes>
+
+</AttributeManifest>

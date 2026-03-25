@@ -2,9 +2,9 @@ package com.worldOfGoo2.util;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.ImageUtility;
-import com.woogleFX.gameData.level.GameVersion;
-import com.worldOfGoo2.environments._2_Environment;
-import com.worldOfGoo2.environments._2_Environment_Layer;
+import com.woogleFX.assets.GameVersion;
+import com.worldOfGoo2.environments.Environment;
+import com.worldOfGoo2.environments.Layer;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.effect.*;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class EnvironmentHelper {
 
-    public static Image singleFromEnvironment(_2_Environment environment) {
+    public static Image singleFromEnvironment(Environment environment) {
 
         Canvas canvas = new Canvas();
 
@@ -28,8 +28,8 @@ public class EnvironmentHelper {
         //canvas.setWidth(boundsTopRight.getAttribute("x").doubleValue() - boundsBottomLeft.getAttribute("x").doubleValue());
         //canvas.setHeight(boundsTopRight.getAttribute("y").doubleValue() - boundsBottomLeft.getAttribute("y").doubleValue());
 
-        ArrayList<_2_Environment_Layer> layers = new ArrayList<>();
-        for (EditorObject part : environment.getChildren()) if (part instanceof _2_Environment_Layer layer) {
+        ArrayList<Layer> layers = new ArrayList<>();
+        for (EditorObject part : environment.getChildren()) if (part instanceof Layer layer) {
             layers.add(layer);
         }
         layers.sort((o1, o2) -> {
@@ -45,57 +45,53 @@ public class EnvironmentHelper {
         var params = new SnapshotParameters();
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
 
-        for (_2_Environment_Layer layer : layers) {
+        for (Layer layer : layers) {
             /*
             if (layer.getAttribute("foreground").booleanValue()) {
                 continue;
             }
             */
-            try {
-                var color = new BigInteger(layer.getAttribute("color").stringValue()).toString(16);
-                Image image = layer.getAttribute("imageName").imageValue(null, GameVersion.VERSION_WOG2);
 
-                var jfxColor = hex2ARGB(color);
+            var color = new BigInteger(layer.getAttribute("color").stringValue()).toString(16);
+            Image image = layer.getAttribute("imageName").imageValue(null, GameVersion.VERSION_WOG2);
 
-                image = ImageUtility.colorize(image,
-                        new com.woogleFX.editorObjects.attributes.dataTypes.Color(jfxColor.getOpacity(), jfxColor.getRed(), jfxColor.getGreen(), jfxColor.getBlue()));
+            var jfxColor = hex2ARGB(color);
 
-                ImageView view = getEffectsView(image, monochrome, color);
+            image = ImageUtility.colorize(image,
+                    new com.woogleFX.editorObjects.attributes.dataTypes.Color(jfxColor.getOpacity(), jfxColor.getRed(), jfxColor.getGreen(), jfxColor.getBlue()));
 
-                int blendMode = 2;
-                try {
-                    blendMode = layer.getAttribute("blendingType").intValue();
-                } catch (Exception e) { e.printStackTrace();}
+            ImageView view = getEffectsView(image, monochrome, color);
 
-                gc.save();
+            System.out.println(environment.getAttribute("id").stringValue());
+            int blendMode = layer.getAttribute("blendingType").intValue();
 
-                gc.setGlobalAlpha(jfxColor.getOpacity());
-                var blend = new Blend();
 
-                switch(blendMode) {
-                    case 3: { // ADD
-                        gc.setGlobalBlendMode(BlendMode.ADD);
+            gc.save();
 
-                        blend.setMode(BlendMode.ADD);
-                        gc.setEffect(blend);
-                    }
-                    default: {
-                        gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-                    };
+            gc.setGlobalAlpha(jfxColor.getOpacity());
+            var blend = new Blend();
+
+            switch(blendMode) {
+                case 3: { // ADD
+                    gc.setGlobalBlendMode(BlendMode.ADD);
+
+                    blend.setMode(BlendMode.ADD);
+                    gc.setEffect(blend);
                 }
-
-                WritableImage snapshot = new WritableImage((int)view.getFitWidth(), (int)view.getFitHeight());
-                view.snapshot(params, snapshot);
-                gc.drawImage(snapshot, 0, 0, canvas.getWidth(), canvas.getHeight());
-
-                gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-                gc.setEffect(null);
-
-                gc.restore();
-
-            } catch(Exception e) {
-                e.printStackTrace();
+                default: {
+                    gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+                }
             }
+
+            WritableImage snapshot = new WritableImage((int)view.getFitWidth(), (int)view.getFitHeight());
+            view.snapshot(params, snapshot);
+            gc.drawImage(snapshot, 0, 0, canvas.getWidth(), canvas.getHeight());
+
+            gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+            gc.setEffect(null);
+
+            gc.restore();
+
         }
 
         WritableImage writableImage = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
@@ -126,9 +122,8 @@ public class EnvironmentHelper {
             var g = Integer.valueOf(h.substring(4, 6), 16);
             var b = Integer.valueOf(h.substring(6, 8), 16);
             return new Color(r / 255d, g / 255d, b / 255d, a / 255d);
-        } catch(Exception e) { // If a color is invalid we'll just use white
+        } catch (Exception e) { // If a color is invalid we'll just use white
             System.out.println("Error while loading color " + h);
-            e.printStackTrace();
             return new Color(1, 1, 1,1);
         }
     }

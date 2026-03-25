@@ -1,28 +1,26 @@
 package com.worldOfGoo2.level;
 
+import com.woogleFX.assets.wog2.WOG2Environment.WOG2Environment;
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.assets.Asset;
 import com.woogleFX.editorObjects.attributes.AttributeAdapter;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.engine.renderer.Depth;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.gameData.animation.AnimationManager;
-import com.woogleFX.gameData.environments.EnvironmentManager;
-import com.woogleFX.gameData.level.GameVersion;
-import com.worldOfGoo2.environments._2_Environment;
-import com.worldOfGoo2.environments._2_Environment_Layer;
+import com.woogleFX.gameData.animation.SimpleBinAnimation;
+import com.woogleFX.assets.GameVersion;
+import com.worldOfGoo2.environments.Environment;
 import com.worldOfGoo2.util.BinAnimationHelper;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import java.io.FileNotFoundException;
-
 public class _2_Level extends EditorObject {
 
-    public _2_Level(EditorObject parent) {
-        super(parent, "Level", GameVersion.VERSION_WOG2);
+    public _2_Level(EditorObject parent, GameVersion version) {
+        super(parent, version);
 
         addAttributeAdapter("gravity", AttributeAdapter.pointAttributeAdapter(this, "gravity", "gravity"));
         addAttributeAdapter("boundsTopRight", AttributeAdapter.pointAttributeAdapter(this, "boundsTopRight", "boundsTopRight"));
@@ -33,30 +31,36 @@ public class _2_Level extends EditorObject {
 
     }
 
-
     @Override
+    @SuppressWarnings("unchecked")
     public Class<? extends EditorObject>[] getPossibleChildren() {
         return new Class[] {
                 _2_Level_BallInstance.class,
-                _2_Level_Strand.class,
+                Strand.class,
                 _2_Level_TerrainGroup.class,
                 _2_Level_Item.class,
-                _2_Level_Pin.class,
-                _2_Level_CameraKeyFrame.class,
-                _2_Level_TerrainBall.class
+                Pin.class,
+                CameraKeyFrame.class,
+                TerrainBall.class
         };
     }
 
-
     @Override
     public String[] getPossibleChildrenTypeIDs() {
-        return new String[] { "balls", "strands", "terrainGroups", "items", "pins", "initialCameraKeyframes", "terrainBalls" };
+        return new String[] {
+                "balls",
+                "strands",
+                "terrainGroups",
+                "items",
+                "pins",
+                "initialCameraKeyframes",
+                "terrainBalls"
+        };
     }
 
-
     @Override
-    public void onLoaded() {
-        super.onLoaded();
+    public void onLoaded(Asset asset) {
+        super.onLoaded(asset);
 
         EditorObject gravity = getChildren("gravity").get(0);
         setAttribute2("gravity", gravity.getAttribute("x").stringValue() + "," + gravity.getAttribute("y").stringValue());
@@ -99,7 +103,7 @@ public class _2_Level extends EditorObject {
         EditorObject boundsBottomLeft = getChildren("boundsBottomLeft").get(0);
         EditorObject boundsTopRight = getChildren("boundsTopRight").get(0);
 
-        addObjectComponent(new RectangleComponent() {
+        addObjectComponent(new RectangleComponent(this) {
             public double getX() {
                 double minx = boundsBottomLeft.getAttribute("x").doubleValue();
                 double maxx = boundsTopRight.getAttribute("x").doubleValue();
@@ -173,127 +177,181 @@ public class _2_Level extends EditorObject {
             }
         });
 
-        try {
+        if (getAttribute("backgroundId").stringValue().isEmpty()) return;
 
-            if (getAttribute("backgroundId").stringValue().isEmpty()) return;
+        Environment environment = (Environment) WOG2Environment.assetSelector.openInstance(getAttribute("backgroundId").stringValue(), getVersion()).getEnvironment();
+        if (environment == null) return;
 
-            _2_Environment environment = EnvironmentManager.getEnvironment(getAttribute("backgroundId").stringValue());
+        if (!environment.getAttribute("clearColor").stringValue().isEmpty())
+                addObjectComponent(new RectangleComponent(this) {
+            public double getX() {
+                return (boundsTopRight.getAttribute("x").doubleValue() + boundsBottomLeft.getAttribute("x").doubleValue()) / 2;
+            }
+            public double getY() {
+                return (-boundsTopRight.getAttribute("y").doubleValue() - boundsBottomLeft.getAttribute("y").doubleValue()) / 2;
+            }
+            public double getWidth() {
+                return boundsTopRight.getAttribute("x").doubleValue() - boundsBottomLeft.getAttribute("x").doubleValue();
+            }
+            public double getHeight() {
+                return -boundsTopRight.getAttribute("y").doubleValue() + boundsBottomLeft.getAttribute("y").doubleValue();
+            }
+            public double getDepth() {
+                return -100000;
+            }
+            public double getEdgeSize() {
+                return 0;
+            }
+            public boolean isEdgeOnly() {
+                return false;
+            }
+            public Color getBorderColor() {
+                return Color.BLACK;
+            }
+            public Color getColor() {
+                long color = Long.parseLong(environment.getAttribute("clearColor").stringValue());
+                return new Color(((color & 0xFF000000L) >> 24) / 255.0, ((color & 0x00FF0000) >> 16) / 255.0, ((color & 0x0000FF00) >> 8) / 255.0, (color & 0x000000FF) / 255.0);
+            }
+            public boolean isVisible() {
+                return AssetManager.getVisibility("scene") == 1;
+            }
+            public boolean isResizable() {
+                return false;
+            }
+            public boolean isDraggable() {
+                return false;
+            }
+            public boolean isRotatable() {
+                return false;
+            }
+            public boolean isSelectable() {
+                return false;
+            }
+        });
 
-            if (!environment.getAttribute("clearColor").stringValue().isEmpty())
-                    addObjectComponent(new RectangleComponent() {
-                public double getX() {
-                    return (boundsTopRight.getAttribute("x").doubleValue() + boundsBottomLeft.getAttribute("x").doubleValue()) / 2;
-                }
-                public double getY() {
-                    return (-boundsTopRight.getAttribute("y").doubleValue() - boundsBottomLeft.getAttribute("y").doubleValue()) / 2;
-                }
-                public double getWidth() {
-                    return boundsTopRight.getAttribute("x").doubleValue() - boundsBottomLeft.getAttribute("x").doubleValue();
-                }
-                public double getHeight() {
-                    return -boundsTopRight.getAttribute("y").doubleValue() + boundsBottomLeft.getAttribute("y").doubleValue();
-                }
-                public double getDepth() {
-                    return -1000000;
-                }
-                public double getAlpha() {
-                    return 1.0; // part.getAttribute("imageAlpha").doubleValue();
-                }
-                public double getEdgeSize() {
-                    return 0;
-                }
-                public boolean isEdgeOnly() {
+        for (EditorObject part : environment.getChildren("layers")) addObjectComponentsForLayer(part);
+
+    }
+
+    private void addObjectComponentsForLayer(EditorObject part) {
+
+        Image image = part.getAttribute("imageName").imageValue(null, GameVersion.VERSION_WOG2);
+
+        double partRotation = 0;
+
+        EditorObject boundsBottomLeft = getChildren("boundsBottomLeft").get(0);
+        EditorObject boundsTopRight = getChildren("boundsTopRight").get(0);
+
+        addObjectComponent(new ImageComponent(this) {
+            public double getX() {
+                return (boundsTopRight.getAttribute("x").doubleValue() + boundsBottomLeft.getAttribute("x").doubleValue()) / 2
+                        + part.getChild("anchors").getAttribute("x").doubleValue();
+            }
+            public double getY() {
+                return (-boundsTopRight.getAttribute("y").doubleValue() - boundsBottomLeft.getAttribute("y").doubleValue()) / 2
+                        - part.getChild("anchors").getAttribute("y").doubleValue();
+            }
+            public double getRotation() {
+                return partRotation;
+            }
+            public double getScaleX() {
+                return part.getAttribute("scale").doubleValue() / 100;
+            }
+            public double getScaleY() {
+                return part.getAttribute("scale").doubleValue() / 100;
+            }
+            public double getDepth() {
+                return -part.getAttribute("depth").doubleValue();
+            }
+            public Depth.Layer getGlobalLayer() {
+                return part.getAttribute("foreground").booleanValue()
+                        ? Depth.Layer.SCENE_FG : Depth.Layer.SCENE_BG;
+            }
+            public boolean isAdditive() {
+                try {
+                    int blendingType = part.getAttribute("blendingType").intValue();
+                    return blendingType == 3;
+                } catch (NumberFormatException e) {
                     return false;
                 }
-                public Color getBorderColor() {
-                    return Color.BLACK;
-                }
-                public Color getColor() {
-                    long color = Long.parseLong(environment.getAttribute("clearColor").stringValue());
-                    return new Color(((color & 0xFF000000L) >> 24) / 255.0, ((color & 0x00FF0000) >> 16) / 255.0, ((color & 0x0000FF00) >> 8) / 255.0, (color & 0x000000FF) / 255.0);
-                }
-                public boolean isVisible() {
-                    return AssetManager.getAsset().getVisibilitySettings().isShowSceneBGColor();
-                }
-                public boolean isResizable() {
-                    return false;
-                }
-                public boolean isDraggable() {
-                    return false;
-                }
-                public boolean isRotatable() {
-                    return false;
-                }
-                public boolean isSelectable() {
-                    return false;
-                }
-            });
+            }
+            public double getAlpha() {
+                return (Long.parseLong(part.getAttribute("color").stringValue()) >> 24) / 255.0;
+            }
+            public Image getImage() {
+                return image;
+            }
+            public boolean isVisible() {
+                return AssetManager.getVisibility("scene") == 1;
+            }
+            public boolean isResizable() {
+                return false;
+            }
+            public boolean isDraggable() {
+                return false;
+            }
+            public boolean isRotatable() {
+                return false;
+            }
+            public boolean isSelectable() {
+                return false;
+            }
+        });
 
-            for (EditorObject part : environment.getChildren()) if (part instanceof _2_Environment_Layer layer) {
+        String flashAnimationName = part.getAttribute("flashAnimationName").stringValue();
+        if (flashAnimationName.isEmpty()) return;
 
-                Image image = part.getAttribute("imageName").imageValue(null, GameVersion.VERSION_WOG2);
+        SimpleBinAnimation animation =
+                ResourceManager.getFlashAnim(null, flashAnimationName, GameVersion.VERSION_WOG2);
+        if (animation == null) return;
 
-                double partRotation = 0;
-
-                addObjectComponent(new ImageComponent() {
-                    public double getX() {
-                        return (boundsTopRight.getAttribute("x").doubleValue() + boundsBottomLeft.getAttribute("x").doubleValue()) / 2
-                                + part.getChild("anchors").getAttribute("x").doubleValue();
-                    }
-                    public double getY() {
-                        return (-boundsTopRight.getAttribute("y").doubleValue() - boundsBottomLeft.getAttribute("y").doubleValue()) / 2
-                                - part.getChild("anchors").getAttribute("y").doubleValue();
-                    }
-                    public double getRotation() {
-                        return partRotation;
-                    }
-                    public double getScaleX() {
-                        return part.getAttribute("scale").doubleValue() / 100;
-                    }
-                    public double getScaleY() {
-                        return part.getAttribute("scale").doubleValue() / 100;
-                    }
-                    public double getDepth() {
-                        //System.out.println(part.getAttribute("depth").doubleValue());
-                        return -part.getAttribute("depth").doubleValue() + 100000 * (part.getAttribute("foreground").booleanValue() ? 1 : -1);
-                        //return -100000;
-                    }
-                    public boolean isAdditive() {
-                        int blendingType = part.getAttribute("blendingType").intValue();
-                        return blendingType == 3;
-                    }
-                    public double getAlpha() {
-                        return (Long.parseLong(part.getAttribute("color").stringValue()) >> 24) / 255.0;
-                    }
-                    public Image getImage() {
-                        return image;
-                    }
-                    public boolean isVisible() {
-                        return AssetManager.getAsset().getVisibilitySettings().isShowSceneBGColor();
-                    }
-                    public boolean isResizable() {
-                        return false;
-                    }
-                    public boolean isDraggable() {
-                        return false;
-                    }
-                    public boolean isRotatable() {
-                        return false;
-                    }
-                    public boolean isSelectable() {
-                        return false;
-                    }
-                });
-
-                if (!part.getAttribute("flashAnimationName").stringValue().isEmpty()) {
-                    BinAnimationHelper.addBinAnimationAsObjectPositions(layer, ResourceManager.getFlashAnim(null, part.getAttribute("flashAnimationName").stringValue(), GameVersion.VERSION_WOG2), "");
-                }
+        BinAnimationHelper.addBinAnimationAsObjectPositions(this, animation, "",
+                new BinAnimationHelper.BinAnimationInterface() {
+            public double getX() {
+                return (boundsTopRight.getAttribute("x").doubleValue() +
+                        boundsBottomLeft.getAttribute("x").doubleValue()) / 2
+                        + part.getChild("anchors").getAttribute("x").doubleValue();
+            }
+            public void setX(double x) {
 
             }
+            public double getY() {
+                return (-boundsTopRight.getAttribute("y").doubleValue() -
+                        boundsBottomLeft.getAttribute("y").doubleValue()) / 2
+                        - part.getChild("anchors").getAttribute("y").doubleValue();
+            }
+            public void setY(double y) {
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            }
+            public double getScaleX() {
+                return part.getAttribute("scale").doubleValue() / 100;
+            }
+            public void setScaleX(double scaleX) {
+
+            }
+            public double getScaleY() {
+                return part.getAttribute("scale").doubleValue() / 100;
+            }
+            public void setScaleY(double scaleY) {
+
+            }
+            public double getRotation() {
+                return 0;
+            }
+            public void setRotation(double rotation) {
+
+            }
+            public double getDepth() {
+                return 0;
+            }
+            public Depth.Layer getGlobalLayer() {
+                return part.getAttribute("foreground").booleanValue()
+                        ? Depth.Layer.SCENE_FG : Depth.Layer.SCENE_BG;
+            }
+            public boolean isSelectable() {
+                return false;
+            }
+        });
 
     }
 

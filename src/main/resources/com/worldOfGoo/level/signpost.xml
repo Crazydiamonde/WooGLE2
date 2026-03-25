@@ -1,0 +1,37 @@
+<AttributeManifest localName="signpost">
+
+    <attributes>
+        <EditorAttribute name="name"      type="STRING"                                  required="true"/>
+        <EditorAttribute name="depth"     type="_1_NUMBER"    defaultValue="0"           required="true"/>
+        <EditorAttribute name="x"         type="_1_NUMBER"    defaultValue="0"           required="true"/>
+        <EditorAttribute name="y"         type="_1_NUMBER"    defaultValue="0"           required="true"/>
+        <EditorAttribute name="scalex"    type="_1_NUMBER"    defaultValue="1"           required="true"/>
+        <EditorAttribute name="scaley"    type="_1_NUMBER"    defaultValue="1"           required="true"/>
+        <EditorAttribute name="rotation"  type="_1_NUMBER"    defaultValue="0"           required="true"/>
+        <EditorAttribute name="alpha"     type="_1_NUMBER"    defaultValue="1"           required="true"/>
+        <EditorAttribute name="colorize"  type="_1_COLOR"     defaultValue="255,255,255" required="true"/>
+        <EditorAttribute name="image"     type="_1_IMAGE"                                required="true"/>
+        <EditorAttribute name="text"      type="_1_TEXT"                                 required="true"/>
+        <EditorAttribute name="particles" type="_1_PARTICLES"/>
+        <EditorAttribute name="pulse"     type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="text"/>
+        <MetaEditorAttribute name="particles"/>
+        <MetaEditorAttribute name="pulse"/>
+        <MetaEditorAttribute name="Image" openByDefault="true">
+            <MetaEditorAttribute name="x"/>
+            <MetaEditorAttribute name="y"/>
+            <MetaEditorAttribute name="scalex"/>
+            <MetaEditorAttribute name="scaley"/>
+            <MetaEditorAttribute name="image"/>
+            <MetaEditorAttribute name="rotation"/>
+            <MetaEditorAttribute name="depth"/>
+            <MetaEditorAttribute name="alpha"/>
+            <MetaEditorAttribute name="colorize"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -1,6 +1,6 @@
 package com.woogleFX.engine.inputEvents;
 
-import com.woogleFX.editorObjects.Asset;
+import com.woogleFX.assets.Asset;
 import com.woogleFX.engine.fx.FXCanvas;
 import com.woogleFX.engine.fx.FXContainers;
 import com.woogleFX.engine.renderer.Renderer;

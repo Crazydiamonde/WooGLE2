@@ -1,0 +1,21 @@
+<AttributeManifest localName="CollisionSound">
+
+    <attributes>
+        <EditorAttribute name="materials" type="STRING"/>
+        <EditorAttribute name="contactSound" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.SoundID" required="true"/>
+        <EditorAttribute name="contactParticleEffect" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.UUID" required="true"/>
+        <EditorAttribute name="minContactVelocity" type="STRING"/>
+        <EditorAttribute name="maxContactVelocity" type="STRING"/>
+        <EditorAttribute name="contactProbability" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="materials"/>
+        <MetaEditorAttribute name="contactSound"/>
+        <MetaEditorAttribute name="contactParticleEffect"/>
+        <MetaEditorAttribute name="minContactVelocity"/>
+        <MetaEditorAttribute name="maxContactVelocity"/>
+        <MetaEditorAttribute name="contactProbability"/>
+    </metaAttributes>
+
+</AttributeManifest>

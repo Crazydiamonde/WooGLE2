@@ -1,14 +1,9 @@
 package com.woogleFX.engine.fx.hierarchy;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.engine.fx.FXPropertiesView;
+import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
 import com.woogleFX.engine.fx.FXStage;
 import com.woogleFX.engine.AssetManager;
-import com.worldOfGoo.addin.Addin;
-import com.worldOfGoo.level.Level;
-import com.worldOfGoo.resrc.ResourceManifest;
-import com.worldOfGoo.scene.Scene;
-import com.worldOfGoo.text.TextStrings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -25,17 +20,30 @@ public class FXHierarchy {
 
         hierarchy.setPlaceholder(new Label());
 
+        // TODO: this
+        /*
+        TreeTableColumn<EditorObject, Boolean> hierarchyHidden = new TreeTableColumn<>();
+        hierarchyHidden.setPrefWidth(20);
+        hierarchyHidden.setMinWidth(20);
+        hierarchyHidden.setMaxWidth(20);
+        hierarchyHidden.setResizable(false);
+        hierarchyHidden.setSortable(false);
+        hierarchyHidden.setReorderable(false);
+        hierarchy.getColumns().add(hierarchyHidden);
+         */
+
         // Create the columns the hierarchy uses ("Element" and its "ID or Name")
         TreeTableColumn<EditorObject, String> hierarchyElements = new TreeTableColumn<>();
-        hierarchyElements.setGraphic(new Label("Elements"));
+        hierarchyElements.setGraphic(new Label("Element"));
         hierarchyElements.setCellValueFactory(new TreeItemPropertyValueFactory<>("type"));
         hierarchy.getColumns().add(hierarchyElements);
-        hierarchyElements.setPrefWidth(200);
         hierarchyElements.setSortable(false);
+        hierarchyElements.setReorderable(false);
 
         TreeTableColumn<EditorObject, String> hierarchyNames = new TreeTableColumn<>();
         hierarchyNames.setGraphic(new Label("ID or Name"));
         hierarchyNames.setSortable(false);
+        hierarchyNames.setReorderable(false);
 
         hierarchyNames.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));
 
@@ -62,22 +70,17 @@ public class FXHierarchy {
             if (newValue == null || newValue.getValue() == null || hierarchy.getSelectionModel().getSelectedItems().isEmpty() ||
                     hierarchy.getSelectionModel().getSelectedItems().get(0) == null) return;
 
-            EditorObject absoluteParent = newValue.getValue();
+            EditorObject editorObject = newValue.getValue();
 
             TabPane hierarchySwitcherButtons = FXHierarchySwitcherButtons.getHierarchySwitcherButtons();
 
-            while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
-            if (absoluteParent instanceof Scene) hierarchySwitcherButtons.getSelectionModel().select(0);
-            else if (absoluteParent instanceof Level) hierarchySwitcherButtons.getSelectionModel().select(1);
-            else if (absoluteParent instanceof ResourceManifest)
-                hierarchySwitcherButtons.getSelectionModel().select(2);
-            else if (absoluteParent instanceof TextStrings) hierarchySwitcherButtons.getSelectionModel().select(3);
-            else if (absoluteParent instanceof Addin) hierarchySwitcherButtons.getSelectionModel().select(4);
+            hierarchySwitcherButtons.getSelectionModel().select(AssetManager.getAsset().getTabForObject(editorObject));
 
             EditorObject[] selectedNow = new EditorObject[hierarchy.getSelectionModel().getSelectedItems().size()];
             for (int i = 0; i < selectedNow.length; i++)
                 selectedNow[i] = hierarchy.getSelectionModel().getSelectedItems().get(i).getValue();
-            AssetManager.getAsset().setSelected(selectedNow);
+
+            AssetManager.getAsset().setSelectedDiscreetly(selectedNow);
 
             FXPropertiesView.changeTableView(selectedNow);
 
@@ -95,6 +98,13 @@ public class FXHierarchy {
         hierarchy.setPrefHeight(FXStage.getStage().getHeight() * 0.4);
 
         hierarchy.setId("hierarchy");
+
+    }
+
+
+    public static void scrollTo(EditorObject editorObject) {
+
+        FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(editorObject.getTreeItem()) - (int)(FXHierarchy.getHierarchy().getHeight() / FXHierarchy.getHierarchy().getFixedCellSize() / 2));
 
     }
 

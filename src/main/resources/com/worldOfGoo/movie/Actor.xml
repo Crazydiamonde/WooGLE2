@@ -1,0 +1,25 @@
+<AttributeManifest localName="actor">
+
+    <attributes>
+        <EditorAttribute name="type" type="_1_NUMBER"/>
+        <EditorAttribute name="image" type="_1_NUMBER"/>
+        <EditorAttribute name="label" type="_1_NUMBER"/>
+        <EditorAttribute name="font" type="_1_NUMBER"/>
+        <EditorAttribute name="labelMaxWidth" type="_1_NUMBER"/>
+        <EditorAttribute name="labelWrapWidth" type="_1_NUMBER"/>
+        <EditorAttribute name="labelJustification" type="_1_NUMBER" defaultValue="0"/>
+        <EditorAttribute name="depth" type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="image"/>
+        <MetaEditorAttribute name="label"/>
+        <MetaEditorAttribute name="font"/>
+        <MetaEditorAttribute name="labelMaxWidth"/>
+        <MetaEditorAttribute name="labelWrapWidth"/>
+        <MetaEditorAttribute name="labelJustification"/>
+        <MetaEditorAttribute name="depth"/>
+    </metaAttributes>
+
+</AttributeManifest>

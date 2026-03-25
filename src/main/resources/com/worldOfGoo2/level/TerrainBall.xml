@@ -1,0 +1,11 @@
+<AttributeManifest localName="TerrainBall">
+
+    <attributes>
+        <EditorAttribute name="group" type="_2_TERRAIN_GROUP" defaultValue="-1" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="group"/>
+    </metaAttributes>
+
+</AttributeManifest>

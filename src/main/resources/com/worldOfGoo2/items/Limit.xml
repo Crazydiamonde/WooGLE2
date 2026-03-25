@@ -1,0 +1,13 @@
+<AttributeManifest localName="Limit">
+
+    <attributes>
+        <EditorAttribute name="minScale" type="NUMBER"/>
+        <EditorAttribute name="maxScale" type="NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="minScale"/>
+        <MetaEditorAttribute name="maxScale"/>
+    </metaAttributes>
+
+</AttributeManifest>

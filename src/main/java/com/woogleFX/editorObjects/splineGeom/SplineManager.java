@@ -1,6 +1,6 @@
 package com.woogleFX.editorObjects.splineGeom;
 
-import com.woogleFX.editorObjects.Asset;
+import com.woogleFX.assets.Asset;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.engine.SelectionManager;
 import javafx.geometry.Point2D;

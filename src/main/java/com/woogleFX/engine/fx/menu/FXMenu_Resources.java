@@ -1,9 +1,8 @@
 package com.woogleFX.engine.fx.menu;
 
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.gameData.level.LevelResourceImporter;
-import com.woogleFX.gameData.level.LevelResourceManager;
-import com.woogleFX.gameData.level._Level;
+import com.woogleFX.file.resourceManagers.LevelResourceImporter;
+import com.woogleFX.file.resourceManagers.LevelResourceManager;
 import javafx.scene.control.Menu;
 
 public class FXMenu_Resources {
@@ -60,32 +59,32 @@ public class FXMenu_Resources {
 
         updateLevelResourcesItem.setText("Update Level Resources...");
         updateLevelResourcesItem.setIcon(prefix + "update_level_resources.png");
-        updateLevelResourcesItem.setOnAction(e -> LevelResourceManager.updateLevelResources((_Level) AssetManager.getAsset()));
+        updateLevelResourcesItem.setOnAction(e -> LevelResourceManager.updateLevelResources(AssetManager.getAsset()));
         resourcesMenu.getItems().add(updateLevelResourcesItem);
 
         importImageItem.setText("Import Images...");
         importImageItem.setIcon(prefix + "import_img.png");
-        importImageItem.setOnAction(e -> LevelResourceImporter.importImages((_Level) AssetManager.getAsset()));
+        importImageItem.setOnAction(e -> LevelResourceImporter.importResources(AssetManager.getAsset()));
         resourcesMenu.getItems().add(importImageItem);
 
         newTextResourceItem.setText("New Text Resource");
         newTextResourceItem.setIcon(prefix + "add_text_resource.png");
-        newTextResourceItem.setOnAction(e -> LevelResourceManager.newTextResource((_Level) AssetManager.getAsset()));
+        newTextResourceItem.setOnAction(e -> LevelResourceManager.newTextResource(AssetManager.getAsset()));
         resourcesMenu.getItems().add(newTextResourceItem);
 
         cleanLevelResourcesItem.setText("Clean Resources");
         cleanLevelResourcesItem.setIcon(prefix + "clean_level_resources.png");
-        cleanLevelResourcesItem.setOnAction(e -> LevelResourceManager.cleanLevelResources((_Level) AssetManager.getAsset()));
+        cleanLevelResourcesItem.setOnAction(e -> LevelResourceManager.cleanLevelResources(AssetManager.getAsset()));
         resourcesMenu.getItems().add(cleanLevelResourcesItem);
 
         setMusicItem.setText("Set Music...");
         setMusicItem.setIcon(prefix + "import_music.png");
-        setMusicItem.setOnAction(e -> LevelResourceImporter.importMusic((_Level) AssetManager.getAsset()));
+        setMusicItem.setOnAction(e -> LevelResourceImporter.importMusic(AssetManager.getAsset()));
         resourcesMenu.getItems().add(setMusicItem);
 
         setLoopsoundItem.setText("Set Loop Sound...");
         setLoopsoundItem.setIcon(prefix + "import_soundloop.png");
-        setLoopsoundItem.setOnAction(e -> LevelResourceImporter.importLoopsound((_Level) AssetManager.getAsset()));
+        setLoopsoundItem.setOnAction(e -> LevelResourceImporter.importLoopsound(AssetManager.getAsset()));
         resourcesMenu.getItems().add(setLoopsoundItem);
 
     }

@@ -1,7 +1,6 @@
 package com.woogleFX.engine.inputEvents;
 
-import com.woogleFX.editorObjects.Asset;
-import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.assets.Asset;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.engine.fx.FXCanvas;
 import com.woogleFX.engine.fx.FXScene;
@@ -10,6 +9,8 @@ import com.woogleFX.engine.AssetManager;
 import com.woogleFX.editorObjects.DragSettings;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
+
+import java.util.Arrays;
 
 public class MouseMovedManager {
 
@@ -31,7 +32,7 @@ public class MouseMovedManager {
         double x = (event.getX() - level.getOffsetX()) / level.getZoom();
         double y = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
-        EditorObject[] selectedList = level.getSelected();
+        ObjectComponent[] selectedList = level.getSelectedComponents();
         if (selectedList.length == 0) {
             // If nothing is selected, set the cursor to the default cursor and don't do anything else.
             FXScene.getScene().setCursor(Cursor.DEFAULT);
@@ -41,7 +42,7 @@ public class MouseMovedManager {
         // Check all the selected objects to see if the mouse intersects them.
         DragSettings cornerHit = DragSettings.NULL;
         DragSettings generalHit = DragSettings.NULL;
-        for (EditorObject selected : selectedList) for (ObjectComponent component : selected.getObjectComponents()) {
+        for (ObjectComponent component : selectedList) {
 
             // If the component isn't visible, don't do anything with it.
             if (!component.isVisible()) continue;
@@ -64,13 +65,8 @@ public class MouseMovedManager {
         if (overshadowingSettings != null) {
             ObjectComponent objectComponent = overshadowingSettings.getObjectComponent();
 
-            boolean isOvershadowed = true;
-            for (EditorObject selected : selectedList) if (selected.containsObjectComponent(objectComponent)) {
-                isOvershadowed = false;
-                break;
-            }
-
-            if (isOvershadowed) {
+            // If this component isn't selected (the user is hovering over a component that overshadows it):
+            if (Arrays.stream(selectedList).noneMatch(e -> e == objectComponent)) {
                 FXScene.getScene().setCursor(Cursor.DEFAULT);
                 return;
             }

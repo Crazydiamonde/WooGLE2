@@ -1,18 +1,21 @@
 package com.woogleFX.editorObjects.clipboardHandling;
 
-import com.woogleFX.editorObjects.Asset;
+import com.woogleFX.assets.Asset;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
+import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.file.fileExport.GOOWriter;
 import com.woogleFX.file.fileImport.ObjectGOOParser;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+@SuppressWarnings("unchecked")
 public class ClipboardHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ClipboardHandler.class);
@@ -29,8 +32,8 @@ public class ClipboardHandler {
         boolean settingAttribute = false;
 
         EditorObject selected;
-        EditorObject[] selectedList = AssetManager.getAsset().getSelected();
-        if (selectedList.length == 1) selected = selectedList[0];
+        ObjectComponent[] selectedList = AssetManager.getAsset().getSelectedComponents();
+        if (selectedList.length == 1) selected = selectedList[0].getEditorObject();
         else selected = null;
 
         ArrayList<EditorObject> selectionBuilder = new ArrayList<>();
@@ -76,9 +79,18 @@ public class ClipboardHandler {
                                 }
                             }
                         }
-
-                        EditorObject parent = okayToBeChild ? selected.getParent() : null;
-                        object = ObjectCreator.create(currentWord.toString(), parent, level.getVersion());
+                        Class<? extends EditorObject> editorObjectClass;
+                        try {
+                            editorObjectClass = (Class<? extends EditorObject>) Class.forName(currentWord.toString());
+                        } catch (ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                        EditorObject parent = okayToBeChild ? selected.getParent() : level.getDefaultParent(editorObjectClass);
+                        // Make sure the object can actually exist here
+                        if (parent == null || Arrays.stream(parent.getPossibleChildren()).noneMatch(e -> e == editorObjectClass)) {
+                            continue;
+                        }
+                        object = ObjectCreator.create(editorObjectClass, parent, level.getVersion());
                         currentWord = new StringBuilder();
                         settingAttribute = true;
                     } else {
@@ -118,8 +130,7 @@ public class ClipboardHandler {
             StringBuilder clipboard = new StringBuilder("WOGEditor:");
 
             for (EditorObject object : selectedList) {
-
-                clipboard.append(object.getParent().getAttribute(object.getTypeID()).getChildAlias());
+                clipboard.append(object.getClass().getName());
 
                 clipboard.append("<");
 

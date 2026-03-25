@@ -6,31 +6,31 @@ import com.woogleFX.engine.fx.hierarchy.HierarchyManager;
 
 public class HierarchyDragAction extends UserAction {
 
-    private final int toPosition;
+    private final EditorObject fromParent;
     private final int fromPosition;
-    public HierarchyDragAction(EditorObject object, int fromPosition, int toPosition) {
+    private final EditorObject toParent;
+    private final int toPosition;
+    public HierarchyDragAction(EditorObject object, EditorObject fromParent, int fromPosition, EditorObject toParent, int toPosition) {
         super(object);
+        this.fromParent = fromParent;
         this.fromPosition = fromPosition;
         this.toPosition = toPosition;
+        this.toParent = toParent;
     }
 
 
     @Override
     public UserAction getInverse() {
+        if (toParent == fromParent && toPosition > fromPosition) return new HierarchyDragAction(getObject(), toParent, toPosition - 1, fromParent, fromPosition);
+        if (toParent == fromParent && toPosition < fromPosition) return new HierarchyDragAction(getObject(), toParent, toPosition, fromParent, fromPosition + 1);
 
-        int extra;
-        // TODO
-        if (toPosition > fromPosition) extra = getObject().getChildren().size();
-        else extra = 0;
-
-        return new HierarchyDragAction(getObject(), toPosition - extra, fromPosition);
+        return new HierarchyDragAction(getObject(), toParent, toPosition, fromParent, fromPosition);
     }
 
 
     @Override
     public void execute() {
-        HierarchyManager.setOldDropIndex(fromPosition);
-        HierarchyManager.handleDragDrop(FXHierarchy.getHierarchy(), toPosition);
+        HierarchyManager.handleDragDrop(FXHierarchy.getHierarchy(), fromParent, fromPosition, toParent, toPosition);
         FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
         FXHierarchy.getHierarchy().getSelectionModel().select(FXHierarchy.getHierarchy().getTreeItem(toPosition));
     }

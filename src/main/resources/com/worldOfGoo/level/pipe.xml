@@ -1,0 +1,15 @@
+<AttributeManifest localName="pipe">
+
+    <attributes>
+        <EditorAttribute name="type"  type="_1_PIPE_TYPE"/>
+        <EditorAttribute name="id"    type="STRING"                        required="true"/>
+        <EditorAttribute name="depth" type="_1_NUMBER"    defaultValue="0" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="depth"/>
+    </metaAttributes>
+
+</AttributeManifest>

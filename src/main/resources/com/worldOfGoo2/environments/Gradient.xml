@@ -1,0 +1,29 @@
+<AttributeManifest localName="Gradient">
+
+    <attributes>
+        <EditorAttribute name="enabled" type="STRING"/>
+        <EditorAttribute name="pointA" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="pointADepth" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="pointB" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="pointBDepth" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="distance" type="STRING"/>
+        <EditorAttribute name="power" type="STRING"/>
+        <EditorAttribute name="startColor" type="STRING"/>
+        <EditorAttribute name="midColor" type="STRING"/>
+        <EditorAttribute name="endColor" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="enabled"/>
+        <MetaEditorAttribute name="pointA"/>
+        <MetaEditorAttribute name="pointADepth"/>
+        <MetaEditorAttribute name="pointB"/>
+        <MetaEditorAttribute name="pointBDepth"/>
+        <MetaEditorAttribute name="distance"/>
+        <MetaEditorAttribute name="power"/>
+        <MetaEditorAttribute name="startColor"/>
+        <MetaEditorAttribute name="midColor"/>
+        <MetaEditorAttribute name="endColor"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -1,0 +1,117 @@
+<AttributeManifest localName="Environment">
+
+    <attributes>
+       <EditorAttribute name="name" type="STRING" required="true"/>
+       <EditorAttribute name="id" type="STRING" required="true"/>
+       <EditorAttribute name="clearColor" type="STRING"/>
+       <EditorAttribute name="layers" type="_2_LIST_CHILD" required="true" childAlias="com.worldOfGoo2.environments.Layer"/>
+       <EditorAttribute name="bloomPosition" type="_2_CHILD" required="true" childAlias="com.worldOfGoo2.misc.Point"/>
+       <EditorAttribute name="bloomRange" type="STRING" required="true"/>
+       <EditorAttribute name="lightingColor" type="STRING" required="true"/>
+       <EditorAttribute name="dynamicLighting" type="STRING" required="true"/>
+       <EditorAttribute name="downloadLighting" type="STRING"/>
+       <EditorAttribute name="dynamicLightingColor" type="STRING"/>
+       <EditorAttribute name="dynamicLightingDecayFactor" type="STRING"/>
+       <EditorAttribute name="lightingTopLeftColor" type="STRING" required="true"/>
+       <EditorAttribute name="lightingTopRightColor" type="STRING" required="true"/>
+       <EditorAttribute name="lightingBottomLeftColor" type="STRING" required="true"/>
+       <EditorAttribute name="lightingBottomRightColor" type="STRING" required="true"/>
+       <EditorAttribute name="lightingBackgroundTopLeftColor" type="STRING"/>
+       <EditorAttribute name="lightingBackgroundTopRightColor" type="STRING"/>
+       <EditorAttribute name="lightingBackgroundBottomLeftColor" type="STRING"/>
+       <EditorAttribute name="lightingBackgroundBottomRightColor" type="STRING"/>
+       <EditorAttribute name="waterTopColor" type="STRING" required="true"/>
+       <EditorAttribute name="waterBottomColor" type="STRING" required="true"/>
+       <EditorAttribute name="waterFoamColor" type="STRING"/>
+       <EditorAttribute name="waterFoamEndColor" type="STRING"/>
+       <EditorAttribute name="waterColorBlend" type="STRING"/>
+       <EditorAttribute name="waterBloomFactor" type="STRING"/>
+       <EditorAttribute name="waterRandomRippleTimeout" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+       <EditorAttribute name="waterRandomRippleSize" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+       <EditorAttribute name="waterRandomRippleTime" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+       <EditorAttribute name="liquidOverrides" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.environments.LiquidOverride" required="true"/>
+       <EditorAttribute name="backgroundBloomFactor" type="STRING" required="true"/>
+       <EditorAttribute name="stableFluidsBloomFactor" type="_2_CHILD" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
+       <EditorAttribute name="windForce" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+       <EditorAttribute name="windFactor" type="STRING"/>
+       <EditorAttribute name="windAddFactor" type="STRING"/>
+       <EditorAttribute name="windDecorationFactor" type="STRING"/>
+       <EditorAttribute name="shadowOffset" type="STRING"/>
+       <EditorAttribute name="shadowColor" type="STRING"/>
+       <EditorAttribute name="inactiveStrandOverlayFactor" type="STRING"/>
+       <EditorAttribute name="trajectoryOverlayFactor" type="STRING"/>
+       <EditorAttribute name="finalFx" type="_2_CHILD" childAlias="com.worldOfGoo2.environments.ForegroundFX" required="true"/>
+       <EditorAttribute name="sound" type="_2_CHILD" childAlias="com.worldOfGoo2.environments.Sound" required="true"/>
+       <EditorAttribute name="fireBlendingType" type="STRING" required="true"/>
+       <EditorAttribute name="fireLut" type="STRING" required="true"/>
+       <EditorAttribute name="filmGrainBlend" type="STRING"/>
+       <EditorAttribute name="vignetteBlendStart" type="STRING"/>
+       <EditorAttribute name="vignetteBlendEnd" type="STRING"/>
+       <EditorAttribute name="vignetteShape" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+       <EditorAttribute name="postProcessBlendingType" type="STRING"/>
+       <EditorAttribute name="lowPerformanceLaserFactor" type="STRING"/>
+       <EditorAttribute name="environmentName" type="STRING"/>
+       <EditorAttribute name="backgroundFx" type="_2_CHILD" childAlias="com.worldOfGoo2.environments.ForegroundFX"/>
+       <EditorAttribute name="preForegroundFx" type="_2_CHILD" childAlias="com.worldOfGoo2.environments.ForegroundFX"/>
+       <EditorAttribute name="foregroundFx" type="_2_CHILD" childAlias="com.worldOfGoo2.environments.ForegroundFX"/>
+       <EditorAttribute name="postForegroundFx" type="_2_CHILD" childAlias="com.worldOfGoo2.environments.ForegroundFX"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="clearColor"/>
+        <MetaEditorAttribute name="layers"/>
+        <MetaEditorAttribute name="bloomPosition"/>
+        <MetaEditorAttribute name="bloomRange"/>
+        <MetaEditorAttribute name="lightingColor"/>
+        <MetaEditorAttribute name="dynamicLighting"/>
+        <MetaEditorAttribute name="downloadLighting"/>
+        <MetaEditorAttribute name="dynamicLightingColor"/>
+        <MetaEditorAttribute name="dynamicLightingDecayFactor"/>
+        <MetaEditorAttribute name="lightingTopLeftColor"/>
+        <MetaEditorAttribute name="lightingTopRightColor"/>
+        <MetaEditorAttribute name="lightingBottomLeftColor"/>
+        <MetaEditorAttribute name="lightingBottomRightColor"/>
+        <MetaEditorAttribute name="lightingBackgroundTopLeftColor"/>
+        <MetaEditorAttribute name="lightingBackgroundTopRightColor"/>
+        <MetaEditorAttribute name="lightingBackgroundBottomLeftColor"/>
+        <MetaEditorAttribute name="lightingBackgroundBottomRightColor"/>
+        <MetaEditorAttribute name="waterTopColor"/>
+        <MetaEditorAttribute name="waterBottomColor"/>
+        <MetaEditorAttribute name="waterFoamColor"/>
+        <MetaEditorAttribute name="waterFoamEndColor"/>
+        <MetaEditorAttribute name="waterColorBlend"/>
+        <MetaEditorAttribute name="waterBloomFactor"/>
+        <MetaEditorAttribute name="waterRandomRippleTimeout"/>
+        <MetaEditorAttribute name="waterRandomRippleSize"/>
+        <MetaEditorAttribute name="waterRandomRippleTime"/>
+        <MetaEditorAttribute name="liquidOverrides"/>
+        <MetaEditorAttribute name="backgroundBloomFactor"/>
+        <MetaEditorAttribute name="stableFluidsBloomFactor"/>
+        <MetaEditorAttribute name="windForce"/>
+        <MetaEditorAttribute name="windFactor"/>
+        <MetaEditorAttribute name="windAddFactor"/>
+        <MetaEditorAttribute name="windDecorationFactor"/>
+        <MetaEditorAttribute name="shadowOffset"/>
+        <MetaEditorAttribute name="shadowColor"/>
+        <MetaEditorAttribute name="inactiveStrandOverlayFactor"/>
+        <MetaEditorAttribute name="trajectoryOverlayFactor"/>
+        <MetaEditorAttribute name="finalFx"/>
+        <MetaEditorAttribute name="sound"/>
+        <MetaEditorAttribute name="fireBlendingType"/>
+        <MetaEditorAttribute name="fireLut"/>
+        <MetaEditorAttribute name="filmGrainBlend"/>
+        <MetaEditorAttribute name="vignetteBlendStart"/>
+        <MetaEditorAttribute name="vignetteBlendEnd"/>
+        <MetaEditorAttribute name="vignetteShape"/>
+        <MetaEditorAttribute name="postProcessBlendingType"/>
+        <MetaEditorAttribute name="lowPerformanceLaserFactor"/>
+        <MetaEditorAttribute name="environmentName"/>
+        <MetaEditorAttribute name="backgroundFx"/>
+        <MetaEditorAttribute name="preForegroundFx"/>
+        <MetaEditorAttribute name="foregroundFx"/>
+        <MetaEditorAttribute name="postForegroundFx"/>
+    </metaAttributes>
+
+</AttributeManifest>

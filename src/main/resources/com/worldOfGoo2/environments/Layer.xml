@@ -1,0 +1,57 @@
+<AttributeManifest localName="Layer">
+
+    <attributes>
+
+        <!-- Added to prevent errors, possibly missed -->
+        <EditorAttribute name="x" type="STRING"/>
+        <EditorAttribute name="y" type="STRING"/>
+        <EditorAttribute name="enabled" type="STRING"/>
+
+        <EditorAttribute name="imageName" type="STRING"/>
+        <EditorAttribute name="scale" type="STRING"/>
+        <EditorAttribute name="depth" type="STRING"/>
+        <EditorAttribute name="depthYOverride" type="STRING"/>
+        <EditorAttribute name="fill" type="STRING"/>
+        <EditorAttribute name="foreground" type="STRING"/>
+        <EditorAttribute name="repeatX" type="STRING"/>
+        <EditorAttribute name="repeatY" type="STRING"/>
+        <EditorAttribute name="mirrorX" type="STRING"/>
+        <EditorAttribute name="mirrorY" type="STRING"/>
+        <EditorAttribute name="flipX" type="STRING"/>
+        <EditorAttribute name="flipY" type="STRING"/>
+        <EditorAttribute name="anchors" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="anchorsTakeDepthIntoAccount" type="STRING"/>
+        <EditorAttribute name="bloom" type="STRING"/>
+        <EditorAttribute name="color" type="NUMBER"/>
+        <EditorAttribute name="blendingType" type="NUMBER" defaultValue="1"/>
+        <EditorAttribute name="flashAnimationName" type="STRING"/>
+        <EditorAttribute name="isFlashAnimation" type="STRING"/>
+        <EditorAttribute name="animScroll" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="gradient" type="_2_CHILD" childAlias="com.worldOfGoo2.environment._2_Environment_Gradient"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="imageName"/>
+        <MetaEditorAttribute name="scale"/>
+        <MetaEditorAttribute name="depth"/>
+        <MetaEditorAttribute name="depthYOverride"/>
+        <MetaEditorAttribute name="fill"/>
+        <MetaEditorAttribute name="foreground"/>
+        <MetaEditorAttribute name="repeatX"/>
+        <MetaEditorAttribute name="repeatY"/>
+        <MetaEditorAttribute name="mirrorX"/>
+        <MetaEditorAttribute name="mirrorY"/>
+        <MetaEditorAttribute name="flipX"/>
+        <MetaEditorAttribute name="flipY"/>
+        <MetaEditorAttribute name="anchors"/>
+        <MetaEditorAttribute name="anchorsTakeDepthIntoAccount"/>
+        <MetaEditorAttribute name="bloom"/>
+        <MetaEditorAttribute name="color"/>
+        <MetaEditorAttribute name="blendingType"/>
+        <MetaEditorAttribute name="flashAnimationName"/>
+        <MetaEditorAttribute name="isFlashAnimation"/>
+        <MetaEditorAttribute name="animScroll"/>
+        <MetaEditorAttribute name="gradient"/>
+    </metaAttributes>
+
+</AttributeManifest>

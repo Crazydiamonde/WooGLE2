@@ -16,7 +16,10 @@ public class FontList extends FontData {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (FontData fontData : data) stringBuilder.append(", ").append(fontData.toString());
+        for (FontData fontData : data) {
+            stringBuilder.append(", ").append(fontData.toString());
+        }
+        if (data.length == 0) return "[]";
         return '[' + stringBuilder.substring(2) + ']';
     }
 

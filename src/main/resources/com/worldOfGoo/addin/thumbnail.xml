@@ -1,0 +1,17 @@
+<AttributeManifest localName="thumbnail">
+
+    <attributes>
+        <EditorAttribute name="value" type="STRING" required="true"/>
+        <EditorAttribute name="type" type="_1_IMAGE_TYPE" required="true"/>
+        <EditorAttribute name="width" type="_1_NUMBER_POSITIVE" required="true"/>
+        <EditorAttribute name="height" type="_1_NUMBER_POSITIVE" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="value"/>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="width"/>
+        <MetaEditorAttribute name="height"/>
+    </metaAttributes>
+
+</AttributeManifest>

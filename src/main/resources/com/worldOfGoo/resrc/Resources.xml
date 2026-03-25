@@ -1,0 +1,11 @@
+<AttributeManifest localName="Resources">
+
+    <attributes>
+        <EditorAttribute name="id" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+    </metaAttributes>
+
+</AttributeManifest>

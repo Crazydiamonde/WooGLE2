@@ -1,0 +1,23 @@
+<AttributeManifest localName="CameraKeyFrame">
+
+    <attributes>
+        <EditorAttribute name="position" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="zoom" type="NUMBER" required="true"/>
+        <EditorAttribute name="timeScaleFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="timeScaleFactor2" type="NUMBER"/>
+        <EditorAttribute name="pauseTimeFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="easeInSpeedFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="easeOutSpeedFactor" type="NUMBER" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="position"/>
+        <MetaEditorAttribute name="zoom"/>
+        <MetaEditorAttribute name="timeScaleFactor"/>
+        <MetaEditorAttribute name="timeScaleFactor2"/>
+        <MetaEditorAttribute name="pauseTimeFactor"/>
+        <MetaEditorAttribute name="easeInSpeedFactor"/>
+        <MetaEditorAttribute name="easeOutSpeedFactor"/>
+    </metaAttributes>
+
+</AttributeManifest>

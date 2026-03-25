@@ -1,35 +1,31 @@
 package com.woogleFX.editorObjects.objectFunctions;
 
-import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects._2_Positionable;
-import com.woogleFX.editorObjects.attributes.dataTypes.Position;
+import com.woogleFX.editorObjects.DragSettings;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.engine.SelectionManager;
+import javafx.geometry.Point2D;
 
 public class ObjectDrag {
 
-    public static void dragFromMouse(double mouseX, double mouseY, double dragSourceX, double dragSourceY) {
+    public static void dragFromMouse(Point2D mousePos, DragSettings dragSettings) {
 
         ObjectComponent objectComponent = SelectionManager.getDragSettings().getObjectComponent();
 
-        double prevX = objectComponent.getX();
-        double prevY = objectComponent.getY();
-        
-        objectComponent.setX(mouseX - dragSourceX);
-        objectComponent.setY(mouseY - dragSourceY);
+        double originalX = objectComponent.getX();
+        double originalY = objectComponent.getY();
 
-        System.out.println(prevX + ", " + objectComponent.getX());
+        double[] originalXs = new double[AssetManager.getAsset().getSelectedComponents().length];
+        double[] originalYs = new double[AssetManager.getAsset().getSelectedComponents().length];
+        for (int i = 0; i < AssetManager.getAsset().getSelectedComponents().length; i++) {
+            originalXs[i] = AssetManager.getAsset().getSelectedComponents()[i].getX();
+            originalYs[i] = AssetManager.getAsset().getSelectedComponents()[i].getY();
+        }
 
-        for (EditorObject object : AssetManager.getAsset().getSelected()) {
-            if (object.containsObjectComponent(objectComponent))
-                continue;
-            
-            if (object instanceof _2_Positionable positionable) {
-                Position pos = positionable.getPosition();
-                positionable.setPosition(pos.getX() + objectComponent.getX() - prevX,
-                        pos.getY() - objectComponent.getY() + prevY);
-            }
+        for (int i = 0; i < AssetManager.getAsset().getSelectedComponents().length; i++) {
+            ObjectComponent object = AssetManager.getAsset().getSelectedComponents()[i];
+            object.setX(originalXs[i] - originalX + mousePos.getX() - dragSettings.getInitialSource().getX());
+            object.setY(originalYs[i] - originalY + mousePos.getY() - dragSettings.getInitialSource().getY());
         }
         
     }

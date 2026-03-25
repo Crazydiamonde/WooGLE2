@@ -1,0 +1,19 @@
+<AttributeManifest localName="material">
+
+    <attributes>
+        <EditorAttribute name="id"             type="STRING"/>
+        <EditorAttribute name="friction"       type="_1_NUMBER"/>
+        <EditorAttribute name="bounce"         type="_1_NUMBER"/>
+        <EditorAttribute name="minbouncelevel" type="_1_NUMBER"/>
+        <EditorAttribute name="stickiness"     type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="friction"/>
+        <MetaEditorAttribute name="bounce"/>
+        <MetaEditorAttribute name="minbouncelevel"/>
+        <MetaEditorAttribute name="stickiness"/>
+    </metaAttributes>
+
+</AttributeManifest>

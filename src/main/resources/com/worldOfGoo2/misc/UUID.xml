@@ -1,0 +1,11 @@
+<AttributeManifest localName="UUID">
+
+    <attributes>
+        <EditorAttribute name="uuid" type="_2_UUID" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="uuid"/>
+    </metaAttributes>
+
+</AttributeManifest>

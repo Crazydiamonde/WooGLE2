@@ -1,0 +1,11 @@
+<AttributeManifest localName="addin">
+
+    <attributes>
+        <EditorAttribute name="spec-version" type="_1_NUMBER_POSITIVE" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="spec-version"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -1,0 +1,25 @@
+<AttributeManifest localName="LiquidOverride">
+
+    <attributes>
+        <EditorAttribute name="startColor" type="STRING"/>
+        <EditorAttribute name="endColor" type="STRING"/>
+        <EditorAttribute name="insideParticleStartColor" type="STRING"/>
+        <EditorAttribute name="insideParticleEndColor" type="STRING"/>
+        <EditorAttribute name="bloomFactor" type="STRING"/>
+        <EditorAttribute name="dynamicLightingFactor" type="STRING"/>
+        <EditorAttribute name="burnOverride" type="STRING"/>
+        <EditorAttribute name="canBurnOverride" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="startColor"/>
+        <MetaEditorAttribute name="endColor"/>
+        <MetaEditorAttribute name="insideParticleStartColor"/>
+        <MetaEditorAttribute name="insideParticleEndColor"/>
+        <MetaEditorAttribute name="bloomFactor"/>
+        <MetaEditorAttribute name="dynamicLightingFactor"/>
+        <MetaEditorAttribute name="burnOverride"/>
+        <MetaEditorAttribute name="canBurnOverride"/>
+    </metaAttributes>
+
+</AttributeManifest>

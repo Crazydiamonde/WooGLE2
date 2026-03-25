@@ -1,5 +1,10 @@
-<AttributeManifest>
+<AttributeManifest localName="BallType">
+
     <attributes>
         <EditorAttribute name="type" type="_2_BALL_TYPE" required="true"/>
     </attributes>
+
+    <metaAttributes>
+    </metaAttributes>
+
 </AttributeManifest>

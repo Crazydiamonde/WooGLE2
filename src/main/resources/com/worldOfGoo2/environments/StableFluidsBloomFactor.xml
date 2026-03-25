@@ -1,0 +1,17 @@
+<AttributeManifest localName="StableFluidsBloomFactor">
+
+    <attributes>
+        <EditorAttribute name="x" type="STRING" required="true"/>
+        <EditorAttribute name="y" type="STRING" required="true"/>
+        <EditorAttribute name="z" type="STRING" required="true"/>
+        <EditorAttribute name="w" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+        <MetaEditorAttribute name="z"/>
+        <MetaEditorAttribute name="w"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -6,14 +6,12 @@ import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.attributes.dataTypes.Color;
 import com.woogleFX.editorObjects.attributes.dataTypes.Position;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
+import com.worldOfGoo.resrc.Resources;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
-
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 public class EditorAttribute {
 
@@ -41,6 +39,15 @@ public class EditorAttribute {
     @JacksonXmlProperty(localName = "name", isAttribute = true)
     public void setName(String name) {
         this.name.setValue(name);
+    }
+
+
+    private String description = "";
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 
@@ -82,7 +89,7 @@ public class EditorAttribute {
         return Color.parse(stringValue());
     }
 
-    public Image imageValue(ArrayList<EditorObject> resources, GameVersion version) throws FileNotFoundException {
+    public Image imageValue(Resources resources, GameVersion version) {
         return ResourceManager.getImage(resources, stringValue(), version);
     }
 
@@ -144,14 +151,24 @@ public class EditorAttribute {
         this.childAlias = childAlias;
         return this;
     }
+    @SuppressWarnings("unchecked")
     public EditorAttribute setChildAlias(String childAlias) {
         try {
             Object object = Class.forName(childAlias);
             this.childAlias = (Class<? extends EditorObject>) object;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            return this;
         }
         return this;
+    }
+
+
+    private Runnable onClick = null;
+    public void setOnClick(Runnable onClick) {
+        this.onClick = onClick;
+    }
+    public void onClick() {
+        if (onClick != null) onClick.run();
     }
 
 

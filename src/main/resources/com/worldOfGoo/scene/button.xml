@@ -1,0 +1,87 @@
+<AttributeManifest localName="button">
+
+    <attributes>
+        <EditorAttribute name="id"                    type="STRING"                               required="true"/>
+        <EditorAttribute name="depth"                 type="_1_NUMBER" defaultValue="0"           required="true"/>
+        <EditorAttribute name="x"                     type="_1_NUMBER"                            required="true"/>
+        <EditorAttribute name="y"                     type="_1_NUMBER" defaultValue="0"           required="true"/>
+        <EditorAttribute name="scalex"                type="_1_NUMBER" defaultValue="1"           required="true"/>
+        <EditorAttribute name="scaley"                type="_1_NUMBER" defaultValue="1"           required="true"/>
+        <EditorAttribute name="rotation"              type="_1_NUMBER" defaultValue="0"           required="true"/>
+        <EditorAttribute name="anchor"                type="STRING"/>
+        <EditorAttribute name="alpha"                 type="STRING"    defaultValue="1"           required="true"/>
+        <EditorAttribute name="colorize"              type="STRING"    defaultValue="255,255,255" required="true"/>
+        <EditorAttribute name="up"                    type="_1_IMAGE"/>
+        <EditorAttribute name="over"                  type="_1_IMAGE"/>
+        <EditorAttribute name="down"                  type="_1_IMAGE"/>
+        <EditorAttribute name="downover"              type="_1_IMAGE"/>
+        <EditorAttribute name="armed"                 type="_1_IMAGE"/>
+        <EditorAttribute name="downarmed"             type="_1_IMAGE"/>
+        <EditorAttribute name="disabled"              type="_1_IMAGE"/>
+        <EditorAttribute name="downdisabled"          type="_1_IMAGE"/>
+        <EditorAttribute name="latch"                 type="BOOLEAN"/>
+        <EditorAttribute name="font"                  type="STRING"/>
+        <EditorAttribute name="text"                  type="STRING"/>
+        <EditorAttribute name="onclick"               type="STRING"/>
+        <EditorAttribute name="onmouseenter"          type="STRING"/>
+        <EditorAttribute name="onmouseexit"           type="STRING"/>
+        <EditorAttribute name="textcolorup"           type="STRING"/>
+        <EditorAttribute name="textcolorupover"       type="STRING"/>
+        <EditorAttribute name="textcoloruparmed"      type="STRING"/>
+        <EditorAttribute name="textcolorupdisabled"   type="STRING"/>
+        <EditorAttribute name="textcolordown"         type="STRING"/>
+        <EditorAttribute name="textcolordownover"     type="STRING"/>
+        <EditorAttribute name="textcolordownarmed"    type="STRING"/>
+        <EditorAttribute name="textcolordowndisabled" type="STRING"/>
+        <EditorAttribute name="tooltip"               type="STRING"/>
+        <EditorAttribute name="overlay"               type="STRING"/>
+        <EditorAttribute name="screenspace"           type="STRING"/>
+        <EditorAttribute name="context"               type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+        <MetaEditorAttribute name="anchor"/>
+        <MetaEditorAttribute name="depth"/>
+        <MetaEditorAttribute name="alpha"/>
+        <MetaEditorAttribute name="rotation"/>
+        <MetaEditorAttribute name="scalex"/>
+        <MetaEditorAttribute name="scaley"/>
+        <MetaEditorAttribute name="colorize"/>
+        <MetaEditorAttribute name="Graphics" openByDefault="false">
+            <MetaEditorAttribute name="up"/>
+            <MetaEditorAttribute name="over"/>
+            <MetaEditorAttribute name="down"/>
+            <MetaEditorAttribute name="downover"/>
+            <MetaEditorAttribute name="armed"/>
+            <MetaEditorAttribute name="downarmed"/>
+            <MetaEditorAttribute name="disabled"/>
+            <MetaEditorAttribute name="downdisabled"/>
+        </MetaEditorAttribute>
+        <MetaEditorAttribute name="latch"/>
+        <MetaEditorAttribute name="Events" openByDefault="false">
+            <MetaEditorAttribute name="onclick"/>
+            <MetaEditorAttribute name="onmouseenter"/>
+            <MetaEditorAttribute name="onmouseexit"/>
+        </MetaEditorAttribute>
+        <MetaEditorAttribute name="Text" openByDefault="false">
+            <MetaEditorAttribute name="font"/>
+            <MetaEditorAttribute name="text"/>
+            <MetaEditorAttribute name="tooltip"/>
+            <MetaEditorAttribute name="textcolorup"/>
+            <MetaEditorAttribute name="textcolorupover"/>
+            <MetaEditorAttribute name="textcoloruparmed"/>
+            <MetaEditorAttribute name="textcolorupdisabled"/>
+            <MetaEditorAttribute name="textcolordown"/>
+            <MetaEditorAttribute name="textcolordownover"/>
+            <MetaEditorAttribute name="textcolordownarmed"/>
+            <MetaEditorAttribute name="textcolordowndisabled"/>
+        </MetaEditorAttribute>
+        <MetaEditorAttribute name="overlay"/>
+        <MetaEditorAttribute name="screenspace"/>
+        <MetaEditorAttribute name="context"/>
+    </metaAttributes>
+
+</AttributeManifest>

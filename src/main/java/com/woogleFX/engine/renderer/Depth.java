@@ -2,6 +2,14 @@ package com.woogleFX.engine.renderer;
 
 public class Depth {
 
+    public enum Layer {
+
+        SCENE_BG,
+        DEFAULT,
+        SCENE_FG,
+
+    }
+
     public static final double SCENE_BG = -10000;
 
     public static final double CAMERA = 9999;

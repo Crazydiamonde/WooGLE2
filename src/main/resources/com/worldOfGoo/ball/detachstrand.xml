@@ -1,0 +1,13 @@
+<AttributeManifest localName="detachstrand">
+
+    <attributes>
+        <EditorAttribute name="image" type="_1_IMAGE"/>
+        <EditorAttribute name="maxlen" type="_1_NUMBER" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="image"/>
+        <MetaEditorAttribute name="maxlen"/>
+    </metaAttributes>
+
+</AttributeManifest>

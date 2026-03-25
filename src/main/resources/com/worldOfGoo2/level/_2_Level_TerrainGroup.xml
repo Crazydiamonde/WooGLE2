@@ -1,15 +1,29 @@
 <AttributeManifest localName="TerrainGroup">
 
     <attributes>
+        <EditorAttribute name="textureOffset" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point"/>
         <EditorAttribute name="typeUuid" type="_2_UUID"/>
         <EditorAttribute name="typeIndex" type="_2_TERRAIN_GROUP_TYPE_INDEX"/>
-        <EditorAttribute name="sortOffset" type="_2_NUMBER"/>
-        <EditorAttribute name="depth" type="_2_NUMBER"/>
-        <EditorAttribute name="foreground" type="_2_BOOLEAN"/>
-        <EditorAttribute name="collision" type="_2_BOOLEAN"/>
-        <EditorAttribute name="destructable" type="_2_BOOLEAN"/>
-        <EditorAttribute name="buildable" type="_2_BOOLEAN"/>
-        <EditorAttribute name="occluder" type="_2_BOOLEAN"/>
+        <EditorAttribute name="sortOffset" type="NUMBER"/>
+        <EditorAttribute name="depth" type="NUMBER"/>
+        <EditorAttribute name="foreground" type="BOOLEAN"/>
+        <EditorAttribute name="collision" type="BOOLEAN"/>
+        <EditorAttribute name="destructable" type="BOOLEAN"/>
+        <EditorAttribute name="buildable" type="BOOLEAN"/>
+        <EditorAttribute name="occluder" type="BOOLEAN"/>
     </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="typeUuid"/>
+        <MetaEditorAttribute name="typeIndex"/>
+        <MetaEditorAttribute name="sortOffset"/>
+        <MetaEditorAttribute name="textureOffset"/>
+        <MetaEditorAttribute name="depth"/>
+        <MetaEditorAttribute name="foreground"/>
+        <MetaEditorAttribute name="collision"/>
+        <MetaEditorAttribute name="destructable"/>
+        <MetaEditorAttribute name="buildable"/>
+        <MetaEditorAttribute name="occluder"/>
+    </metaAttributes>
 
 </AttributeManifest>

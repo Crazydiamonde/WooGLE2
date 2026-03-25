@@ -1,0 +1,11 @@
+<AttributeManifest localName="splat">
+
+    <attributes>
+        <EditorAttribute name="image" type="_1_IMAGE" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="image"/>
+    </metaAttributes>
+
+</AttributeManifest>

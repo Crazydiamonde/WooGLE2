@@ -1,0 +1,19 @@
+<AttributeManifest localName="scene">
+
+    <attributes>
+        <EditorAttribute name="minx"            type="_1_NUMBER" defaultValue="-500"/>
+        <EditorAttribute name="miny"            type="_1_NUMBER" defaultValue="0"/>
+        <EditorAttribute name="maxx"            type="_1_NUMBER" defaultValue="500"/>
+        <EditorAttribute name="maxy"            type="_1_NUMBER" defaultValue="1000"/>
+        <EditorAttribute name="backgroundcolor" type="_1_COLOR"  defaultValue="0,0,0" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="backgroundcolor"/>
+        <MetaEditorAttribute name="minx"/>
+        <MetaEditorAttribute name="miny"/>
+        <MetaEditorAttribute name="maxx"/>
+        <MetaEditorAttribute name="maxy"/>
+    </metaAttributes>
+
+</AttributeManifest>

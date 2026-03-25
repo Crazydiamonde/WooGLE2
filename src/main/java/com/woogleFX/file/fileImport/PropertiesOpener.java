@@ -1,9 +1,16 @@
 package com.woogleFX.file.fileImport;
+import com.woogleFX.assets.Asset;
+import com.woogleFX.assets.AssetLoader;
+import com.woogleFX.engine.AssetManager;
+import com.woogleFX.engine.gui.AssetSelector;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.gameData.ball.PaletteManager;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.engine.fx.PaletteManager;
+import com.woogleFX.assets.GameVersion;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 public class PropertiesOpener extends DefaultHandler {
 
@@ -32,6 +39,21 @@ public class PropertiesOpener extends DefaultHandler {
                     case "1.5" -> GameVersion.VERSION_WOG1_NEW;
                     default -> GameVersion.VERSION_WOG2;
                 });
+            }
+            case "Asset" -> {
+                String type = attributes.getValue("type");
+                String name = attributes.getValue("name");
+                String file = attributes.getValue("file");
+                String version = attributes.getValue("version");
+                try {
+                    AssetManager.addRecentlyOpenedAsset(new AssetManager.AssetDescription((Class<? extends Asset>) Class.forName(type), new File(file), name, switch(version) {
+                        case "1.3" -> GameVersion.VERSION_WOG1_OLD;
+                        case "1.5" -> GameVersion.VERSION_WOG1_NEW;
+                        default -> GameVersion.VERSION_WOG2;
+                    }));
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

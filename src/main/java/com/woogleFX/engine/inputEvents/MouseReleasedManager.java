@@ -1,6 +1,7 @@
 package com.woogleFX.engine.inputEvents;
 
-import com.woogleFX.editorObjects.Asset;
+import com.woogleFX.assets.Asset;
+import com.woogleFX.assets.wog2.WOG2Level.WOG2Level;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
@@ -20,11 +21,11 @@ import com.woogleFX.engine.undoHandling.userActions.AttributeChangeAction;
 import com.woogleFX.engine.undoHandling.userActions.CreateSplinePointAction;
 import com.woogleFX.engine.undoHandling.userActions.MoveSplinePointAction;
 import com.woogleFX.engine.undoHandling.userActions.UserAction;
-import com.woogleFX.gameData.level.WOG1Level;
-import com.woogleFX.gameData.level.WOG2Level;
+import com.woogleFX.assets.wog1.level.WOG1Level;
+import com.woogleFX.assets.GameVersion;
 import com.worldOfGoo.level.BallInstance;
 import com.worldOfGoo2.level._2_Level_BallInstance;
-import com.worldOfGoo2.level._2_Level_Strand;
+import com.worldOfGoo2.level.Strand;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.control.SplitPane;
@@ -45,6 +46,8 @@ public class MouseReleasedManager {
             primaryMouseButton(event);
         } else if (event.getButton() == MouseButton.SECONDARY) {
             FXScene.getScene().setCursor(Cursor.DEFAULT);
+            SelectionManager.setMouseStartX(0);
+            SelectionManager.setMouseStartY(0);
         }
     }
 
@@ -54,15 +57,17 @@ public class MouseReleasedManager {
         Asset level = AssetManager.getAsset();
         if (level == null) return;
 
+        if (!MousePressedManager.wasDragged) MousePressedManager.reselect(event);
+
         // Record the changes made to the selected object.
         // Clear all possible redos if changes have been made.
-        if (level.getSelected() == SelectionManager.getOldSelected() && SelectionManager.getOldAttributes() != null) {
+        if (level.getSelectedComponents() == SelectionManager.getOldSelected() && SelectionManager.getOldAttributes() != null) {
 
             ArrayList<AttributeChangeAction> attributeChangeActions = new ArrayList<>();
 
-            for (int i = 0; i < level.getSelected().length; i++) {
+            for (int i = 0; i < level.getSelectedComponents().length; i++) {
 
-                EditorObject selected = level.getSelected()[i];
+                EditorObject selected = level.getSelectedComponents()[i].getEditorObject();
                 EditorAttribute[] oldAttributes = SelectionManager.getOldAttributes()[i];
 
                 for (EditorAttribute attribute : selected.getAttributes()) {
@@ -93,8 +98,8 @@ public class MouseReleasedManager {
         SelectionManager.setDragSettings(DragSettings.NULL);
         // If we have started placing a strand, attempt to complete the strand.
         if (SelectionManager.getMode() == SelectionManager.STRAND && SelectionManager.getStrand1Gooball() != null) {
-            if (level instanceof WOG1Level wog1Level) {
-                for (EditorObject ball : wog1Level.getLevel().toArray(new EditorObject[0])) {
+            if (level.getVersion() == GameVersion.VERSION_WOG1_OLD || level.getVersion() == GameVersion.VERSION_WOG1_NEW) {
+                for (EditorObject ball : level.getObjects().toArray(new EditorObject[0])) {
                     if (ball instanceof BallInstance ballInstance) {
                         if (ball != SelectionManager.getStrand1Gooball()) {
 
@@ -102,13 +107,11 @@ public class MouseReleasedManager {
                                 if (!objectComponent.isVisible()) continue;
                                 if (objectComponent.mouseIntersection(mouseX, mouseY) != DragSettings.NULL) {
 
-                                    EditorObject strand = ObjectCreator.create("Strand", ((WOG1Level)level).getLevelObject(), level.getVersion());
-                                    if (strand == null) continue;
+                                    EditorObject strand = ObjectCreator.create(com.worldOfGoo.level.Strand.class, ((WOG1Level)level).getLevel(), level.getVersion());
 
                                     strand.setAttribute("gb1", SelectionManager.getStrand1Gooball().getAttribute("id").stringValue());
                                     strand.setAttribute("gb2", ball.getAttribute("id").stringValue());
 
-                                    ((WOG1Level)level).getLevel().add(strand);
                                     ObjectAdder.addAnything(strand);
 
                                     SelectionManager.getStrand1Gooball().update();
@@ -121,9 +124,9 @@ public class MouseReleasedManager {
                         }
                     }
                 }
-            } else if (level instanceof WOG2Level wog2Level) {
+            } else {
                 boolean foundAlready = false;
-                for (EditorObject ball : wog2Level.getObjects().toArray(new EditorObject[0])) {
+                for (EditorObject ball : level.getObjects().toArray(new EditorObject[0])) {
                     if (ball instanceof _2_Level_BallInstance ballInstance) {
                         if (ball != SelectionManager.getStrand1Gooball()) {
 
@@ -131,14 +134,14 @@ public class MouseReleasedManager {
                                 if (!objectComponent.isVisible()) continue;
                                 if (objectComponent.mouseIntersection(mouseX, mouseY) != DragSettings.NULL) {
 
-                                    EditorObject strand = ObjectCreator.create2(_2_Level_Strand.class, wog2Level.getLevel(), "strands", level.getVersion());
+                                    EditorObject strand = ObjectCreator.create(Strand.class, ((WOG2Level)level).getLevel(), "strands", level.getVersion());
                                     if (strand == null) continue;
 
                                     strand.setAttribute("ball1UID", SelectionManager.getStrand1Gooball().getAttribute("uid").stringValue());
                                     strand.setAttribute("ball2UID", ball.getAttribute("uid").stringValue());
                                     strand.setAttribute("type", SelectionManager.getStrand1Gooball().getAttribute("type").stringValue());
 
-                                    wog2Level.getObjects().add(strand);
+                                    level.getObjects().add(strand);
                                     ObjectAdder.addAnything(strand);
 
                                     SelectionManager.getStrand1Gooball().update();

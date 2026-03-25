@@ -1,0 +1,39 @@
+<AttributeManifest localName="part">
+
+    <attributes>
+        <EditorAttribute name="name" type="STRING" required="true"/>
+        <EditorAttribute name="layer" type="_1_NUMBER" required="true"/>
+        <EditorAttribute name="x" type="_1_NUMBER" required="true"/>
+        <EditorAttribute name="y" type="_1_NUMBER" required="true"/>
+        <EditorAttribute name="image" type="_1_IMAGE" required="true"/>
+        <EditorAttribute name="scale" type="_1_NUMBER" defaultValue="1" required="true"/>
+        <EditorAttribute name="rotate" type="BOOLEAN"/>
+        <EditorAttribute name="stretch" type="_1_NUMBER"/>
+        <EditorAttribute name="xrange" type="_1_POSITION" defaultValue="0,0"/>
+        <EditorAttribute name="yrange" type="_1_POSITION" defaultValue="0,0"/>
+        <EditorAttribute name="eye" type="BOOLEAN"/>
+        <EditorAttribute name="pupil" type="_1_IMAGE"/>
+        <EditorAttribute name="pupilinset" type="_1_NUMBER"/>
+        <EditorAttribute name="state" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="image"/>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+        <MetaEditorAttribute name="scale"/>
+        <MetaEditorAttribute name="layer"/>
+        <MetaEditorAttribute name="rotate"/>
+        <MetaEditorAttribute name="stretch"/>
+        <MetaEditorAttribute name="state"/>
+        <MetaEditorAttribute name="Eye" openByDefault="false">
+            <MetaEditorAttribute name="eye"/>
+            <MetaEditorAttribute name="xrange"/>
+            <MetaEditorAttribute name="yrange"/>
+            <MetaEditorAttribute name="pupil"/>
+            <MetaEditorAttribute name="pupilinset"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

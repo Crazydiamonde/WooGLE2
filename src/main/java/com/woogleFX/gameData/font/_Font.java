@@ -1,6 +1,6 @@
 package com.woogleFX.gameData.font;
 
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 
 import java.util.ArrayList;
 

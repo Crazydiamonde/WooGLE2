@@ -1,0 +1,13 @@
+<AttributeManifest localName="ocd">
+
+    <attributes>
+        <EditorAttribute name="type"  type="_1_OCD_TYPE"            required="true"/>
+        <EditorAttribute name="value" type="_1_NUMBER_NON_NEGATIVE" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="value"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -1,8 +1,8 @@
-<AttributeManifest>
+<AttributeManifest localName="AttenuationFunction">
 
     <attributes>
         <EditorAttribute name="frames" type="_2_LIST_NUMBER" required="true"/>
-        <EditorAttribute name="totalLength" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="totalLength" type="NUMBER" required="true"/>
     </attributes>
 
     <metaAttributes>

@@ -46,7 +46,8 @@ public abstract class AttributeAdapter {
 
             @Override
             public EditorAttribute getValue() {
-                editorAttribute.setValue(object.getChildren(realName).get(0).getAttributes()[0].stringValue());
+                if (!object.getChildren(realName).isEmpty())
+                    editorAttribute.setValue(object.getChildren(realName).get(0).getAttributes()[0].stringValue());
                 return editorAttribute;
             }
 

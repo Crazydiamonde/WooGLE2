@@ -1,0 +1,23 @@
+<AttributeManifest localName="Sound">
+
+    <attributes>
+        <EditorAttribute name="collisionSounds" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.items.CollisionSound" required="true"/>
+        <EditorAttribute name="minCollisionCosine" type="STRING" required="true"/>
+        <EditorAttribute name="collisionTimeout" type="STRING" required="true"/>
+        <EditorAttribute name="collisionLoopSound" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.SoundID" required="true"/>
+        <EditorAttribute name="minCollisionLoopAngularVelocity" type="STRING" required="true"/>
+        <EditorAttribute name="maxCollisionLoopAngularVelocity" type="STRING" required="true"/>
+        <EditorAttribute name="collisionLoopBlendSpeed" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="collisionSounds"/>
+        <MetaEditorAttribute name="minCollisionCosine"/>
+        <MetaEditorAttribute name="collisionTimeout"/>
+        <MetaEditorAttribute name="collisionLoopSound"/>
+        <MetaEditorAttribute name="minCollisionLoopAngularVelocity"/>
+        <MetaEditorAttribute name="maxCollisionLoopAngularVelocity"/>
+        <MetaEditorAttribute name="collisionLoopBlendSpeed"/>
+    </metaAttributes>
+
+</AttributeManifest>

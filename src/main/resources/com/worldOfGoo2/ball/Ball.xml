@@ -1,138 +1,148 @@
 <AttributeManifest localName="Ball">
 
     <attributes>
-        <EditorAttribute name="name" type="_2_STRING" required="true"/>
-        <EditorAttribute name="width" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="height" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="name" type="STRING" required="true"/>
+        <EditorAttribute name="width" type="NUMBER" required="true"/>
+        <EditorAttribute name="height" type="NUMBER" required="true"/>
         <EditorAttribute name="shape" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.Shape"/>
-        <EditorAttribute name="sizeVariance" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="mass" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="towerMass" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="dragMass" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="destroyForce" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxDropDistance" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxStrands" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="walkSpeed" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="climbSpeed" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="speedVariance" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="antiGravFactor" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="isAntiGravAttached" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isAntiGravUnattached" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="dampening" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="isEditable" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isDraggable" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isDetachable" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="diesOnDetach" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isInvulnerable" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isInvulnerableToLava" type="_2_BOOLEAN"/>
-        <EditorAttribute name="isStickyAttached" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isStickyUnattached" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="attachToSameTypeOnly" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isGrumpy" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isStatic" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isStaticWhenSleeping" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="selectionMarkerRadius" type="_2_NUMBER"/>
-        <EditorAttribute name="attachedMaginSS" type="_2_NUMBER"/>
-        <EditorAttribute name="unattachedMarginSS" type="_2_NUMBER"/>
-        <EditorAttribute name="health" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="blinkColor" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_Color"/>
-        <EditorAttribute name="jumpMultiplierMin" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="jumpMultiplierMax" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="collideAttached" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="collideWithAttached" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="allowAttachmentsWhenStuck" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="allowAttachmentsWhenFalling" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="motorMaxForce" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="motorMaxForceUndiscovered" type="_2_NUMBER"/>
-        <EditorAttribute name="isSuckable" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="opensExitUnattached" type="_2_BOOLEAN"/>
-        <EditorAttribute name="affectsAutoboundsAttached" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="affectsAutoboundsUnattached" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="burnTime" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="detonateForce" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="detonateRadius" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="detonateKillBalls" type="_2_BOOLEAN"/>
-        <EditorAttribute name="detonateKillItems" type="_2_BOOLEAN"/>
-        <EditorAttribute name="detonateKillTerrain" type="_2_BOOLEAN"/>
-        <EditorAttribute name="detonateParticleEffect" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="autoAttach" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isClimber" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="attachedParticleBarrierFactor" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="sizeVariance" type="NUMBER" required="true"/>
+        <EditorAttribute name="mass" type="NUMBER" required="true"/>
+        <EditorAttribute name="towerMass" type="NUMBER" required="true"/>
+        <EditorAttribute name="dragMass" type="NUMBER" required="true"/>
+        <EditorAttribute name="destroyForce" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxDropDistance" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxStrands" type="NUMBER" required="true"/>
+        <EditorAttribute name="walkSpeed" type="NUMBER" required="true"/>
+        <EditorAttribute name="climbSpeed" type="NUMBER" required="true"/>
+        <EditorAttribute name="speedVariance" type="NUMBER" required="true"/>
+        <EditorAttribute name="antiGravFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="isAntiGravAttached" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isAntiGravUnattached" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="dampening" type="NUMBER" required="true"/>
+        <EditorAttribute name="rotationalDampening" type="NUMBER"/>
+        <EditorAttribute name="isEditable" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isDraggable" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isDetachable" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="diesOnDetach" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isInvulnerable" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isInvulnerableToLava" type="BOOLEAN"/>
+        <EditorAttribute name="isStickyAttached" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isStickyUnattached" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="attachToSameTypeOnly" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isGrumpy" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isStatic" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isStaticWhenSleeping" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="selectionMarkerRadius" type="NUMBER"/>
+        <EditorAttribute name="countMoveOnUnatachedRelease" type="BOOLEAN"/>
+        <EditorAttribute name="attachedMaginSS" type="NUMBER"/>
+        <EditorAttribute name="unattachedMarginSS" type="NUMBER"/>
+        <EditorAttribute name="health" type="NUMBER" required="true"/>
+        <EditorAttribute name="blinkColor" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.Color"/>
+        <EditorAttribute name="jumpMultiplierMin" type="NUMBER" required="true"/>
+        <EditorAttribute name="jumpMultiplierMax" type="NUMBER" required="true"/>
+        <EditorAttribute name="collideAttached" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="collideWithAttached" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="collideWithParticlesAttached" type="BOOLEAN"/>
+        <EditorAttribute name="collisionGroup" type="NUMBER"/>
+        <EditorAttribute name="allowAttachmentsWhenStuck" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="allowAttachmentsWhenFalling" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="motorMaxForce" type="NUMBER" required="true"/>
+        <EditorAttribute name="motorMaxForceUndiscovered" type="NUMBER"/>
+        <EditorAttribute name="isSuckable" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="opensExitUnattached" type="BOOLEAN"/>
+        <EditorAttribute name="affectsAutoboundsAttached" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="affectsAutoboundsUnattached" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="burnTime" type="NUMBER" required="true"/>
+        <EditorAttribute name="detonateForce" type="NUMBER" required="true"/>
+        <EditorAttribute name="detonateRadius" type="NUMBER" required="true"/>
+        <EditorAttribute name="detonateKillBalls" type="BOOLEAN"/>
+        <EditorAttribute name="detonateKillItems" type="BOOLEAN"/>
+        <EditorAttribute name="detonateKillTerrain" type="BOOLEAN"/>
+        <EditorAttribute name="detonateParticleEffect" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="autoAttach" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isClimber" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="attachedParticleBarrierFactor" type="NUMBER" required="true"/>
         <EditorAttribute name="material" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.Material"/>
         <EditorAttribute name="contains" type="_2_LIST_CHILD" required="true"/>
-        <EditorAttribute name="popSoundId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_SoundID"/>
-        <EditorAttribute name="popParticlesId" type="_2_STRING" required="true"/>
-        <EditorAttribute name="fireworksParticleEffect" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="trailEffectId" type="_2_STRING" required="true"/>
-        <EditorAttribute name="trailParticleEffect" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="trailEffectEnabled" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="popDuration" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="popDelayMin" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="popDelayMax" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="hideEyes" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="botoxEyesWhenAttached" type="_2_BOOLEAN"/>
-        <EditorAttribute name="isBehindStrands" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="wakeOtherBallsAtDistance" type="_2_BOOLEAN" required="true"/>
+        <EditorAttribute name="popSoundId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.SoundID"/>
+        <EditorAttribute name="popParticlesId" type="STRING" required="true"/>
+        <EditorAttribute name="despawnTriggersFullDeath" type="BOOLEAN"/>
+        <EditorAttribute name="deathParticleEffect" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="fireworksParticleEffect" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="trailEffectId" type="STRING" required="true"/>
+        <EditorAttribute name="trailParticleEffect" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="trailEffectEnabled" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="popDuration" type="NUMBER" required="true"/>
+        <EditorAttribute name="popDelayMin" type="NUMBER" required="true"/>
+        <EditorAttribute name="popDelayMax" type="NUMBER" required="true"/>
+        <EditorAttribute name="hideEyes" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="botoxEyesWhenAttached" type="BOOLEAN"/>
+        <EditorAttribute name="isBehindStrands" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="wakeOtherBallsAtDistance" type="BOOLEAN" required="true"/>
         <EditorAttribute name="spawnType" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.Type"/>
-        <EditorAttribute name="decay" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="flingForceFactor" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="flingStrandMaxLength" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="autoDisable" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isStacking" type="_2_BOOLEAN"/>
-        <EditorAttribute name="maxDragForce" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="dragDampeningFactor" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="alwaysLookAtMouse" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="hingeDrag" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="maxAttachSpeed" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="jumpOnWakeup" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="thrust" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="useDistantSounds" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="canBeRotatedByHand" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="stencil" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="stencilWhenAttached" type="_2_BOOLEAN"/>
-        <EditorAttribute name="canSuckLiquidExternally" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="canSuckLiquidFromPipe" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="liquidParticlesPerSecond" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="initialBallLiquidAmount" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxBallLiquidAmount" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxStrandLiquidAmount" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandSuckLiquidParticlesPerSecond" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="hitVelocityAccumulationLimit" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="shadowImageId" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="shadowImageIsAdditive" type="_2_BOOLEAN"/>
+        <EditorAttribute name="decay" type="NUMBER" required="true"/>
+        <EditorAttribute name="flingForceFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="flingStrandMaxLength" type="NUMBER" required="true"/>
+        <EditorAttribute name="autoDisable" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isStacking" type="BOOLEAN"/>
+        <EditorAttribute name="maxDragForce" type="NUMBER" required="true"/>
+        <EditorAttribute name="dragDampeningFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="alwaysLookAtMouse" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="hingeDrag" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="maxAttachSpeed" type="NUMBER" required="true"/>
+        <EditorAttribute name="jumpOnWakeup" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="thrust" type="NUMBER" required="true"/>
+        <EditorAttribute name="useDistantSounds" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="canBeRotatedByHand" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="stencil" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="stencilWhenAttached" type="BOOLEAN"/>
+        <EditorAttribute name="canSuckLiquidExternally" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="canSuckLiquidFromPipe" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="liquidParticlesPerSecond" type="NUMBER" required="true"/>
+        <EditorAttribute name="initialBallLiquidAmount" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxBallLiquidAmount" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxStrandLiquidAmount" type="NUMBER" required="true"/>
+        <EditorAttribute name="liquidSinkOffset" type="NUMBER"/>
+        <EditorAttribute name="strandSuckLiquidParticlesPerSecond" type="NUMBER" required="true"/>
+        <EditorAttribute name="hitVelocityAccumulationLimit" type="NUMBER" required="true"/>
+        <EditorAttribute name="shadowImageId" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="shadowImageIsAdditive" type="BOOLEAN"/>
         <EditorAttribute name="strandType" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.StrandType"/>
-        <EditorAttribute name="springConstMin" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="springConstMax" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandDampening" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxReplacementStrandLength" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxNormalStrandLength" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="minStrandLength" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandShrinkLength" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxStretchForce" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxCompressForce" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandDensity" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandThickness" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="isSingleStrandAllowed" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isSingleStrandAllowedEvenForOneStrand" type="_2_BOOLEAN"/>
-        <EditorAttribute name="allowBallToStrandConversion" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="swallowBall" type="_2_BOOLEAN"/>
-        <EditorAttribute name="useStrandConnect" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="isStrandWalkable" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="canShrinkStrand" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="strandImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="strandInactiveImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="strandInactiveOverlayImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="strandIgniteDelay" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandBurnSpeed" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandFireParticlesId" type="_2_STRING" required="true"/>
-        <EditorAttribute name="strandBurntImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="strandBackgroundImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="detachStrandImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="detachStrandMaxLength" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="dragMarkerImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="detachMarkerImageId" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="markerRotSpeed" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="stainLiquidType" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_LiquidType"/>
+        <EditorAttribute name="springConstMin" type="NUMBER" required="true"/>
+        <EditorAttribute name="springConstMax" type="NUMBER" required="true"/>
+        <EditorAttribute name="strandDampening" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxReplacementStrandLength" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxNormalStrandLength" type="NUMBER" required="true"/>
+        <EditorAttribute name="minStrandLength" type="NUMBER" required="true"/>
+        <EditorAttribute name="strandShrinkLength" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxStretchForce" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxCompressForce" type="NUMBER" required="true"/>
+        <EditorAttribute name="maxStrandAngle" type="NUMBER"/>
+        <EditorAttribute name="maxStrandSeparation" type="NUMBER"/>
+        <EditorAttribute name="strandDensity" type="NUMBER" required="true"/>
+        <EditorAttribute name="strandThickness" type="NUMBER" required="true"/>
+        <EditorAttribute name="strandGrowMultiplier" type="NUMBER"/>
+        <EditorAttribute name="isSingleStrandAllowed" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isSingleStrandAllowedEvenForOneStrand" type="BOOLEAN"/>
+        <EditorAttribute name="allowBallToStrandConversion" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="swallowBall" type="BOOLEAN"/>
+        <EditorAttribute name="useStrandConnect" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="isStrandWalkable" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="canShrinkStrand" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="strandImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="strandInactiveImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="strandInactiveOverlayImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="strandIgniteDelay" type="NUMBER" required="true"/>
+        <EditorAttribute name="strandBurnSpeed" type="NUMBER" required="true"/>
+        <EditorAttribute name="strandFireParticlesId" type="STRING" required="true"/>
+        <EditorAttribute name="strandBurntImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="strandBackgroundImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="detachStrandImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="detachStrandMaxLength" type="NUMBER" required="true"/>
+        <EditorAttribute name="dragMarkerImageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="detachMarkerImageId" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="markerRotSpeed" type="NUMBER" required="true"/>
+        <EditorAttribute name="stainLiquidType" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.LiquidType"/>
         <EditorAttribute name="deselectAttenuationFunc" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.AttenuationFunction"/>
         <EditorAttribute name="selectAttenuationFunc" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.AttenuationFunction"/>
         <EditorAttribute name="dropAttenuationFunc" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.AttenuationFunction"/>
@@ -141,74 +151,64 @@
         <EditorAttribute name="ballParts" type="_2_LIST_CHILD" required="true" childAlias="com.worldOfGoo2.ball.Part"/>
         <EditorAttribute name="bodyPart" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.PartName"/>
         <EditorAttribute name="stateAnimations" type="_2_LIST_CHILD" required="true" childAlias="com.worldOfGoo2.ball.StateAnimation"/>
-        <EditorAttribute name="splatImageIds" type="_2_LIST_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
+        <EditorAttribute name="splatImageIds" type="_2_LIST_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
         <EditorAttribute name="soundEvents" type="_2_LIST_CHILD" required="true" childAlias="com.worldOfGoo2.ball.SoundEvent"/>
         <EditorAttribute name="flashAnimation" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.FlashAnimation"/>
+        <EditorAttribute name="flashAnimationPreLiquidLayerTextureIndices" type="_2_LIST_NUMBER" required="true"/>
         <EditorAttribute name="stateScales" type="_2_LIST_NUMBER" required="true"/>
         <EditorAttribute name="particleEffects" type="_2_LIST_CHILD" required="true" childAlias="com.worldOfGoo2.ball.ParticleEffect"/>
-        <EditorAttribute name="stableFluidsDensityFactor" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_Color"/>
-        <EditorAttribute name="stableFluidsMinTrailVelocity" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="stableFluidsDensityRange" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="isLauncher" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="canBeSuckedByLauncher" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="whenAttachedRenderOnTop" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="lighting" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="popSpawnItems" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="popSpawnItemProbability" type="_2_NUMBER"/>
-        <EditorAttribute name="popSpawnItemCountRange" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="popSpawnItemRadiusRange" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="popSpawnItemScaleRange" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="strandShatterItem" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="strandShatterItemProbability" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandShatterParticleEffect" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="strandShatterParticleEffectProbability" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="strandShatterFragmentSize" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="unwalkableTime" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="dynamicLightingFactor" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="attachedDynamicLightingFactor" type="_2_NUMBER"/>
-        <EditorAttribute name="undiscoveredDynamicLightingFactor" type="_2_NUMBER"/>
-        <EditorAttribute name="shadow" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="neededLighting" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="sortOffset" type="_2_NUMBER"/>
-        <EditorAttribute name="canPinToJelly" type="_2_BOOLEAN"/>
-        <EditorAttribute name="hideWhenPinnedToJelly" type="_2_BOOLEAN"/>
-        <EditorAttribute name="popOnUnpinFromJelly" type="_2_BOOLEAN"/>
-        <EditorAttribute name="canStrandCutJelly" type="_2_BOOLEAN"/>
-        <EditorAttribute name="inactiveStrandCollideWithJelly" type="_2_BOOLEAN"/>
-        <EditorAttribute name="renderInJellyBackground" type="_2_BOOLEAN"/>
-        <EditorAttribute name="thrusterStableFluidsImage" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="markerColor" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_Color"/>
-        <EditorAttribute name="zoomFactorAttached" type="_2_NUMBER"/>
-        <EditorAttribute name="zoomFactorUnattached" type="_2_NUMBER"/>
-        <EditorAttribute name="zoomSpeed" type="_2_NUMBER"/>
-        <EditorAttribute name="liquidParticlesRadiusScale" type="_2_NUMBER"/>
-        <EditorAttribute name="structureFillingLayers" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.ball.StructureFillingLayer"/>
-        <EditorAttribute name="ropeOffsetRadiusScale" type="_2_NUMBER"/>
-        <EditorAttribute name="ropeStiffness" type="_2_NUMBER"/>
-        <EditorAttribute name="ropeDamping" type="_2_NUMBER"/>
-        <EditorAttribute name="collideWithParticlesAttached" type="_2_BOOLEAN"/>
-        <EditorAttribute name="liquidSinkOffset" type="_2_NUMBER"/>
-        <EditorAttribute name="strandGrowMultiplier" type="_2_NUMBER"/>
-        <EditorAttribute name="renderInPlayMode" type="_2_BOOLEAN"/>
-        <EditorAttribute name="canActOnBalls" type="_2_BOOLEAN"/>
-        <EditorAttribute name="visibilityScale" type="_2_NUMBER"/>
-        <EditorAttribute name="rotationalDampening" type="_2_NUMBER"/>
-        <EditorAttribute name="collisionGroup" type="_2_NUMBER"/>
-        <EditorAttribute name="despawnTriggersFullDeath" type="_2_BOOLEAN"/>
-        <EditorAttribute name="deathParticleEffect" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="flashAnimationPreLiquidLayerTextureIndices" type="_2_NUMBER"/>
-        <EditorAttribute name="inputPipeForceVariation" type="_2_NUMBER"/>
-        <EditorAttribute name="laserCount" type="_2_NUMBER"/>
-        <EditorAttribute name="laserGradientStart" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Color"/>
-        <EditorAttribute name="laserGradientEnd" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Color"/>
-        <EditorAttribute name="laserOverrideImage" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="countMoveOnUnatachedRelease" type="_2_BOOLEAN"/>
-        <EditorAttribute name="maxStrandAngle" type="_2_NUMBER"/>
-        <EditorAttribute name="maxStrandSeparation" type="_2_NUMBER"/>
+        <EditorAttribute name="stableFluidsDensityFactor" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.Color"/>
+        <EditorAttribute name="stableFluidsMinTrailVelocity" type="NUMBER" required="true"/>
+        <EditorAttribute name="stableFluidsDensityRange" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="isLauncher" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="canBeSuckedByLauncher" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="inputPipeForceVariation" type="NUMBER"/>
+        <EditorAttribute name="whenAttachedRenderOnTop" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="renderInPlayMode" type="BOOLEAN"/>
+        <EditorAttribute name="canActOnBalls" type="BOOLEAN"/>
+        <EditorAttribute name="lighting" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="popSpawnItems" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc.UUID" required="true"/>
+        <EditorAttribute name="popSpawnItemProbability" type="NUMBER"/>
+        <EditorAttribute name="popSpawnItemCountRange" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="popSpawnItemRadiusRange" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="popSpawnItemScaleRange" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="strandShatterItem" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="strandShatterItemProbability" type="NUMBER" required="true"/>
+        <EditorAttribute name="strandShatterParticleEffect" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="strandShatterParticleEffectProbability" type="NUMBER" required="true"/>
+        <EditorAttribute name="strandShatterFragmentSize" type="NUMBER" required="true"/>
+        <EditorAttribute name="unwalkableTime" type="NUMBER" required="true"/>
+        <EditorAttribute name="dynamicLightingFactor" type="NUMBER" required="true"/>
+        <EditorAttribute name="attachedDynamicLightingFactor" type="NUMBER"/>
+        <EditorAttribute name="undiscoveredDynamicLightingFactor" type="NUMBER"/>
+        <EditorAttribute name="shadow" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="neededLighting" type="NUMBER" required="true"/>
+        <EditorAttribute name="sortOffset" type="NUMBER"/>
+        <EditorAttribute name="canPinToJelly" type="BOOLEAN"/>
+        <EditorAttribute name="hideWhenPinnedToJelly" type="BOOLEAN"/>
+        <EditorAttribute name="popOnUnpinFromJelly" type="BOOLEAN"/>
+        <EditorAttribute name="canStrandCutJelly" type="BOOLEAN"/>
+        <EditorAttribute name="inactiveStrandCollideWithJelly" type="BOOLEAN"/>
+        <EditorAttribute name="renderInJellyBackground" type="BOOLEAN"/>
+        <EditorAttribute name="thrusterStableFluidsImage" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="markerColor" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.Color"/>
+        <EditorAttribute name="zoomFactorAttached" type="NUMBER"/>
+        <EditorAttribute name="zoomFactorUnattached" type="NUMBER"/>
+        <EditorAttribute name="zoomSpeed" type="NUMBER"/>
+        <EditorAttribute name="liquidParticlesRadiusScale" type="NUMBER"/>
+        <EditorAttribute name="structureFillingLayers" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.ball.StructureFillingLayer" required="true"/>
+        <EditorAttribute name="ropeOffsetRadiusScale" type="NUMBER"/>
+        <EditorAttribute name="ropeStiffness" type="NUMBER"/>
+        <EditorAttribute name="ropeDamping" type="NUMBER"/>
+        <EditorAttribute name="visibilityScale" type="NUMBER"/>
+        <EditorAttribute name="laserCount" type="NUMBER"/>
+        <EditorAttribute name="laserGradientStart" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Color"/>
+        <EditorAttribute name="laserGradientEnd" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Color"/>
+        <EditorAttribute name="laserOverrideImage" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID"/>
     </attributes>
 
     <metaAttributes>
-        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="name" description="Name"/>
         <MetaEditorAttribute name="width"/>
         <MetaEditorAttribute name="height"/>
         <MetaEditorAttribute name="shape"/>
@@ -216,84 +216,64 @@
         <MetaEditorAttribute name="mass"/>
         <MetaEditorAttribute name="towerMass"/>
         <MetaEditorAttribute name="dragMass"/>
-        <MetaEditorAttribute name="destroyForce"/>
-        <MetaEditorAttribute name="maxDropDistance"/>
-        <MetaEditorAttribute name="maxStrands"/>
-        <MetaEditorAttribute name="walkSpeed"/>
-        <MetaEditorAttribute name="climbSpeed"/>
-        <MetaEditorAttribute name="speedVariance"/>
-        <MetaEditorAttribute name="antiGravFactor"/>
-        <MetaEditorAttribute name="isAntiGravAttached"/>
-        <MetaEditorAttribute name="isAntiGravUnattached"/>
-        <MetaEditorAttribute name="dampening"/>
-        <MetaEditorAttribute name="diesOnDetach"/>
-        <MetaEditorAttribute name="selectionMarkerRadius"/>
-        <MetaEditorAttribute name="attachedMaginSS"/>
-        <MetaEditorAttribute name="unattachedMarginSS"/>
-        <MetaEditorAttribute name="health"/>
-        <MetaEditorAttribute name="jumpMultiplierMin"/>
-        <MetaEditorAttribute name="jumpMultiplierMax"/>
-        <MetaEditorAttribute name="collideAttached"/>
-        <MetaEditorAttribute name="collideWithAttached"/>
-        <MetaEditorAttribute name="allowAttachmentsWhenStuck"/>
-        <MetaEditorAttribute name="allowAttachmentsWhenFalling"/>
-        <MetaEditorAttribute name="motorMaxForce"/>
-        <MetaEditorAttribute name="motorMaxForceUndiscovered"/>
-        <MetaEditorAttribute name="autoAttach"/>
-        <MetaEditorAttribute name="isClimber"/>
-        <MetaEditorAttribute name="attachedParticleBarrierFactor"/>
-        <MetaEditorAttribute name="material"/>
-        <MetaEditorAttribute name="contains"/>
-        <MetaEditorAttribute name="wakeOtherBallsAtDistance"/>
-        <MetaEditorAttribute name="spawnType"/>
-        <MetaEditorAttribute name="decay"/>
-        <MetaEditorAttribute name="flingForceFactor"/>
-        <MetaEditorAttribute name="flingStrandMaxLength"/>
-        <MetaEditorAttribute name="autoDisable"/>
-        <MetaEditorAttribute name="isStacking"/>
-        <MetaEditorAttribute name="maxDragForce"/>
-        <MetaEditorAttribute name="dragDampeningFactor"/>
-        <MetaEditorAttribute name="maxAttachSpeed"/>
-        <MetaEditorAttribute name="jumpOnWakeup"/>
-        <MetaEditorAttribute name="thrust"/>
-        <MetaEditorAttribute name="useDistantSounds"/>
-        <MetaEditorAttribute name="stencil"/>
-        <MetaEditorAttribute name="stencilWhenAttached"/>
-        <MetaEditorAttribute name="hitVelocityAccumulationLimit"/>
-        <MetaEditorAttribute name="markerRotSpeed"/>
-        <MetaEditorAttribute name="stainLiquidType"/>
         <MetaEditorAttribute name="bodyPart"/>
-        <MetaEditorAttribute name="splatImageIds"/>
-        <MetaEditorAttribute name="soundEvents"/>
-        <MetaEditorAttribute name="flashAnimation"/>
-        <MetaEditorAttribute name="particleEffects"/>
-        <MetaEditorAttribute name="stableFluidsDensityFactor"/>
-        <MetaEditorAttribute name="stableFluidsMinTrailVelocity"/>
-        <MetaEditorAttribute name="stableFluidsDensityRange"/>
-        <MetaEditorAttribute name="isLauncher"/>
-        <MetaEditorAttribute name="canBeSuckedByLauncher"/>
-        <MetaEditorAttribute name="unwalkableTime"/>
-        <MetaEditorAttribute name="despawnTriggersFullDeath"/>
-        <MetaEditorAttribute name="deathParticleEffect"/>
-        <MetaEditorAttribute name="flashAnimationPreLiquidLayerTextureIndices"/>
-        <MetaEditorAttribute name="inputPipeForceVariation"/>
-        <MetaEditorAttribute name="countMoveOnUnatachedRelease"/>
-
         <MetaEditorAttribute name="Behavior" openByDefault="false">
+            <MetaEditorAttribute name="Movement" openByDefault="false">
+                <MetaEditorAttribute name="walkSpeed"/>
+                <MetaEditorAttribute name="climbSpeed"/>
+                <MetaEditorAttribute name="speedVariance"/>
+                <MetaEditorAttribute name="jumpMultiplierMin"/>
+                <MetaEditorAttribute name="jumpMultiplierMax"/>
+                <MetaEditorAttribute name="maxDropDistance"/>
+                <MetaEditorAttribute name="hitVelocityAccumulationLimit"/>
+            </MetaEditorAttribute>
+            <MetaEditorAttribute name="Physics" openByDefault="false">
+                <MetaEditorAttribute name="material"/>
+                <MetaEditorAttribute name="dampening"/>
+                <MetaEditorAttribute name="collideWithParticlesAttached"/>
+                <MetaEditorAttribute name="rotationalDampening"/>
+                <MetaEditorAttribute name="collisionGroup"/>
+                <MetaEditorAttribute name="antiGravFactor"/>
+                <MetaEditorAttribute name="isAntiGravAttached"/>
+                <MetaEditorAttribute name="isAntiGravUnattached"/>
+            </MetaEditorAttribute>
+            <MetaEditorAttribute name="health"/>
+            <MetaEditorAttribute name="destroyForce"/>
+            <MetaEditorAttribute name="motorMaxForce"/>
+            <MetaEditorAttribute name="motorMaxForceUndiscovered"/>
+            <MetaEditorAttribute name="autoAttach"/>
+            <MetaEditorAttribute name="isClimber"/>
+            <MetaEditorAttribute name="attachedParticleBarrierFactor"/>
+            <MetaEditorAttribute name="decay"/>
+            <MetaEditorAttribute name="autoDisable"/>
+            <MetaEditorAttribute name="isStacking"/>
+            <MetaEditorAttribute name="maxDragForce"/>
+            <MetaEditorAttribute name="dragDampeningFactor"/>
+            <MetaEditorAttribute name="maxAttachSpeed"/>
+            <MetaEditorAttribute name="jumpOnWakeup"/>
+            <MetaEditorAttribute name="thrust"/>
             <MetaEditorAttribute name="canActOnBalls"/>
+            <MetaEditorAttribute name="isLauncher"/>
+            <MetaEditorAttribute name="unwalkableTime"/>
+            <MetaEditorAttribute name="despawnTriggersFullDeath"/>
         </MetaEditorAttribute>
-
         <MetaEditorAttribute name="Cosmetic" openByDefault="false">
+            <MetaEditorAttribute name="stencil"/>
+            <MetaEditorAttribute name="stencilWhenAttached"/>
+            <MetaEditorAttribute name="markerRotSpeed"/>
+            <MetaEditorAttribute name="stainLiquidType"/>
+            <MetaEditorAttribute name="splatImageIds"/>
+            <MetaEditorAttribute name="useDistantSounds"/>
+            <MetaEditorAttribute name="selectionMarkerRadius"/>
+            <MetaEditorAttribute name="attachedMaginSS"/>
+            <MetaEditorAttribute name="unattachedMarginSS"/>
             <MetaEditorAttribute name="blinkColor"/>
-            <MetaEditorAttribute name="fireworksParticleEffect"/>
-            <MetaEditorAttribute name="trailEffectId"/>
-            <MetaEditorAttribute name="trailParticleEffect"/>
-            <MetaEditorAttribute name="trailEffectEnabled"/>
             <MetaEditorAttribute name="hideEyes"/>
             <MetaEditorAttribute name="botoxEyesWhenAttached"/>
             <MetaEditorAttribute name="isBehindStrands"/>
             <MetaEditorAttribute name="shadowImageId"/>
             <MetaEditorAttribute name="shadowImageIsAdditive"/>
+            <MetaEditorAttribute name="flashAnimation"/>
             <MetaEditorAttribute name="dragMarkerImageId"/>
             <MetaEditorAttribute name="detachMarkerImageId"/>
             <MetaEditorAttribute name="alwaysLookAtMouse"/>
@@ -304,6 +284,13 @@
                 <MetaEditorAttribute name="laserGradientStart"/>
                 <MetaEditorAttribute name="laserGradientEnd"/>
                 <MetaEditorAttribute name="laserOverrideImage"/>
+            </MetaEditorAttribute>
+            <MetaEditorAttribute name="Particle Effects" openByDefault="false">
+                <MetaEditorAttribute name="deathParticleEffect"/>
+                <MetaEditorAttribute name="fireworksParticleEffect"/>
+                <MetaEditorAttribute name="trailEffectId"/>
+                <MetaEditorAttribute name="trailParticleEffect"/>
+                <MetaEditorAttribute name="trailEffectEnabled"/>
             </MetaEditorAttribute>
             <MetaEditorAttribute name="dynamicLightingFactor"/>
             <MetaEditorAttribute name="attachedDynamicLightingFactor"/>
@@ -318,30 +305,32 @@
             <MetaEditorAttribute name="zoomSpeed"/>
             <MetaEditorAttribute name="liquidParticlesRadiusScale"/>
             <MetaEditorAttribute name="liquidSinkOffset"/>
-            <MetaEditorAttribute name="Attenuation">
-                <MetaEditorAttribute name="deselectAttenuationFunc"/>
-                <MetaEditorAttribute name="selectAttenuationFunc"/>
-                <MetaEditorAttribute name="dropAttenuationFunc"/>
-                <MetaEditorAttribute name="dragAttenuationFunc"/>
-                <MetaEditorAttribute name="spawnAttenuationFunc"/>
-            </MetaEditorAttribute>
             <MetaEditorAttribute name="whenAttachedRenderOnTop"/>
             <MetaEditorAttribute name="lighting"/>
             <MetaEditorAttribute name="renderInPlayMode"/>
+            <MetaEditorAttribute name="flashAnimationPreLiquidLayerTextureIndices"/>
         </MetaEditorAttribute>
-
         <MetaEditorAttribute name="Player Interaction" openByDefault="false">
+            <MetaEditorAttribute name="spawnType" description="Ball type"/>
             <MetaEditorAttribute name="isEditable"/>
             <MetaEditorAttribute name="isDraggable"/>
             <MetaEditorAttribute name="isDetachable"/>
             <MetaEditorAttribute name="hingeDrag"/>
             <MetaEditorAttribute name="canBeRotatedByHand"/>
+            <MetaEditorAttribute name="flingForceFactor"/>
+            <MetaEditorAttribute name="flingStrandMaxLength"/>
         </MetaEditorAttribute>
-
-        <MetaEditorAttribute name="Ball Interaction" openByDefault="false">
+        <MetaEditorAttribute name="Goo Interaction" openByDefault="false">
+            <MetaEditorAttribute name="wakeOtherBallsAtDistance"/>
             <MetaEditorAttribute name="attachToSameTypeOnly"/>
             <MetaEditorAttribute name="isGrumpy"/>
+            <MetaEditorAttribute name="collideAttached"/>
+            <MetaEditorAttribute name="collideWithAttached"/>
+            <MetaEditorAttribute name="allowAttachmentsWhenStuck"/>
+            <MetaEditorAttribute name="allowAttachmentsWhenFalling"/>
+            <MetaEditorAttribute name="canBeSuckedByLauncher"/>
             <MetaEditorAttribute name="Pop" openByDefault="false">
+                <MetaEditorAttribute name="contains"/>
                 <MetaEditorAttribute name="popSoundId"/>
                 <MetaEditorAttribute name="popParticlesId"/>
                 <MetaEditorAttribute name="popDuration"/>
@@ -362,7 +351,6 @@
                 <MetaEditorAttribute name="renderInJellyBackground"/>
             </MetaEditorAttribute>
         </MetaEditorAttribute>
-
         <MetaEditorAttribute name="Level Interaction" openByDefault="false">
             <MetaEditorAttribute name="isInvulnerable"/>
             <MetaEditorAttribute name="isInvulnerableToLava"/>
@@ -374,6 +362,9 @@
             <MetaEditorAttribute name="opensExitUnattached"/>
             <MetaEditorAttribute name="affectsAutoboundsAttached"/>
             <MetaEditorAttribute name="affectsAutoboundsUnattached"/>
+            <MetaEditorAttribute name="inputPipeForceVariation"/>
+            <MetaEditorAttribute name="countMoveOnUnatachedRelease"/>
+            <MetaEditorAttribute name="diesOnDetach"/>
             <MetaEditorAttribute name="Liquid">
                 <MetaEditorAttribute name="canSuckLiquidExternally"/>
                 <MetaEditorAttribute name="canSuckLiquidFromPipe"/>
@@ -383,25 +374,23 @@
                 <MetaEditorAttribute name="maxStrandLiquidAmount"/>
                 <MetaEditorAttribute name="strandSuckLiquidParticlesPerSecond"/>
             </MetaEditorAttribute>
+            <MetaEditorAttribute name="Fluid" openByDefault="false">
+                <MetaEditorAttribute name="stableFluidsDensityFactor"/>
+                <MetaEditorAttribute name="stableFluidsMinTrailVelocity"/>
+                <MetaEditorAttribute name="stableFluidsDensityRange"/>
+            </MetaEditorAttribute>
+            <MetaEditorAttribute name="Burn" openByDefault="false">
+                <MetaEditorAttribute name="burnTime"/>
+                <MetaEditorAttribute name="detonateForce"/>
+                <MetaEditorAttribute name="detonateRadius"/>
+                <MetaEditorAttribute name="detonateKillBalls"/>
+                <MetaEditorAttribute name="detonateKillItems"/>
+                <MetaEditorAttribute name="detonateKillTerrain"/>
+                <MetaEditorAttribute name="detonateParticleEffect"/>
+            </MetaEditorAttribute>
         </MetaEditorAttribute>
-
-        <MetaEditorAttribute name="Burn" openByDefault="false">
-            <MetaEditorAttribute name="burnTime"/>
-            <MetaEditorAttribute name="detonateForce"/>
-            <MetaEditorAttribute name="detonateRadius"/>
-            <MetaEditorAttribute name="detonateKillBalls"/>
-            <MetaEditorAttribute name="detonateKillItems"/>
-            <MetaEditorAttribute name="detonateKillTerrain"/>
-            <MetaEditorAttribute name="detonateParticleEffect"/>
-        </MetaEditorAttribute>
-
-        <MetaEditorAttribute name="Physics" openByDefault="false">
-            <MetaEditorAttribute name="collideWithParticlesAttached"/>
-            <MetaEditorAttribute name="rotationalDampening"/>
-            <MetaEditorAttribute name="collisionGroup"/>
-        </MetaEditorAttribute>
-
         <MetaEditorAttribute name="Strand" openByDefault="false">
+            <MetaEditorAttribute name="maxStrands"/>
             <MetaEditorAttribute name="strandType"/>
             <MetaEditorAttribute name="Physics" openByDefault="false">
                 <MetaEditorAttribute name="springConstMin"/>
@@ -451,7 +440,6 @@
                 <MetaEditorAttribute name="canShrinkStrand"/>
             </MetaEditorAttribute>
         </MetaEditorAttribute>
-
     </metaAttributes>
 
 </AttributeManifest>

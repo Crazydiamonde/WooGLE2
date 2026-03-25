@@ -1,7 +1,9 @@
 package com.woogleFX.editorObjects.objectComponents;
 
+import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.editorObjects.objectComponents.generic.BorderProperty;
+import com.woogleFX.editorObjects.objectComponents.generic.BoundedProperty;
 import com.woogleFX.editorObjects.objectComponents.generic.ColoredProperty;
 import com.woogleFX.editorObjects.objectComponents.generic.RotatableProperty;
 import com.woogleFX.engine.renderer.Renderer;
@@ -12,11 +14,14 @@ import javafx.scene.canvas.GraphicsContext;
 
 /** Represents a circle component in any object. */
 public abstract class CircleComponent extends ObjectComponent
-        implements BorderProperty, RotatableProperty, ColoredProperty {
+        implements BorderProperty, RotatableProperty, ColoredProperty, BoundedProperty {
+
+    public CircleComponent(EditorObject editorObject) {
+        super(editorObject);
+    }
 
     /** Returns this circle component's radius. */
     public abstract double getRadius();
-
 
     /** Sets this circle component's radius.
      * @param radius The circle's radius. */
@@ -24,9 +29,57 @@ public abstract class CircleComponent extends ObjectComponent
 
     }
 
+    @Override
+    public double getWidth() {
+        return getRadius();
+    }
 
     @Override
-    public void draw(GraphicsContext graphicsContext, boolean selected) {
+    public void setWidth(double width) {
+        setRadius(width);
+    }
+
+    @Override
+    public double getHeight() {
+        return getRadius();
+    }
+
+    @Override
+    public void setHeight(double height) {
+        setRadius(height);
+    }
+
+    @Override
+    public void draw(GraphicsContext graphicsContext) {
+
+        double x = getX();
+        double y = getY();
+        double radius = getRadius();
+
+        double offsetX = AssetManager.getAsset().getOffsetX();
+        double offsetY = AssetManager.getAsset().getOffsetY();
+        double zoom = AssetManager.getAsset().getZoom();
+
+        double screenX = (x - radius) * zoom + offsetX;
+        double screenY = (y - radius) * zoom + offsetY;
+
+        double woag = Math.min(getEdgeSize(), Math.abs(radius)) / 2;
+
+        graphicsContext.setLineWidth(radius * zoom);
+        graphicsContext.setStroke(getColor());
+        graphicsContext.strokeOval(screenX + radius * zoom / 2, screenY + radius * zoom / 2,
+                (radius - 0.5) * zoom, (radius - 0.5) * zoom);
+
+        graphicsContext.setLineWidth(woag * 2 * zoom);
+        graphicsContext.setStroke(getBorderColor());
+        if (getEdgeSize() != 0)
+            graphicsContext.strokeOval(screenX + woag * zoom, screenY + woag * zoom,
+                    (radius - woag) * 2 * zoom, (radius - woag) * 2 * zoom);
+
+    }
+
+    @Override
+    public void drawSelectionOutline(GraphicsContext graphicsContext) {
 
         double x = getX();
         double y = getY();
@@ -40,20 +93,6 @@ public abstract class CircleComponent extends ObjectComponent
         double screenX = (x - radius) * zoom + offsetX;
         double screenY = (y - radius) * zoom + offsetY;
 
-        double woag = Math.min(getEdgeSize(), Math.abs(radius)) / 2;
-
-
-        graphicsContext.setLineWidth(radius * 100 * zoom);
-        graphicsContext.setStroke(getColor());
-        graphicsContext.strokeOval(screenX + zoom / 2, screenY + zoom / 2,
-                (radius - 0.5) * 2 * zoom, (radius - 0.5) * 2 * zoom);
-
-        graphicsContext.setLineWidth(woag * 2 * zoom);
-        graphicsContext.setStroke(getBorderColor());
-        if (getEdgeSize() != 0)
-            graphicsContext.strokeOval(screenX + woag * zoom, screenY + woag * zoom,
-                    (radius - woag) * 2 * zoom, (radius - woag) * 2 * zoom);
-
         Point2D center = new Point2D(x, y);
 
         Point2D right = new Point2D(x + radius, y);
@@ -62,39 +101,33 @@ public abstract class CircleComponent extends ObjectComponent
 
         Point2D left = new Point2D(x - radius, y);
         left = ObjectUtil.rotate(left, rotation, center);
-        left = new Point2D(left.getX(), left.getY());
         left = left.multiply(zoom).add(offsetX, offsetY);
 
-        if (selected) {
+        graphicsContext.setStroke(Renderer.selectionOutline2);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashes(3);
+        graphicsContext.setLineDashOffset(0);
+        graphicsContext.strokeRect(screenX, screenY, radius * 2 * zoom, radius * 2 * zoom);
 
-            graphicsContext.setStroke(Renderer.selectionOutline2);
-            graphicsContext.setLineWidth(1);
-            graphicsContext.setLineDashes(3);
-            graphicsContext.setLineDashOffset(0);
-            graphicsContext.strokeRect(screenX, screenY, radius * 2 * zoom, radius * 2 * zoom);
+        graphicsContext.setStroke(Renderer.selectionOutline);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashOffset(3);
+        graphicsContext.strokeRect(screenX, screenY, radius * 2 * zoom, radius * 2 * zoom);
+        graphicsContext.setLineDashes(0);
 
-            graphicsContext.setStroke(Renderer.selectionOutline);
-            graphicsContext.setLineWidth(1);
-            graphicsContext.setLineDashOffset(3);
-            graphicsContext.strokeRect(screenX, screenY, radius * 2 * zoom, radius * 2 * zoom);
-            graphicsContext.setLineDashes(0);
+        if (isResizable()) {
+            graphicsContext.strokeRect(screenX - 4, screenY + radius * zoom - 4, 8, 8);
+            graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY + radius * 2 * zoom - 4, 8, 8);
+            graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY - 4, 8, 8);
+            graphicsContext.strokeRect(screenX + radius * 2 * zoom - 4, screenY + radius * zoom - 4, 8, 8);
+        }
 
-            if (isResizable()) {
-                graphicsContext.strokeRect(screenX - 4, screenY + radius * zoom - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY + radius * 2 * zoom - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * zoom - 4, screenY - 4, 8, 8);
-                graphicsContext.strokeRect(screenX + radius * 2 * zoom - 4, screenY + radius * zoom - 4, 8, 8);
-            }
-
-            if (isRotatable()) {
-                graphicsContext.strokeOval(left.getX() - 4, left.getY() - 4, 8, 8);
-                graphicsContext.strokeOval(right.getX() - 4, right.getY() - 4, 8, 8);
-            }
-
+        if (isRotatable()) {
+            graphicsContext.strokeOval(left.getX() - 4, left.getY() - 4, 8, 8);
+            graphicsContext.strokeOval(right.getX() - 4, right.getY() - 4, 8, 8);
         }
 
     }
-
 
     @Override
     public DragSettings mouseIntersection(double mouseX, double mouseY) {
@@ -105,10 +138,10 @@ public abstract class CircleComponent extends ObjectComponent
 
         double distance = Math.hypot(mouseX - x, mouseY - y);
 
-        if (distance < radius && (!isEdgeOnly() || distance > radius - getEdgeSize())) {
+        if (distance < radius) {
             DragSettings dragSettings = new DragSettings(DragSettings.MOVE, this);
-            dragSettings.setInitialSourceX(mouseX - x);
-            dragSettings.setInitialSourceY(mouseY - y);
+            dragSettings.setInitialSource(new Point2D(mouseX - x, mouseY - y));
+            dragSettings.setOpacity(!isEdgeOnly() || distance > radius - getEdgeSize() ? 1.0 : 0.5);
             return dragSettings;
         } else {
             return DragSettings.NULL;
@@ -148,10 +181,8 @@ public abstract class CircleComponent extends ObjectComponent
         )) {
 
             DragSettings resizeSettings = new DragSettings(DragSettings.RESIZE, this);
-            resizeSettings.setInitialSourceX(0);
-            resizeSettings.setInitialSourceY(0);
-            resizeSettings.setAnchorX(0);
-            resizeSettings.setAnchorY(0);
+            resizeSettings.setInitialSource(Point2D.ZERO);
+            resizeSettings.setAnchor(Point2D.ZERO);
             return resizeSettings;
 
         }
@@ -178,8 +209,7 @@ public abstract class CircleComponent extends ObjectComponent
 
             DragSettings rotateSettings = new DragSettings(DragSettings.ROTATE, this);
             Point2D dragSourceRotated = ObjectUtil.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
-            rotateSettings.setInitialSourceX(dragSourceRotated.getX());
-            rotateSettings.setInitialSourceY(dragSourceRotated.getY());
+            rotateSettings.setInitialSource(dragSourceRotated);
             rotateSettings.setRotateAngleOffset(rotation);
             return rotateSettings;
 

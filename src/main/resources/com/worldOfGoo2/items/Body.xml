@@ -1,0 +1,27 @@
+<AttributeManifest localName="Body">
+
+    <attributes>
+        <EditorAttribute name="id" type="STRING" required="true"/>
+        <EditorAttribute name="type" type="NUMBER" required="true"/>
+        <EditorAttribute name="pos" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="rotation" type="NUMBER" required="true"/>
+        <EditorAttribute name="collisionEnabled" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="materialName" type="STRING" required="true"/>
+        <EditorAttribute name="tags" type="STRING" required="true"/>
+        <EditorAttribute name="geoms" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc._2_Item_Geometry" required="true"/>
+        <EditorAttribute name="categoryBits" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="pos"/>
+        <MetaEditorAttribute name="rotation"/>
+        <MetaEditorAttribute name="collisionEnabled"/>
+        <MetaEditorAttribute name="materialName"/>
+        <MetaEditorAttribute name="tags"/>
+        <MetaEditorAttribute name="geoms"/>
+        <MetaEditorAttribute name="categoryBits"/>
+    </metaAttributes>
+
+</AttributeManifest>

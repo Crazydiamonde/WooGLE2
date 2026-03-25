@@ -20,6 +20,20 @@ public class FXMenu {
 
     }
 
+    public static abstract class EditorMenu extends Menu {
+
+        public abstract void updateDisabled();
+
+        public void setIcon(String pathString) {
+            setGraphic(new ImageView(FileManager.getIcon(pathString)));
+        }
+
+        public EditorMenu(String s) {
+            super(s);
+        }
+
+    }
+
 
     private static final MenuBar menuBar = new MenuBar();
     public static MenuBar getMenuBar() {

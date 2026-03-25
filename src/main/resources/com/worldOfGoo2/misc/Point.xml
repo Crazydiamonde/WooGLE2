@@ -1,0 +1,13 @@
+<AttributeManifest localName="Point">
+
+    <attributes>
+        <EditorAttribute name="x" type="NUMBER" required="true"/>
+        <EditorAttribute name="y" type="NUMBER" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+    </metaAttributes>
+
+</AttributeManifest>

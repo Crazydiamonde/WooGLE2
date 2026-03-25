@@ -1,0 +1,37 @@
+<AttributeManifest localName="particle">
+
+    <attributes>
+        <EditorAttribute name="image" type="STRING" required="true"/>
+        <EditorAttribute name="rotspeed" type="_1_RANGE" defaultValue="0"/>
+        <EditorAttribute name="rotation" type="_1_RANGE" defaultValue="0"/>
+        <EditorAttribute name="directed" type="BOOLEAN" defaultValue="false" required="true"/>
+        <EditorAttribute name="scale" type="_1_RANGE" defaultValue="" required="true"/>
+        <EditorAttribute name="finalscale" type="_1_RANGE" defaultValue="1"/>
+        <EditorAttribute name="fade" type="BOOLEAN" defaultValue="false"/>
+        <EditorAttribute name="additive" type="BOOLEAN" defaultValue="" required="true"/>
+        <EditorAttribute name="lifespan" type="_1_RANGE" defaultValue="1"/>
+        <EditorAttribute name="dampening" type="_1_NUMBER" defaultValue="0"/>
+        <EditorAttribute name="speed" type="_1_RANGE" defaultValue="0" required="true"/>
+        <EditorAttribute name="movedir" type="_1_NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="movedirvar" type="_1_NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="acceleration" type="_1_POSITION" defaultValue="0,0" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="image"/>
+        <MetaEditorAttribute name="rotspeed"/>
+        <MetaEditorAttribute name="rotation"/>
+        <MetaEditorAttribute name="directed"/>
+        <MetaEditorAttribute name="scale"/>
+        <MetaEditorAttribute name="finalscale"/>
+        <MetaEditorAttribute name="fade"/>
+        <MetaEditorAttribute name="additive"/>
+        <MetaEditorAttribute name="lifespan"/>
+        <MetaEditorAttribute name="dampening"/>
+        <MetaEditorAttribute name="speed"/>
+        <MetaEditorAttribute name="movedir"/>
+        <MetaEditorAttribute name="movedirvar"/>
+        <MetaEditorAttribute name="acceleration"/>
+    </metaAttributes>
+
+</AttributeManifest>

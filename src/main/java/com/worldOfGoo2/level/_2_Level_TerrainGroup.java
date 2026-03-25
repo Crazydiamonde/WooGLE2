@@ -1,36 +1,42 @@
 package com.worldOfGoo2.level;
 
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.assets.Asset;
+import com.woogleFX.assets.wog2.WOG2TerrainType.WOG2TerrainType;
 import com.woogleFX.editorObjects.attributes.AttributeAdapter;
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.attributes.InputField;
-import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 import com.woogleFX.editorObjects.objectComponents.TerrainMeshComponent;
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.engine.fx.FXPropertiesView;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.gameData.level.WOG2Level;
-import com.woogleFX.gameData.terrainTypes.TerrainTypeManager;
-import com.worldOfGoo2.misc._2_Point;
-import com.worldOfGoo2.terrain._2_Terrain_TerrainType;
+import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
+import com.woogleFX.assets.GameVersion;
+import com.woogleFX.assets.wog2.WOG2Level.WOG2Level;
 import com.worldOfGoo2.util.ItemHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class _2_Level_TerrainGroup extends EditorObject {
-    private ArrayList<_2_Level_BallInstance> balls = new ArrayList<>();
-    
-    public _2_Level_TerrainGroup(EditorObject parent) {
-        super(parent, "TerrainGroup", GameVersion.VERSION_WOG2);
 
-        addAttribute("textureOffset", InputField._2_CHILD_HIDDEN).setChildAlias(_2_Point.class);
+    /** A list of all the BallInstances that have this terrain group.
+     * This should always reflect the current state of the level. */
+    private final ArrayList<_2_Level_BallInstance> balls = new ArrayList<>();
+    public void addBall(_2_Level_BallInstance ballInstance) {
+        balls.add(ballInstance);
+    }
+    public void removeBall(_2_Level_BallInstance ballInstance) {
+        balls.remove(ballInstance);
+    }
+
+    
+    public _2_Level_TerrainGroup(EditorObject parent, GameVersion version) {
+        super(parent, version);
+
         addAttributeAdapter("textureOffset", AttributeAdapter.pointAttributeAdapter(this, "textureOffset", "textureOffset"));
 
-
-        setMetaAttributes(MetaEditorAttribute.parse("textureOffset,typeUuid,typeIndex,sortOffset,depth,foreground,collision,destructable,buildable,occluder,"));
-
-        EditorAttribute temp = new EditorAttribute("type", InputField._2_TERRAIN_GROUP_TYPE, this).assertRequired();
         addAttributeAdapter("typeUuid", new AttributeAdapter("type") {
+
+            private final EditorAttribute temp = new EditorAttribute("type", InputField._2_TERRAIN_GROUP_TYPE, _2_Level_TerrainGroup.this).assertRequired();
 
             @Override
             public EditorAttribute getValue() {
@@ -43,11 +49,12 @@ public class _2_Level_TerrainGroup extends EditorObject {
 
             @Override
             public void setValue(String value) {
+                EditorObject terrainType = WOG2TerrainType.assetSelector.openInstance(value, getVersion()).getTerrainType();
+                if (terrainType == null) return;
                 temp.setValue(value);
-                _2_Terrain_TerrainType terrainType = TerrainTypeManager.getTerrainType(value);
                 setAttribute2("typeUuid", terrainType.getAttribute("uuid").stringValue());
-                if (AssetManager.getAsset().getSelected().length > 0 && _2_Level_TerrainGroup.this == AssetManager.getAsset().getSelected()[0]) {
-                    FXPropertiesView.changeTableView(AssetManager.getAsset().getSelected());
+                if (Arrays.stream(getObjectComponents()).anyMatch(e -> AssetManager.getAsset().isSelected(e))) {
+                    FXPropertiesView.changeTableView(AssetManager.getAsset().getSelectedObjects());
                 }
                 update();
             }
@@ -58,7 +65,7 @@ public class _2_Level_TerrainGroup extends EditorObject {
 
     @Override
     public String getName() {
-        if (AssetManager.getAsset() != null && AssetManager.getAsset() instanceof WOG2Level level) {
+        if (AssetManager.getAsset() instanceof WOG2Level level) {
             for (int i = 0; i < level.getLevel().getChildren("terrainGroups").size(); i++) {
                 if (level.getLevel().getChildren("terrainGroups").get(i) == this) {
                     return i + ", " + this.getAttribute("type").stringValue();
@@ -69,8 +76,8 @@ public class _2_Level_TerrainGroup extends EditorObject {
     }
 
     @Override
-    public void onLoaded() {
-        super.onLoaded();
+    public void onLoaded(Asset asset) {
+        super.onLoaded(asset);
 
         EditorObject textureOffset = getChildren("textureOffset").get(0);
         textureOffset.getAttribute("x").addChangeListener((observable, oldValue, newValue) ->
@@ -91,27 +98,25 @@ public class _2_Level_TerrainGroup extends EditorObject {
         update();
 
     }
-    
-    @Override
-    public void postInit() {
-        update();
-    }
 
     @Override
     public void update() {
 
         clearObjectComponents();
 
-        if (TerrainTypeManager.getTerrainType(getAttribute("typeUuid").stringValue()) != null)
-            addObjectComponent(new TerrainMeshComponent(this, getStrands(), balls.toArray(_2_Level_BallInstance[]::new)));
+        if (WOG2TerrainType.assetSelector.openInstance(getAttribute("typeUuid").stringValue(), getVersion()) != null)
+            addObjectComponent(new TerrainMeshComponent(this, getStrands(), balls.toArray(_2_Level_BallInstance[]::new)) {
+                // TODO2: put stuff inside
+            });
 
     }
 
-    private _2_Level_Strand[] getStrands() {
-        ArrayList<_2_Level_Strand> strands = new ArrayList<>();
-        
-        for (EditorObject object : ((WOG2Level) AssetManager.getAsset()).getLevel().getChildren("strands")) {
-            _2_Level_Strand strand = (_2_Level_Strand)object;
+    private Strand[] getStrands() {
+        ArrayList<Strand> strands = new ArrayList<>();
+
+        WOG2Level level = ((WOG2Level) AssetManager.getAsset());
+        for (EditorObject object : level.getLevel().getChildren("strands")) {
+            Strand strand = (Strand)object;
             _2_Level_BallInstance ballInstance = strand.getGoo1();
             
             if (ballInstance != null && ballInstance.getCurrentGroup() == _2_Level_TerrainGroup.this && ballInstance.containsStrand(strand)) {
@@ -119,19 +124,6 @@ public class _2_Level_TerrainGroup extends EditorObject {
             }
         }
         
-        return strands.toArray(_2_Level_Strand[]::new);
-    }
-    
-    public void addBall(_2_Level_BallInstance ballInstance) {
-        if (!balls.contains(ballInstance))
-            balls.add(ballInstance);
-    }
-    
-    public void removeBall(_2_Level_BallInstance ballInstance) {
-        balls.remove(ballInstance);
-    }
-    
-    public ArrayList<_2_Level_BallInstance> getBalls() {
-        return balls;
+        return strands.toArray(Strand[]::new);
     }
 }

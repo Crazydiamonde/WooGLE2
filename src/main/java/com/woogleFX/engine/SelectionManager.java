@@ -2,18 +2,17 @@ package com.woogleFX.engine;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
-import com.woogleFX.engine.fx.FXContainers;
-import com.woogleFX.engine.fx.editorButtons.FXEditorButtons;
+import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
+import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
 import com.woogleFX.engine.fx.editorButtons.FXEditorButtons_Edit;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.editorObjects.DragSettings;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchySwitcherButtons;
-import com.woogleFX.gameData.level.GameVersion;
-import javafx.scene.control.SplitPane;
+import com.woogleFX.assets.GameVersion;
 
 public class SelectionManager {
 
-    private static double mouseStartX;
+    private static double mouseStartX = 0;
     public static double getMouseStartX() {
         return mouseStartX;
     }
@@ -22,7 +21,7 @@ public class SelectionManager {
     }
 
 
-    private static double mouseStartY;
+    private static double mouseStartY = 0;
     public static double getMouseStartY() {
         return mouseStartY;
     }
@@ -58,11 +57,11 @@ public class SelectionManager {
     }
 
 
-    private static EditorObject[] oldSelected;
-    public static EditorObject[] getOldSelected() {
+    private static ObjectComponent[] oldSelected;
+    public static ObjectComponent[] getOldSelected() {
         return oldSelected;
     }
-    public static void setOldSelected(EditorObject[] oldSelected) {
+    public static void setOldSelected(ObjectComponent[] oldSelected) {
         SelectionManager.oldSelected = oldSelected;
     }
 
@@ -126,15 +125,10 @@ public class SelectionManager {
 
     public static void goToSelectedInHierarchy() {
 
-        EditorObject[] selectedArray = AssetManager.getAsset().getSelected();
+        EditorObject[] selectedArray = AssetManager.getAsset().getSelectedObjects();
+
         if (selectedArray.length == 0 || selectedArray[0] == null) {
-
-            SplitPane splitPane = FXContainers.getSplitPane();
-            double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth() - 6;
-
-            if (SelectionManager.getMouseX() < editorViewWidth)
-                FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
-
+            FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
             return;
         }
 
@@ -144,35 +138,16 @@ public class SelectionManager {
         if (selected.getVersion() != GameVersion.VERSION_WOG2)
             while (absoluteParent.getParent() != null) absoluteParent = absoluteParent.getParent();
 
-        if (selected.getParent() != null) {
+        FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(AssetManager.getAsset().getTabForObject(selected));
+        FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
+        FXPropertiesView.changeTableView(selectedArray);
+        FXHierarchy.scrollTo(selected);
+        int[] indices = new int[selectedArray.length - 1];
+        for (int i = 0; i < selectedArray.length - 1; i++)
+            indices[i] = FXHierarchy.getHierarchy().getRow(selectedArray[i + 1].getTreeItem());
+        FXHierarchy.getHierarchy().getSelectionModel().selectIndices(FXHierarchy.getHierarchy().getRow(selected.getTreeItem()), indices);
+        FXHierarchy.getHierarchy().refresh();
 
-            if (selected.getVersion() != GameVersion.VERSION_WOG2)
-                FXHierarchy.getHierarchy().setRoot(absoluteParent.getTreeItem());
-            FXHierarchy.getHierarchy().setShowRoot(true);
-
-
-            switch (absoluteParent.getType()) {
-                case "scene" -> FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(0);
-                case "level" -> FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(1);
-                case "resourcemanifest" -> FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(2);
-                case "strings" -> FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(3);
-                case "addin" -> {
-                    FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(4);
-                    FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(5);
-                }
-
-                case "BallInstance" -> {
-                    if (absoluteParent.getAttribute("type").stringValue().equals("Terrain"))
-                        FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(0);
-                    else FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(2);
-                }
-                case "TerrainGroup" -> FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(1);
-                case "Item" -> FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(3);
-                case "Pin" -> FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(4);
-                case "CameraKeyFrame" -> FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(5);
-
-            }
-        }
     }
 
 }

@@ -1,11 +1,4 @@
-# WooGLE
-An editor for World of Goo levels. Compatible with the community version and anniversary version of World of Goo.
+# World of Goo Everything Editor
+A general-purpose versatile editor for the World of Goo series. Compatible with World of Goo 1.3 (the standard community version), World of Goo 1.5 (the 2018 anniversary update), and World of Goo 2.
 
-# Building/Running
-To run the project, run the "WooGLE.jar" file below this readme.
-
-To compile the project yourself, set up a Maven environment and run `mvn install` to rebuild the project JAR.
-
-# Note
-
-Make sure to have at least Java 17 or higher when compiling or running
+Unfinished and untested! To run this version of the project, you should set up a Maven environment and compile it yourself. A full build is included regardless, but expect everything to be broken, especially the World of Goo 2 features.

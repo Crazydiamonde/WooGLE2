@@ -1,0 +1,11 @@
+<AttributeManifest localName="Color">
+
+    <attributes>
+        <EditorAttribute name="color" type="NUMBER" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="color"/>
+    </metaAttributes>
+
+</AttributeManifest>

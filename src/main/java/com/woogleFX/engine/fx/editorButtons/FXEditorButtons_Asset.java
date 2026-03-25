@@ -1,12 +1,26 @@
 package com.woogleFX.engine.fx.editorButtons;
 
+import com.woogleFX.assets.wog1.animation.WOG1Animation;
+import com.woogleFX.assets.wog1.ball.WOG1Ball;
+import com.woogleFX.assets.wog1.level.WOG1Level;
+import com.woogleFX.assets.wog1.movie.WOG1Movie;
+import com.woogleFX.assets.wog1.particle.WOG1Particle;
+import com.woogleFX.assets.wog2.WOG2Animation.WOG2Animation;
+import com.woogleFX.assets.wog2.WOG2Ball.WOG2Ball;
+import com.woogleFX.assets.wog2.WOG2Environment.WOG2Environment;
+import com.woogleFX.assets.wog2.WOG2Item.WOG2Item;
+import com.woogleFX.assets.wog2.WOG2Level.WOG2Level;
+import com.woogleFX.assets.wog2.WOG2Particle.WOG2Particle;
+import com.woogleFX.assets.wog2.WOG2TerrainType.WOG2TerrainType;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.engine.fx.menu.FXMenu;
-import com.woogleFX.engine.gui.BallAssetSelector;
-import com.woogleFX.engine.gui.LevelSelector;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.gameData.level.levelOpening.AssetLoader;
-import com.woogleFX.gameData.level.levelSaving.AssetUpdater;
+import com.woogleFX.engine.fx.menu.FXMenu_Asset;
+import com.woogleFX.file.FileManager;
+import com.woogleFX.assets.GameVersion;
+import com.woogleFX.assets.AssetLoader;
+import com.woogleFX.assets.AssetUpdater;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
@@ -31,187 +45,428 @@ public class FXEditorButtons_Asset {
     private static final FXMenu.EditorMenuItem buttonNewAnimationOld = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewBallOld = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewLevelOld = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
+        }
+    };
+    private static final FXMenu.EditorMenuItem buttonNewMovieOld = new FXMenu.EditorMenuItem() {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewParticleOld = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
         }
     };
+    private static final Menu newOldMenu = new FXMenu.EditorMenu("World of Goo 1.3...") {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
+        }
+    };
+    private static void initNewOld() {
+
+        buttonNewAnimationOld.setIcon("ObjectIcons/assets/Animation.png");
+        buttonNewBallOld.setIcon("ObjectIcons/assets/Ball.png");
+        buttonNewLevelOld.setIcon("ObjectIcons/assets/Level.png");
+        buttonNewMovieOld.setIcon("ObjectIcons/assets/Movie.png");
+        buttonNewParticleOld.setIcon("ObjectIcons/assets/Particle.png");
+
+        buttonNewAnimationOld.setText("New Animation...");
+        buttonNewBallOld.setText("New Ball...");
+        buttonNewLevelOld.setText("New Level...");
+        buttonNewMovieOld.setText("New Movie...");
+        buttonNewParticleOld.setText("New Particle...");
+
+        buttonNewAnimationOld.setOnAction(e ->
+                WOG1Animation.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+        buttonNewBallOld.setOnAction(e ->
+                WOG1Ball.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+        buttonNewLevelOld.setOnAction(e ->
+                WOG1Level.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+        buttonNewMovieOld.setOnAction(e ->
+                WOG1Movie.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+        buttonNewParticleOld.setOnAction(e ->
+                WOG1Particle.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+
+        newOldMenu.getItems().add(buttonNewAnimationOld);
+        newOldMenu.getItems().add(buttonNewBallOld);
+        newOldMenu.getItems().add(buttonNewLevelOld);
+        newOldMenu.getItems().add(buttonNewMovieOld);
+        newOldMenu.getItems().add(buttonNewParticleOld);
+
+    }
 
     private static final FXMenu.EditorMenuItem buttonNewAnimationNew = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewBallNew = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewLevelNew = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
+        }
+    };
+    private static final FXMenu.EditorMenuItem buttonNewMovieNew = new FXMenu.EditorMenuItem() {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewParticleNew = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
         }
     };
+    private static final Menu newNewMenu = new FXMenu.EditorMenu("World of Goo 1.5...") {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
+        }
+    };
+    private static void initNewNew() {
+
+        buttonNewAnimationNew.setIcon("ObjectIcons/assets/Animation.png");
+        buttonNewBallNew.setIcon("ObjectIcons/assets/Ball.png");
+        buttonNewLevelNew.setIcon("ObjectIcons/assets/Level.png");
+        buttonNewMovieNew.setIcon("ObjectIcons/assets/Movie.png");
+        buttonNewParticleNew.setIcon("ObjectIcons/assets/Particle.png");
+
+        buttonNewAnimationNew.setText("New Animation...");
+        buttonNewBallNew.setText("New Ball...");
+        buttonNewLevelNew.setText("New Level...");
+        buttonNewMovieNew.setText("New Movie...");
+        buttonNewParticleNew.setText("New Particle...");
+
+        buttonNewAnimationNew.setOnAction(e ->
+                WOG1Animation.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+        buttonNewBallNew.setOnAction(e ->
+                WOG1Ball.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+        buttonNewLevelNew.setOnAction(e ->
+                WOG1Level.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+        buttonNewMovieNew.setOnAction(e ->
+                WOG1Movie.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+        buttonNewParticleNew.setOnAction(e ->
+                WOG1Particle.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, true));
+
+        newNewMenu.getItems().add(buttonNewAnimationNew);
+        newNewMenu.getItems().add(buttonNewBallNew);
+        newNewMenu.getItems().add(buttonNewLevelNew);
+        newNewMenu.getItems().add(buttonNewMovieNew);
+        newNewMenu.getItems().add(buttonNewParticleNew);
+
+    }
 
     private static final FXMenu.EditorMenuItem buttonNewAnimation2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewBall2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewEnvironment2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
+        }
+    };
+    private static final FXMenu.EditorMenuItem buttonNewFlashAnimation2 = new FXMenu.EditorMenuItem() {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewItem2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewLevel2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewParticle2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonNewTerrain2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
+    private static final Menu new2Menu = new FXMenu.EditorMenu("World of Goo 2...") {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
+        }
+    };
+    private static void initNew2() {
+
+        buttonNewAnimation2.setIcon("ObjectIcons/assets/Animation.png");
+        buttonNewBall2.setIcon("ObjectIcons/assets/Ball.png");
+        buttonNewEnvironment2.setIcon("ObjectIcons/assets/Environment.png");
+        buttonNewFlashAnimation2.setIcon("ObjectIcons/assets/Movie.png");
+        buttonNewItem2.setIcon("ObjectIcons/assets/Item.png");
+        buttonNewLevel2.setIcon("ObjectIcons/assets/Level.png");
+        buttonNewParticle2.setIcon("ObjectIcons/assets/Particle.png");
+        buttonNewTerrain2.setIcon("ObjectIcons/assets/TerrainType.png");
+
+        buttonNewAnimation2.setText("New Animation...");
+        buttonNewBall2.setText("New Ball...");
+        buttonNewEnvironment2.setText("New Environment...");
+        buttonNewFlashAnimation2.setText("New Level...");
+        buttonNewItem2.setText("New Item...");
+        buttonNewLevel2.setText("New Level...");
+        buttonNewParticle2.setText("New Particle...");
+        buttonNewTerrain2.setText("New Terrain Type...");
+
+        buttonNewAnimation2.setOnAction(e ->
+                WOG1Animation.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, true));
+        buttonNewBall2.setOnAction(e ->
+                WOG2Ball.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, true));
+        buttonNewEnvironment2.setOnAction(e ->
+                WOG2Environment.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, true));
+        buttonNewFlashAnimation2.setOnAction(e ->
+                WOG2Animation.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, true));
+        buttonNewItem2.setOnAction(e ->
+                WOG2Item.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, true));
+        buttonNewLevel2.setOnAction(e ->
+                WOG2Level.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, true));
+        buttonNewParticle2.setOnAction(e ->
+                WOG2Particle.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, true));
+        buttonNewTerrain2.setOnAction(e ->
+                WOG2TerrainType.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, true));
+
+        new2Menu.getItems().add(buttonNewAnimation2);
+        new2Menu.getItems().add(buttonNewBall2);
+        new2Menu.getItems().add(buttonNewEnvironment2);
+        new2Menu.getItems().add(buttonNewFlashAnimation2);
+        new2Menu.getItems().add(buttonNewItem2);
+        new2Menu.getItems().add(buttonNewLevel2);
+        new2Menu.getItems().add(buttonNewParticle2);
+        new2Menu.getItems().add(buttonNewTerrain2);
+
+    }
 
 
     private static final FXMenu.EditorMenuItem buttonOpenAnimationOld = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenBallOld = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenLevelOld = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
+        }
+    };
+    private static final FXMenu.EditorMenuItem buttonOpenMovieOld = new FXMenu.EditorMenuItem() {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenParticleOld = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
         }
     };
+    private static final Menu openOldMenu = new FXMenu.EditorMenu("World of Goo 1.3...") {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_OLD).isEmpty());
+        }
+    };
+    private static void initOpenOld() {
+
+        buttonOpenAnimationOld.setIcon("ObjectIcons/assets/Animation.png");
+        buttonOpenBallOld.setIcon("ObjectIcons/assets/Ball.png");
+        buttonOpenLevelOld.setIcon("ObjectIcons/assets/Level.png");
+        buttonOpenMovieOld.setIcon("ObjectIcons/assets/Movie.png");
+        buttonOpenParticleOld.setIcon("ObjectIcons/assets/Particle.png");
+
+        buttonOpenAnimationOld.setText("Open Animation...");
+        buttonOpenBallOld.setText("Open Ball...");
+        buttonOpenLevelOld.setText("Open Level...");
+        buttonOpenMovieOld.setText("Open Movie...");
+        buttonOpenParticleOld.setText("Open Particle...");
+
+        buttonOpenAnimationOld.setOnAction(e ->
+                WOG1Animation.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, false));
+        buttonOpenBallOld.setOnAction(e ->
+                WOG1Ball.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, false));
+        buttonOpenLevelOld.setOnAction(e ->
+                WOG1Level.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, false));
+        buttonOpenMovieOld.setOnAction(e ->
+                WOG1Movie.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, false));
+        buttonOpenParticleOld.setOnAction(e ->
+                WOG1Particle.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_OLD, false));
+
+        openOldMenu.getItems().add(buttonOpenAnimationOld);
+        openOldMenu.getItems().add(buttonOpenBallOld);
+        openOldMenu.getItems().add(buttonOpenLevelOld);
+        openOldMenu.getItems().add(buttonOpenMovieOld);
+        openOldMenu.getItems().add(buttonOpenParticleOld);
+
+    }
 
     private static final FXMenu.EditorMenuItem buttonOpenAnimationNew = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenBallNew = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenLevelNew = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
+        }
+    };
+    private static final FXMenu.EditorMenuItem buttonOpenMovieNew = new FXMenu.EditorMenuItem() {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenParticleNew = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
         }
     };
+    private static final Menu openNewMenu = new FXMenu.EditorMenu("World of Goo 1.5...") {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty());
+        }
+    };
+    private static void initOpenNew() {
+
+        buttonOpenAnimationNew.setIcon("ObjectIcons/assets/Animation.png");
+        buttonOpenBallNew.setIcon("ObjectIcons/assets/Ball.png");
+        buttonOpenLevelNew.setIcon("ObjectIcons/assets/Level.png");
+        buttonOpenMovieNew.setIcon("ObjectIcons/assets/Movie.png");
+        buttonOpenParticleNew.setIcon("ObjectIcons/assets/Particle.png");
+
+        buttonOpenAnimationNew.setText("Open Animation...");
+        buttonOpenBallNew.setText("Open Ball...");
+        buttonOpenLevelNew.setText("Open Level...");
+        buttonOpenMovieNew.setText("Open Movie...");
+        buttonOpenParticleNew.setText("Open Particle...");
+
+        buttonOpenAnimationNew.setOnAction(e ->
+                WOG1Animation.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_NEW, false));
+        buttonOpenBallNew.setOnAction(e ->
+                WOG1Ball.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_NEW, false));
+        buttonOpenLevelNew.setOnAction(e ->
+                WOG1Level.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_NEW, false));
+        buttonOpenMovieNew.setOnAction(e ->
+                WOG1Movie.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_NEW, false));
+        buttonOpenParticleNew.setOnAction(e ->
+                WOG1Particle.assetSelector.start(new Stage(), GameVersion.VERSION_WOG1_NEW, false));
+
+        openNewMenu.getItems().add(buttonOpenAnimationNew);
+        openNewMenu.getItems().add(buttonOpenBallNew);
+        openNewMenu.getItems().add(buttonOpenLevelNew);
+        openNewMenu.getItems().add(buttonOpenMovieNew);
+        openNewMenu.getItems().add(buttonOpenParticleNew);
+
+    }
 
     private static final FXMenu.EditorMenuItem buttonOpenAnimation2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenBall2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenEnvironment2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
+        }
+    };
+    private static final FXMenu.EditorMenuItem buttonOpenFlashAnimation2 = new FXMenu.EditorMenuItem() {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenItem2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenLevel2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenParticle2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
     private static final FXMenu.EditorMenuItem buttonOpenTerrain2 = new FXMenu.EditorMenuItem() {
         @Override
         public void updateDisabled() {
-            setDisable(true);
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
         }
     };
 
@@ -219,258 +474,162 @@ public class FXEditorButtons_Asset {
     private static final FXEditorButtons.EditorButton buttonClone = new FXEditorButtons.EditorButton() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(AssetManager.getAsset() == null);
         }
     };
     private static final FXEditorButtons.EditorButton buttonSave = new FXEditorButtons.EditorButton() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(AssetManager.getAsset() == null);
+        }
+    };
+    private static final FXEditorButtons.EditorButton buttonSaveAs = new FXEditorButtons.EditorButton() {
+        @Override
+        public void updateDisabled() {
+            setDisable(AssetManager.getAsset() == null);
         }
     };
     private static final FXEditorButtons.EditorButton buttonSaveAll = new FXEditorButtons.EditorButton() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
-        }
-    };
-    private static final FXEditorButtons.EditorButton buttonSaveAndPlay = new FXEditorButtons.EditorButton() {
-        @Override
-        public void updateDisabled() {
-            setDisable(false);
+            setDisable(AssetManager.getAsset() == null);
         }
     };
     private static final FXEditorButtons.EditorButton buttonExport = new FXEditorButtons.EditorButton() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(AssetManager.getAsset() == null);
         }
     };
     private static final FXEditorButtons.EditorButton buttonDummyExport = new FXEditorButtons.EditorButton() {
         @Override
         public void updateDisabled() {
-            setDisable(false);
+            setDisable(AssetManager.getAsset() == null);
         }
     };
+    private static final Menu open2Menu = new FXMenu.EditorMenu("World of Goo 2...") {
+        @Override
+        public void updateDisabled() {
+            setDisable(FileManager.getGameDir(GameVersion.VERSION_WOG2).isEmpty());
+        }
+    };
+    private static void initOpen2() {
+
+        buttonOpenAnimation2.setIcon("ObjectIcons/assets/Animation.png");
+        buttonOpenBall2.setIcon("ObjectIcons/assets/Ball.png");
+        buttonOpenEnvironment2.setIcon("ObjectIcons/assets/Environment.png");
+        buttonOpenFlashAnimation2.setIcon("ObjectIcons/assets/Movie.png");
+        buttonOpenItem2.setIcon("ObjectIcons/assets/Item.png");
+        buttonOpenLevel2.setIcon("ObjectIcons/assets/Level.png");
+        buttonOpenParticle2.setIcon("ObjectIcons/assets/Particle.png");
+        buttonOpenTerrain2.setIcon("ObjectIcons/assets/TerrainType.png");
+
+        buttonOpenAnimation2.setText("Open Animation...");
+        buttonOpenBall2.setText("Open Ball...");
+        buttonOpenEnvironment2.setText("Open Environment...");
+        buttonOpenFlashAnimation2.setText("Open Flash... Animation");
+        buttonOpenItem2.setText("Open Item...");
+        buttonOpenLevel2.setText("Open Level...");
+        buttonOpenParticle2.setText("Open Particle...");
+        buttonOpenTerrain2.setText("Open Terrain Type...");
+
+        buttonOpenAnimation2.setOnAction(e ->
+                WOG1Animation.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, false));
+        buttonOpenBall2.setOnAction(e ->
+                WOG2Ball.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, false));
+        buttonOpenEnvironment2.setOnAction(e ->
+                WOG2Environment.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, false));
+        buttonOpenFlashAnimation2.setOnAction(e ->
+                WOG2Animation.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, false));
+        buttonOpenItem2.setOnAction(e ->
+                WOG2Item.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, false));
+        buttonOpenLevel2.setOnAction(e ->
+                WOG2Level.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, false));
+        buttonOpenParticle2.setOnAction(e ->
+                WOG2Particle.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, false));
+        buttonOpenTerrain2.setOnAction(e ->
+                WOG2TerrainType.assetSelector.start(new Stage(), GameVersion.VERSION_WOG2, false));
+
+        open2Menu.getItems().add(buttonOpenAnimation2);
+        open2Menu.getItems().add(buttonOpenBall2);
+        open2Menu.getItems().add(buttonOpenEnvironment2);
+        open2Menu.getItems().add(buttonOpenFlashAnimation2);
+        open2Menu.getItems().add(buttonOpenItem2);
+        open2Menu.getItems().add(buttonOpenLevel2);
+        open2Menu.getItems().add(buttonOpenParticle2);
+        open2Menu.getItems().add(buttonOpenTerrain2);
+
+    }
+
+
+    private static void initEverythingElse(ToolBar toolBar) {
+
+        buttonNew.setIcon("ButtonIcons/Level/new_lvl.png");
+        buttonOpen.setIcon("ButtonIcons/Level/open_lvl.png");
+        buttonClone.setIcon("ButtonIcons/Level/clone_lvl.png");
+        buttonSave.setIcon("ButtonIcons/Level/save.png");
+        buttonSaveAs.setIcon("ButtonIcons/Level/save.png");
+        buttonSaveAll.setIcon("ButtonIcons/Level/save_all.png");
+        buttonExport.setIcon("ButtonIcons/Level/make_goomod.png");
+        buttonDummyExport.setIcon("ButtonIcons/Level/make_dummy_goomod.png");
+
+        buttonNew.setTooltip(new FXEditorButtons.DelayedTooltip("New Asset..."));
+        buttonOpen.setTooltip(new FXEditorButtons.DelayedTooltip("Open Asset..."));
+        buttonClone.setTooltip(new FXEditorButtons.DelayedTooltip("Clone Asset"));
+        buttonSave.setTooltip(new FXEditorButtons.DelayedTooltip("Save Asset"));
+        buttonSaveAs.setTooltip(new FXEditorButtons.DelayedTooltip("Save Asset As..."));
+        buttonSaveAll.setTooltip(new FXEditorButtons.DelayedTooltip("Save All Assets"));
+        buttonExport.setTooltip(new FXEditorButtons.DelayedTooltip("Export Asset"));
+        buttonDummyExport.setTooltip(new FXEditorButtons.DelayedTooltip("Export Asset Without Addin Info"));
+
+        buttonClone.setOnAction(e -> AssetLoader.cloneLevel());
+        buttonSave.setOnAction(e -> AssetUpdater.saveAsset(AssetManager.getAsset()));
+        buttonSaveAs.setOnAction(e -> AssetUpdater.saveAssetAs(AssetManager.getAsset()));
+        buttonSaveAll.setOnAction(e -> AssetUpdater.saveAll());
+        buttonExport.setOnAction(e -> AssetManager.getAsset().export(true));
+        buttonDummyExport.setOnAction(e -> AssetManager.getAsset().export(false));
+
+        toolBar.getItems().add(buttonNew);
+        toolBar.getItems().add(buttonOpen);
+        toolBar.getItems().add(buttonClone);
+        toolBar.getItems().add(buttonSave);
+        toolBar.getItems().add(buttonSaveAs);
+        toolBar.getItems().add(buttonSaveAll);
+        toolBar.getItems().add(new Separator());
+        toolBar.getItems().add(buttonExport);
+        toolBar.getItems().add(buttonDummyExport);
+
+    }
 
 
     public static void asset(ToolBar toolBar) {
 
-        String prefix = "ButtonIcons/Level/";
-
-        Menu newOldMenu = new Menu("World of Goo 1.3...");
-
-        buttonNewAnimationOld.setIcon("ObjectIcons/level/camera.png");
-        buttonNewAnimationOld.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG1_OLD));
-        buttonNewAnimationOld.setText("New Animation");
-        newOldMenu.getItems().add(buttonNewAnimationOld);
-
-        buttonNewBallOld.setIcon("ObjectIcons/assets/Ball.png");
-        buttonNewBallOld.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG1_OLD));
-        buttonNewBallOld.setText("New Ball");
-        newOldMenu.getItems().add(buttonNewBallOld);
-
-        buttonNewLevelOld.setIcon("ObjectIcons/assets/Level.png");
-        buttonNewLevelOld.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG1_OLD));
-        buttonNewLevelOld.setText("New Level");
-        newOldMenu.getItems().add(buttonNewLevelOld);
-
-        buttonNewParticleOld.setIcon("ObjectIcons/scene/particles.png");
-        buttonNewParticleOld.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG1_OLD));
-        buttonNewParticleOld.setText("New Particle");
-        newOldMenu.getItems().add(buttonNewParticleOld);
-
+        initNewOld();
         buttonNew.getItems().add(newOldMenu);
 
-        Menu newNewMenu = new Menu("World of Goo 1.5...");
-
-        buttonNewAnimationNew.setIcon("ObjectIcons/level/camera.png");
-        buttonNewAnimationNew.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG1_NEW));
-        buttonNewAnimationNew.setText("New Animation");
-        newNewMenu.getItems().add(buttonNewAnimationNew);
-
-        buttonNewBallNew.setIcon("ObjectIcons/assets/Ball.png");
-        buttonNewBallNew.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG1_NEW));
-        buttonNewBallNew.setText("New Ball");
-        newNewMenu.getItems().add(buttonNewBallNew);
-
-        buttonNewLevelNew.setIcon("ObjectIcons/assets/Level.png");
-        buttonNewLevelNew.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG1_NEW));
-        buttonNewLevelNew.setText("New Level");
-        newNewMenu.getItems().add(buttonNewLevelNew);
-
-        buttonNewParticleNew.setIcon("ObjectIcons/scene/particles.png");
-        buttonNewParticleNew.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG1_NEW));
-        buttonNewParticleNew.setText("New Particle");
-        newNewMenu.getItems().add(buttonNewParticleNew);
-
+        initNewNew();
         buttonNew.getItems().add(newNewMenu);
 
-        Menu new2Menu = new Menu("World of Goo 2...");
-
-        buttonNewAnimation2.setIcon("ObjectIcons/level/camera.png");
-        buttonNewAnimation2.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG2));
-        buttonNewAnimation2.setText("New Animation");
-        new2Menu.getItems().add(buttonNewAnimation2);
-
-        buttonNewBall2.setIcon("ObjectIcons/assets/Ball.png");
-        buttonNewBall2.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG2));
-        buttonNewBall2.setText("New Ball");
-        new2Menu.getItems().add(buttonNewBall2);
-
-        buttonNewEnvironment2.setIcon("ObjectIcons/scene/SceneLayer.png");
-        buttonNewEnvironment2.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG2));
-        buttonNewEnvironment2.setText("New Environment");
-        new2Menu.getItems().add(buttonNewEnvironment2);
-
-        buttonNewItem2.setIcon("ObjectIcons/scene/compositegeom.png");
-        buttonNewItem2.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG2));
-        buttonNewItem2.setText("New Item");
-        new2Menu.getItems().add(buttonNewItem2);
-
-        buttonNewLevel2.setIcon("ObjectIcons/assets/Level.png");
-        buttonNewLevel2.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG2));
-        buttonNewLevel2.setText("New Level");
-        new2Menu.getItems().add(buttonNewLevel2);
-
-        buttonNewParticle2.setIcon("ObjectIcons/scene/particles.png");
-        buttonNewParticle2.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG2));
-        buttonNewParticle2.setText("New Particle");
-        new2Menu.getItems().add(buttonNewParticle2);
-
-        buttonNewTerrain2.setIcon("ObjectIcons/WoG2/TerrainBallInstance.png");
-        buttonNewTerrain2.setOnAction(e -> AssetLoader.newAsset(GameVersion.VERSION_WOG2));
-        buttonNewTerrain2.setText("New Terrain Type");
-        new2Menu.getItems().add(buttonNewTerrain2);
-
+        initNew2();
         buttonNew.getItems().add(new2Menu);
 
-        buttonNew.setIcon(prefix + "new_level_2.png");
-        buttonNew.setTooltip(new FXEditorButtons.DelayedTooltip("New Asset"));
-        toolBar.getItems().add(buttonNew);
-
-        Menu openOldMenu = new Menu("World of Goo 1.3...");
-
-        buttonOpenAnimationOld.setIcon("ObjectIcons/level/camera.png");
-        buttonOpenAnimationOld.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG1_OLD));
-        buttonOpenAnimationOld.setText("Open Animation");
-        openOldMenu.getItems().add(buttonOpenAnimationOld);
-
-        buttonOpenBallOld.setIcon("ObjectIcons/assets/Ball.png");
-        buttonOpenBallOld.setOnAction(e -> new BallAssetSelector(GameVersion.VERSION_WOG1_OLD).start(new Stage()));
-        buttonOpenBallOld.setText("Open Ball");
-        openOldMenu.getItems().add(buttonOpenBallOld);
-
-        buttonOpenLevelOld.setIcon("ObjectIcons/assets/Level.png");
-        buttonOpenLevelOld.setOnAction(e -> new LevelSelector(GameVersion.VERSION_WOG1_OLD).start(new Stage()));
-        buttonOpenLevelOld.setText("Open Level");
-        openOldMenu.getItems().add(buttonOpenLevelOld);
-
-        buttonOpenParticleOld.setIcon("ObjectIcons/scene/particles.png");
-        buttonOpenParticleOld.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG1_OLD));
-        buttonOpenParticleOld.setText("Open Particle");
-        openOldMenu.getItems().add(buttonOpenParticleOld);
-
+        initOpenOld();
         buttonOpen.getItems().add(openOldMenu);
 
-        Menu openNewMenu = new Menu("World of Goo 1.5...");
-
-        buttonOpenAnimationNew.setIcon("ObjectIcons/level/camera.png");
-        buttonOpenAnimationNew.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG1_NEW));
-        buttonOpenAnimationNew.setText("Open Animation");
-        openNewMenu.getItems().add(buttonOpenAnimationNew);
-
-        buttonOpenBallNew.setIcon("ObjectIcons/assets/Ball.png");
-        buttonOpenBallNew.setOnAction(e -> new BallAssetSelector(GameVersion.VERSION_WOG1_NEW).start(new Stage()));
-        buttonOpenBallNew.setText("Open Ball");
-        openNewMenu.getItems().add(buttonOpenBallNew);
-
-        buttonOpenLevelNew.setIcon("ObjectIcons/assets/Level.png");
-        buttonOpenLevelNew.setOnAction(e -> new LevelSelector(GameVersion.VERSION_WOG1_NEW).start(new Stage()));
-        buttonOpenLevelNew.setText("Open Level");
-        openNewMenu.getItems().add(buttonOpenLevelNew);
-
-        buttonOpenParticleNew.setIcon("ObjectIcons/scene/particles.png");
-        buttonOpenParticleNew.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG1_NEW));
-        buttonOpenParticleNew.setText("Open Particle");
-        openNewMenu.getItems().add(buttonOpenParticleNew);
-
+        initOpenNew();
         buttonOpen.getItems().add(openNewMenu);
 
-        Menu open2Menu = new Menu("World of Goo 2...");
-
-        buttonOpenAnimation2.setIcon("ObjectIcons/level/camera.png");
-        buttonOpenAnimation2.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG2));
-        buttonOpenAnimation2.setText("Open Animation");
-        open2Menu.getItems().add(buttonOpenAnimation2);
-
-        buttonOpenBall2.setIcon("ObjectIcons/assets/Ball.png");
-        buttonOpenBall2.setOnAction(e -> new BallAssetSelector(GameVersion.VERSION_WOG2).start(new Stage()));
-        buttonOpenBall2.setText("Open Ball");
-        open2Menu.getItems().add(buttonOpenBall2);
-
-        buttonOpenEnvironment2.setIcon("ObjectIcons/scene/SceneLayer.png");
-        buttonOpenEnvironment2.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG2));
-        buttonOpenEnvironment2.setText("Open Environment");
-        open2Menu.getItems().add(buttonOpenEnvironment2);
-
-        buttonOpenItem2.setIcon("ObjectIcons/scene/compositegeom.png");
-        buttonOpenItem2.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG2));
-        buttonOpenItem2.setText("Open Item");
-        open2Menu.getItems().add(buttonOpenItem2);
-
-        buttonOpenLevel2.setIcon("ObjectIcons/assets/Level.png");
-        buttonOpenLevel2.setOnAction(e -> new LevelSelector(GameVersion.VERSION_WOG2).start(new Stage()));
-        buttonOpenLevel2.setText("Open Level");
-        open2Menu.getItems().add(buttonOpenLevel2);
-
-        buttonOpenParticle2.setIcon("ObjectIcons/scene/particles.png");
-        buttonOpenParticle2.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG2));
-        buttonOpenParticle2.setText("Open Particle");
-        open2Menu.getItems().add(buttonOpenParticle2);
-
-        buttonOpenTerrain2.setIcon("ObjectIcons/WoG2/TerrainBallInstance.png");
-        buttonOpenTerrain2.setOnAction(e -> AssetLoader.openAsset(GameVersion.VERSION_WOG2));
-        buttonOpenTerrain2.setText("Open Terrain Type");
-        open2Menu.getItems().add(buttonOpenTerrain2);
-
+        initOpen2();
         buttonOpen.getItems().add(open2Menu);
 
-        buttonOpen.setIcon(prefix + "open_lvl_2.png");
-        buttonOpen.setTooltip(new FXEditorButtons.DelayedTooltip("Open Asset"));
-        toolBar.getItems().add(buttonOpen);
+        buttonOpen.setOnShowing(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                FXMenu_Asset.addRecentlyOpened(buttonOpen.getItems());
+            }
+        });
 
-        buttonClone.setIcon(prefix + "clone_lvl.png");
-        buttonClone.setOnAction(e -> AssetLoader.cloneLevel());
-        buttonClone.setTooltip(new FXEditorButtons.DelayedTooltip("Clone Asset"));
-        toolBar.getItems().add(buttonClone);
-
-        buttonSave.setIcon(prefix + "save.png");
-        buttonSave.setOnAction(e -> AssetUpdater.saveAsset(AssetManager.getAsset()));
-        buttonSave.setTooltip(new FXEditorButtons.DelayedTooltip("Save Asset"));
-        toolBar.getItems().add(buttonSave);
-
-        buttonSaveAll.setIcon(prefix + "save_all.png");
-        buttonSaveAll.setOnAction(e -> AssetUpdater.saveAll());
-        buttonSaveAll.setTooltip(new FXEditorButtons.DelayedTooltip("Save All Assets"));
-        toolBar.getItems().add(buttonSaveAll);
-
-        buttonSaveAndPlay.setIcon(prefix + "play.png");
-        buttonSaveAndPlay.setOnAction(e -> AssetManager.getAsset().play());
-        buttonSaveAndPlay.setTooltip(new FXEditorButtons.DelayedTooltip("Save and Play Asset"));
-        toolBar.getItems().add(buttonSaveAndPlay);
-
-        toolBar.getItems().add(new Separator());
-
-        buttonExport.setIcon(prefix + "make_goomod.png");
-        buttonExport.setOnAction(e -> AssetManager.getAsset().export(true));
-        buttonExport.setTooltip(new FXEditorButtons.DelayedTooltip("Export Asset"));
-        toolBar.getItems().add(buttonExport);
-
-        buttonDummyExport.setIcon(prefix + "make_dummy_goomod.png");
-        buttonDummyExport.setOnAction(e -> AssetManager.getAsset().export(false));
-        buttonDummyExport.setTooltip(new FXEditorButtons.DelayedTooltip("Export Asset Without Addin Info"));
-        toolBar.getItems().add(buttonDummyExport);
+        initEverythingElse(toolBar);
 
     }
 

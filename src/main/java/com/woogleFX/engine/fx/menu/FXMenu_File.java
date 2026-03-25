@@ -2,9 +2,8 @@ package com.woogleFX.engine.fx.menu;
 
 import com.woogleFX.engine.gui.PaletteReconfigurator;
 import com.woogleFX.file.resourceManagers.GameResourceManager;
-import com.woogleFX.gameData.ball.BallManager;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.gameData.level.LevelCloser;
+import com.woogleFX.assets.GameVersion;
+import com.woogleFX.assets.AssetCloser;
 import javafx.scene.control.Menu;
 import javafx.stage.Stage;
 
@@ -114,23 +113,13 @@ public class FXMenu_File {
         changeGameDirectory2Item.setOnAction(e -> GameResourceManager.changeWorldOfGooDirectory(GameVersion.VERSION_WOG2, false));
         fileMenu.getItems().add(changeGameDirectory2Item);
 
-        saveOldBallToNewItem.setText("Copy Ball from 1.3 to 1.5");
-        saveOldBallToNewItem.setIcon(prefix + "move_ball_to_new_version.png");
-        saveOldBallToNewItem.setOnAction(e -> BallManager.saveBallInVersion(GameVersion.VERSION_WOG1_OLD, GameVersion.VERSION_WOG1_NEW));
-        fileMenu.getItems().add(saveOldBallToNewItem);
-
-        saveNewBallToOldItem.setText("Copy Ball from 1.5 to 1.3");
-        saveNewBallToOldItem.setIcon(prefix + "move_ball_to_old_version.png");
-        saveNewBallToOldItem.setOnAction(e -> BallManager.saveBallInVersion(GameVersion.VERSION_WOG1_NEW, GameVersion.VERSION_WOG1_OLD));
-        fileMenu.getItems().add(saveNewBallToOldItem);
-
         configurePaletteItem.setText("Configure Goo Ball Palette...");
         configurePaletteItem.setOnAction(e -> new PaletteReconfigurator().start(new Stage()));
         fileMenu.getItems().add(configurePaletteItem);
 
         quitItem.setText("Quit");
         quitItem.setIcon(prefix + "quit.png");
-        quitItem.setOnAction(e -> LevelCloser.resumeLevelClosing());
+        quitItem.setOnAction(e -> AssetCloser.resumeLevelClosing());
         fileMenu.getItems().add(quitItem);
 
     }

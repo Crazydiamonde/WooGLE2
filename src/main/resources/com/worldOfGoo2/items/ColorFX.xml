@@ -1,0 +1,19 @@
+<AttributeManifest localName="ColorFX">
+
+    <attributes>
+        <EditorAttribute name="enabled" type="BOOLEAN"/>
+        <EditorAttribute name="brightness" type="NUMBER"/>
+        <EditorAttribute name="contrast" type="NUMBER"/>
+        <EditorAttribute name="exposure" type="NUMBER"/>
+        <EditorAttribute name="saturation" type="NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="enabled"/>
+        <MetaEditorAttribute name="brightness"/>
+        <MetaEditorAttribute name="contrast"/>
+        <MetaEditorAttribute name="exposure"/>
+        <MetaEditorAttribute name="saturation"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -2,6 +2,8 @@ package com.woogleFX.editorObjects.attributes;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
 
@@ -16,6 +18,16 @@ public class MetaEditorAttribute {
     @JacksonXmlProperty(localName = "name", isAttribute = true)
     public void setName(String name) {
         this.name = name;
+    }
+
+    private final StringProperty description = new SimpleStringProperty("");
+    @JacksonXmlProperty(localName = "description", isAttribute = true)
+    public String getDescription() {
+        return description.getValue();
+    }
+    @JacksonXmlProperty(localName = "description", isAttribute = true)
+    public void setDescription(String description) {
+        this.description.setValue(description);
     }
 
     @JacksonXmlElementWrapper(localName = "children", useWrapping = false)

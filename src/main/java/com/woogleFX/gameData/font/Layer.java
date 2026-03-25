@@ -102,7 +102,8 @@ public class Layer {
 
     private final Map<Character, Double> widthMap = new HashMap<>();
     public double getWidth(char c) {
-        return widthMap.get(c);
+        if (widthMap.containsKey(c)) return widthMap.get(c);
+        else return 1.0;
     }
     public void mapWidth(char c, double width) {
         widthMap.put(c, width);

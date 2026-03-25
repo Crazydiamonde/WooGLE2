@@ -1,5 +1,10 @@
-<AttributeManifest>
+<AttributeManifest localName="PartName">
+
     <attributes>
-        <EditorAttribute name="partName" type="_2_STRING" required="true"/>
+        <EditorAttribute name="partName" type="STRING" required="true"/>
     </attributes>
+
+    <metaAttributes>
+    </metaAttributes>
+
 </AttributeManifest>

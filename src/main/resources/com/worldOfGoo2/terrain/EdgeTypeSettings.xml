@@ -1,7 +1,7 @@
 <AttributeManifest localName="EdgeTypeSettings">
 
     <attributes>
-        <EditorAttribute name="curvatureFactor" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
+        <EditorAttribute name="curvatureFactor" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
     </attributes>
 
 </AttributeManifest>

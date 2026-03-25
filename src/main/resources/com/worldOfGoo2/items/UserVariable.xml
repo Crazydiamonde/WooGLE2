@@ -1,0 +1,25 @@
+<AttributeManifest localName="UserVariable">
+
+    <attributes>
+        <EditorAttribute name="name" type="STRING" required="true"/>
+        <EditorAttribute name="defaultValue" type="STRING" required="true"/>
+        <EditorAttribute name="minValue" type="STRING" required="true"/>
+        <EditorAttribute name="maxValue" type="STRING" required="true"/>
+        <EditorAttribute name="orderIndex" type="STRING" required="true"/>
+        <EditorAttribute name="enabled" type="STRING" required="true"/>
+        <EditorAttribute name="type" type="STRING" required="true"/>
+        <EditorAttribute name="stringValue" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="defaultValue"/>
+        <MetaEditorAttribute name="minValue"/>
+        <MetaEditorAttribute name="maxValue"/>
+        <MetaEditorAttribute name="orderIndex"/>
+        <MetaEditorAttribute name="enabled"/>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="stringValue"/>
+    </metaAttributes>
+
+</AttributeManifest>

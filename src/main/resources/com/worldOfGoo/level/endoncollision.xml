@@ -1,0 +1,15 @@
+<AttributeManifest localName="endoncollision">
+
+    <attributes>
+        <EditorAttribute name="id1"   type="_1_GEOMETRY" defaultValue="normal"/>
+        <EditorAttribute name="id2"   type="_1_GEOMETRY" defaultValue="0,0"   />
+        <EditorAttribute name="delay" type="_1_NUMBER"   defaultValue="1"     />
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id1"/>
+        <MetaEditorAttribute name="id2"/>
+        <MetaEditorAttribute name="delay"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -2,12 +2,7 @@ package com.woogleFX.engine.gui;
 
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.renderer.Renderer;
-import com.woogleFX.gameData.level.WOG1Level;
-import com.woogleFX.gameData.particle.ParticleUtility;
-import com.woogleFX.gameData.animation.AnimationManager;
 import com.woogleFX.engine.AssetManager;
-import com.worldOfGoo.level.Fire;
-import com.worldOfGoo.scene.Particles;
 import javafx.animation.AnimationTimer;
 
 public class EditorWindow extends AnimationTimer {
@@ -33,21 +28,8 @@ public class EditorWindow extends AnimationTimer {
         if (timeStarted == -1) timeStarted = now;
         timeElapsed = (now - timeStarted) / 1000000000f;
 
-        AnimationManager.updateAnimations(timeElapsed);
-
-        if (AssetManager.getAsset() != null) {
-            if (AssetManager.getAsset() instanceof WOG1Level level) {
-                for (EditorObject EditorObject : level.getScene()) {
-                    if (EditorObject instanceof Particles particles) {
-                        ParticleUtility.frameUpdate(particles, particles.getCounts(), particles.getDrawing(), timeStep);
-                    }
-                }
-                for (EditorObject EditorObject : level.getLevel()) {
-                    if (EditorObject instanceof Fire fire) {
-                        ParticleUtility.frameUpdate(fire, fire.getCounts(), fire.getDrawing(), timeStep);
-                    }
-                }
-            }
+        if (AssetManager.getAsset() != null) for (EditorObject editorObject : AssetManager.getAsset().getObjects()) {
+            editorObject.frameUpdate(timeStep);
         }
 
         Renderer.draw();

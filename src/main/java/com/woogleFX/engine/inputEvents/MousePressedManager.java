@@ -1,22 +1,22 @@
 package com.woogleFX.engine.inputEvents;
 
-import com.woogleFX.editorObjects.Asset;
+import com.woogleFX.assets.Asset;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
+import com.woogleFX.editorObjects.objectComponents.generic.BoundedProperty;
+import com.woogleFX.editorObjects.objectComponents.generic.RotatableProperty;
 import com.woogleFX.editorObjects.splineGeom.SplineGeometryPlacer;
 import com.woogleFX.editorObjects.splineGeom.SplineManager;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
+import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
 import com.woogleFX.engine.renderer.Renderer;
 import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.editorObjects.DragSettings;
 import com.woogleFX.engine.undoHandling.UndoManager;
 import com.woogleFX.engine.undoHandling.userActions.CreateSplinePointAction;
-import com.woogleFX.gameData.level.WOG1Level;
-import com.woogleFX.gameData.level.WOG2Level;
-import com.woogleFX.gameData.level._Level;
 import com.worldOfGoo.level.BallInstance;
 import com.worldOfGoo2.level._2_Level_BallInstance;
 import javafx.geometry.Point2D;
@@ -28,15 +28,21 @@ import javafx.scene.input.MouseEvent;
 
 import java.awt.geom.QuadCurve2D;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MousePressedManager {
 
+    // TODO: make it so you can click on stuff beneath the foremost objects
 
     /** Called whenever the mouse is pressed. */
     public static void eventMousePressed(MouseEvent event) {
+        wasDragged = false;
         if (event.getButton() == MouseButton.PRIMARY) primaryMouseButton(event);
         else if (event.getButton() == MouseButton.SECONDARY) secondaryMouseButton(event);
     }
+
+    public static boolean wasDragged = false;
 
 
     private static void primaryMouseButton(MouseEvent event) {
@@ -44,14 +50,12 @@ public class MousePressedManager {
         Asset level = AssetManager.getAsset();
         if (level == null) return;
 
-        if (level.getSelected().length != 0) ifSelectedAlreadyExists(level);
+        if (level.getSelectedComponents().length != 0) ifSelectedAlreadyExists(level);
 
         if (event.getY() < FXCanvas.getMouseYOffset()) return;
 
         if (SelectionManager.getMode() == SelectionManager.SELECTION) manageSelection(event, level);
-        else if (SelectionManager.getMode() == SelectionManager.STRAND) {
-            if (level instanceof _Level _level) tryToPlaceStrand(event, _level);
-        }
+        else if (SelectionManager.getMode() == SelectionManager.STRAND) tryToPlaceStrand(event, level);
         else if (SelectionManager.getMode() == SelectionManager.GEOMETRY) manageSplinePlacement(event, level);
 
     }
@@ -74,7 +78,7 @@ public class MousePressedManager {
 
     private static void ifSelectedAlreadyExists(Asset level) {
 
-        TreeTableView<EditorAttribute> propertiesView = FXPropertiesView.getPropertiesView();
+        TreeTableView<EditorAttribute[]> propertiesView = FXPropertiesView.getPropertiesView();
 
         if (propertiesView.getEditingCell() == null
                 || propertiesView.getFocusModel().focusedIndexProperty().get() == -1) {
@@ -85,8 +89,15 @@ public class MousePressedManager {
 
     }
 
+    public static void reselect(MouseEvent event) {
+        if (SelectionManager.getOldSelected() != null) {
+            previouslySelectedComponents.addAll(Arrays.asList(SelectionManager.getOldSelected()));
+            manageSelection(event, AssetManager.getAsset());
+        }
+    }
 
-    private static void manageSelection(MouseEvent event, Asset level) {
+
+    public static void manageSelection(MouseEvent event, Asset level) {
 
         SplitPane splitPane = FXContainers.getSplitPane();
         double editorViewWidth = splitPane.getDividerPositions()[0] * splitPane.getWidth() - 6;
@@ -96,54 +107,90 @@ public class MousePressedManager {
         DragSettings dragSettings = tryToSelectSomething(event, level);
         if (dragSettings == DragSettings.NULL) {
             level.clearSelection();
+            previouslySelectedComponents.clear();
             return;
         }
-        for (EditorObject selected : level.getSelected())
+        if (Arrays.stream(level.getSelectedComponents()).anyMatch(e -> e == dragSettings.getObjectComponent()) && !event.isControlDown()) {
 
-            if (selected.containsObjectComponent(dragSettings.getObjectComponent())) {
+            if (!dragSettings.getObjectComponent().isDraggable()) return;
 
-                if (!dragSettings.getObjectComponent().isDraggable()) return;
-
-                if (dragSettings.getType() == DragSettings.MOVE) FXScene.getScene().setCursor(Cursor.MOVE);
-                SelectionManager.setDragSettings(dragSettings);
-                return;
-
+            if (dragSettings.getType() == DragSettings.MOVE) FXScene.getScene().setCursor(Cursor.MOVE);
+            dragSettings.setOriginalPositions(new Point2D[level.getSelectedComponents().length]);
+            dragSettings.setOriginalSizes(new Point2D[level.getSelectedComponents().length]);
+            dragSettings.setOriginalRotations(new double[level.getSelectedComponents().length]);
+            int i = 0;
+            for (ObjectComponent objectComponent : level.getSelectedComponents()) {
+                dragSettings.getOriginalPositions()[i] = new Point2D(objectComponent.getX(), objectComponent.getY());
+                if (objectComponent instanceof BoundedProperty rectangleComponent) {
+                    dragSettings.getOriginalSizes()[i] = new Point2D(rectangleComponent.getWidth(), rectangleComponent.getHeight());
+                }
+                if (objectComponent instanceof RotatableProperty rotatableProperty) {
+                    dragSettings.getOriginalRotations()[i] = rotatableProperty.getRotation();
+                }
+                i++;
             }
+            SelectionManager.setDragSettings(dragSettings);
+            return;
 
-        EditorObject selectedObject = level.getObjectWithComponent(dragSettings.getObjectComponent());
-        if (selectedObject == null) return;
-
-        EditorObject[] selectedList;
-        if (event.isControlDown()) {
-            selectedList = new EditorObject[level.getSelected().length + 1];
-            System.arraycopy(level.getSelected(), 0, selectedList, 0, level.getSelected().length);
-            selectedList[level.getSelected().length] = selectedObject;
-        } else {
-            selectedList = new EditorObject[]{selectedObject};
         }
 
-        level.setSelected(selectedList);
-        FXPropertiesView.changeTableView(selectedList);
+        ObjectComponent[] selectedList;
+        if (event.isControlDown()) {
+            if (Arrays.stream(level.getSelectedComponents()).anyMatch(e -> e == dragSettings.getObjectComponent())) {
+                selectedList = new ObjectComponent[level.getSelectedComponents().length - 1];
+                int j = 0;
+                for (int i = 0; i < level.getSelectedComponents().length; i++) {
+                    if (level.getSelectedComponents()[i] != dragSettings.getObjectComponent()) {
+                        selectedList[j] = level.getSelectedComponents()[i];
+                        j++;
+                    }
+                }
+            } else {
+                selectedList = new ObjectComponent[level.getSelectedComponents().length + 1];
+                System.arraycopy(level.getSelectedComponents(), 0, selectedList, 0, level.getSelectedComponents().length);
+                selectedList[level.getSelectedComponents().length] = dragSettings.getObjectComponent();
+            }
+        } else {
+            selectedList = new ObjectComponent[] { dragSettings.getObjectComponent() };
+        }
+
+        ArrayList<EditorObject> selectedObjects = new ArrayList<>();
+        for (ObjectComponent objectComponent : selectedList) {
+            if (!selectedObjects.contains(objectComponent.getEditorObject())) {
+                selectedObjects.add(objectComponent.getEditorObject());
+            }
+        }
+        level.setSelectedDiscreetly(selectedObjects.toArray(EditorObject[]::new));
+        level.setSelectedComponents(selectedList);
+
+        EditorObject selectedObject = dragSettings.getObjectComponent().getEditorObject();
+        if (selectedObject == null) return;
+
+        FXPropertiesView.changeTableView(level.getSelectedObjects());
         if (selectedObject.getParent() != null) selectedObject.getParent().getTreeItem().setExpanded(true);
+        FXHierarchy.scrollTo(selectedObject);
 
+        if (selectedList.length == 0) return;
         int[] indices = new int[selectedList.length - 1];
-        for (int i = 0; i < indices.length; i++) indices[i] = FXHierarchy.getHierarchy().getRow(selectedList[i + 1].getTreeItem());
+        // TODO: this also sucks
+        for (int i = 0; i < indices.length; i++) indices[i] = FXHierarchy.getHierarchy().getRow(selectedList[i + 1].getEditorObject().getTreeItem());
 
+        level.lockSelection();
         FXHierarchy.getHierarchy().getSelectionModel().clearSelection();
-        FXHierarchy.getHierarchy().getSelectionModel().selectIndices(FXHierarchy.getHierarchy().getRow(selectedList[0].getTreeItem()), indices);
-        FXHierarchy.getHierarchy().scrollTo(FXHierarchy.getHierarchy().getRow(selectedObject.getTreeItem()));
-
+        FXHierarchy.getHierarchy().getSelectionModel().selectIndices(FXHierarchy.getHierarchy().getRow(selectedList[0].getEditorObject().getTreeItem()), indices);
+        FXHierarchy.scrollTo(selectedObject);
+        level.unlockSelection();
 
     }
 
 
-    private static void tryToPlaceStrand(MouseEvent event, _Level _level) {
+    private static void tryToPlaceStrand(MouseEvent event, Asset _level) {
 
         double mouseX = (event.getX() - _level.getOffsetX()) / _level.getZoom();
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - _level.getOffsetY()) / _level.getZoom();
 
-        if (_level instanceof WOG1Level level) {
-            for (EditorObject EditorObject : level.getLevel()) if (EditorObject instanceof BallInstance ballInstance) {
+        for (EditorObject EditorObject : _level.getObjects()) {
+            if (EditorObject instanceof BallInstance ballInstance) {
                 for (ObjectComponent objectComponent : ballInstance.getObjectComponents()) {
                     if (objectComponent.mouseIntersection(mouseX, mouseY) != DragSettings.NULL) {
                         if (SelectionManager.getStrand1Gooball() == null) {
@@ -153,8 +200,7 @@ public class MousePressedManager {
                     }
                 }
             }
-        } else if (_level instanceof WOG2Level level) {
-            for (EditorObject EditorObject : level.getObjects()) if (EditorObject instanceof _2_Level_BallInstance ballInstance) {
+            if (EditorObject instanceof _2_Level_BallInstance ballInstance) {
                 for (ObjectComponent objectComponent : ballInstance.getObjectComponents()) {
                     if (objectComponent.mouseIntersection(mouseX, mouseY) != DragSettings.NULL) {
                         if (SelectionManager.getStrand1Gooball() == null) {
@@ -165,20 +211,19 @@ public class MousePressedManager {
                 }
             }
         }
-
 
     }
 
 
     private static void updateOldAttributes(Asset level) {
 
-        EditorAttribute[][] oldAttributes = new EditorAttribute[level.getSelected().length][];
+        EditorAttribute[][] oldAttributes = new EditorAttribute[level.getSelectedComponents().length][];
 
-        for (int i = 0; i < level.getSelected().length; i++) {
+        for (int i = 0; i < level.getSelectedComponents().length; i++) {
 
             ArrayList<EditorAttribute> output = new ArrayList<>();
 
-            EditorObject selected = level.getSelected()[i];
+            EditorObject selected = level.getSelectedComponents()[i].getEditorObject();
 
             for (EditorAttribute attribute : selected.getAttributes()) {
 
@@ -196,9 +241,12 @@ public class MousePressedManager {
         }
 
         SelectionManager.setOldAttributes(oldAttributes);
-        SelectionManager.setOldSelected(level.getSelected());
+        SelectionManager.setOldSelected(level.getSelectedComponents());
 
     }
+
+
+    private static final List<ObjectComponent> previouslySelectedComponents = new ArrayList<>();
 
 
     public static DragSettings tryToSelectSomething(MouseEvent event, Asset level) {
@@ -206,23 +254,50 @@ public class MousePressedManager {
         double mouseX = (event.getX() - level.getOffsetX()) / level.getZoom();
         double mouseY = (event.getY() - FXCanvas.getMouseYOffset() - level.getOffsetY()) / level.getZoom();
 
-        EditorObject[] selectedList = level.getSelected();
-        for (EditorObject selected : selectedList) for (ObjectComponent objectComponent : selected.getObjectComponents()) {
+        for (ObjectComponent objectComponent : level.getSelectedComponents()) {
             if (!objectComponent.isVisible()) continue;
             if (!objectComponent.isSelectable()) continue;
             DragSettings dragSettings = objectComponent.mouseIntersectingCorners(mouseX, mouseY);
             if (dragSettings != DragSettings.NULL) return dragSettings;
         }
 
+        DragSettings toReturn = DragSettings.NULL;
         ArrayList<ObjectComponent> byDepth = Renderer.orderObjectPositionsByDepth(level);
-        byDepth.sort((o1, o2) -> (int)Math.signum(o2.getDepth() - o1.getDepth()));
         for (ObjectComponent object : byDepth) {
             if (!object.isVisible() || !object.isSelectable()) continue;
+            if (previouslySelectedComponents.contains(object)) continue;
             DragSettings dragSettings = object.mouseIntersection(mouseX, mouseY);
-            if (dragSettings != DragSettings.NULL) return dragSettings;
+            if (dragSettings != DragSettings.NULL) {
+                boolean canSelect = true;
+
+                if (toReturn != DragSettings.NULL &&
+                        toReturn.getObjectComponent() instanceof BoundedProperty imageComponent1 &&
+                        dragSettings.getObjectComponent() instanceof BoundedProperty imageComponent2 &&
+                        (dragSettings.getOpacity() > 0.9 || toReturn.getOpacity() < 0.9)) {
+
+                    if (imageComponent1.getWidth() * imageComponent1.getHeight() <
+                            imageComponent2.getWidth() * imageComponent2.getHeight()) {
+                        canSelect = false;
+                    }
+
+                }
+                if (canSelect) {
+                    toReturn = dragSettings;
+                }
+                if (dragSettings.getOpacity() > 0.9) break;
+            }
         }
 
-        return DragSettings.NULL;
+        if (toReturn == DragSettings.NULL && !previouslySelectedComponents.isEmpty()) {
+            previouslySelectedComponents.clear();
+            // teehee
+            return tryToSelectSomething(event, level);
+        } else {
+            if (toReturn != DragSettings.NULL) {
+                //previouslySelectedComponents.add(toReturn.getObjectComponent());
+            }
+            return toReturn;
+        }
 
     }
 

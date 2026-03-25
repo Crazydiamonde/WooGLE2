@@ -1,13 +1,14 @@
 package com.worldOfGoo.resrc;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.attributes.InputField;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
+import com.woogleFX.assets.GameVersion;
 
-public class Sound extends EditorObject {
+public class Sound extends EditorObject implements ResourceInterface {
 
     private SetDefaults setDefaults;
+    public SetDefaults getSetDefaults() {
+        return setDefaults;
+    }
     public void setSetDefaults(SetDefaults setDefaults) {
         this.setDefaults = setDefaults;
     }
@@ -26,15 +27,8 @@ public class Sound extends EditorObject {
 
 
     public Sound(EditorObject _parent, GameVersion version) {
-        super(_parent, "Sound", version);
-
-        addAttribute("id", InputField._1_STRING).assertRequired();
-        addAttribute("path", InputField._1_SOUND_PATH).assertRequired();
-
-        setMetaAttributes(MetaEditorAttribute.parse("id,path,"));
-
+        super(_parent, version);
     }
-
 
     @Override
     public String getName() {

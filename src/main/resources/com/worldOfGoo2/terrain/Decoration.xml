@@ -1,32 +1,32 @@
 <AttributeManifest localName="Decoration">
 
     <attributes>
-        <EditorAttribute name="type" type="_2_STRING" childAlias="com.worldOfGoo2.level._2_Level_UserVariable"/>
-        <EditorAttribute name="images" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="selectionWeight" type="_2_STRING"/>
-        <EditorAttribute name="scaleStart" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="scaleEnd" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="scaleDelay" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="scaleDuration" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="tPos" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="tPosMaxAngleDifference" type="_2_STRING"/>
-        <EditorAttribute name="yOffset" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="angleLimit1" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="angleLimit2" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="rotationRange" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="alpha" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="anchor" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="followEdgeFactor" type="_2_STRING"/>
-        <EditorAttribute name="stainLiquidType" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_LiquidType"/>
-        <EditorAttribute name="stainFactor" type="_2_STRING"/>
-        <EditorAttribute name="windFactor" type="_2_STRING"/>
-        <EditorAttribute name="fitWidthFactor" type="_2_STRING"/>
-        <EditorAttribute name="density" type="_2_STRING"/>
-        <EditorAttribute name="order" type="_2_STRING" childAlias="com.worldOfGoo2.level._2_Level_UserVariable"/>
-        <EditorAttribute name="sortOffset" type="_2_STRING"/>
-        <EditorAttribute name="group" type="_2_STRING"/>
-        <EditorAttribute name="ignoreEdgeAttribute" type="_2_STRING"/>
-        <EditorAttribute name="genericProbability" type="_2_STRING"/>
+        <EditorAttribute name="type" type="STRING" childAlias="com.worldOfGoo2.level.UserVariable"/>
+        <EditorAttribute name="images" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="selectionWeight" type="STRING"/>
+        <EditorAttribute name="scaleStart" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="scaleEnd" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="scaleDelay" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="scaleDuration" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="tPos" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="tPosMaxAngleDifference" type="STRING"/>
+        <EditorAttribute name="yOffset" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="angleLimit1" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="angleLimit2" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="rotationRange" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="alpha" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="anchor" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="followEdgeFactor" type="STRING"/>
+        <EditorAttribute name="stainLiquidType" type="STRING" childAlias="com.worldOfGoo2.misc.LiquidType"/>
+        <EditorAttribute name="stainFactor" type="STRING"/>
+        <EditorAttribute name="windFactor" type="STRING"/>
+        <EditorAttribute name="fitWidthFactor" type="STRING"/>
+        <EditorAttribute name="density" type="STRING"/>
+        <EditorAttribute name="order" type="STRING" childAlias="com.worldOfGoo2.level.UserVariable"/>
+        <EditorAttribute name="sortOffset" type="STRING"/>
+        <EditorAttribute name="group" type="STRING"/>
+        <EditorAttribute name="ignoreEdgeAttribute" type="STRING"/>
+        <EditorAttribute name="genericProbability" type="STRING"/>
     </attributes>
 
 </AttributeManifest>

@@ -1,6 +1,13 @@
-<AttributeManifest>
+<AttributeManifest localName="Image">
+
     <attributes>
-        <EditorAttribute name="imageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="imageMaskId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
+        <EditorAttribute name="imageId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="imageMaskId" type="_2_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.misc.ImageID"/>
     </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="imageId"/>
+        <MetaEditorAttribute name="imageMaskId"/>
+    </metaAttributes>
+
 </AttributeManifest>

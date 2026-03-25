@@ -1,0 +1,35 @@
+<AttributeManifest localName="label">
+
+    <attributes>
+        <EditorAttribute name="id"          type="STRING"                              required="true"/>
+        <EditorAttribute name="depth"       type="_1_NUMBER" defaultValue="10"         required="true"/>
+        <EditorAttribute name="x"           type="_1_NUMBER" defaultValue="0"          required="true"/>
+        <EditorAttribute name="y"           type="_1_NUMBER" defaultValue="0"          required="true"/>
+        <EditorAttribute name="align"       type="STRING"    defaultValue="center"     required="true"/>
+        <EditorAttribute name="rotation"    type="_1_NUMBER" defaultValue="0"          required="true"/>
+        <EditorAttribute name="scale"       type="_1_NUMBER" defaultValue="1"          required="true"/>
+        <EditorAttribute name="overlay"     type="BOOLEAN"   defaultValue="true"       required="true"/>
+        <EditorAttribute name="screenspace" type="BOOLEAN"   defaultValue="true"       required="true"/>
+        <EditorAttribute name="font"        type="_1_FONT"                             required="true"/>
+        <EditorAttribute name="text"        type="_1_TEXT"                             required="true"/>
+        <EditorAttribute name="colorize"    type="_1_COLOR"  defaultValue="255,55,255"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+        <MetaEditorAttribute name="rotation"/>
+        <MetaEditorAttribute name="scale"/>
+        <MetaEditorAttribute name="depth"/>
+        <MetaEditorAttribute name="colorize"/>
+        <MetaEditorAttribute name="overlay"/>
+        <MetaEditorAttribute name="screenspace"/>
+        <MetaEditorAttribute name="Text" openByDefault="true">
+            <MetaEditorAttribute name="text"/>
+            <MetaEditorAttribute name="font"/>
+            <MetaEditorAttribute name="align"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

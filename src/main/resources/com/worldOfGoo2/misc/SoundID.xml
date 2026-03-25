@@ -1,0 +1,11 @@
+<AttributeManifest localName="SoundID">
+
+    <attributes>
+        <EditorAttribute name="soundId" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="soundId"/>
+    </metaAttributes>
+
+</AttributeManifest>

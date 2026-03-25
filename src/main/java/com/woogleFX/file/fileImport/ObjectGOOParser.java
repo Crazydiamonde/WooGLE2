@@ -3,7 +3,7 @@ package com.woogleFX.file.fileImport;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -11,23 +11,11 @@ import java.util.Stack;
 /** Opens the custom World of Goo 2 file format. */
 public class ObjectGOOParser {
 
-    static class AssetObject {
+    private static class AssetObject {
 
     }
 
-    static class AssetObjectAttribute {
-
-        String name;
-        AssetObject value;
-
-        AssetObjectAttribute(String name, AssetObject value) {
-            this.name = name;
-            this.value = value;
-        }
-
-    }
-
-    static class AssetStringObject extends AssetObject {
+    private static class AssetStringObject extends AssetObject {
 
         String value;
 
@@ -37,17 +25,7 @@ public class ObjectGOOParser {
 
     }
 
-    static class AssetDoubleObject extends AssetObject {
-
-        double value;
-
-        AssetDoubleObject(double value) {
-            this.value = value;
-        }
-
-    }
-
-    static class AssetAssetObject extends AssetObject {
+    private static class AssetAssetObject extends AssetObject {
 
         final EditorObject value;
 
@@ -57,7 +35,7 @@ public class ObjectGOOParser {
 
     }
 
-    static class AssetArrayObject extends AssetObject {
+    private static class AssetArrayObject extends AssetObject {
 
         final ArrayList<AssetObject> value;
 
@@ -68,7 +46,7 @@ public class ObjectGOOParser {
     }
 
 
-    public static AssetObject readString(Stack<String> tokens) {
+    private static AssetObject readString(Stack<String> tokens) {
         String token = tokens.remove(0);
         if (!token.equals("\"")) {
             tokens.remove(0);
@@ -79,7 +57,7 @@ public class ObjectGOOParser {
     }
 
 
-    public static AssetObject readList(Class<? extends EditorObject> type, Stack<String> tokens, String typeId, EditorObject parent) {
+    private static AssetObject readList(Class<? extends EditorObject> type, Stack<String> tokens, String typeId, EditorObject parent) {
 
         ArrayList<AssetObject> assetObjects = new ArrayList<>();
         while (true) {
@@ -92,13 +70,9 @@ public class ObjectGOOParser {
                     return new AssetArrayObject(assetObjects);
                 }
 
-                case "[" -> {
-                    assetObjects.add(readList(type, tokens, typeId, parent));
-                }
+                case "[" -> assetObjects.add(readList(type, tokens, typeId, parent));
 
-                case "\"" -> {
-                    assetObjects.add(readString(tokens));
-                }
+                case "\"" -> assetObjects.add(readString(tokens));
 
                 case "{" -> {
                     if (type != null) assetObjects.add(readAsset(type, tokens, typeId, parent));
@@ -108,9 +82,7 @@ public class ObjectGOOParser {
 
                 }
 
-                default -> {
-                    assetObjects.add(new AssetStringObject(token));
-                }
+                default -> assetObjects.add(new AssetStringObject(token));
 
             }
 
@@ -118,9 +90,9 @@ public class ObjectGOOParser {
 
     }
 
-    public static AssetAssetObject readAsset(Class<? extends EditorObject> type, Stack<String> tokens, String typeId, EditorObject parent) {
+    private static AssetAssetObject readAsset(Class<? extends EditorObject> type, Stack<String> tokens, String typeId, EditorObject parent) {
 
-        EditorObject asset = ObjectCreator.create2(type, parent, typeId, GameVersion.VERSION_WOG2);
+        EditorObject asset = ObjectCreator.create(type, parent, typeId, GameVersion.VERSION_WOG2);
 
         String name = null;
 
@@ -142,10 +114,10 @@ public class ObjectGOOParser {
                             break;
                         }
                     }
-                    String total = "";
+                    StringBuilder total = new StringBuilder();
                     for (AssetObject assetObject : ((AssetArrayObject) readList(typeClass, tokens, name, asset)).value) {
                         if (assetObject instanceof AssetStringObject assetStringObject) {
-                            total += assetStringObject.value + ",";
+                            total.append(assetStringObject.value).append(",");
                         }
                     }
                     if (!total.isEmpty()) {
@@ -180,11 +152,7 @@ public class ObjectGOOParser {
                     name = null;
                 }
 
-                case ":" -> {
-
-                }
-
-                case "," -> {
+                case ":", "," -> {
 
                 }
 
@@ -202,9 +170,10 @@ public class ObjectGOOParser {
     }
 
 
+    @SuppressWarnings("unchecked")
     public static <T extends EditorObject> T read(Class<T> assetType, String text, String typeId) {
 
-        String currentWord = "";
+        StringBuilder currentWord = new StringBuilder();
 
         Stack<String> tokens = new Stack<>();
 
@@ -213,12 +182,12 @@ public class ObjectGOOParser {
             char c = text.charAt(index);
 
             if (c == '{' || c == '}' || c == '[' || c == ']' || c == ':' || c == ',' || c == '"') {
-                if (!currentWord.isEmpty()) tokens.add(currentWord);
-                currentWord = "";
+                if (!currentWord.isEmpty()) tokens.add(currentWord.toString());
+                currentWord = new StringBuilder();
                 tokens.add(String.valueOf(c));
             } else {
-                if (c != '\n' && c != '\t' && c != ' ') {
-                    currentWord += c;
+                if (c != '\n' && c != '\t' && c != ' ' && c != '\r') {
+                    currentWord.append(c);
                 }
             }
 

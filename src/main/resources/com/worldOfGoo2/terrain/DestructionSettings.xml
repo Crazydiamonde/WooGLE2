@@ -1,13 +1,13 @@
 <AttributeManifest localName="DestructionSettings">
 
     <attributes>
-        <EditorAttribute name="enabled" type="_2_STRING"/>
-        <EditorAttribute name="particleEffect" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="spawnItem" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="cameraShakeTime" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="cameraShakeFrequency" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="cameraShakeStrength" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="stableFluidsDensityFactor" type="_2_STRING" childAlias="com.worldOfGoo2.environments._2_Environment_StableFluidsBloomFactor"/>
+        <EditorAttribute name="enabled" type="STRING"/>
+        <EditorAttribute name="particleEffect" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="spawnItem" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="cameraShakeTime" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="cameraShakeFrequency" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="cameraShakeStrength" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="stableFluidsDensityFactor" type="STRING" childAlias="com.worldOfGoo2.environments.StableFluidsBloomFactor"/>
     </attributes>
 
 </AttributeManifest>

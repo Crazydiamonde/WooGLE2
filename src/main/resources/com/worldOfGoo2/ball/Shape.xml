@@ -1,5 +1,10 @@
-<AttributeManifest>
+<AttributeManifest localName="Shape">
+
     <attributes>
-        <EditorAttribute name="ballShape" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="ballShape" type="NUMBER" required="true"/>
     </attributes>
+
+    <metaAttributes>
+    </metaAttributes>
+
 </AttributeManifest>

@@ -1,0 +1,23 @@
+<AttributeManifest localName="sinanim">
+
+    <attributes>
+        <EditorAttribute name="part" type="_1_PART" required="true"/>
+        <EditorAttribute name="state" type="STRING" required="true"/>
+        <EditorAttribute name="type" type="STRING" required="true"/>
+        <EditorAttribute name="axis" type="STRING" required="true"/>
+        <EditorAttribute name="freq" type="STRING" required="true"/>
+        <EditorAttribute name="amp" type="STRING" required="true"/>
+        <EditorAttribute name="shift" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="part"/>
+        <MetaEditorAttribute name="state"/>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="axis"/>
+        <MetaEditorAttribute name="freq"/>
+        <MetaEditorAttribute name="amp"/>
+        <MetaEditorAttribute name="shift"/>
+    </metaAttributes>
+
+</AttributeManifest>

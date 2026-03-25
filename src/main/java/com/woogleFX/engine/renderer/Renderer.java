@@ -1,17 +1,14 @@
 package com.woogleFX.engine.renderer;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.woogleFX.editorObjects.Asset;
+import com.woogleFX.assets.*;
+import com.woogleFX.assets.wog1.ball.WOG1Ball;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.engine.SelectionManager;
 import com.woogleFX.engine.fx.FXCanvas;
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.gameData.ball._2Ball;
-import com.woogleFX.gameData.level.WOG1Level;
-import com.woogleFX.gameData.level.WOG2Level;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -45,13 +42,11 @@ public class Renderer {
         Canvas canvas = FXCanvas.getCanvas();
 
         if (level != null) {
-            //if (level.getVisibilitySettings().isShowSceneBGColor()) {
-               //canvas.getGraphicsContext2D().setFill(Paint.valueOf(((WOG1Level)level).getSceneObject().getAttribute("backgroundcolor").colorValue().toHexRGBA()));
-               //canvas.getGraphicsContext2D().fillRect(-5000000, -5000000, 10000000, 10000000);
-            //} else {
-               //canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
-            //}
             canvas.getGraphicsContext2D().clearRect(-5000000, -5000000, 10000000, 10000000);
+            if (level instanceof HasBackground hasBackground) {
+                canvas.getGraphicsContext2D().setFill(hasBackground.getBackgroundColor());
+                canvas.getGraphicsContext2D().fillRect(-5000000, -5000000, 10000000, 10000000);
+            }
             drawLevelToCanvas(level, canvas);
 
             if (SelectionManager.getMode() == SelectionManager.GEOMETRY) {
@@ -80,58 +75,27 @@ public class Renderer {
     }
 
 
-    private static void recursiveGetAllObjectsInList(ArrayList<EditorObject> EditorObjects,
-                                                     EditorObject EditorObject) {
-
-        if (EditorObject == null) return;
-
-        EditorObjects.add(EditorObject);
-
-        for (EditorObject child : EditorObject.getChildren().toArray(new EditorObject[0])) {
-            recursiveGetAllObjectsInList(EditorObjects, child);
-        }
-
-    }
-
-
-    private static void addAllObjectPositionsToList(ArrayList<ObjectComponent> objectComponents,
-                                                    EditorObject EditorObject) {
-
-        ArrayList<EditorObject> allObjects = new ArrayList<>();
-        recursiveGetAllObjectsInList(allObjects, EditorObject);
-
-        for (EditorObject object : allObjects) {
-            for (ObjectComponent objectComponent : object.getObjectComponents()) {
-                addObjectPositionToListByDepth(objectComponents, objectComponent);
-            }
-        }
-
-    }
-
-
     public static ArrayList<ObjectComponent> orderObjectPositionsByDepth(Asset level) {
 
         ArrayList<ObjectComponent> objectComponents = new ArrayList<>();
 
-        if (level instanceof WOG2Level wog2Level) {
-
-            addAllObjectPositionsToList(objectComponents, wog2Level.getLevel());
-            return objectComponents;
-
+        for (EditorObject editorObject : level.getObjects()) {
+            for (ObjectComponent objectComponent : editorObject.getObjectComponents()) {
+                addObjectPositionToListByDepth(objectComponents, objectComponent);
+            }
         }
 
-        if (level instanceof _2Ball ball) {
-
-            addAllObjectPositionsToList(objectComponents, ball.getObjects().get(0));
-            return objectComponents;
-
+        if (SelectionManager.getStrand1Gooball() != null) {
+            double gameRelativeX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();
+            double gameRelativeY = (SelectionManager.getMouseY() - level.getOffsetY()) / level.getZoom();
+            addObjectPositionToListByDepth(objectComponents, EffectsManager.getPlacingStrand(SelectionManager.getStrand1Gooball(), gameRelativeX, gameRelativeY));
         }
 
-        addAllObjectPositionsToList(objectComponents, ((WOG1Level)level).getLevelObject());
-        addAllObjectPositionsToList(objectComponents, ((WOG1Level)level).getSceneObject());
-        addAllObjectPositionsToList(objectComponents, ((WOG1Level)level).getResrcObject());
-        addAllObjectPositionsToList(objectComponents, ((WOG1Level)level).getAddinObject());
-        addAllObjectPositionsToList(objectComponents, ((WOG1Level)level).getTextObject());
+        objectComponents.sort((o1, o2) -> {
+            if (o2.getGlobalLayer() != o1.getGlobalLayer())
+                return o2.getGlobalLayer().ordinal() - o1.getGlobalLayer().ordinal();
+            else return (int)Math.signum(o2.getDepth() - o1.getDepth());
+        });
 
         return objectComponents;
 
@@ -144,14 +108,6 @@ public class Renderer {
 
         ArrayList<ObjectComponent> objectPositionsOrderedByDepth = orderObjectPositionsByDepth(level);
 
-        if (SelectionManager.getStrand1Gooball() != null) {
-            double gameRelativeX = (SelectionManager.getMouseX() - level.getOffsetX()) / level.getZoom();
-            double gameRelativeY = (SelectionManager.getMouseY() - level.getOffsetY()) / level.getZoom();
-            addObjectPositionToListByDepth(objectPositionsOrderedByDepth, EffectsManager.getPlacingStrand(SelectionManager.getStrand1Gooball(), gameRelativeX, gameRelativeY));
-        }
-
-        objectPositionsOrderedByDepth.sort((o1, o2) -> (int)Math.signum(o2.getDepth() - o1.getDepth()));
-
         for (int i = objectPositionsOrderedByDepth.size() - 1; i >= 0; i--) {
             ObjectComponent objectComponent = objectPositionsOrderedByDepth.get(i);
 
@@ -159,15 +115,7 @@ public class Renderer {
 
             graphicsContext.save();
 
-            boolean selected = false;
-            for (EditorObject selectedObject : level.getSelected()) {
-                if (List.of(selectedObject.getObjectComponents()).contains(objectComponent)) {
-                    selected = true;
-                    break;
-                }
-            }
-
-            objectComponent.draw(graphicsContext, selected);
+            objectComponent.draw(graphicsContext);
 
             // This part is necessary for additive + low opacity rendering to work correctly. :)
             // ex. GPU bitspew particles in Graphics Processing Unit will have a white background without this
@@ -178,6 +126,15 @@ public class Renderer {
 
             graphicsContext.restore();
 
+        }
+
+        for (ObjectComponent objectComponent : level.getSelectedComponents()) {
+
+            if (!objectComponent.isVisible()) continue;
+
+            graphicsContext.save();
+            objectComponent.drawSelectionOutline(graphicsContext);
+            graphicsContext.restore();
         }
 
     }

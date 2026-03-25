@@ -44,12 +44,10 @@ public class KTXFileManager {
             DataBuffer buffer = new DataBufferByte(output, output.length);
             WritableRaster raster = Raster.createInterleavedRaster(buffer, width2, height2, 4 * width, 4, new int[]{ 0, 1, 2, 3}, null);
             ColorModel colorModel = new ComponentColorModel(ColorModel.getRGBdefault().getColorSpace(), true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
-            BufferedImage image = new BufferedImage(colorModel, raster, true, null);
 
-            return image;
+            return new BufferedImage(colorModel, raster, true, null);
 
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
 

@@ -1,0 +1,21 @@
+<AttributeManifest localName="font">
+
+    <attributes>
+        <EditorAttribute name="id"   type="STRING" required="true"/>
+        <EditorAttribute name="path" type="STRING" required="true"/>
+
+        <EditorAttribute name="cn" type="STRING"/>
+        <EditorAttribute name="ko" type="STRING"/>
+        <EditorAttribute name="jp" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="path"/>
+
+        <MetaEditorAttribute name="cn"/>
+        <MetaEditorAttribute name="ko"/>
+        <MetaEditorAttribute name="jp"/>
+    </metaAttributes>
+
+</AttributeManifest>

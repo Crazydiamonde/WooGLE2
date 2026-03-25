@@ -7,9 +7,7 @@ import com.woogleFX.editorObjects.splineGeom.SplineManager;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.gameData.ball.AtlasManager;
-import com.woogleFX.gameData.level.GameVersion;
-import javafx.embed.swing.SwingFXUtils;
+import com.woogleFX.assets.GameVersion;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -17,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
 import java.awt.geom.QuadCurve2D;
-import java.io.FileNotFoundException;
 
 public class EffectsManager {
 
@@ -27,72 +24,67 @@ public class EffectsManager {
 
         Image strandImage;
 
-        try {
-            if (goo1.getVersion() == GameVersion.VERSION_WOG2) {
-                strandImage = SwingFXUtils.toFXImage(AtlasManager.atlas.get("IMAGE_BALL_GENERIC_ARM_INACTIVE"), null);
-            } else {
-                if (!FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty())
-                    strandImage = ResourceManager.getImage(null, strandImageID, GameVersion.VERSION_WOG1_NEW);
-                else strandImage = ResourceManager.getImage(null, strandImageID, GameVersion.VERSION_WOG1_OLD);
+        if (goo1.getVersion() == GameVersion.VERSION_WOG2) {
+            strandImage = ResourceManager.getImage(null, "IMAGE_BALL_GENERIC_ARM_INACTIVE", GameVersion.VERSION_WOG2);
+        } else {
+            if (!FileManager.getGameDir(GameVersion.VERSION_WOG1_NEW).isEmpty())
+                strandImage = ResourceManager.getImage(null, strandImageID, GameVersion.VERSION_WOG1_NEW);
+            else strandImage = ResourceManager.getImage(null, strandImageID, GameVersion.VERSION_WOG1_OLD);
+        }
+
+        return new ImageComponent(null) {
+            public double getX() {
+                double x1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? goo1.getAttribute("pos").positionValue().getX() : goo1.getAttribute("x").doubleValue();
+                return (x1 + mouseX) / 2;
             }
 
-            return new ImageComponent() {
-                public double getX() {
-                    double x1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? goo1.getAttribute("pos").positionValue().getX() : goo1.getAttribute("x").doubleValue();
-                    return (x1 + mouseX) / 2;
-                }
+            public double getY() {
+                double y1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? -goo1.getAttribute("pos").positionValue().getY() : -goo1.getAttribute("y").doubleValue();
+                return (y1 + mouseY) / 2;
+            }
 
-                public double getY() {
-                    double y1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? -goo1.getAttribute("pos").positionValue().getY() : -goo1.getAttribute("y").doubleValue();
-                    return (y1 + mouseY) / 2;
-                }
+            public double getRotation() {
 
-                public double getRotation() {
+                double x1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? goo1.getAttribute("pos").positionValue().getX() : goo1.getAttribute("x").doubleValue();
+                double y1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? -goo1.getAttribute("pos").positionValue().getY() : -goo1.getAttribute("y").doubleValue();
 
-                    double x1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? goo1.getAttribute("pos").positionValue().getX() : goo1.getAttribute("x").doubleValue();
-                    double y1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? -goo1.getAttribute("pos").positionValue().getY() : -goo1.getAttribute("y").doubleValue();
+                return Math.PI / 2 + Renderer.angleTo(new Point2D(x1, y1), new Point2D(mouseX, mouseY));
 
-                    return Math.PI / 2 + Renderer.angleTo(new Point2D(x1, y1), new Point2D(mouseX, mouseY));
+            }
 
-                }
+            public double getScaleX() {
+                return 0.0015;
+            }
 
-                public double getScaleX() {
-                    return 0.0015;
-                }
+            public double getScaleY() {
 
-                public double getScaleY() {
+                double x1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? goo1.getAttribute("pos").positionValue().getX() : goo1.getAttribute("x").doubleValue();
+                double y1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? -goo1.getAttribute("pos").positionValue().getY() : -goo1.getAttribute("y").doubleValue();
 
-                    double x1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? goo1.getAttribute("pos").positionValue().getX() : goo1.getAttribute("x").doubleValue();
-                    double y1 = goo1.getVersion() == GameVersion.VERSION_WOG2 ? -goo1.getAttribute("pos").positionValue().getY() : -goo1.getAttribute("y").doubleValue();
+                return Math.hypot(mouseX - x1, mouseY - y1) / strandImage.getHeight();
 
-                    return Math.hypot(mouseX - x1, mouseY - y1) / strandImage.getHeight();
+            }
 
-                }
+            public Image getImage() {
+                return strandImage;
+            }
 
-                public Image getImage() {
-                    return strandImage;
-                }
+            public double getDepth() {
+                return 0.00000001;
+            }
 
-                public double getDepth() {
-                    return 0.00000001;
-                }
+            public boolean isDraggable() {
+                return false;
+            }
 
-                public boolean isDraggable() {
-                    return false;
-                }
+            public boolean isResizable() {
+                return false;
+            }
 
-                public boolean isResizable() {
-                    return false;
-                }
-
-                public boolean isRotatable() {
-                    return false;
-                }
-            };
-
-        } catch (FileNotFoundException e) {
-            return null;
-        }
+            public boolean isRotatable() {
+                return false;
+            }
+        };
 
     }
 

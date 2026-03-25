@@ -1,0 +1,15 @@
+<AttributeManifest localName="sinvariance">
+
+    <attributes>
+        <EditorAttribute name="freq" type="STRING" required="true"/>
+        <EditorAttribute name="amp" type="STRING" required="true"/>
+        <EditorAttribute name="shift" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="freq"/>
+        <MetaEditorAttribute name="amp"/>
+        <MetaEditorAttribute name="shift"/>
+    </metaAttributes>
+
+</AttributeManifest>

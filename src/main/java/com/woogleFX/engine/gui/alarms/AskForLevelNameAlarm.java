@@ -1,12 +1,12 @@
 package com.woogleFX.engine.gui.alarms;
 
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.engine.gui.LevelSelector;
+import com.woogleFX.engine.fx.assetSelectPane.FXAssetSelectPane;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.gameData.level._Level;
-import com.woogleFX.gameData.level.levelOpening.AssetLoader;
-import com.woogleFX.gameData.level.levelSaving.AssetUpdater;
+import com.woogleFX.assets.GameVersion;
+import com.woogleFX.assets.AssetLoader;
+import com.woogleFX.assets.AssetUpdater;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class AskForLevelNameAlarm {
 
@@ -70,6 +71,9 @@ public class AskForLevelNameAlarm {
         newLevelNameText.setStyle("-fx-font-size: 11");
         typeItCorrectly.setStyle("-fx-font-size: 11");
 
+        Label errorText = new Label("");
+        errorText.setStyle("-fx-font-size: 11");
+
         enterNameHere.setMinHeight(25);
         enterNameHere.setPrefSize(291, 25);
         okButton.setMinHeight(25);
@@ -81,7 +85,7 @@ public class AskForLevelNameAlarm {
         buttonBox.setSpacing(8);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
-        VBox centralVBox = new VBox(newLevelNameText, enterNameHere, typeItCorrectly, buttonBox);
+        VBox centralVBox = new VBox(newLevelNameText, enterNameHere, errorText, typeItCorrectly, buttonBox);
 
         centralVBox.setPadding(new Insets(11, 11, 11, 11));
 
@@ -104,7 +108,8 @@ public class AskForLevelNameAlarm {
             case "new" -> {
                 stage.setTitle("Create New Level");
                 okButton.setOnAction(event -> {
-                    AssetLoader.newAsset(new LevelSelector(version), enterNameHere.getText());
+                    // TODO:
+                    //AssetLoader.newAsset(new LevelSelector(version), enterNameHere.getText());
                     stage.close();
                 });
             }
@@ -115,26 +120,44 @@ public class AskForLevelNameAlarm {
                     stage.close();
                 });
             }
-            case "changename" -> {
+            case "changeName" -> {
                 stage.setTitle("Change Level Name");
                 okButton.setOnAction(event -> {
                     File[] allLevels = new File(FileManager.getGameDir(version) + "/res/levels").listFiles();
                     if (allLevels == null) return;
                     for (File levelFile : allLevels) {
                         if (levelFile.getName().equals(enterNameHere.getText())) {
-                            //TODO Display a message saying it's already taken
+                            errorText.setText("Name is already taken.");
+
+                            new Task<Void>() {
+                                @Override
+                                protected Void call() {
+
+                                    try {
+                                        wait(1000);
+                                        errorText.setText("");
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+                                    return null;
+                                }
+                            }.run();
+
                             return;
                         }
                     }
-                    AssetUpdater.renameLevel((_Level) AssetManager.getAsset(), enterNameHere.getText());
+                    AssetUpdater.renameLevel(AssetManager.getAsset(), enterNameHere.getText());
                     stage.close();
                 });
             }
             case "delete" -> {
                 stage.setTitle("Delete Level");
                 okButton.setOnAction(event -> {
-                    if (enterNameHere.getText().equals(AssetManager.getAsset().getLevelName())) {
+                    if (enterNameHere.getText().equals(AssetManager.getAsset().getName())) {
                         AssetManager.getAsset().delete();
+                        FXAssetSelectPane.closeCurrentTab();
                         stage.close();
                     }
                 });

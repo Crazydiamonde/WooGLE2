@@ -1,0 +1,11 @@
+<AttributeManifest localName="music">
+
+    <attributes>
+        <EditorAttribute name="id" type="_1_SOUND" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+    </metaAttributes>
+
+</AttributeManifest>

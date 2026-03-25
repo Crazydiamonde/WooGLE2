@@ -1,379 +1,647 @@
 package com.woogleFX.editorObjects.attributes;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-
+import com.woogleFX.assets.AssetLoader;
+import com.woogleFX.assets.wog1.animation.WOG1Animation;
+import com.woogleFX.assets.wog1.ball.WOG1Ball;
+import com.woogleFX.assets.wog1.level.WOG1Level;
+import com.woogleFX.assets.wog1.particle.WOG1Particle;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.attributes.dataTypes.Color;
-import com.woogleFX.editorObjects.attributes.dataTypes.Position;
-import com.woogleFX.file.resourceManagers.BaseGameResources;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.gameData.animation.AnimationManager;
 import com.woogleFX.file.resourceManagers.ResourceManager;
-import com.woogleFX.engine.AssetManager;
-import com.woogleFX.gameData.level.WOG1Level;
-import com.woogleFX.gameData.particle.ParticleManager;
+import com.worldOfGoo.ball.part;
 import com.worldOfGoo.level.BallInstance;
-import com.worldOfGoo.particle.Ambientparticleeffect;
-import com.worldOfGoo.particle.Particleeffect;
-import com.worldOfGoo.resrc.ResrcImage;
+import com.worldOfGoo.resrc.Image;
+import com.worldOfGoo.resrc.ResourceInterface;
 import com.worldOfGoo.resrc.Sound;
-import com.worldOfGoo.scene.Circle;
-import com.worldOfGoo.scene.Compositegeom;
-import com.worldOfGoo.scene.Rectangle;
+import com.worldOfGoo.scene.circle;
+import com.worldOfGoo.scene.compositegeom;
+import com.worldOfGoo.scene.rectangle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum InputField {
 
     // World of Goo 1
 
     // Data types
-    _1_STRING,
-    _1_NUMBER,
-    _1_NUMBER_NON_NEGATIVE,
-    _1_NUMBER_POSITIVE,
-    _1_POSITION,
-    _1_COLOR,
-    _1_FLAG,
+    STRING {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    BOOLEAN {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+
+    _1_NUMBER {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_LIST_NUMBER {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_BALL_CONTAINS {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_BALL_SPAWN {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_ATTENUATION {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_INTEGER_NON_NEGATIVE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_NUMBER_NON_NEGATIVE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_NUMBER_POSITIVE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_POSITION {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_COLOR {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    FILE_PATH {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            if (!(object instanceof ResourceInterface resourceInterface)) return false;
+            String path = (resourceInterface.getSetDefaults() == null ? "" : resourceInterface.getSetDefaults().getAttribute("path").stringValue());
+            if (path.equals("./")) path = "";
+            Path parentPath = Path.of(FileManager.getGameDir(object.getVersion()) + "/" + path + s + ".temp").getParent();
+            if (!Files.exists(parentPath)) return false;
+            File[] children = new File(parentPath.toString()).listFiles();
+            if (children == null) return false;
+            for (File child : children) if (child.isFile()) {
+                String formattedPath = child.getPath().substring(FileManager.getGameDir(object.getVersion()).length(), child.getPath().lastIndexOf('.'));
+                if (formattedPath.startsWith("\\."))
+                    formattedPath = formattedPath.substring(2);
+                if (formattedPath.startsWith("\\"))
+                    formattedPath = formattedPath.substring(1);
+                formattedPath = formattedPath.replace('\\', '/');
+                if (formattedPath.equals(path + s))
+                    return true;
+            }
+            return false;
+        }
+        public String[] getPossibleValues(EditorAttribute attribute) {
+            List<String> possibleValues = new ArrayList<>();
+            if (!(attribute.getObject() instanceof ResourceInterface resourceInterface)) return new String[0];
+            String path = (resourceInterface.getSetDefaults() == null ? "" : resourceInterface.getSetDefaults().getAttribute("path").stringValue());
+            if (path.equals("./")) path = "";
+            File[] files = attribute.getObject().getAsset().getFile().listFiles();
+            if (files == null) return new String[0];
+            for (File child : files) {
+                if (attribute.getObject() instanceof Image) {
+                    try {
+                        if (ImageIO.read(child) == null) continue;
+                    } catch (IOException e) {
+                        continue;
+                    }
+                }
+                String childName = child.getPath().substring(FileManager.getGameDir(attribute.getObject().getVersion()).length() + 1, child.getPath().lastIndexOf("."));
+                childName = childName.replace('\\', '/');
+                possibleValues.add(childName.substring(path.length()));
+            }
+            return possibleValues.toArray(String[]::new);
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            if (!(object instanceof ResourceInterface resourceInterface)) return;
+            String path = (resourceInterface.getSetDefaults() == null ? "" : resourceInterface.getSetDefaults().getAttribute("path").stringValue());
+            if (path.equals("./")) path = "";
+            Path parentPath = Path.of(FileManager.getGameDir(object.getVersion()) + "/" + path + s + ".temp").getParent();
+            if (!Files.exists(parentPath)) return;
+            File[] children = new File(parentPath.toString()).listFiles();
+            if (children == null) return;
+            for (File child : children) if (child.isFile()) {
+                String formattedPath = child.getPath().substring(FileManager.getGameDir(object.getVersion()).length(), child.getPath().lastIndexOf('.'));
+                if (formattedPath.startsWith("\\."))
+                    formattedPath = formattedPath.substring(2);
+                if (formattedPath.startsWith("\\"))
+                    formattedPath = formattedPath.substring(1);
+                formattedPath = formattedPath.replace('\\', '/');
+                if (formattedPath.equals(path + s)) {
+                    try {
+                        Desktop.getDesktop().browse(child.getParentFile().toURI());
+                    } catch (IOException e) {
+                        logger.error("", e);
+                    }
+                }
+            }
+        }
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            return verify(object, s, true);
+        }
+    },
+
+
+    _1_PART {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            if (!(object.getAsset() instanceof WOG1Ball ball)) return;
+            for (EditorObject object1 : ball.getBall().getChildren()) {
+                if (object1 instanceof part && object1.getAttribute("name").stringValue().equals(s.split(",")[0])) {
+                    ball.setSelectedLoudly(new EditorObject[]{ object1 });
+                    return;
+                }
+            }
+        }
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            if (!(object.getAsset() instanceof WOG1Ball ball)) return false;
+            for (String s_ : s.split(",")) {
+                boolean ok = false;
+                for (EditorObject object1 : ball.getBall().getChildren()) {
+                    if (object1 instanceof part && object1.getAttribute("name").stringValue().equals(s_)) {
+                        ok = true;
+                        break;
+                    }
+                }
+                if (!ok) return false;
+            }
+            return true;
+        }
+    },
 
     // Level objects
-    _1_GOOBALL_ID,
-    _1_UNIQUE_GOOBALL_ID,
-    _1_IMAGE,
-    _1_GEOMETRY,
-
-
-    _1_ANIMATION,
-    _1_RANGE,
-    _1_MATERIAL,
-    _1_TAG,
-    _1_TEXT,
-    _1_PARTICLES,
-    _1_BALL,
-    _1_OCD_TYPE,
-    _1_IMAGE_TYPE,
-    _1_IMAGE_PATH,
-    _1_SOUND_PATH,
-    _1_FONT,
-    _1_CONTEXT,
-
-    _2_STRING,
-    _2_NUMBER,
-    _2_LEVEL_TYPE,
-    _2_BOOLEAN,
-    _2_UUID,
-    _2_UID,
-    _2_ISLAND_ID,
-    _2_OBJECT,
-    _2_LIST_STRING,
-    _2_LIST_NUMBER,
-    _2_BALL_TYPE,
-    _2_BALL_TYPE_USERVAR,
-    _2_TERRAIN_GROUP_TYPE_INDEX,
-    _2_TERRAIN_GROUP,
-    _2_ITEM_TYPE,
-    _2_SKIN,
-    _2_GAME_LEVEL,
-    _2_SOUND_ID,
-    _2_MUSIC_ID,
-    _2_AMBIENCE_ID,
-    _2_BALL_UID,
-    _2_STRAND_TYPE,
-    _2_ENVIRONMENT_ID,
-    _2_BACKGROUND_ID,
-    _2_LIQUID_TYPE,
-    _2_PARTICLE_EFFECT_NAME,
-    _2_COLLISION_GROUP,
-
-    _2_CHILD,
-    _2_CHILD_HIDDEN,
-    _2_LIST_CHILD,
-    _2_LIST_CHILD_HIDDEN,
-
-    _2_TERRAIN_GROUP_TYPE;
-
-    public static boolean verify(EditorObject object, InputField type, String potential, boolean required) {
-
-        if (type == null) return true;
-        if (type == _2_LIST_STRING || type == _2_LIST_NUMBER || type == _2_LIST_CHILD || type == _2_LIST_CHILD_HIDDEN) return true;
-
-        if (potential == null) return !required;
-
-        switch (type) {
-
-            case _1_STRING -> {
-                return true;
+    _1_GOOBALL_ID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            if (!(object.getAsset() instanceof WOG1Level level)) return false;
+            for (EditorObject object1 : level.getLevel().getChildren()) {
+                if (object1 instanceof BallInstance && object1.getAttribute("id").stringValue().equals(s)) {
+                    return true;
+                }
             }
-
-            case _1_NUMBER, _1_NUMBER_POSITIVE, _1_NUMBER_NON_NEGATIVE, _1_POSITION, _1_COLOR, _1_FLAG -> {
-                return verifyDataType(type, potential);
-            }
-
-            case _1_GOOBALL_ID, _1_UNIQUE_GOOBALL_ID, _1_IMAGE, _1_GEOMETRY -> {
-                return verifyLevelObject(object, type, potential);
-            }
-
-            case _1_ANIMATION, _1_TEXT, _1_BALL, _1_PARTICLES, _1_MATERIAL, _1_TAG, _1_FONT -> {
-                return verifyResource(object, type, potential);
-            }
-
-            case _1_IMAGE_PATH, _1_SOUND_PATH -> {
-                return verifyFilePath(object, type, potential);
-            }
-
-            case _1_OCD_TYPE, _1_CONTEXT -> {
-                return verifyGameValue(type, potential);
-            }
-
-            default -> {
-                return true;
-            }
-
+            return false;
         }
-    }
-
-
-    private static boolean verifyDataType(InputField type, String potential) {
-
-        switch (type) {
-
-            case _1_NUMBER -> {
-                try {
-                    Double.parseDouble(potential);
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
+        public void onDoubleClick(EditorObject object, String s) {
+            if (!(object.getAsset() instanceof WOG1Level level)) return;
+            for (EditorObject object1 : level.getLevel().getChildren()) {
+                if (object1 instanceof BallInstance && object1.getAttribute("id").stringValue().equals(s)) {
+                    level.setSelectedLoudly(new EditorObject[]{ object1 });
+                    return;
                 }
             }
-
-            case _1_NUMBER_POSITIVE -> {
-                try {
-                    return Double.parseDouble(potential) > 0;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-
-            case _1_NUMBER_NON_NEGATIVE -> {
-                try {
-                    return Double.parseDouble(potential) >= 0;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-
-            case _1_POSITION -> {
-                try {
-                    Position.parse(potential);
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
-
-            case _1_COLOR -> {
-                try {
-                    Color.parse(potential);
-                    return true;
-                } catch (Exception e) {
-                    return false;
-                }
-            }
-
-            case _1_FLAG -> {
-                return potential.equals("true") || potential.equals("false");
-            }
-
-            default -> {
-                return false;
-            }
-
         }
-
-    }
-
-
-    private static boolean verifyLevelObject(EditorObject object, InputField type, String potential) {
-
-        switch (type) {
-
-            case _1_GOOBALL_ID -> {
-                WOG1Level level = (WOG1Level) AssetManager.getAsset();
-                for (EditorObject ball : level.getLevel())
-                    if (ball instanceof BallInstance &&
-                            ball.getAttribute("id").stringValue().equals(potential)) return true;
-                return false;
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            return true;
+        }
+    },
+    _1_UNIQUE_GOOBALL_ID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_IMAGE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            if ((s == null || s.isEmpty()) && !required) return true;
+            if (s == null) return false;
+            for (String s_ : s.split(",")) {
+                if (ResourceManager.getImage(object.getAsset().getResources(), s_, object.getVersion()) == null) {
+                    return false;
+                }
             }
-
-            case _1_UNIQUE_GOOBALL_ID -> {
-                WOG1Level level = (WOG1Level) AssetManager.getAsset();
-                for (EditorObject ball : level.getLevel())
-                    if (ball instanceof BallInstance && ball != object &&
-                            ball.getAttribute("id").stringValue().equals(potential)) return false;
-                return true;
+            return true;
+        }
+        public String[] getPossibleValues(EditorAttribute attribute) {
+            List<String> possibleValues = new ArrayList<>();
+            for (EditorObject resource : attribute.getObject().getAsset().getResources().getChildren()) {
+                if (resource instanceof Image image) {
+                    possibleValues.add(image.getAdjustedID());
+                }
             }
-
-            case _1_IMAGE -> {
-                WOG1Level level = (WOG1Level) AssetManager.getAsset();
-                for (EditorObject resrc : level.getResrc())
-                    if (resrc instanceof ResrcImage image &&
-                            image.getAttribute("id").stringValue().equals(potential)) return true;
-                return false;
-            }
-
-            case _1_GEOMETRY -> {
-                WOG1Level level = (WOG1Level) AssetManager.getAsset();
-                for (EditorObject EditorObject : level.getScene()) {
-                    if (EditorObject instanceof Rectangle ||
-                        EditorObject instanceof Circle ||
-                        EditorObject instanceof Compositegeom) {
-                        if (EditorObject.getAttribute("id").stringValue().equals(potential)) {
-                            return true;
-                        }
+            return possibleValues.toArray(String[]::new);
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            ArrayList<EditorObject> toSelect = new ArrayList<>();
+            for (String s_ : s.split(",")) {
+                for (EditorObject resource : object.getAsset().getResources().getChildren()) {
+                    if (resource instanceof Image image && image.getAdjustedID().equals(s_)) {
+                        toSelect.add(resource);
+                        break;
                     }
                 }
-                return false;
             }
-
-            default -> {
-                return false;
-            }
-
+            object.getAsset().setSelectedLoudly(toSelect.toArray(EditorObject[]::new));
         }
-
-    }
-
-
-    private static boolean verifyResource(EditorObject object, InputField type, String potential) {
-
-        switch (type) {
-
-            case _1_ANIMATION -> {
-                return AnimationManager.hasAnimation(potential);
-            }
-
-            case _1_BALL -> {
-                String dir = FileManager.getGameDir(object.getVersion());
-                File[] ballFiles = new File(dir + "/res/balls").listFiles();
-                if (ballFiles == null) return false;
-                for (File ballFile : ballFiles) {
-                    if (ballFile.getName().equals(potential)) {
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            for (String s_ : s.split(",")) {
+                for (EditorObject resource : object.getAsset().getResources().getChildren()) {
+                    if (resource instanceof Image image && image.getAdjustedID().equals(s_)) {
                         return true;
                     }
                 }
-                return false;
             }
-
-            case _1_TEXT -> {
-                try {
-                    ResourceManager.getText(null, potential, object.getVersion());
-                    return true;
-                } catch (FileNotFoundException ignored) {
+            return false;
+        }
+    },
+    _1_SOUND {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            if (s == null || s.isEmpty()) return true;
+            for (String s_ : s.split(",")) {
+                if (ResourceManager.findResource(object.getAsset().getResources(), s_, object.getVersion()) == null) {
                     return false;
                 }
             }
-
-            case _1_PARTICLES -> {
-                for (EditorObject particle : ParticleManager.getParticles()) {
-                    if ((particle instanceof Particleeffect || particle instanceof Ambientparticleeffect) &&
-                            particle.getAttribute("name").stringValue().equals(potential)) {
+            return true;
+        }
+        public String[] getPossibleValues(EditorAttribute attribute) {
+            List<String> possibleValues = new ArrayList<>();
+            for (EditorObject resource : attribute.getObject().getAsset().getResources().getChildren()) {
+                if (resource instanceof Sound sound) {
+                    possibleValues.add(sound.getAdjustedID());
+                }
+            }
+            return possibleValues.toArray(String[]::new);
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            ArrayList<EditorObject> toSelect = new ArrayList<>();
+            for (String s_ : s.split(",")) {
+                for (EditorObject resource : object.getAsset().getResources().getChildren()) {
+                    if (resource instanceof Sound sound && sound.getAdjustedID().equals(s_)) {
+                        toSelect.add(resource);
+                        break;
+                    }
+                }
+            }
+            object.getAsset().setSelectedLoudly(toSelect.toArray(EditorObject[]::new));
+        }
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            if (object.getAsset() == null) return false; // ??????
+            for (String s_ : s.split(",")) {
+                for (EditorObject resource : object.getAsset().getResources().getChildren()) {
+                    if (resource instanceof Sound sound && sound.getAdjustedID().equals(s_)) {
                         return true;
                     }
                 }
-                return false;
             }
-
-            case _1_MATERIAL -> {
-                try {
-                    ResourceManager.getMaterial(null, potential, object.getVersion());
+            return false;
+        }
+    },
+    _1_GEOMETRY {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            if ((s == null || s.isEmpty()) && !required) return true;
+            if (!(object.getAsset() instanceof WOG1Level level)) return false;
+            for (EditorObject object1 : level.getScene().getChildren()) {
+                if ((object1 instanceof rectangle || object1 instanceof circle || object1 instanceof compositegeom) && object1.getAttribute("id").stringValue().equals(s)) {
                     return true;
-                } catch (FileNotFoundException ignored) {
-                    return false;
                 }
             }
-
-            case _1_TAG -> {
-                return Arrays.stream(potential.split(",")).allMatch(BaseGameResources.TAGS::contains);
-            }
-
-            case _1_FONT -> {
-                try {
-                    ResourceManager.getFont(null, potential, object.getVersion());
-                    return true;
-                } catch (FileNotFoundException ignored) {
-                    return false;
+            return false;
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            if (!(object.getAsset() instanceof WOG1Level level)) return;
+            for (EditorObject object1 : level.getScene().getChildren()) {
+                if ((object1 instanceof rectangle || object1 instanceof circle || object1 instanceof compositegeom) && object1.getAttribute("id").stringValue().equals(s)) {
+                    level.setSelectedLoudly(new EditorObject[]{ object1 });
+                    return;
                 }
             }
-
-            default -> {
-                return false;
-            }
-
         }
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            return true;
+        }
+    },
+
+
+    _1_ANIMATION {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            if ((s == null || s.isEmpty()) && !required) return true;
+            return WOG1Animation.assetSelector.getItems(object.getVersion()).contains(s);
+        }
+        public String[] getPossibleValues(EditorAttribute attribute) {
+            return WOG1Animation.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+        }
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            return true;
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            if (WOG1Animation.assetSelector.getItems(object.getVersion()).contains(s))
+                AssetLoader.openAsset(WOG1Animation.assetSelector, null, s, object.getVersion());
+        }
+    },
+    _1_RANGE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_BALL_SHAPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_MATERIAL {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_TAG {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_TEXT {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            for (EditorObject object1 : object.getAsset().getStrings().getChildren()) {
+                if (object1.getAttribute("id").stringValue().equals(s)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            for (EditorObject object1 : object.getAsset().getStrings().getChildren()) {
+                if (object1.getAttribute("id").stringValue().equals(s)) {
+                    object.getAsset().setSelectedLoudly(new EditorObject[]{ object1 });
+                    return;
+                }
+            }
+        }
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            return verify(object, s, true);
+        }
+    },
+    _1_PARTICLES {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            if ((s == null || s.isEmpty()) && !required) return true;
+            return WOG1Particle.assetSelector.getItems(object.getVersion()).contains(s);
+        }
+        public String[] getPossibleValues(EditorAttribute attribute) {
+            return WOG1Particle.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+        }
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            return true;
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            if (WOG1Particle.assetSelector.getItems(object.getVersion()).contains(s))
+                AssetLoader.openAsset(WOG1Particle.assetSelector, null, s, object.getVersion());
+        }
+    },
+    _1_BALL {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            if ((s == null || s.isEmpty()) && !required) return true;
+            return WOG1Ball.assetSelector.getItems(object.getVersion()).contains(s);
+        }
+        public String[] getPossibleValues(EditorAttribute attribute) {
+            return WOG1Ball.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+        }
+        public void onDoubleClick(EditorObject object, String s) {
+            if (WOG1Ball.assetSelector.getItems(object.getVersion()).contains(s))
+                AssetLoader.openAsset(WOG1Ball.assetSelector, null, s, object.getVersion());
+        }
+        public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+            return true;
+        }
+    },
+    _1_OCD_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_IMAGE_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_IMAGE_PATH {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_SOUND_PATH {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_FONT {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_CONTEXT {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_PIPE_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _1_ASPECT {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+
+    NUMBER {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_LEVEL_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_UUID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_UID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_ISLAND_ID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_OBJECT {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_LIST_STRING {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_LIST_NUMBER {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_BALL_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_BALL_TYPE_USERVAR {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_TERRAIN_GROUP_TYPE_INDEX {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_TERRAIN_GROUP {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_ITEM_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_SKIN {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_GAME_LEVEL {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_SOUND_ID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_MUSIC_ID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_AMBIENCE_ID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_BALL_UID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_STRAND_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_ENVIRONMENT_ID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_BACKGROUND_ID {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_LIQUID_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_PARTICLE_EFFECT_NAME {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_COLLISION_GROUP {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+
+    _2_CHILD {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_CHILD_HIDDEN {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_LIST_CHILD {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+    _2_LIST_CHILD_HIDDEN {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    },
+
+    _2_TERRAIN_GROUP_TYPE {
+        public boolean verify(EditorObject object, String s, boolean required) {
+            return true;
+        }
+    };
+
+    private static final Logger logger = LoggerFactory.getLogger(InputField.class);
+
+
+    public abstract boolean verify(EditorObject object, String s, boolean required);
+
+    public void onDoubleClick(EditorObject object, String s) {
 
     }
-
-
-    private static boolean verifyFilePath(EditorObject object, InputField type, String potential) {
-
-        switch (type) {
-
-            case _1_IMAGE_PATH -> {
-                if (object instanceof ResrcImage resrcImage) {
-                    String path = resrcImage.getAttribute("path").stringValue();
-                    String adjustedPath = resrcImage.getAdjustedPath();
-                    String setDefaultsPart = adjustedPath.substring(0, adjustedPath.length() - path.length());
-                    String dir = FileManager.getGameDir(resrcImage.getVersion());
-                    return new File(dir + "/" + setDefaultsPart + potential + ".png").exists();
-                } else return false;
-            }
-
-            case _1_SOUND_PATH -> {
-                if (object instanceof Sound sound) {
-                    String path = sound.getAttribute("path").stringValue();
-                    String adjustedPath = sound.getAdjustedPath();
-                    String setDefaultsPart = adjustedPath.substring(0, adjustedPath.length() - path.length());
-                    String dir = FileManager.getGameDir(sound.getVersion());
-                    return new File(dir + "/" + setDefaultsPart + potential + ".ogg").exists();
-                } else return false;
-            }
-
-            default -> {
-                return false;
-            }
-
-        }
-
+    public boolean hasSpecialClickBehavior(EditorObject object, String s) {
+        return false;
     }
 
-
-    private static boolean verifyGameValue(InputField type, String potential) {
-
-        switch (type) {
-
-            case _1_OCD_TYPE -> {
-                return potential.equals("balls") || potential.equals("moves") || potential.equals("time");
-            }
-
-            case _1_CONTEXT -> {
-                return potential.equals("screen");
-            }
-
-            default -> {
-                return false;
-            }
-
-        }
-
+    public String[] getPossibleValues(EditorAttribute attribute) {
+        return new String[0];
     }
 
 
     public static double getRange(String range, double randomPercentage) {
         double min;
         double max;
-        if (range.contains(",")){
+        if (range.contains(",")) {
             min = Double.parseDouble(range.substring(0, range.indexOf(",")));
-            max = Double.parseDouble(range.substring(range.indexOf(",") + 1));
+            max = Double.parseDouble(range.substring(range.indexOf(",") + 1).replace(",", ""));
         } else {
             min = Double.parseDouble(range);
             max = min;

@@ -1,6 +1,7 @@
 package com.woogleFX.editorObjects.objectComponents;
 
 import com.woogleFX.editorObjects.DragSettings;
+import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.engine.AssetManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -8,8 +9,13 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.transform.Affine;
 
 public abstract class MeshComponent extends ObjectComponent {
-    
-    public static record Face(double[] xPositions, double[] yPositions, int vertexCount) {}
+
+    public MeshComponent(EditorObject editorObject) {
+        super(editorObject);
+    }
+
+
+    public record Face(double[] xPositions, double[] yPositions, int vertexCount) {}
     
     public abstract Face[] getMesh();
 
@@ -28,7 +34,7 @@ public abstract class MeshComponent extends ObjectComponent {
     private Face[] cachedMesh;
     
     @Override
-    public void draw(GraphicsContext graphicsContext, boolean selected) {
+    public void draw(GraphicsContext graphicsContext) {
         if (cachedMesh == null)
             cachedMesh = getMesh();
         
@@ -53,6 +59,11 @@ public abstract class MeshComponent extends ObjectComponent {
         }
         
         graphicsContext.restore();
+
+    }
+
+    @Override
+    public void drawSelectionOutline(GraphicsContext graphicsContext) {
 
     }
 

@@ -1,0 +1,15 @@
+<AttributeManifest localName="Depends">
+
+    <attributes>
+        <EditorAttribute name="ref" type="STRING" required="true"/>
+        <EditorAttribute name="min-version" type="_1_NUMBER_POSITIVE" required="true"/>
+        <EditorAttribute name="max-version" type="_1_NUMBER_POSITIVE" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="ref"/>
+        <MetaEditorAttribute name="min-version"/>
+        <MetaEditorAttribute name="max-version"/>
+    </metaAttributes>
+
+</AttributeManifest>

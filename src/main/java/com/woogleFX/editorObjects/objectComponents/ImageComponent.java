@@ -1,24 +1,30 @@
 package com.woogleFX.editorObjects.objectComponents;
 
+import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.ObjectUtil;
+import com.woogleFX.editorObjects.objectComponents.generic.BoundedProperty;
 import com.woogleFX.editorObjects.objectComponents.generic.RotatableProperty;
 import com.woogleFX.engine.renderer.Renderer;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.editorObjects.DragSettings;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.*;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
 /** Represents an image component in any object. */
-public abstract class ImageComponent extends ObjectComponent implements RotatableProperty {
+public abstract class ImageComponent extends ObjectComponent implements RotatableProperty, BoundedProperty {
+
+    public ImageComponent(EditorObject editorObject) {
+        super(editorObject);
+    }
 
     /** Returns this component's horizontal scale. */
     public double getScaleX() {
         return 1;
     }
-
 
     /** Sets this component's horizontal scale.
      * @param scaleX This component's horizontal scale. */
@@ -26,12 +32,10 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
 
     }
 
-
     /** Returns this component's vertical scale. */
     public double getScaleY() {
         return 1;
     }
-
 
     /** Sets this component's vertical scale.
      * @param scaleY This component's vertical scale. */
@@ -39,30 +43,57 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
 
     }
 
-
     /** Returns if this image is additive. */
     public boolean isAdditive() {
         return false;
     }
 
-
     /** Returns this component's image. */
     public abstract Image getImage();
-
 
     /** Returns if this image is from a geometry object. */
     public boolean isGeometryImage() {
         return false;
     }
 
+    public Color getColorize() {
+        return Color.WHITE;
+    }
 
     public double getAlpha() {
         return 1.0;
     }
 
+    @Override
+    public double getWidth() {
+        Image image = getImage();
+        if (image == null) return 0;
+        return image.getWidth() * getScaleX();
+    }
 
     @Override
-    public void draw(GraphicsContext graphicsContext, boolean selected) {
+    public void setWidth(double width) {
+        Image image = getImage();
+        if (image == null) return;
+        setScaleX(width / image.getWidth());
+    }
+
+    @Override
+    public double getHeight() {
+        Image image = getImage();
+        if (image == null) return 0;
+        return image.getHeight() * getScaleY();
+    }
+
+    @Override
+    public void setHeight(double height) {
+        Image image = getImage();
+        if (image == null) return;
+        setScaleY(height / image.getHeight());
+    }
+
+    @Override
+    public void draw(GraphicsContext graphicsContext) {
 
         Image image = getImage();
         if (image == null) return;
@@ -77,6 +108,14 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
         double offsetY = AssetManager.getAsset().getOffsetY();
         double zoom = AssetManager.getAsset().getZoom();
 
+        // TODO: add some way of previewing depth
+        //double depth = getDepth();
+        //double depthFactor = Math.exp(-0.01 * Math.abs(depth));
+        //double canvasWidth = FXContainers.getSplitPane().getDividers().get(0).getPosition() * FXContainers.getSplitPane().getWidth();
+        //double canvasHeight = FXContainers.getSplitPane().getHeight();
+        //offsetX = x + (offsetX + canvasWidth / 2 - x) * depthFactor - canvasWidth / 2;
+        //offsetY = y + (offsetY + canvasHeight / 2 - y) * depthFactor - canvasHeight / 2;
+
         graphicsContext.save();
 
         Affine t = graphicsContext.getTransform();
@@ -88,91 +127,106 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
         graphicsContext.setGlobalAlpha(getAlpha());
 
         if (isAdditive()) graphicsContext.setGlobalBlendMode(BlendMode.ADD);
+
+        //Blend blend = new Blend(BlendMode.MULTIPLY);
+        //blend.setBottomInput(new ColorAdjust(0.0, 1.0, 0.0, 0.0));
+        //blend.setTopInput(new ColorInput(x - width / 2.0, y - height / 2.0, width, height, getColorize()));
+        //graphicsContext.setEffect(blend);
+
         graphicsContext.drawImage(image, x - width / 2.0, y - height / 2.0, width, height);
 
         graphicsContext.restore();
 
-        if (selected) {
+    }
 
-            Point2D topLeft = ObjectUtil.rotate(new Point2D(x - width / 2, y - height / 2), rotation, new Point2D(x, y));
-            topLeft = topLeft.multiply(zoom).add(offsetX, offsetY);
+    @Override
+    public void drawSelectionOutline(GraphicsContext graphicsContext) {
 
-            Point2D bottomRight = ObjectUtil.rotate(new Point2D(x + width / 2, y + height / 2), rotation, new Point2D(x, y));
-            bottomRight = bottomRight.multiply(zoom).add(offsetX, offsetY);
+        Image image = getImage();
+        if (image == null) return;
 
-            Point2D left = ObjectUtil.rotate(new Point2D(x - width / 2, y), rotation, new Point2D(x, y));
-            left = left.multiply(zoom).add(offsetX, offsetY);
+        double x = getX();
+        double y = getY();
+        double rotation = getRotation();
+        double width = image.getWidth() * getScaleX();
+        double height = image.getHeight() * getScaleY();
 
-            Point2D right = ObjectUtil.rotate(new Point2D(x + width / 2, y), rotation, new Point2D(x, y));
-            right = right.multiply(zoom).add(offsetX, offsetY);
+        double offsetX = AssetManager.getAsset().getOffsetX();
+        double offsetY = AssetManager.getAsset().getOffsetY();
+        double zoom = AssetManager.getAsset().getZoom();
 
-            Point2D bottomLeft = ObjectUtil.rotate(new Point2D(x - width / 2, y + height / 2), rotation, new Point2D(x, y));
-            bottomLeft = bottomLeft.multiply(zoom).add(offsetX, offsetY);
+        Point2D topLeft = ObjectUtil.rotate(new Point2D(x - width / 2, y - height / 2), rotation, new Point2D(x, y));
+        topLeft = topLeft.multiply(zoom).add(offsetX, offsetY);
 
-            Point2D topRight = ObjectUtil.rotate(new Point2D(x + width / 2, y - height / 2), rotation, new Point2D(x, y));
-            topRight = topRight.multiply(zoom).add(offsetX, offsetY);
+        Point2D bottomRight = ObjectUtil.rotate(new Point2D(x + width / 2, y + height / 2), rotation, new Point2D(x, y));
+        bottomRight = bottomRight.multiply(zoom).add(offsetX, offsetY);
 
-            double screenX2 = x * zoom + offsetX;
-            double screenY2 = y * zoom + offsetY;
+        Point2D left = ObjectUtil.rotate(new Point2D(x - width / 2, y), rotation, new Point2D(x, y));
+        left = left.multiply(zoom).add(offsetX, offsetY);
 
-            graphicsContext.setLineWidth(1);
-            if (isResizable()) {
+        Point2D right = ObjectUtil.rotate(new Point2D(x + width / 2, y), rotation, new Point2D(x, y));
+        right = right.multiply(zoom).add(offsetX, offsetY);
 
-                graphicsContext.setStroke(Renderer.selectionOutline);
-                if (isGeometryImage()) {
-                    graphicsContext.fillRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
-                    graphicsContext.fillRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
-                    graphicsContext.fillRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
-                    graphicsContext.fillRect(topRight.getX() - 4, topRight.getY() - 4, 8, 8);
-                    graphicsContext.setStroke(Renderer.selectionOutline2);
-                }
-                graphicsContext.strokeRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
-                graphicsContext.strokeRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
-                graphicsContext.strokeRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
-                graphicsContext.strokeRect(topRight.getX() - 4, topRight.getY() - 4, 8, 8);
+        Point2D bottomLeft = ObjectUtil.rotate(new Point2D(x - width / 2, y + height / 2), rotation, new Point2D(x, y));
+        bottomLeft = bottomLeft.multiply(zoom).add(offsetX, offsetY);
 
-            }
+        Point2D topRight = ObjectUtil.rotate(new Point2D(x + width / 2, y - height / 2), rotation, new Point2D(x, y));
+        topRight = topRight.multiply(zoom).add(offsetX, offsetY);
 
-            if (isRotatable()) {
+        double screenX2 = x * zoom + offsetX;
+        double screenY2 = y * zoom + offsetY;
 
-                graphicsContext.setStroke(Renderer.selectionOutline);
-                if (isGeometryImage()) {
-                    graphicsContext.fillOval(left.getX() - 4, left.getY() - 4, 8, 8);
-                    graphicsContext.fillOval(right.getX() - 4, right.getY() - 4, 8, 8);
-                    graphicsContext.setStroke(Renderer.selectionOutline2);
-                }
-                graphicsContext.strokeOval(left.getX() - 4, left.getY() - 4, 8, 8);
-                graphicsContext.strokeOval(right.getX() - 4, right.getY() - 4, 8, 8);
+        graphicsContext.setLineWidth(1);
+        if (isResizable()) {
 
-            }
-
-            Affine t2 = graphicsContext.getTransform();
-            t2.appendRotation(Math.toDegrees(rotation), screenX2, screenY2);
-            graphicsContext.setTransform(t2);
-
-            if (isSelectable()) {
-
-                double absWidth = Math.abs(width);
-                double absHeight = Math.abs(height);
-
+            graphicsContext.setStroke(Renderer.selectionOutline);
+            if (isGeometryImage()) {
+                graphicsContext.fillRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
+                graphicsContext.fillRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
+                graphicsContext.fillRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
+                graphicsContext.fillRect(topRight.getX() - 4, topRight.getY() - 4, 8, 8);
                 graphicsContext.setStroke(Renderer.selectionOutline2);
-                graphicsContext.setLineWidth(1);
-                graphicsContext.setLineDashes(3);
-                graphicsContext.setLineDashOffset(0);
-                graphicsContext.strokeRect(screenX2 - absWidth * zoom / 2, screenY2 - absHeight * zoom / 2, absWidth * zoom, absHeight * zoom);
-
-                graphicsContext.setStroke(Renderer.selectionOutline);
-                graphicsContext.setLineWidth(1);
-                graphicsContext.setLineDashOffset(3);
-                graphicsContext.strokeRect(screenX2 - absWidth * zoom / 2, screenY2 - absHeight * zoom / 2, absWidth * zoom, absHeight * zoom);
-                graphicsContext.setLineDashes(0);
-
             }
+            graphicsContext.strokeRect(topLeft.getX() - 4, topLeft.getY() - 4, 8, 8);
+            graphicsContext.strokeRect(bottomRight.getX() - 4, bottomRight.getY() - 4, 8, 8);
+            graphicsContext.strokeRect(bottomLeft.getX() - 4, bottomLeft.getY() - 4, 8, 8);
+            graphicsContext.strokeRect(topRight.getX() - 4, topRight.getY() - 4, 8, 8);
 
         }
 
-    }
+        if (isRotatable()) {
 
+            graphicsContext.setStroke(Renderer.selectionOutline);
+            if (isGeometryImage()) {
+                graphicsContext.fillOval(left.getX() - 4, left.getY() - 4, 8, 8);
+                graphicsContext.fillOval(right.getX() - 4, right.getY() - 4, 8, 8);
+                graphicsContext.setStroke(Renderer.selectionOutline2);
+            }
+            graphicsContext.strokeOval(left.getX() - 4, left.getY() - 4, 8, 8);
+            graphicsContext.strokeOval(right.getX() - 4, right.getY() - 4, 8, 8);
+
+        }
+
+        Affine t2 = graphicsContext.getTransform();
+        t2.appendRotation(Math.toDegrees(rotation), screenX2, screenY2);
+        graphicsContext.setTransform(t2);
+
+        double absWidth = Math.abs(width);
+        double absHeight = Math.abs(height);
+
+        graphicsContext.setStroke(Renderer.selectionOutline2);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashes(3);
+        graphicsContext.setLineDashOffset(0);
+        graphicsContext.strokeRect(screenX2 - absWidth * zoom / 2, screenY2 - absHeight * zoom / 2, absWidth * zoom, absHeight * zoom);
+
+        graphicsContext.setStroke(Renderer.selectionOutline);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashOffset(3);
+        graphicsContext.strokeRect(screenX2 - absWidth * zoom / 2, screenY2 - absHeight * zoom / 2, absWidth * zoom, absHeight * zoom);
+        graphicsContext.setLineDashes(0);
+
+    }
 
     @Override
     public DragSettings mouseIntersection(double mouseX, double mouseY) {
@@ -197,8 +251,8 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
             long pixel = image.getPixelReader().getArgb((int)goodX, (int)goodY);
             if ((pixel & 0xFF000000L) * getAlpha() > 0x20000000L) {
                 DragSettings dragSettings = new DragSettings(isDraggable() ? DragSettings.MOVE : DragSettings.NONE, this);
-                dragSettings.setInitialSourceX(mouseX - x);
-                dragSettings.setInitialSourceY(mouseY - y);
+                dragSettings.setInitialSource(new Point2D(mouseX - x, mouseY - y));
+                dragSettings.setOpacity(((pixel & 0xFF000000L) >> 24) / 255.0 * getAlpha());
                 return dragSettings;
             }
         }
@@ -290,6 +344,8 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
             rotate = true;
             dragSourceX = x - width / 2;
             dragSourceY = y;
+            dragAnchorX = x;
+            dragAnchorY = y;
             rotateAngleOffset = rotation;
         }
 
@@ -297,25 +353,24 @@ public abstract class ImageComponent extends ObjectComponent implements Rotatabl
             rotate = true;
             dragSourceX = x + width / 2;
             dragSourceY = y;
+            dragAnchorX = x;
+            dragAnchorY = y;
             rotateAngleOffset = rotation;
         }
 
         if (resize) {
             Point2D dragSourceRotated = ObjectUtil.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
             Point2D dragAnchorRotated = ObjectUtil.rotate(new Point2D(dragAnchorX, dragAnchorY), rotation, new Point2D(x, y));
-            resizeSettings.setInitialSourceX(dragSourceRotated.getX());
-            resizeSettings.setInitialSourceY(dragSourceRotated.getY());
-            resizeSettings.setAnchorX(dragAnchorRotated.getX());
-            resizeSettings.setAnchorY(dragAnchorRotated.getY());
-            resizeSettings.setInitialScaleX(getScaleX());
-            resizeSettings.setInitialScaleY(getScaleY());
+            resizeSettings.setInitialSource(dragSourceRotated);
+            resizeSettings.setAnchor(dragAnchorRotated);
+            resizeSettings.setInitialScale(new Point2D(getScaleX(), getScaleY()));
             return resizeSettings;
         }
 
         if (rotate) {
             Point2D dragSourceRotated = ObjectUtil.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
-            rotateSettings.setInitialSourceX(dragSourceRotated.getX());
-            rotateSettings.setInitialSourceY(dragSourceRotated.getY());
+            rotateSettings.setInitialSource(dragSourceRotated);
+            rotateSettings.setAnchor(new Point2D(dragAnchorX, dragAnchorY));
             rotateSettings.setRotateAngleOffset(rotateAngleOffset);
             return rotateSettings;
         }

@@ -1,13 +1,13 @@
-<AttributeManifest>
+<AttributeManifest localName="ParticleEffect">
 
     <attributes>
-        <EditorAttribute name="particleEffectId" type="_2_STRING" required="true"/>
+        <EditorAttribute name="particleEffectId" type="STRING" required="true"/>
+        <EditorAttribute name="particleEffectV2Id" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.UUID"/>
         <EditorAttribute name="states" type="_2_LIST_NUMBER" required="true"/>
-        <EditorAttribute name="sleeping" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="onFire" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="thruster" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="depth" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="particleEffectV2Id" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_UUID"/>
+        <EditorAttribute name="sleeping" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="onFire" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="thruster" type="BOOLEAN" required="true"/>
+        <EditorAttribute name="depth" type="NUMBER" required="true"/>
     </attributes>
 
     <metaAttributes>

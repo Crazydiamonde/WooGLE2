@@ -1,35 +1,35 @@
 <AttributeManifest localName="Part">
 
     <attributes>
-        <EditorAttribute name="name" type="_2_STRING" required="true"/>
-        <EditorAttribute name="images" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.ball.Image" required="true"/>
-        <EditorAttribute name="imageBackgroundIds" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID" required="true"/>
-        <EditorAttribute name="layer" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="drawWhenAttached" type="_2_BOOLEAN"/>
-        <EditorAttribute name="drawWhenNotAttached" type="_2_BOOLEAN"/>
-        <EditorAttribute name="minX" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxX" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="minY" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxY" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="minRangeX" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxRangeX" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="minRangeY" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="maxRangeY" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="name" type="STRING" defaultValue="" required="true"/>
+        <EditorAttribute name="images" type="_2_LIST_CHILD" childAlias="com.worldOfGoo2.ball.Image" required="true"/>
+        <EditorAttribute name="imageBackgroundIds" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID" required="true"/>
+        <EditorAttribute name="layer" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="drawWhenAttached" type="BOOLEAN"/>
+        <EditorAttribute name="drawWhenNotAttached" type="BOOLEAN"/>
+        <EditorAttribute name="minX" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="maxX" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="minY" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="maxY" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="minRangeX" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="maxRangeX" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="minRangeY" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="maxRangeY" type="NUMBER" defaultValue="0" required="true"/>
         <EditorAttribute name="states" type="_2_LIST_CHILD_HIDDEN" required="true" childAlias="com.worldOfGoo2.ball.State"/>
-        <EditorAttribute name="isActiveWhenUndiscovered" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="scale" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="scaleIsRelative" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="rotation" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="isEye" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="pupilImageIds" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID" required="true"/>
-        <EditorAttribute name="pupilInset" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="pupilScale" type="_2_NUMBER"/>
-        <EditorAttribute name="isRotating" type="_2_BOOLEAN" required="true"/>
-        <EditorAttribute name="stretchMaxSpeed" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="stretchParallel" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="stretchPerpendicular" type="_2_NUMBER" required="true"/>
-        <EditorAttribute name="color" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_Color"/>
-        <EditorAttribute name="stretchFactorFromStrandForce" type="_2_NUMBER" required="true"/>
+        <EditorAttribute name="isActiveWhenUndiscovered" type="BOOLEAN" defaultValue="true" required="true"/>
+        <EditorAttribute name="scale" type="NUMBER" defaultValue="1" required="true"/>
+        <EditorAttribute name="scaleIsRelative" type="BOOLEAN" defaultValue="true" required="true"/>
+        <EditorAttribute name="rotation" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="isEye" type="BOOLEAN" defaultValue="false" required="true"/>
+        <EditorAttribute name="pupilImageIds" type="_2_LIST_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID" required="true"/>
+        <EditorAttribute name="pupilInset" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="pupilScale" type="NUMBER" defaultValue="1"/>
+        <EditorAttribute name="isRotating" type="BOOLEAN" defaultValue="true" required="true"/>
+        <EditorAttribute name="stretchMaxSpeed" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="stretchParallel" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="stretchPerpendicular" type="NUMBER" defaultValue="0" required="true"/>
+        <EditorAttribute name="color" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.Color"/>
+        <EditorAttribute name="stretchFactorFromStrandForce" type="NUMBER" defaultValue="0" required="true"/>
     </attributes>
 
     <metaAttributes>

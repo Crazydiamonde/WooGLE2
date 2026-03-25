@@ -1,19 +1,19 @@
 <AttributeManifest localName="TopSettings">
 
     <attributes>
-        <EditorAttribute name="canBeStained" type="_2_STRING"/>
-        <EditorAttribute name="height" type="_2_STRING"/>
-        <EditorAttribute name="heightOffset" type="_2_STRING"/>
-        <EditorAttribute name="endDistance" type="_2_STRING"/>
-        <EditorAttribute name="endPower" type="_2_STRING"/>
-        <EditorAttribute name="endOverhangDistance" type="_2_STRING"/>
-        <EditorAttribute name="collisionEdgeOffset" type="_2_STRING"/>
-        <EditorAttribute name="collisionHeightOffset" type="_2_STRING"/>
-        <EditorAttribute name="collisionHeightScale" type="_2_STRING"/>
-        <EditorAttribute name="image" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="shadowImage" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
+        <EditorAttribute name="canBeStained" type="STRING"/>
+        <EditorAttribute name="height" type="STRING"/>
+        <EditorAttribute name="heightOffset" type="STRING"/>
+        <EditorAttribute name="endDistance" type="STRING"/>
+        <EditorAttribute name="endPower" type="STRING"/>
+        <EditorAttribute name="endOverhangDistance" type="STRING"/>
+        <EditorAttribute name="collisionEdgeOffset" type="STRING"/>
+        <EditorAttribute name="collisionHeightOffset" type="STRING"/>
+        <EditorAttribute name="collisionHeightScale" type="STRING"/>
+        <EditorAttribute name="image" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="shadowImage" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID"/>
         <EditorAttribute name="material" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.ball.Material"/>
-        <EditorAttribute name="shaderType" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level._2_Level_UserVariable"/>
+        <EditorAttribute name="shaderType" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.level.UserVariable"/>
         <EditorAttribute name="topShaderUniforms" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.terrain.BaseShaderUniform"/>
     </attributes>
 

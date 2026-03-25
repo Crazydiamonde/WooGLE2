@@ -1,0 +1,25 @@
+<AttributeManifest localName="ParticleEffect">
+
+    <attributes>
+        <EditorAttribute name="name" type="STRING" required="true"/>
+        <EditorAttribute name="position" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Point" required="true"/>
+        <EditorAttribute name="rotation" type="STRING" required="true"/>
+        <EditorAttribute name="scale" type="STRING" required="true"/>
+        <EditorAttribute name="depth" type="STRING" required="true"/>
+        <EditorAttribute name="sortOffset" type="STRING" required="true"/>
+        <EditorAttribute name="relativeDepthAndSort" type="STRING" required="true"/>
+        <EditorAttribute name="enabled" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="position"/>
+        <MetaEditorAttribute name="rotation"/>
+        <MetaEditorAttribute name="scale"/>
+        <MetaEditorAttribute name="depth"/>
+        <MetaEditorAttribute name="sortOffset"/>
+        <MetaEditorAttribute name="relativeDepthAndSort"/>
+        <MetaEditorAttribute name="enabled"/>
+    </metaAttributes>
+
+</AttributeManifest>

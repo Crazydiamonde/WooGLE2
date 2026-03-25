@@ -1,0 +1,11 @@
+<AttributeManifest localName="name">
+
+    <attributes>
+        <EditorAttribute name="value" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="value"/>
+    </metaAttributes>
+
+</AttributeManifest>

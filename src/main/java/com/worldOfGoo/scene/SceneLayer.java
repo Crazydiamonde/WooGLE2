@@ -1,24 +1,28 @@
 package com.worldOfGoo.scene;
 
-import java.io.FileNotFoundException;
-
+import com.woogleFX.assets.Asset;
+import com.woogleFX.assets.wog1.animation.WOG1Animation;
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.ImageUtility;
-import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
+import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.gameData.animation.Keyframe;
-import com.woogleFX.gameData.animation.WoGAnimation;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 
-import com.woogleFX.editorObjects.attributes.InputField;
-
-import com.woogleFX.gameData.level.WOG1Level;
+import com.worldOfGoo.anim.Animation;
+import com.worldOfGoo.anim.Keyframe;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class SceneLayer extends EditorObject {
 
-    private Image image;
+    private WOG1Animation animation;
+    public WOG1Animation getAnimation() {
+        return animation;
+    }
 
 
     private double animx = 0;
@@ -29,61 +33,44 @@ public class SceneLayer extends EditorObject {
 
 
     public SceneLayer(EditorObject _parent, GameVersion version) {
-        super(_parent, "SceneLayer", version);
+        super(_parent, version);
+    }
 
-        addAttribute("id",         InputField._1_STRING);
-        addAttribute("name",       InputField._1_STRING);
-        addAttribute("depth",      InputField._1_NUMBER)         .setDefaultValue("0")            .assertRequired();
-        addAttribute("x",          InputField._1_NUMBER)         .setDefaultValue("0")            .assertRequired();
-        addAttribute("y",          InputField._1_NUMBER)         .setDefaultValue("0")            .assertRequired();
-        addAttribute("scalex",     InputField._1_NUMBER)         .setDefaultValue("1");
-        addAttribute("scaley",     InputField._1_NUMBER)         .setDefaultValue("1");
-        addAttribute("rotation",   InputField._1_NUMBER)         .setDefaultValue("0");
-        addAttribute("alpha",      InputField._1_NUMBER)         .setDefaultValue("1");
-        addAttribute("colorize",   InputField._1_COLOR)          .setDefaultValue("255,255,255");
-        addAttribute("image",      InputField._1_IMAGE)                                           .assertRequired();
-        addAttribute("tilex",      InputField._1_FLAG)           .setDefaultValue("false");
-        addAttribute("tiley",      InputField._1_FLAG)           .setDefaultValue("false");
-        addAttribute("tilecountx", InputField._1_NUMBER)         .setDefaultValue("0");
-        addAttribute("tilecounty", InputField._1_NUMBER)         .setDefaultValue("0");
-        addAttribute("anim",       InputField._1_ANIMATION);
-        addAttribute("animspeed",  InputField._1_NUMBER)         .setDefaultValue("1");
-        addAttribute("animdelay",  InputField._1_NUMBER)         .setDefaultValue("0");
-        addAttribute("animloop",   InputField._1_FLAG)           .setDefaultValue("false");
-        addAttribute("anchor",     InputField._1_GEOMETRY);
-        addAttribute("context",    InputField._1_CONTEXT)        .setDefaultValue("screen");
+    @Override
+    public void onLoaded(Asset asset) {
+        super.onLoaded(asset);
 
-        addObjectComponent(new ImageComponent() {
+        addObjectComponent(new ImageComponent(this) {
             public double getX() {
-                double extraX = AssetManager.getAsset().getVisibilitySettings().isShowAnimations() ? animx : 0;
+                double extraX = AssetManager.getVisibility("animations") == 1 ? animx : 0;
                 return getAttribute("x").doubleValue() + extraX;
             }
             public void setX(double x) {
                 setAttribute("x", x);
             }
             public double getY() {
-                double extraY = AssetManager.getAsset().getVisibilitySettings().isShowAnimations() ? animy : 0;
+                double extraY = AssetManager.getVisibility("animations") == 1 ? animy : 0;
                 return -getAttribute("y").doubleValue() + extraY;
             }
             public void setY(double y) {
                 setAttribute("y", -y);
             }
             public double getRotation() {
-                double extraRotation = AssetManager.getAsset().getVisibilitySettings().isShowAnimations() ? animrotation : 0;
+                double extraRotation = AssetManager.getVisibility("animations") == 1 ? animrotation : 0;
                 return -Math.toRadians(getAttribute("rotation").doubleValue() + extraRotation);
             }
             public void setRotation(double rotation) {
                 setAttribute("rotation", -Math.toDegrees(rotation));
             }
             public double getScaleX() {
-                double extraScaleX = AssetManager.getAsset().getVisibilitySettings().isShowAnimations() ? animscalex : 1;
+                double extraScaleX = AssetManager.getVisibility("animations") == 1 ? animscalex : 1;
                 return getAttribute("scalex").doubleValue() * extraScaleX;
             }
             public void setScaleX(double scaleX) {
                 setAttribute("scalex", scaleX);
             }
             public double getScaleY() {
-                double extraScaleY = AssetManager.getAsset().getVisibilitySettings().isShowAnimations() ? animscaley : 1;
+                double extraScaleY = AssetManager.getVisibility("animations") == 1 ? animscaley : 1;
                 return getAttribute("scaley").doubleValue() * extraScaleY;
             }
             public void setScaleY(double scaleY) {
@@ -96,20 +83,63 @@ public class SceneLayer extends EditorObject {
                 return getAttribute("alpha").doubleValue();
             }
             public Image getImage() {
-                return image;
+                return getAttribute("image").imageValue(asset.getResources(), getVersion());
+            }
+            public Color getColorize() {
+                com.woogleFX.editorObjects.attributes.dataTypes.Color color =
+                        getAttribute("colorize").colorValue();
+                return new Color(color.getR() / 255.0, color.getG() / 255.0, color.getB() / 255.0, color.getA() / 255.0);
             }
             public boolean isVisible() {
-                return AssetManager.getAsset().getVisibilitySettings().isShowGraphics();
+                return AssetManager.getVisibility("graphics") == 1;
             }
         });
 
-        String general = "id,name,x,y,scalex,scaley,rotation,";
-        String image = "Image<image,depth,tilex,tiley,tilecountx,tilecounty,alpha,colorize,anchor,context>";
-        String anim = "?Anim<anim,animspeed,animdelay,animloop>";
-        setMetaAttributes(MetaEditorAttribute.parse(general + image + anim));
+        // Invalid image rectangle
+        addObjectComponent(new RectangleComponent(this) {
+            public double getX() {
+                return getAttribute("x").doubleValue();
+            }
+            public void setX(double x) {
+                setAttribute("x", x);
+            }
+            public double getY() {
+                return -getAttribute("y").doubleValue();
+            }
+            public void setY(double y) {
+                setAttribute("y", -y);
+            }
+            public double getWidth() {
+                return 100;
+            }
+            public double getHeight() {
+                return 100;
+            }
+            public double getDepth() {
+                return getAttribute("depth").doubleValue();
+            }
+            public double getEdgeSize() {
+                return 5.0;
+            }
+            public Color getColor() {
+                return new Color(0, 0, 0, 0);
+            }
+            public boolean isEdgeOnly() {
+                return true;
+            }
+            public Color getBorderColor() {
+                return new Color(0.5, 0.0, 0.0, 1.0);
+            }
+            public boolean isVisible() {
+                return AssetManager.getVisibility("graphics") == 1 &&
+                        getAttribute("image").imageValue(asset.getResources(), getVersion()) == null;
+            }
+        });
 
-        getAttribute("image").addChangeListener((observable, oldValue, newValue) -> updateImage());
-        getAttribute("colorize").addChangeListener((observable, oldValue, newValue) -> updateImage());
+        getAttribute("anim").addChangeListener((observable, oldValue, newValue) -> updateAnimation());
+        //getAttribute("colorize").addChangeListener((observable, oldValue, newValue) -> updateImage());
+
+        updateAnimation();
 
     }
 
@@ -136,67 +166,57 @@ public class SceneLayer extends EditorObject {
     }
 
 
-    public void updateWithAnimation(WoGAnimation animation, float timer){
+    private double animationTimeElapsed = 0;
+
+    @Override
+    public void frameUpdate(double deltaTime) {
+
+        animationTimeElapsed += deltaTime;
+
+        if (animation == null) return;
+
         double animspeed = getAttribute("animspeed").doubleValue();
         double animdelay = getAttribute("animdelay").doubleValue();
-        double goodTimer = (timer * animspeed - animdelay);
-        if (goodTimer >= 0) {
-            goodTimer %= animation.getFrameTimes()[animation.getFrameTimes().length - 1];
-        } else {
-            while (goodTimer < 0){
-                goodTimer += animation.getFrameTimes()[animation.getFrameTimes().length - 1];
-            }
-        }
-        for (int i2 : new int[]{ 0, 1, 2 }) {
-            if (animation.getTransformFrames()[i2].length == 0) continue;
-            int i = 0;
-            for (int i3 = 0; i3 < animation.getFrameTimes().length; i3++) {
-                if (goodTimer < animation.getFrameTimes()[i3] && animation.getTransformFrames()[i2][i3] != null) {
-                    break;
-                } else if (animation.getTransformFrames()[i2][i3] != null) {
-                    i = i3;
-                }
-            }
-            Keyframe currentFrame = animation.getTransformFrames()[i2][i];
-            Keyframe nextFrame;
-            int nextIndex = currentFrame.getNextFrameIndex();
-            if (currentFrame.getNextFrameIndex() == -1){
-                nextIndex = 0;
-                nextFrame = currentFrame;
-            } else {
-                nextFrame = animation.getTransformFrames()[i2][currentFrame.getNextFrameIndex()];
-            }
-            float timerInterpolateValue = reverseInterpolate(animation.getFrameTimes()[i], animation.getFrameTimes()[nextIndex], (float)goodTimer);
-            if (i2 == 0) {
-                animscalex = lerp(currentFrame.getX(), nextFrame.getX(), timerInterpolateValue);
-                animscaley = lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
-            } else if (i2 == 1) {
-                animrotation = lerp(currentFrame.getAngle(), nextFrame.getAngle(), timerInterpolateValue);
-            } else {
-                animx = lerp(currentFrame.getX(), nextFrame.getX(), timerInterpolateValue);
-                animy = lerp(currentFrame.getY(), nextFrame.getY(), timerInterpolateValue);
-            }
-        }
-    }
+        double effectiveAnimationTime = animationTimeElapsed * animspeed - animdelay;
 
+        Animation animation1 = animation.getAnimation();
+
+        double length = 0;
+        for (EditorObject child : animation1.getChildren()) if (child instanceof Keyframe keyframe) {
+            double time = keyframe.getAttribute("time").doubleValue();
+            if (time > length) length = time;
+        }
+        if (effectiveAnimationTime < 0) effectiveAnimationTime += ((int)(-effectiveAnimationTime / length) + 10) * length;
+        effectiveAnimationTime %= length;
+
+        animx = animation1.getProperty("x", effectiveAnimationTime);
+        animy = animation1.getProperty("y", effectiveAnimationTime);
+        animscalex = animation1.getProperty("scaleX", effectiveAnimationTime);
+        animscaley = animation1.getProperty("scaleY", effectiveAnimationTime);
+        // anim animation1.getProperty("alpha", animation.getTime()) / 255.0;
+        animrotation = animation1.getProperty("angle", effectiveAnimationTime);
+
+    }
 
     @Override
     public void update() {
-        updateImage();
+        updateAnimation();
     }
 
 
-    private void updateImage() {
 
-        if (AssetManager.getAsset() == null) return;
+    private void updateAnimation() {
 
-        try {
-            if (!getAttribute("image").stringValue().isEmpty()) {
-                image = getAttribute("image").imageValue(((WOG1Level) AssetManager.getAsset()).getResrc(), getVersion());
-                image = ImageUtility.colorize(image, getAttribute("colorize").colorValue());
-            }
-        } catch (FileNotFoundException ignored) {
+        // Animations in a level folder will apply to SceneLayers with a matching ID
+        // Ex. Fisty_eye.anim.binltl and the Fisty_eye SceneLayer
+        // I learned this TODAY
 
+        String suffix = (getVersion() == GameVersion.VERSION_WOG1_OLD) ? ".binltl" : ".binuni";
+
+        if (!getAttribute("anim").stringValue().isEmpty()) {
+            animation = WOG1Animation.assetSelector.openInstance(getAttribute("anim").stringValue(), getVersion());
+        } else if (Files.exists(Path.of(getAsset().getFile().toPath() + "/" + getAttribute("id").stringValue() + ".anim" + suffix))) {
+            animation = WOG1Animation.assetSelector.openInstance(new File(getAsset().getFile().toPath() + "/" + getAttribute("id").stringValue() + ".anim" + suffix), getAttribute("id").stringValue(), getVersion());
         }
 
     }

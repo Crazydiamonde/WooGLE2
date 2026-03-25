@@ -1,0 +1,49 @@
+<AttributeManifest localName="strand">
+
+    <attributes>
+        <EditorAttribute name="type"           type="STRING"                      required="true"/>
+        <EditorAttribute name="image"          type="_1_IMAGE"                    required="true"/>
+        <EditorAttribute name="inactiveimage"  type="_1_IMAGE"                      required="true"/>
+        <EditorAttribute name="mass"           type="_1_NUMBER"/>
+        <EditorAttribute name="springconstmin" type="STRING"                      required="true"/>
+        <EditorAttribute name="springconstmax" type="STRING"                      required="true"/>
+        <EditorAttribute name="dampfac"        type="STRING"                      required="true"/>
+        <EditorAttribute name="maxlen2"        type="STRING"    defaultValue="0"  required="true"/>
+        <EditorAttribute name="maxlen1"        type="STRING"/>
+        <EditorAttribute name="maxforce"       type="STRING"                      required="true"/>
+        <EditorAttribute name="minlen"         type="STRING"                      required="true"/>
+        <EditorAttribute name="walkable"       type="STRING"/>
+        <EditorAttribute name="thickness"      type="_1_NUMBER" defaultValue="24"/>
+        <EditorAttribute name="ignitedelay"    type="STRING"/>
+        <EditorAttribute name="burnspeed"      type="STRING"/>
+        <EditorAttribute name="fireparticles"  type="STRING"/>
+        <EditorAttribute name="burntimage"     type="_1_IMAGE"/>
+        <EditorAttribute name="geom"           type="STRING"/>
+        <EditorAttribute name="shrinklen"      type="STRING"/>
+        <EditorAttribute name="rope"           type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="type"/>
+        <MetaEditorAttribute name="image"/>
+        <MetaEditorAttribute name="inactiveimage"/>
+        <MetaEditorAttribute name="mass"/>
+        <MetaEditorAttribute name="springconstmin"/>
+        <MetaEditorAttribute name="springconstmax"/>
+        <MetaEditorAttribute name="dampfac"/>
+        <MetaEditorAttribute name="maxlen2"/>
+        <MetaEditorAttribute name="maxlen1"/>
+        <MetaEditorAttribute name="maxforce"/>
+        <MetaEditorAttribute name="minlen"/>
+        <MetaEditorAttribute name="walkable"/>
+        <MetaEditorAttribute name="thickness"/>
+        <MetaEditorAttribute name="ignitedelay"/>
+        <MetaEditorAttribute name="burnspeed"/>
+        <MetaEditorAttribute name="fireparticles"/>
+        <MetaEditorAttribute name="burntimage"/>
+        <MetaEditorAttribute name="geom"/>
+        <MetaEditorAttribute name="shrinklen"/>
+        <MetaEditorAttribute name="rope"/>
+    </metaAttributes>
+
+</AttributeManifest>

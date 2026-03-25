@@ -1,0 +1,487 @@
+<AttributeManifest localName="subtitle">
+
+    <attributes>
+        <EditorAttribute name="text" type="STRING" required="true"/>
+        <EditorAttribute name="ad" type="STRING"/>
+        <EditorAttribute name="ae" type="STRING"/>
+        <EditorAttribute name="af" type="STRING"/>
+        <EditorAttribute name="ag" type="STRING"/>
+        <EditorAttribute name="ai" type="STRING"/>
+        <EditorAttribute name="al" type="STRING"/>
+        <EditorAttribute name="am" type="STRING"/>
+        <EditorAttribute name="an" type="STRING"/>
+        <EditorAttribute name="ao" type="STRING"/>
+        <EditorAttribute name="ar" type="STRING"/>
+        <EditorAttribute name="as" type="STRING"/>
+        <EditorAttribute name="at" type="STRING"/>
+        <EditorAttribute name="au" type="STRING"/>
+        <EditorAttribute name="aw" type="STRING"/>
+        <EditorAttribute name="ax" type="STRING"/>
+        <EditorAttribute name="az" type="STRING"/>
+        <EditorAttribute name="ba" type="STRING"/>
+        <EditorAttribute name="bb" type="STRING"/>
+        <EditorAttribute name="bd" type="STRING"/>
+        <EditorAttribute name="be" type="STRING"/>
+        <EditorAttribute name="bf" type="STRING"/>
+        <EditorAttribute name="bg" type="STRING"/>
+        <EditorAttribute name="bh" type="STRING"/>
+        <EditorAttribute name="bi" type="STRING"/>
+        <EditorAttribute name="bj" type="STRING"/>
+        <EditorAttribute name="bm" type="STRING"/>
+        <EditorAttribute name="bn" type="STRING"/>
+        <EditorAttribute name="bo" type="STRING"/>
+        <EditorAttribute name="br" type="STRING"/>
+        <EditorAttribute name="bs" type="STRING"/>
+        <EditorAttribute name="by" type="STRING"/>
+        <EditorAttribute name="bv" type="STRING"/>
+        <EditorAttribute name="bw" type="STRING"/>
+        <EditorAttribute name="by" type="STRING"/>
+        <EditorAttribute name="bz" type="STRING"/>
+        <EditorAttribute name="ca" type="STRING"/>
+        <EditorAttribute name="cc" type="STRING"/>
+        <EditorAttribute name="cd" type="STRING"/>
+        <EditorAttribute name="cf" type="STRING"/>
+        <EditorAttribute name="cg" type="STRING"/>
+        <EditorAttribute name="ch" type="STRING"/>
+        <EditorAttribute name="ci" type="STRING"/>
+        <EditorAttribute name="ck" type="STRING"/>
+        <EditorAttribute name="cl" type="STRING"/>
+        <EditorAttribute name="cm" type="STRING"/>
+        <EditorAttribute name="cn" type="STRING"/>
+        <EditorAttribute name="co" type="STRING"/>
+        <EditorAttribute name="cr" type="STRING"/>
+        <EditorAttribute name="cu" type="STRING"/>
+        <EditorAttribute name="cv" type="STRING"/>
+        <EditorAttribute name="cx" type="STRING"/>
+        <EditorAttribute name="cy" type="STRING"/>
+        <EditorAttribute name="cz" type="STRING"/>
+        <EditorAttribute name="de" type="STRING"/>
+        <EditorAttribute name="dj" type="STRING"/>
+        <EditorAttribute name="dk" type="STRING"/>
+        <EditorAttribute name="dm" type="STRING"/>
+        <EditorAttribute name="do" type="STRING"/>
+        <EditorAttribute name="ec" type="STRING"/>
+        <EditorAttribute name="ee" type="STRING"/>
+        <EditorAttribute name="eg" type="STRING"/>
+        <EditorAttribute name="eh" type="STRING"/>
+        <EditorAttribute name="er" type="STRING"/>
+        <EditorAttribute name="es" type="STRING"/>
+        <EditorAttribute name="et" type="STRING"/>
+        <EditorAttribute name="eu" type="STRING"/>
+        <EditorAttribute name="fi" type="STRING"/>
+        <EditorAttribute name="fj" type="STRING"/>
+        <EditorAttribute name="fk" type="STRING"/>
+        <EditorAttribute name="fm" type="STRING"/>
+        <EditorAttribute name="fo" type="STRING"/>
+        <EditorAttribute name="fr" type="STRING"/>
+        <EditorAttribute name="ga" type="STRING"/>
+        <EditorAttribute name="gb" type="STRING"/>
+        <EditorAttribute name="gd" type="STRING"/>
+        <EditorAttribute name="ge" type="STRING"/>
+        <EditorAttribute name="gf" type="STRING"/>
+        <EditorAttribute name="gg" type="STRING"/>
+        <EditorAttribute name="gh" type="STRING"/>
+        <EditorAttribute name="gi" type="STRING"/>
+        <EditorAttribute name="gl" type="STRING"/>
+        <EditorAttribute name="gm" type="STRING"/>
+        <EditorAttribute name="gn" type="STRING"/>
+        <EditorAttribute name="gp" type="STRING"/>
+        <EditorAttribute name="gq" type="STRING"/>
+        <EditorAttribute name="gr" type="STRING"/>
+        <EditorAttribute name="gs" type="STRING"/>
+        <EditorAttribute name="gt" type="STRING"/>
+        <EditorAttribute name="gu" type="STRING"/>
+        <EditorAttribute name="gw" type="STRING"/>
+        <EditorAttribute name="gy" type="STRING"/>
+        <EditorAttribute name="hk" type="STRING"/>
+        <EditorAttribute name="hn" type="STRING"/>
+        <EditorAttribute name="hr" type="STRING"/>
+        <EditorAttribute name="ht" type="STRING"/>
+        <EditorAttribute name="hu" type="STRING"/>
+        <EditorAttribute name="ie" type="STRING"/>
+        <EditorAttribute name="il" type="STRING"/>
+        <EditorAttribute name="im" type="STRING"/>
+        <EditorAttribute name="in" type="STRING"/>
+        <EditorAttribute name="io" type="STRING"/>
+        <EditorAttribute name="iq" type="STRING"/>
+        <EditorAttribute name="ir" type="STRING"/>
+        <EditorAttribute name="is" type="STRING"/>
+        <EditorAttribute name="it" type="STRING"/>
+        <EditorAttribute name="je" type="STRING"/>
+        <EditorAttribute name="jm" type="STRING"/>
+        <EditorAttribute name="jo" type="STRING"/>
+        <EditorAttribute name="jp" type="STRING"/>
+        <EditorAttribute name="ke" type="STRING"/>
+        <EditorAttribute name="kg" type="STRING"/>
+        <EditorAttribute name="kh" type="STRING"/>
+        <EditorAttribute name="ki" type="STRING"/>
+        <EditorAttribute name="km" type="STRING"/>
+        <EditorAttribute name="kn" type="STRING"/>
+        <EditorAttribute name="kp" type="STRING"/>
+        <EditorAttribute name="kr" type="STRING"/>
+        <EditorAttribute name="kw" type="STRING"/>
+        <EditorAttribute name="ky" type="STRING"/>
+        <EditorAttribute name="la" type="STRING"/>
+        <EditorAttribute name="lb" type="STRING"/>
+        <EditorAttribute name="lc" type="STRING"/>
+        <EditorAttribute name="li" type="STRING"/>
+        <EditorAttribute name="lk" type="STRING"/>
+        <EditorAttribute name="lr" type="STRING"/>
+        <EditorAttribute name="ls" type="STRING"/>
+        <EditorAttribute name="lt" type="STRING"/>
+        <EditorAttribute name="lu" type="STRING"/>
+        <EditorAttribute name="lv" type="STRING"/>
+        <EditorAttribute name="ly" type="STRING"/>
+        <EditorAttribute name="ma" type="STRING"/>
+        <EditorAttribute name="mc" type="STRING"/>
+        <EditorAttribute name="md" type="STRING"/>
+        <EditorAttribute name="mh" type="STRING"/>
+        <EditorAttribute name="mk" type="STRING"/>
+        <EditorAttribute name="ml" type="STRING"/>
+        <EditorAttribute name="mm" type="STRING"/>
+        <EditorAttribute name="mn" type="STRING"/>
+        <EditorAttribute name="mo" type="STRING"/>
+        <EditorAttribute name="mp" type="STRING"/>
+        <EditorAttribute name="mq" type="STRING"/>
+        <EditorAttribute name="mr" type="STRING"/>
+        <EditorAttribute name="ms" type="STRING"/>
+        <EditorAttribute name="mt" type="STRING"/>
+        <EditorAttribute name="mu" type="STRING"/>
+        <EditorAttribute name="mv" type="STRING"/>
+        <EditorAttribute name="mw" type="STRING"/>
+        <EditorAttribute name="mx" type="STRING"/>
+        <EditorAttribute name="my" type="STRING"/>
+        <EditorAttribute name="mz" type="STRING"/>
+        <EditorAttribute name="na" type="STRING"/>
+        <EditorAttribute name="nc" type="STRING"/>
+        <EditorAttribute name="ne" type="STRING"/>
+        <EditorAttribute name="nf" type="STRING"/>
+        <EditorAttribute name="ng" type="STRING"/>
+        <EditorAttribute name="ni" type="STRING"/>
+        <EditorAttribute name="nl" type="STRING"/>
+        <EditorAttribute name="no" type="STRING"/>
+        <EditorAttribute name="np" type="STRING"/>
+        <EditorAttribute name="nr" type="STRING"/>
+        <EditorAttribute name="nu" type="STRING"/>
+        <EditorAttribute name="nz" type="STRING"/>
+        <EditorAttribute name="om" type="STRING"/>
+        <EditorAttribute name="pa" type="STRING"/>
+        <EditorAttribute name="pe" type="STRING"/>
+        <EditorAttribute name="pf" type="STRING"/>
+        <EditorAttribute name="pg" type="STRING"/>
+        <EditorAttribute name="ph" type="STRING"/>
+        <EditorAttribute name="pk" type="STRING"/>
+        <EditorAttribute name="pl" type="STRING"/>
+        <EditorAttribute name="pm" type="STRING"/>
+        <EditorAttribute name="pn" type="STRING"/>
+        <EditorAttribute name="pr" type="STRING"/>
+        <EditorAttribute name="ps" type="STRING"/>
+        <EditorAttribute name="pt" type="STRING"/>
+        <EditorAttribute name="pw" type="STRING"/>
+        <EditorAttribute name="py" type="STRING"/>
+        <EditorAttribute name="qa" type="STRING"/>
+        <EditorAttribute name="re" type="STRING"/>
+        <EditorAttribute name="ro" type="STRING"/>
+        <EditorAttribute name="ru" type="STRING"/>
+        <EditorAttribute name="rw" type="STRING"/>
+        <EditorAttribute name="sa" type="STRING"/>
+        <EditorAttribute name="sb" type="STRING"/>
+        <EditorAttribute name="sc" type="STRING"/>
+        <EditorAttribute name="sd" type="STRING"/>
+        <EditorAttribute name="se" type="STRING"/>
+        <EditorAttribute name="sg" type="STRING"/>
+        <EditorAttribute name="sh" type="STRING"/>
+        <EditorAttribute name="si" type="STRING"/>
+        <EditorAttribute name="sj" type="STRING"/>
+        <EditorAttribute name="sk" type="STRING"/>
+        <EditorAttribute name="sl" type="STRING"/>
+        <EditorAttribute name="sm" type="STRING"/>
+        <EditorAttribute name="sn" type="STRING"/>
+        <EditorAttribute name="so" type="STRING"/>
+        <EditorAttribute name="sr" type="STRING"/>
+        <EditorAttribute name="st" type="STRING"/>
+        <EditorAttribute name="sv" type="STRING"/>
+        <EditorAttribute name="sy" type="STRING"/>
+        <EditorAttribute name="sz" type="STRING"/>
+        <EditorAttribute name="tc" type="STRING"/>
+        <EditorAttribute name="td" type="STRING"/>
+        <EditorAttribute name="tf" type="STRING"/>
+        <EditorAttribute name="tg" type="STRING"/>
+        <EditorAttribute name="th" type="STRING"/>
+        <EditorAttribute name="tj" type="STRING"/>
+        <EditorAttribute name="tk" type="STRING"/>
+        <EditorAttribute name="tl" type="STRING"/>
+        <EditorAttribute name="tm" type="STRING"/>
+        <EditorAttribute name="tn" type="STRING"/>
+        <EditorAttribute name="to" type="STRING"/>
+        <EditorAttribute name="tr" type="STRING"/>
+        <EditorAttribute name="tt" type="STRING"/>
+        <EditorAttribute name="tv" type="STRING"/>
+        <EditorAttribute name="tw" type="STRING"/>
+        <EditorAttribute name="tz" type="STRING"/>
+        <EditorAttribute name="ua" type="STRING"/>
+        <EditorAttribute name="ug" type="STRING"/>
+        <EditorAttribute name="um" type="STRING"/>
+        <EditorAttribute name="us" type="STRING"/>
+        <EditorAttribute name="uy" type="STRING"/>
+        <EditorAttribute name="uz" type="STRING"/>
+        <EditorAttribute name="va" type="STRING"/>
+        <EditorAttribute name="vc" type="STRING"/>
+        <EditorAttribute name="ve" type="STRING"/>
+        <EditorAttribute name="vg" type="STRING"/>
+        <EditorAttribute name="vi" type="STRING"/>
+        <EditorAttribute name="vn" type="STRING"/>
+        <EditorAttribute name="vu" type="STRING"/>
+        <EditorAttribute name="wf" type="STRING"/>
+        <EditorAttribute name="ws" type="STRING"/>
+        <EditorAttribute name="ye" type="STRING"/>
+        <EditorAttribute name="yt" type="STRING"/>
+        <EditorAttribute name="za" type="STRING"/>
+        <EditorAttribute name="zm" type="STRING"/>
+        <EditorAttribute name="zw" type="STRING"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="text"/>
+        <MetaEditorAttribute name="Translations" openByDefault="false">
+            <MetaEditorAttribute name="ad"/>
+            <MetaEditorAttribute name="ae"/>
+            <MetaEditorAttribute name="af"/>
+            <MetaEditorAttribute name="ag"/>
+            <MetaEditorAttribute name="ai"/>
+            <MetaEditorAttribute name="al"/>
+            <MetaEditorAttribute name="am"/>
+            <MetaEditorAttribute name="an"/>
+            <MetaEditorAttribute name="ao"/>
+            <MetaEditorAttribute name="ar"/>
+            <MetaEditorAttribute name="as"/>
+            <MetaEditorAttribute name="at"/>
+            <MetaEditorAttribute name="au"/>
+            <MetaEditorAttribute name="aw"/>
+            <MetaEditorAttribute name="ax"/>
+            <MetaEditorAttribute name="az"/>
+            <MetaEditorAttribute name="ba"/>
+            <MetaEditorAttribute name="bb"/>
+            <MetaEditorAttribute name="bd"/>
+            <MetaEditorAttribute name="be"/>
+            <MetaEditorAttribute name="bf"/>
+            <MetaEditorAttribute name="bg"/>
+            <MetaEditorAttribute name="bh"/>
+            <MetaEditorAttribute name="bi"/>
+            <MetaEditorAttribute name="bj"/>
+            <MetaEditorAttribute name="bm"/>
+            <MetaEditorAttribute name="bn"/>
+            <MetaEditorAttribute name="bo"/>
+            <MetaEditorAttribute name="br"/>
+            <MetaEditorAttribute name="bs"/>
+            <MetaEditorAttribute name="by"/>
+            <MetaEditorAttribute name="bv"/>
+            <MetaEditorAttribute name="bw"/>
+            <MetaEditorAttribute name="by"/>
+            <MetaEditorAttribute name="bz"/>
+            <MetaEditorAttribute name="ca"/>
+            <MetaEditorAttribute name="cc"/>
+            <MetaEditorAttribute name="cd"/>
+            <MetaEditorAttribute name="cf"/>
+            <MetaEditorAttribute name="cg"/>
+            <MetaEditorAttribute name="ch"/>
+            <MetaEditorAttribute name="ci"/>
+            <MetaEditorAttribute name="ck"/>
+            <MetaEditorAttribute name="cl"/>
+            <MetaEditorAttribute name="cm"/>
+            <MetaEditorAttribute name="cn"/>
+            <MetaEditorAttribute name="co"/>
+            <MetaEditorAttribute name="cr"/>
+            <MetaEditorAttribute name="cu"/>
+            <MetaEditorAttribute name="cv"/>
+            <MetaEditorAttribute name="cx"/>
+            <MetaEditorAttribute name="cy"/>
+            <MetaEditorAttribute name="cz"/>
+            <MetaEditorAttribute name="de"/>
+            <MetaEditorAttribute name="dj"/>
+            <MetaEditorAttribute name="dk"/>
+            <MetaEditorAttribute name="dm"/>
+            <MetaEditorAttribute name="do"/>
+            <MetaEditorAttribute name="ec"/>
+            <MetaEditorAttribute name="ee"/>
+            <MetaEditorAttribute name="eg"/>
+            <MetaEditorAttribute name="eh"/>
+            <MetaEditorAttribute name="er"/>
+            <MetaEditorAttribute name="es"/>
+            <MetaEditorAttribute name="et"/>
+            <MetaEditorAttribute name="eu"/>
+            <MetaEditorAttribute name="fi"/>
+            <MetaEditorAttribute name="fj"/>
+            <MetaEditorAttribute name="fk"/>
+            <MetaEditorAttribute name="fm"/>
+            <MetaEditorAttribute name="fo"/>
+            <MetaEditorAttribute name="fr"/>
+            <MetaEditorAttribute name="ga"/>
+            <MetaEditorAttribute name="gb"/>
+            <MetaEditorAttribute name="gd"/>
+            <MetaEditorAttribute name="ge"/>
+            <MetaEditorAttribute name="gf"/>
+            <MetaEditorAttribute name="gg"/>
+            <MetaEditorAttribute name="gh"/>
+            <MetaEditorAttribute name="gi"/>
+            <MetaEditorAttribute name="gl"/>
+            <MetaEditorAttribute name="gm"/>
+            <MetaEditorAttribute name="gn"/>
+            <MetaEditorAttribute name="gp"/>
+            <MetaEditorAttribute name="gq"/>
+            <MetaEditorAttribute name="gr"/>
+            <MetaEditorAttribute name="gs"/>
+            <MetaEditorAttribute name="gt"/>
+            <MetaEditorAttribute name="gu"/>
+            <MetaEditorAttribute name="gw"/>
+            <MetaEditorAttribute name="gy"/>
+            <MetaEditorAttribute name="hk"/>
+            <MetaEditorAttribute name="hn"/>
+            <MetaEditorAttribute name="hr"/>
+            <MetaEditorAttribute name="ht"/>
+            <MetaEditorAttribute name="hu"/>
+            <MetaEditorAttribute name="ie"/>
+            <MetaEditorAttribute name="il"/>
+            <MetaEditorAttribute name="im"/>
+            <MetaEditorAttribute name="in"/>
+            <MetaEditorAttribute name="io"/>
+            <MetaEditorAttribute name="iq"/>
+            <MetaEditorAttribute name="ir"/>
+            <MetaEditorAttribute name="is"/>
+            <MetaEditorAttribute name="it"/>
+            <MetaEditorAttribute name="je"/>
+            <MetaEditorAttribute name="jm"/>
+            <MetaEditorAttribute name="jo"/>
+            <MetaEditorAttribute name="jp"/>
+            <MetaEditorAttribute name="ke"/>
+            <MetaEditorAttribute name="kg"/>
+            <MetaEditorAttribute name="kh"/>
+            <MetaEditorAttribute name="ki"/>
+            <MetaEditorAttribute name="km"/>
+            <MetaEditorAttribute name="kn"/>
+            <MetaEditorAttribute name="kp"/>
+            <MetaEditorAttribute name="kr"/>
+            <MetaEditorAttribute name="kw"/>
+            <MetaEditorAttribute name="ky"/>
+            <MetaEditorAttribute name="la"/>
+            <MetaEditorAttribute name="lb"/>
+            <MetaEditorAttribute name="lc"/>
+            <MetaEditorAttribute name="li"/>
+            <MetaEditorAttribute name="lk"/>
+            <MetaEditorAttribute name="lr"/>
+            <MetaEditorAttribute name="ls"/>
+            <MetaEditorAttribute name="lt"/>
+            <MetaEditorAttribute name="lu"/>
+            <MetaEditorAttribute name="lv"/>
+            <MetaEditorAttribute name="ly"/>
+            <MetaEditorAttribute name="ma"/>
+            <MetaEditorAttribute name="mc"/>
+            <MetaEditorAttribute name="md"/>
+            <MetaEditorAttribute name="mh"/>
+            <MetaEditorAttribute name="mk"/>
+            <MetaEditorAttribute name="ml"/>
+            <MetaEditorAttribute name="mm"/>
+            <MetaEditorAttribute name="mn"/>
+            <MetaEditorAttribute name="mo"/>
+            <MetaEditorAttribute name="mp"/>
+            <MetaEditorAttribute name="mq"/>
+            <MetaEditorAttribute name="mr"/>
+            <MetaEditorAttribute name="ms"/>
+            <MetaEditorAttribute name="mt"/>
+            <MetaEditorAttribute name="mu"/>
+            <MetaEditorAttribute name="mv"/>
+            <MetaEditorAttribute name="mw"/>
+            <MetaEditorAttribute name="mx"/>
+            <MetaEditorAttribute name="my"/>
+            <MetaEditorAttribute name="mz"/>
+            <MetaEditorAttribute name="na"/>
+            <MetaEditorAttribute name="nc"/>
+            <MetaEditorAttribute name="ne"/>
+            <MetaEditorAttribute name="nf"/>
+            <MetaEditorAttribute name="ng"/>
+            <MetaEditorAttribute name="ni"/>
+            <MetaEditorAttribute name="nl"/>
+            <MetaEditorAttribute name="no"/>
+            <MetaEditorAttribute name="np"/>
+            <MetaEditorAttribute name="nr"/>
+            <MetaEditorAttribute name="nu"/>
+            <MetaEditorAttribute name="nz"/>
+            <MetaEditorAttribute name="om"/>
+            <MetaEditorAttribute name="pa"/>
+            <MetaEditorAttribute name="pe"/>
+            <MetaEditorAttribute name="pf"/>
+            <MetaEditorAttribute name="pg"/>
+            <MetaEditorAttribute name="ph"/>
+            <MetaEditorAttribute name="pk"/>
+            <MetaEditorAttribute name="pl"/>
+            <MetaEditorAttribute name="pm"/>
+            <MetaEditorAttribute name="pn"/>
+            <MetaEditorAttribute name="pr"/>
+            <MetaEditorAttribute name="ps"/>
+            <MetaEditorAttribute name="pt"/>
+            <MetaEditorAttribute name="pw"/>
+            <MetaEditorAttribute name="py"/>
+            <MetaEditorAttribute name="qa"/>
+            <MetaEditorAttribute name="re"/>
+            <MetaEditorAttribute name="ro"/>
+            <MetaEditorAttribute name="ru"/>
+            <MetaEditorAttribute name="rw"/>
+            <MetaEditorAttribute name="sa"/>
+            <MetaEditorAttribute name="sb"/>
+            <MetaEditorAttribute name="sc"/>
+            <MetaEditorAttribute name="sd"/>
+            <MetaEditorAttribute name="se"/>
+            <MetaEditorAttribute name="sg"/>
+            <MetaEditorAttribute name="sh"/>
+            <MetaEditorAttribute name="si"/>
+            <MetaEditorAttribute name="sj"/>
+            <MetaEditorAttribute name="sk"/>
+            <MetaEditorAttribute name="sl"/>
+            <MetaEditorAttribute name="sm"/>
+            <MetaEditorAttribute name="sn"/>
+            <MetaEditorAttribute name="so"/>
+            <MetaEditorAttribute name="sr"/>
+            <MetaEditorAttribute name="st"/>
+            <MetaEditorAttribute name="sv"/>
+            <MetaEditorAttribute name="sy"/>
+            <MetaEditorAttribute name="sz"/>
+            <MetaEditorAttribute name="tc"/>
+            <MetaEditorAttribute name="td"/>
+            <MetaEditorAttribute name="tf"/>
+            <MetaEditorAttribute name="tg"/>
+            <MetaEditorAttribute name="th"/>
+            <MetaEditorAttribute name="tj"/>
+            <MetaEditorAttribute name="tk"/>
+            <MetaEditorAttribute name="tl"/>
+            <MetaEditorAttribute name="tm"/>
+            <MetaEditorAttribute name="tn"/>
+            <MetaEditorAttribute name="to"/>
+            <MetaEditorAttribute name="tr"/>
+            <MetaEditorAttribute name="tt"/>
+            <MetaEditorAttribute name="tv"/>
+            <MetaEditorAttribute name="tw"/>
+            <MetaEditorAttribute name="tz"/>
+            <MetaEditorAttribute name="ua"/>
+            <MetaEditorAttribute name="ug"/>
+            <MetaEditorAttribute name="um"/>
+            <MetaEditorAttribute name="us"/>
+            <MetaEditorAttribute name="uy"/>
+            <MetaEditorAttribute name="uz"/>
+            <MetaEditorAttribute name="va"/>
+            <MetaEditorAttribute name="vc"/>
+            <MetaEditorAttribute name="ve"/>
+            <MetaEditorAttribute name="vg"/>
+            <MetaEditorAttribute name="vi"/>
+            <MetaEditorAttribute name="vn"/>
+            <MetaEditorAttribute name="vu"/>
+            <MetaEditorAttribute name="wf"/>
+            <MetaEditorAttribute name="ws"/>
+            <MetaEditorAttribute name="ye"/>
+            <MetaEditorAttribute name="yt"/>
+            <MetaEditorAttribute name="za"/>
+            <MetaEditorAttribute name="zm"/>
+            <MetaEditorAttribute name="zw"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

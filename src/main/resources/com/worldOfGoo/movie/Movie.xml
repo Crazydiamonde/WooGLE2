@@ -1,0 +1,11 @@
+<AttributeManifest localName="movie">
+
+    <attributes>
+        <EditorAttribute name="length" type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="length"/>
+    </metaAttributes>
+
+</AttributeManifest>

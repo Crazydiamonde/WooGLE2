@@ -1,19 +1,12 @@
 package com.worldOfGoo.resrc;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.editorObjects.attributes.InputField;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
+import com.woogleFX.assets.GameVersion;
 
 public class Resources extends EditorObject {
 
     public Resources(EditorObject _parent, GameVersion version) {
-        super(_parent, "Resources", version);
-
-        addAttribute("id", InputField._1_STRING).assertRequired();
-
-        setMetaAttributes(MetaEditorAttribute.parse("id,"));
-
+        super(_parent, version);
     }
 
 
@@ -23,9 +16,10 @@ public class Resources extends EditorObject {
     }
 
 
-    //@Override
-    //public String[] getPossibleChildren() {
-    //    return new String[]{ "Image", "Sound", "font", "SetDefaults" };
-    //}
+    @Override
+    @SuppressWarnings("unchecked")
+    public Class<? extends EditorObject>[] getPossibleChildren() {
+        return (Class<? extends EditorObject>[]) new Class[]{ Image.class, Sound.class, font.class, SetDefaults.class };
+    }
 
 }

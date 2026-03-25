@@ -1,0 +1,13 @@
+<AttributeManifest localName="FlashAnim">
+
+    <attributes>
+        <EditorAttribute name="id"   type="STRING" required="true"/>
+        <EditorAttribute name="path" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="path"/>
+    </metaAttributes>
+
+</AttributeManifest>

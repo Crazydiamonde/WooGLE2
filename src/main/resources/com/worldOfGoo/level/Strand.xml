@@ -1,0 +1,13 @@
+<AttributeManifest localName="Strand">
+
+    <attributes>
+        <EditorAttribute name="gb1" type="_1_GOOBALL_ID" required="true"/>
+        <EditorAttribute name="gb2" type="_1_GOOBALL_ID" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="gb1"/>
+        <MetaEditorAttribute name="gb2"/>
+    </metaAttributes>
+
+</AttributeManifest>

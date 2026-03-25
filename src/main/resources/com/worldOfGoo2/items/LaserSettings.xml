@@ -1,0 +1,46 @@
+<AttributeManifest localName="LaserSettings">
+
+    <attributes>
+        <EditorAttribute name="enabled" type="STRING" required="true"/>
+        <EditorAttribute name="base" type="STRING" required="true"/>
+        <EditorAttribute name="top" type="STRING" required="true"/>
+        <EditorAttribute name="baseAdditive" type="STRING" required="true"/>
+        <EditorAttribute name="topAdditive" type="STRING" required="true"/>
+        <EditorAttribute name="count" type="STRING" required="true"/>
+        <EditorAttribute name="timeScale" type="STRING" required="true"/>
+        <EditorAttribute name="waveScale" type="STRING" required="true"/>
+        <EditorAttribute name="moveTimeScale" type="STRING" required="true"/>
+        <EditorAttribute name="gravityScale" type="STRING" required="true"/>
+        <EditorAttribute name="rotationStep" type="STRING" required="true"/>
+        <EditorAttribute name="innerGravityScale" type="STRING" required="true"/>
+        <EditorAttribute name="scaleStep" type="STRING" required="true"/>
+        <EditorAttribute name="positionStep" type="STRING" required="true"/>
+        <EditorAttribute name="centerFactor" type="STRING" required="true"/>
+        <EditorAttribute name="gradientStart" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Color" required="true"/>
+        <EditorAttribute name="gradientEnd" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.Color" required="true"/>
+        <EditorAttribute name="image" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.ImageID" required="true"/>
+
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="enabled"/>
+        <MetaEditorAttribute name="base"/>
+        <MetaEditorAttribute name="top"/>
+        <MetaEditorAttribute name="baseAdditive"/>
+        <MetaEditorAttribute name="topAdditive"/>
+        <MetaEditorAttribute name="count"/>
+        <MetaEditorAttribute name="timeScale"/>
+        <MetaEditorAttribute name="waveScale"/>
+        <MetaEditorAttribute name="moveTimeScale"/>
+        <MetaEditorAttribute name="gravityScale"/>
+        <MetaEditorAttribute name="rotationStep"/>
+        <MetaEditorAttribute name="innerGravityScale"/>
+        <MetaEditorAttribute name="scaleStep"/>
+        <MetaEditorAttribute name="positionStep"/>
+        <MetaEditorAttribute name="centerFactor"/>
+        <MetaEditorAttribute name="gradientStart"/>
+        <MetaEditorAttribute name="gradientEnd"/>
+        <MetaEditorAttribute name="image"/>
+    </metaAttributes>
+
+</AttributeManifest>

@@ -5,30 +5,29 @@ import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class CreateFileAction extends UserAction {
 
+    private final String source;
     private final String path;
-    private final byte[] contents;
-    public CreateFileAction(String path, byte[] contents) {
+    public CreateFileAction(String source, String path) {
         super(null);
+        this.source = source;
         this.path = path;
-        this.contents = contents;
     }
 
 
     @Override
     public UserAction getInverse() {
-        return new DestroyFileAction(path, contents);
+        return new DestroyFileAction(source, path);
     }
 
 
     @Override
     public void execute() {
         try {
-            Path actualPath = Path.of(path);
-            Files.createFile(actualPath);
-            Files.write(actualPath, contents);
+            Files.copy(Path.of(source), Path.of(path), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             ErrorAlarm.show(e);
         }

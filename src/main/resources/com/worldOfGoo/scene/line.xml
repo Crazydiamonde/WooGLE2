@@ -1,0 +1,23 @@
+<AttributeManifest localName="line">
+
+    <attributes>
+        <EditorAttribute name="id"       type="STRING"                          required="true"/>
+        <EditorAttribute name="static"   type="BOOLEAN"     defaultValue="true" required="true"/>
+        <EditorAttribute name="tag"      type="_1_TAG"                          required="true"/>
+        <EditorAttribute name="material" type="_1_MATERIAL" defaultValue="rock" required="true"/>
+        <EditorAttribute name="anchor"   type="_1_POSITION" defaultValue="0,0"  required="true"/>
+        <EditorAttribute name="normal"   type="_1_POSITION" defaultValue="1,0"  required="true"/>
+        <EditorAttribute name="break"    type="_1_NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="static"/>
+        <MetaEditorAttribute name="tag"/>
+        <MetaEditorAttribute name="material"/>
+        <MetaEditorAttribute name="anchor"/>
+        <MetaEditorAttribute name="normal"/>
+        <MetaEditorAttribute name="break"/>
+    </metaAttributes>
+
+</AttributeManifest>

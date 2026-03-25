@@ -1,18 +1,18 @@
 <AttributeManifest localName="TerrainType">
 
     <attributes>
-        <EditorAttribute name="uuid" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_UUID"/>
-        <EditorAttribute name="name" type="_2_STRING"/>
-        <EditorAttribute name="goolfHitSound" type="_2_CHILD" childAlias="com.worldOfGoo2.misc._2_SoundID"/>
-        <EditorAttribute name="edgeTypesSettings" type="_2_STRING" childAlias="com.worldOfGoo2.terrain._2_Terrain_EdgeTypesSettings"/>
-        <EditorAttribute name="baseSettings" type="_2_STRING" childAlias="com.worldOfGoo2.terrain.BaseSettings"/>
-        <EditorAttribute name="topSettings" type="_2_STRING" childAlias="com.worldOfGoo2.terrain.TopSettings"/>
-        <EditorAttribute name="deadlySettings" type="_2_STRING" childAlias="com.worldOfGoo2.terrain.DeadlySettings"/>
-        <EditorAttribute name="edgeSettings" type="_2_STRING" childAlias="com.worldOfGoo2.terrain.EdgeSettings"/>
-        <EditorAttribute name="destructionSettings" type="_2_STRING" childAlias="com.worldOfGoo2.terrain.DestructionSettings"/>
-        <EditorAttribute name="godRaySettings" type="_2_STRING" childAlias="com.worldOfGoo2.terrain.GodRaySettings"/>
-        <EditorAttribute name="laserSettings" type="_2_STRING" childAlias="com.worldOfGoo2.items._2_Item_LaserSettings"/>
-        <EditorAttribute name="decorations" type="_2_STRING" childAlias="com.worldOfGoo2.terrain.Decoration"/>
+        <EditorAttribute name="uuid" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.UUID"/>
+        <EditorAttribute name="name" type="STRING"/>
+        <EditorAttribute name="goolfHitSound" type="_2_CHILD" childAlias="com.worldOfGoo2.misc.SoundID"/>
+        <EditorAttribute name="edgeTypesSettings" type="STRING" childAlias="com.worldOfGoo2.terrain._2_Terrain_EdgeTypesSettings"/>
+        <EditorAttribute name="baseSettings" type="STRING" childAlias="com.worldOfGoo2.terrain.BaseSettings"/>
+        <EditorAttribute name="topSettings" type="STRING" childAlias="com.worldOfGoo2.terrain.TopSettings"/>
+        <EditorAttribute name="deadlySettings" type="STRING" childAlias="com.worldOfGoo2.terrain.DeadlySettings"/>
+        <EditorAttribute name="edgeSettings" type="STRING" childAlias="com.worldOfGoo2.terrain.EdgeSettings"/>
+        <EditorAttribute name="destructionSettings" type="STRING" childAlias="com.worldOfGoo2.terrain.DestructionSettings"/>
+        <EditorAttribute name="godRaySettings" type="STRING" childAlias="com.worldOfGoo2.terrain.GodRaySettings"/>
+        <EditorAttribute name="laserSettings" type="STRING" childAlias="com.worldOfGoo2.items.LaserSettings"/>
+        <EditorAttribute name="decorations" type="STRING" childAlias="com.worldOfGoo2.terrain.Decoration"/>
     </attributes>
 
 </AttributeManifest>

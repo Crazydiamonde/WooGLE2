@@ -1,0 +1,55 @@
+<AttributeManifest localName="SceneLayer">
+
+    <attributes>
+        <EditorAttribute name="id"         type="STRING"/>
+        <EditorAttribute name="name"       type="STRING"/>
+        <EditorAttribute name="depth"      type="_1_NUMBER"    defaultValue="0"           required="true"/>
+        <EditorAttribute name="x"          type="_1_NUMBER"    defaultValue="0"           required="true"/>
+        <EditorAttribute name="y"          type="_1_NUMBER"    defaultValue="0"           required="true"/>
+        <EditorAttribute name="scalex"     type="_1_NUMBER"    defaultValue="1"/>
+        <EditorAttribute name="scaley"     type="_1_NUMBER"    defaultValue="1"/>
+        <EditorAttribute name="rotation"   type="_1_NUMBER"    defaultValue="0"/>
+        <EditorAttribute name="alpha"      type="_1_NUMBER"    defaultValue="1"/>
+        <EditorAttribute name="colorize"   type="_1_COLOR"     defaultValue="255,255,255"/>
+        <EditorAttribute name="image"      type="_1_IMAGE"                                required="true"/>
+        <EditorAttribute name="tilex"      type="BOOLEAN"      defaultValue="false"/>
+        <EditorAttribute name="tiley"      type="BOOLEAN"      defaultValue="false"/>
+        <EditorAttribute name="tilecountx" type="_1_NUMBER"    defaultValue="0"/>
+        <EditorAttribute name="tilecounty" type="_1_NUMBER"    defaultValue="0"/>
+        <EditorAttribute name="anim"       type="_1_ANIMATION"/>
+        <EditorAttribute name="animspeed"  type="_1_NUMBER"    defaultValue="1"/>
+        <EditorAttribute name="animdelay"  type="_1_NUMBER"    defaultValue="0"/>
+        <EditorAttribute name="animloop"   type="BOOLEAN"      defaultValue="false"/>
+        <EditorAttribute name="anchor"     type="_1_GEOMETRY"/>
+        <EditorAttribute name="context"    type="_1_CONTEXT"   defaultValue="screen"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="name"/>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+        <MetaEditorAttribute name="scalex"/>
+        <MetaEditorAttribute name="scaley"/>
+        <MetaEditorAttribute name="rotation"/>
+        <MetaEditorAttribute name="Image" openByDefault="true">
+            <MetaEditorAttribute name="image"/>
+            <MetaEditorAttribute name="depth"/>
+            <MetaEditorAttribute name="tilex"/>
+            <MetaEditorAttribute name="tiley"/>
+            <MetaEditorAttribute name="tilecountx"/>
+            <MetaEditorAttribute name="tilecounty"/>
+            <MetaEditorAttribute name="alpha"/>
+            <MetaEditorAttribute name="colorize"/>
+            <MetaEditorAttribute name="anchor"/>
+            <MetaEditorAttribute name="context"/>
+        </MetaEditorAttribute>
+        <MetaEditorAttribute name="Anim" openByDefault="false">
+            <MetaEditorAttribute name="anim"/>
+            <MetaEditorAttribute name="animspeed"/>
+            <MetaEditorAttribute name="animdelay"/>
+            <MetaEditorAttribute name="animloop"/>
+        </MetaEditorAttribute>
+    </metaAttributes>
+
+</AttributeManifest>

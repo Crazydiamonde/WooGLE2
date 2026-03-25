@@ -1,35 +1,33 @@
 package com.worldOfGoo.level;
 
+import com.woogleFX.assets.Asset;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.engine.AssetManager;
-import com.woogleFX.editorObjects.attributes.InputField;
-import com.woogleFX.gameData.level.GameVersion;
-import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
+import com.woogleFX.assets.GameVersion;
 
-import com.woogleFX.gameData.level.WOG1Level;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Vertex extends EditorObject {
 
     public Vertex(EditorObject _parent, GameVersion version) {
-        super(_parent, "Vertex", version);
+        super(_parent, version);
+    }
 
-        addAttribute("x", InputField._1_NUMBER).setDefaultValue("0").assertRequired();
-        addAttribute("y", InputField._1_NUMBER).setDefaultValue("0").assertRequired();
+    @Override
+    public void onLoaded(Asset asset) {
+        super.onLoaded(asset);
 
-        Vertex thisVertex = this;
-
-        addObjectComponent(new RectangleComponent() {
+        addObjectComponent(new RectangleComponent(this) {
             public double getX() {
                 return getAttribute("x").doubleValue();
             }
             public void setX(double x) {
 
                 EditorObject pipe = null;
-                for (EditorObject EditorObject : ((WOG1Level) AssetManager.getAsset()).getLevelObject().getChildren())
-                    if (EditorObject instanceof Pipe) {
+                for (EditorObject EditorObject : AssetManager.getAsset().getObjects())
+                    if (EditorObject instanceof com.worldOfGoo.level.pipe) {
                         pipe = EditorObject;
                         break;
                     }
@@ -37,8 +35,8 @@ public class Vertex extends EditorObject {
                 if (pipe == null) return;
 
                 EditorObject previous;
-                if (pipe.getChildren().indexOf(thisVertex) == 0) previous = null;
-                else previous = pipe.getChildren().get(pipe.getChildren().indexOf(thisVertex) - 1);
+                if (pipe.getChildren().indexOf(Vertex.this) == 0) previous = null;
+                else previous = pipe.getChildren().get(pipe.getChildren().indexOf(Vertex.this) - 1);
 
                 if (previous != null) {
                     double previousX = previous.getAttribute("x").doubleValue();
@@ -59,8 +57,8 @@ public class Vertex extends EditorObject {
             public void setY(double y) {
 
                 EditorObject pipe = null;
-                for (EditorObject EditorObject : ((WOG1Level) AssetManager.getAsset()).getLevelObject().getChildren())
-                    if (EditorObject instanceof Pipe) {
+                for (EditorObject EditorObject : AssetManager.getAsset().getObjects())
+                    if (EditorObject instanceof com.worldOfGoo.level.pipe) {
                         pipe = EditorObject;
                         break;
                     }
@@ -68,8 +66,8 @@ public class Vertex extends EditorObject {
                 if (pipe == null) return;
 
                 EditorObject previous;
-                if (pipe.getChildren().indexOf(thisVertex) == 0) previous = null;
-                else previous = pipe.getChildren().get(pipe.getChildren().indexOf(thisVertex) - 1);
+                if (pipe.getChildren().indexOf(Vertex.this) == 0) previous = null;
+                else previous = pipe.getChildren().get(pipe.getChildren().indexOf(Vertex.this) - 1);
 
                 if (previous != null) {
                     double previousY = -previous.getAttribute("y").doubleValue();
@@ -109,7 +107,7 @@ public class Vertex extends EditorObject {
                 return new Color(1.0, 0, 1.0, 0.1);
             }
             public boolean isVisible() {
-                return AssetManager.getAsset().getVisibilitySettings().getShowGeometry() != 0;
+                return AssetManager.getVisibility("geometry") != 0;
             }
             public boolean isResizable() {
                 return false;
@@ -119,16 +117,12 @@ public class Vertex extends EditorObject {
             }
         });
 
-        setMetaAttributes(MetaEditorAttribute.parse("x,y,"));
-
     }
-
 
     @Override
     public void update() {
         getParent().update();
     }
-
 
     @Override
     public String getName() {

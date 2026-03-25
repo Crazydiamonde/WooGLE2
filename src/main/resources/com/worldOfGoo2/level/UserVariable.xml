@@ -1,0 +1,11 @@
+<AttributeManifest localName="UserVariable">
+
+    <attributes>
+        <EditorAttribute name="value" type="NUMBER" defaultValue="0" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="value"/>
+    </metaAttributes>
+
+</AttributeManifest>

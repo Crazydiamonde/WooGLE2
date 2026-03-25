@@ -3,7 +3,7 @@ package com.woogleFX.editorObjects;
 import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.attributes.InputField;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 import com.worldOfGoo2.level._2_Level;
 import javafx.geometry.Point2D;
 
@@ -21,18 +21,18 @@ public class ObjectUtil {
     }
 
 
-    public static EditorObject deepClone(EditorObject editorObject, EditorObject parent) {
+    public static <T extends EditorObject> T deepClone(T editorObject, EditorObject parent) {
 
-        EditorObject clone;
+        T clone;
         if (editorObject.getVersion() == GameVersion.VERSION_WOG2)
-            clone = ObjectCreator.create2(parent == null ? _2_Level.class : parent.getAttribute(editorObject.getTypeID()).getChildAlias(), parent, editorObject.getTypeID(), editorObject.getVersion());
-        else clone = ObjectCreator.create(editorObject.getType(), parent, editorObject.getVersion());
+            clone = ObjectCreator.create(parent == null ? _2_Level.class : parent.getAttribute(editorObject.getTypeID()).getChildAlias(), parent, editorObject.getTypeID(), editorObject.getVersion());
+        else clone = ObjectCreator.create(editorObject.getClass(), parent, editorObject.getVersion());
 
         for (EditorObject child : editorObject.getChildren()) {
             deepClone(child, clone);
         }
 
-        if (editorObject.getParent() == null) cloneAllAttributes(editorObject, clone);
+        cloneAllAttributes(editorObject, clone);
 
         return clone;
     }

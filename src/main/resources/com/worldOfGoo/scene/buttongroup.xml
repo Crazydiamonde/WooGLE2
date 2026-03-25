@@ -1,0 +1,13 @@
+<AttributeManifest localName="buttongroup">
+
+    <attributes>
+        <EditorAttribute name="id" type="STRING" defaultValue="levelMarkerGroup" required="true"/>
+        <EditorAttribute name="osx" type="_1_POSITION" defaultValue="150,1.08" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="id"/>
+        <MetaEditorAttribute name="osx"/>
+    </metaAttributes>
+
+</AttributeManifest>

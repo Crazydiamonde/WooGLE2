@@ -10,6 +10,8 @@ public class ImageUtility {
 
     public static Image colorize(Image image, Color colorize) {
 
+        if (image == null) return null;
+
         double aScale = colorize.getA() / 255.0;
         double rScale = colorize.getR() / 255.0;
         double gScale = colorize.getG() / 255.0;

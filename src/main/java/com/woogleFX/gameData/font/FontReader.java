@@ -1,7 +1,7 @@
 package com.woogleFX.gameData.font;
 
 import com.woogleFX.file.*;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.slf4j.Logger;
@@ -338,7 +338,7 @@ public class FontReader {
                 FontData _scale = command.args()[1];
 
                 String layerID = ((FontKeyword)_layerID).getKeyword();
-                double scale = ((FontDouble)_scale).getData();
+                double scale = (_scale instanceof FontInteger integer ? integer.getData() : ((FontDouble)_scale).getData());
                 font.getLayer(layerID).setScale(scale);
 
             }
@@ -356,13 +356,14 @@ public class FontReader {
                 FontData _spacing = command.args()[1];
 
                 String layerID = ((FontKeyword)_layerID).getKeyword();
-                double spacing = ((FontDouble)_spacing).getData();
+                double spacing = (_spacing instanceof FontInteger integer ? integer.getData() : ((FontDouble)_spacing).getData());
                 font.getLayer(layerID).setSpacing(spacing);
 
             }
 
             default -> {
                 logger.error("Unknown command: " + command.id());
+                System.out.println("Unknown command: " + command.id());
                 System.out.println(font.getName());
                 System.out.println((int)command.id().charAt(0));
                 System.out.println(command.id().length());
@@ -370,6 +371,9 @@ public class FontReader {
             }
 
         }
+
+        // System.out.println("Successfully opened " + font.getName());
+        // System.out.println(font.getLayers().size());
 
         return font;
 

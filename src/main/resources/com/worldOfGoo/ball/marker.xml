@@ -1,0 +1,15 @@
+<AttributeManifest localName="marker">
+
+    <attributes>
+        <EditorAttribute name="drag" type="STRING" required="true"/>
+        <EditorAttribute name="detach" type="STRING" required="true"/>
+        <EditorAttribute name="rotspeed" type="STRING" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="drag"/>
+        <MetaEditorAttribute name="detach"/>
+        <MetaEditorAttribute name="rotspeed"/>
+    </metaAttributes>
+
+</AttributeManifest>

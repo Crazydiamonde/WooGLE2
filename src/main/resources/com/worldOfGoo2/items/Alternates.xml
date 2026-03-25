@@ -1,0 +1,13 @@
+<AttributeManifest localName="Alternates">
+
+    <attributes>
+        <EditorAttribute name="stringValue" type="STRING" required="true"/>
+        <EditorAttribute name="integerValue" type="NUMBER" required="true"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="stringValue"/>
+        <MetaEditorAttribute name="integerValue"/>
+    </metaAttributes>
+
+</AttributeManifest>

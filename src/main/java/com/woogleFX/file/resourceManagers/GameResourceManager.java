@@ -1,11 +1,12 @@
 package com.woogleFX.file.resourceManagers;
 
+import com.woogleFX.engine.fx.editorButtons.FXBallPaletteManager;
 import com.woogleFX.engine.fx.editorButtons.FXEditorButtons;
 import com.woogleFX.engine.fx.menu.FXMenu;
 import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
-import com.woogleFX.gameData.ball.PaletteManager;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.engine.fx.PaletteManager;
+import com.woogleFX.assets.GameVersion;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -78,16 +79,7 @@ public class GameResourceManager {
                 }
                 reloadWorldOfGoo(GameVersion.VERSION_WOG2);
             }
-            if (FXEditorButtons.getOldGooballsToolbar() != null) {
-                FXEditorButtons.getOldGooballsToolbar().getItems().clear();
-            }
-            if (FXEditorButtons.getNewGooballsToolbar() != null) {
-                FXEditorButtons.getNewGooballsToolbar().getItems().clear();
-            }
-            if (FXEditorButtons.getSequelGooballsToolbar() != null) {
-                FXEditorButtons.getSequelGooballsToolbar().getItems().clear();
-            }
-            if (!editorJustLaunched) FXEditorButtons.addBallsTo();
+            if (!editorJustLaunched) FXBallPaletteManager.regeneratePalettes();
             if (!editorJustLaunched) FXEditorButtons.updateAllButtons();
             if (!editorJustLaunched) FXMenu.updateAllButtons();
             return true;

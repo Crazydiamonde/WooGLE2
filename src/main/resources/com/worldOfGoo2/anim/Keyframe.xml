@@ -1,0 +1,31 @@
+<AttributeManifest localName="Keyframe">
+
+    <attributes>
+        <EditorAttribute name="unknown1" type="NUMBER"/>
+        <EditorAttribute name="angleTopLeft" type="NUMBER"/>
+        <EditorAttribute name="angleBottomRight" type="NUMBER"/>
+        <EditorAttribute name="centerX" type="NUMBER"/>
+        <EditorAttribute name="centerY" type="NUMBER"/>
+        <EditorAttribute name="offsetX" type="NUMBER"/>
+        <EditorAttribute name="offsetY" type="NUMBER"/>
+        <EditorAttribute name="scaleX" type="NUMBER"/>
+        <EditorAttribute name="scaleY" type="NUMBER"/>
+        <EditorAttribute name="colorize" type="NUMBER"/>
+        <EditorAttribute name="unknown2" type="NUMBER"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="unknown1"/>
+        <MetaEditorAttribute name="angleTopLeft"/>
+        <MetaEditorAttribute name="angleBottomRight"/>
+        <MetaEditorAttribute name="centerX"/>
+        <MetaEditorAttribute name="centerY"/>
+        <MetaEditorAttribute name="offsetX"/>
+        <MetaEditorAttribute name="offsetY"/>
+        <MetaEditorAttribute name="scaleX"/>
+        <MetaEditorAttribute name="scaleY"/>
+        <MetaEditorAttribute name="colorize"/>
+        <MetaEditorAttribute name="unknown2"/>
+    </metaAttributes>
+
+</AttributeManifest>

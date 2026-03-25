@@ -1,7 +1,7 @@
 package com.woogleFX.file.fileExport;
 
 import com.woogleFX.editorObjects.EditorObject;
-import com.woogleFX.gameData.level.WOG2Level;
+import com.woogleFX.assets.wog2.WOG2Level.WOG2Level;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -21,7 +21,7 @@ public class Goo2modExporter {
         ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(destinationFile));
 
         zipOutputStream.putNextEntry(new ZipEntry("addin.xml"));
-        EditorObject addinObject = level.getAddinObject();
+        EditorObject addinObject = level.getAddin();
         zipOutputStream.write(XMLUtility.fullAddinXMLExport("", addinObject, 0).getBytes());
         zipOutputStream.closeEntry();
 
@@ -39,7 +39,7 @@ public class Goo2modExporter {
         zipOutputStream.closeEntry();
         zipOutputStream.putNextEntry(new ZipEntry("override/res/levels/"));
         zipOutputStream.closeEntry();
-        zipOutputStream.putNextEntry(new ZipEntry("override/res/levels/" + level.getLevelName() + ".wog2"));
+        zipOutputStream.putNextEntry(new ZipEntry("override/res/levels/" + level.getName() + ".wog2"));
         StringBuilder exportBuilder = new StringBuilder();
         GOOWriter.recursiveGOOExport(exportBuilder, level.getLevel(), 0);
         zipOutputStream.write(exportBuilder.toString().getBytes());

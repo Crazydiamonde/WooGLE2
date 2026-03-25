@@ -1,9 +1,9 @@
 <AttributeManifest localName="EdgeSettings">
 
     <attributes>
-        <EditorAttribute name="topAngle" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="cliffAngle" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
-        <EditorAttribute name="underSideAngle" type="_2_STRING" childAlias="com.worldOfGoo2.misc._2_Point"/>
+        <EditorAttribute name="topAngle" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="cliffAngle" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
+        <EditorAttribute name="underSideAngle" type="STRING" childAlias="com.worldOfGoo2.misc.Point"/>
     </attributes>
 
 </AttributeManifest>

@@ -1,0 +1,29 @@
+<AttributeManifest localName="Keyframe">
+
+    <attributes>
+        <EditorAttribute name="time" type="_1_NUMBER"/>
+        <EditorAttribute name="x" type="_1_NUMBER" defaultValue="0"/>
+        <EditorAttribute name="y" type="_1_NUMBER" defaultValue="0"/>
+        <EditorAttribute name="scaleX" type="_1_NUMBER" defaultValue="1.0"/>
+        <EditorAttribute name="scaleY" type="_1_NUMBER" defaultValue="1.0"/>
+        <EditorAttribute name="angle" type="_1_NUMBER" defaultValue="0"/>
+        <EditorAttribute name="alpha" type="_1_NUMBER" defaultValue="255"/>
+        <EditorAttribute name="color" type="_1_NUMBER"/>
+        <EditorAttribute name="soundStringIndex" type="_1_NUMBER"/>
+        <EditorAttribute name="interpolation" type="_1_NUMBER" defaultValue="0"/>
+    </attributes>
+
+    <metaAttributes>
+        <MetaEditorAttribute name="time"/>
+        <MetaEditorAttribute name="x"/>
+        <MetaEditorAttribute name="y"/>
+        <MetaEditorAttribute name="scaleX"/>
+        <MetaEditorAttribute name="scaleY"/>
+        <MetaEditorAttribute name="angle"/>
+        <MetaEditorAttribute name="alpha"/>
+        <MetaEditorAttribute name="color"/>
+        <MetaEditorAttribute name="soundStringIndex"/>
+        <MetaEditorAttribute name="interpolation"/>
+    </metaAttributes>
+
+</AttributeManifest>

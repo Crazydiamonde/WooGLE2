@@ -1,7 +1,9 @@
 package com.woogleFX.editorObjects.objectComponents;
 
+import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.editorObjects.objectComponents.generic.BorderProperty;
+import com.woogleFX.editorObjects.objectComponents.generic.BoundedProperty;
 import com.woogleFX.editorObjects.objectComponents.generic.ColoredProperty;
 import com.woogleFX.editorObjects.objectComponents.generic.RotatableProperty;
 import com.woogleFX.engine.renderer.Renderer;
@@ -9,17 +11,19 @@ import com.woogleFX.engine.AssetManager;
 import com.woogleFX.editorObjects.DragSettings;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.transform.Affine;
 
 /** Represents a rectangle component in any object. */
 public abstract class RectangleComponent extends ObjectComponent
-        implements BorderProperty, RotatableProperty, ColoredProperty {
+        implements BorderProperty, RotatableProperty, ColoredProperty, BoundedProperty {
+
+    public RectangleComponent(EditorObject editorObject) {
+        super(editorObject);
+    }
 
     /** Returns this component's width. */
     public abstract double getWidth();
-
 
     /** Sets this component's width.
      * @param width This component's width. */
@@ -27,10 +31,8 @@ public abstract class RectangleComponent extends ObjectComponent
 
     }
 
-
     /** Returns this component's height. */
     public abstract double getHeight();
-
 
     /** Sets this component's height.
      * @param height This component's height. */
@@ -48,9 +50,8 @@ public abstract class RectangleComponent extends ObjectComponent
         return getEdgeSize();
     }
 
-
     @Override
-    public void draw(GraphicsContext graphicsContext, boolean selected) {
+    public void draw(GraphicsContext graphicsContext) {
 
         double x = getX();
         double y = getY();
@@ -67,37 +68,9 @@ public abstract class RectangleComponent extends ObjectComponent
         double offsetY = AssetManager.getAsset().getOffsetY();
         double zoom = AssetManager.getAsset().getZoom();
 
-        Point2D topLeft = new Point2D(x - width / 2 + woag2, y - height / 2 + woag1);
-        topLeft = ObjectUtil.rotate(topLeft, -rotation, center);
-        topLeft = topLeft.multiply(zoom).add(offsetX, offsetY);
-
-        Point2D topRight = new Point2D(x + width / 2 - woag2, y - height / 2 + woag1);
-        topRight = ObjectUtil.rotate(topRight, -rotation, center);
-        topRight = topRight.multiply(zoom).add(offsetX, offsetY);
-
-        Point2D bottomLeft = new Point2D(x - width / 2 + woag2, y + height / 2 - woag1);
-        bottomLeft = ObjectUtil.rotate(bottomLeft, -rotation, center);
-        bottomLeft = bottomLeft.multiply(zoom).add(offsetX, offsetY);
-
-        Point2D bottomRight = new Point2D(x + width / 2 - woag2, y + height / 2 - woag1);
-        bottomRight = ObjectUtil.rotate(bottomRight, -rotation, center);
-        bottomRight = bottomRight.multiply(zoom).add(offsetX, offsetY);
-
         Point2D topLeft2 = new Point2D(x - width / 2, y - height / 2);
         topLeft2 = ObjectUtil.rotate(topLeft2, rotation, center);
         topLeft2 = topLeft2.multiply(zoom).add(offsetX, offsetY);
-
-        Point2D topRight2 = new Point2D(x + width / 2, y - height / 2);
-        topRight2 = ObjectUtil.rotate(topRight2, rotation, center);
-        topRight2 = topRight2.multiply(zoom).add(offsetX, offsetY);
-
-        Point2D bottomLeft2 = new Point2D(x - width / 2, y + height / 2);
-        bottomLeft2 = ObjectUtil.rotate(bottomLeft2, rotation, center);
-        bottomLeft2 = bottomLeft2.multiply(zoom).add(offsetX, offsetY);
-
-        Point2D bottomRight2 = new Point2D(x + width / 2, y + height / 2);
-        bottomRight2 = ObjectUtil.rotate(bottomRight2, rotation, center);
-        bottomRight2 = bottomRight2.multiply(zoom).add(offsetX, offsetY);
 
         graphicsContext.setFill(getColor());
 
@@ -157,51 +130,79 @@ public abstract class RectangleComponent extends ObjectComponent
             graphicsContext.strokeLine(topRightV.getX(), topRightV.getY(), bottomRightV.getX(), bottomRightV.getY());
         }
 
-        if (selected) {
+    }
 
-            graphicsContext.setStroke(Renderer.selectionOutline2);
-            graphicsContext.setLineWidth(1);
-            graphicsContext.setLineDashes(3);
-            graphicsContext.setLineDashOffset(0);
-            graphicsContext.strokePolygon(
-                    new double[]{ topRight2.getX(), topLeft2.getX(), bottomLeft2.getX(), bottomRight2.getX() },
-                    new double[]{ topRight2.getY(), topLeft2.getY(), bottomLeft2.getY(), bottomRight2.getY() },
-                    4);
+    @Override
+    public void drawSelectionOutline(GraphicsContext graphicsContext) {
 
-            graphicsContext.setStroke(Renderer.selectionOutline);
-            graphicsContext.setLineWidth(1);
-            graphicsContext.setLineDashOffset(3);
-            graphicsContext.strokePolygon(
-                    new double[]{ topRight2.getX(), topLeft2.getX(), bottomLeft2.getX(), bottomRight2.getX() },
-                    new double[]{ topRight2.getY(), topLeft2.getY(), bottomLeft2.getY(), bottomRight2.getY() },
-                    4);
-            graphicsContext.setLineDashes(0);
+        double x = getX();
+        double y = getY();
+        double rotation = getRotation();
+        double width = getWidth();
+        double height = getHeight();
 
-            graphicsContext.setLineWidth(1);
-            if (isResizable()) {
-                graphicsContext.strokeRect(topRight2.getX() - 4, topRight2.getY() - 4, 8, 8);
-                graphicsContext.strokeRect(topLeft2.getX() - 4, topLeft2.getY() - 4, 8, 8);
-                graphicsContext.strokeRect(bottomLeft2.getX() - 4, bottomLeft2.getY() - 4, 8, 8);
-                graphicsContext.strokeRect(bottomRight2.getX() - 4, bottomRight2.getY() - 4, 8, 8);
-            }
+        Point2D center = new Point2D(x, y);
 
-            Point2D middleLeft = new Point2D(x - width / 2, y);
-            middleLeft = ObjectUtil.rotate(middleLeft, rotation, center);
-            middleLeft = new Point2D(middleLeft.getX() * zoom + offsetX, middleLeft.getY() * zoom + offsetY);
+        double offsetX = AssetManager.getAsset().getOffsetX();
+        double offsetY = AssetManager.getAsset().getOffsetY();
+        double zoom = AssetManager.getAsset().getZoom();
 
-            Point2D middleRight = new Point2D(x + width / 2, y);
-            middleRight = ObjectUtil.rotate(middleRight, rotation, center);
-            middleRight = new Point2D(middleRight.getX() * zoom + offsetX, middleRight.getY() * zoom + offsetY);
+        Point2D topLeft2 = new Point2D(x - width / 2, y - height / 2);
+        topLeft2 = ObjectUtil.rotate(topLeft2, rotation, center);
+        topLeft2 = topLeft2.multiply(zoom).add(offsetX, offsetY);
 
-            if (isRotatable()) {
-                graphicsContext.strokeOval(middleLeft.getX() - 4, middleLeft.getY() - 4, 8, 8);
-                graphicsContext.strokeOval(middleRight.getX() - 4, middleRight.getY() - 4, 8, 8);
-            }
+        Point2D topRight2 = new Point2D(x + width / 2, y - height / 2);
+        topRight2 = ObjectUtil.rotate(topRight2, rotation, center);
+        topRight2 = topRight2.multiply(zoom).add(offsetX, offsetY);
 
+        Point2D bottomLeft2 = new Point2D(x - width / 2, y + height / 2);
+        bottomLeft2 = ObjectUtil.rotate(bottomLeft2, rotation, center);
+        bottomLeft2 = bottomLeft2.multiply(zoom).add(offsetX, offsetY);
+
+        Point2D bottomRight2 = new Point2D(x + width / 2, y + height / 2);
+        bottomRight2 = ObjectUtil.rotate(bottomRight2, rotation, center);
+        bottomRight2 = bottomRight2.multiply(zoom).add(offsetX, offsetY);
+
+        graphicsContext.setStroke(Renderer.selectionOutline2);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashes(3);
+        graphicsContext.setLineDashOffset(0);
+        graphicsContext.strokePolygon(
+                new double[]{ topRight2.getX(), topLeft2.getX(), bottomLeft2.getX(), bottomRight2.getX() },
+                new double[]{ topRight2.getY(), topLeft2.getY(), bottomLeft2.getY(), bottomRight2.getY() },
+                4);
+
+        graphicsContext.setStroke(Renderer.selectionOutline);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashOffset(3);
+        graphicsContext.strokePolygon(
+                new double[]{ topRight2.getX(), topLeft2.getX(), bottomLeft2.getX(), bottomRight2.getX() },
+                new double[]{ topRight2.getY(), topLeft2.getY(), bottomLeft2.getY(), bottomRight2.getY() },
+                4);
+        graphicsContext.setLineDashes(0);
+
+        graphicsContext.setLineWidth(1);
+        if (isResizable()) {
+            graphicsContext.strokeRect(topRight2.getX() - 4, topRight2.getY() - 4, 8, 8);
+            graphicsContext.strokeRect(topLeft2.getX() - 4, topLeft2.getY() - 4, 8, 8);
+            graphicsContext.strokeRect(bottomLeft2.getX() - 4, bottomLeft2.getY() - 4, 8, 8);
+            graphicsContext.strokeRect(bottomRight2.getX() - 4, bottomRight2.getY() - 4, 8, 8);
+        }
+
+        Point2D middleLeft = new Point2D(x - width / 2, y);
+        middleLeft = ObjectUtil.rotate(middleLeft, rotation, center);
+        middleLeft = new Point2D(middleLeft.getX() * zoom + offsetX, middleLeft.getY() * zoom + offsetY);
+
+        Point2D middleRight = new Point2D(x + width / 2, y);
+        middleRight = ObjectUtil.rotate(middleRight, rotation, center);
+        middleRight = new Point2D(middleRight.getX() * zoom + offsetX, middleRight.getY() * zoom + offsetY);
+
+        if (isRotatable()) {
+            graphicsContext.strokeOval(middleLeft.getX() - 4, middleLeft.getY() - 4, 8, 8);
+            graphicsContext.strokeOval(middleRight.getX() - 4, middleRight.getY() - 4, 8, 8);
         }
 
     }
-
 
     @Override
     public DragSettings mouseIntersection(double mouseX, double mouseY) {
@@ -227,16 +228,21 @@ public abstract class RectangleComponent extends ObjectComponent
                 mY > y + height / 2
         ) return DragSettings.NULL;
 
-        if (isEdgeOnly() && (
+//        if (isEdgeOnly() && (
+//                mX > x - width / 2 + edgeSizeV &&
+//                mX < x + width / 2 - edgeSizeV &&
+//                mY > y - height / 2 + edgeSizeH &&
+//                mY < y + height / 2 - edgeSizeH
+//        )) return DragSettings.NULL;
+
+        DragSettings dragSettings = new DragSettings(isDraggable() ? DragSettings.MOVE : DragSettings.NONE, this);
+        dragSettings.setInitialSource(new Point2D(mouseX - x, mouseY - y));
+        dragSettings.setOpacity((isEdgeOnly() &&
                 mX > x - width / 2 + edgeSizeV &&
                 mX < x + width / 2 - edgeSizeV &&
                 mY > y - height / 2 + edgeSizeH &&
                 mY < y + height / 2 - edgeSizeH
-        )) return DragSettings.NULL;
-
-        DragSettings dragSettings = new DragSettings(isDraggable() ? DragSettings.MOVE : DragSettings.NONE, this);
-        dragSettings.setInitialSourceX(mouseX - x);
-        dragSettings.setInitialSourceY(mouseY - y);
+        ) ? 0.5 : 1.0);
         return dragSettings;
 
     }
@@ -332,17 +338,14 @@ public abstract class RectangleComponent extends ObjectComponent
         if (resize) {
             Point2D dragSourceRotated = ObjectUtil.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
             Point2D dragAnchorRotated = ObjectUtil.rotate(new Point2D(dragAnchorX, dragAnchorY), rotation, new Point2D(x, y));
-            resizeSettings.setInitialSourceX(dragSourceRotated.getX());
-            resizeSettings.setInitialSourceY(dragSourceRotated.getY());
-            resizeSettings.setAnchorX(dragAnchorRotated.getX());
-            resizeSettings.setAnchorY(dragAnchorRotated.getY());
+            resizeSettings.setInitialSource(dragSourceRotated);
+            resizeSettings.setAnchor(dragAnchorRotated);
             return resizeSettings;
         }
 
         if (rotate) {
             Point2D dragSourceRotated = ObjectUtil.rotate(new Point2D(dragSourceX, dragSourceY), rotation, new Point2D(x, y));
-            rotateSettings.setInitialSourceX(dragSourceRotated.getX());
-            rotateSettings.setInitialSourceY(dragSourceRotated.getY());
+            rotateSettings.setInitialSource(dragSourceRotated);
             rotateSettings.setRotateAngleOffset(rotateAngleOffset);
             return rotateSettings;
         }

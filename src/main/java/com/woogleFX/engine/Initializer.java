@@ -1,20 +1,22 @@
 package com.woogleFX.engine;
 
+import com.woogleFX.assets.wog1.animation.WOG1AnimationGUI;
+import com.woogleFX.assets.wog1.level.WOG1LevelGUI;
 import com.woogleFX.engine.fx.*;
 import com.woogleFX.engine.fx.assetSelectPane.FXAssetSelectPane;
+import com.woogleFX.engine.fx.editorButtons.FXBallPaletteManager;
 import com.woogleFX.engine.fx.editorButtons.FXEditorButtons;
 import com.woogleFX.engine.fx.hierarchy.FXHierarchy;
 import com.woogleFX.engine.fx.menu.FXMenu;
+import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
 import com.woogleFX.engine.gui.EditorWindow;
-import com.woogleFX.engine.gui.LoadingScreen;
 import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.engine.gui.alarms.MissingWOGAlarm;
 import com.woogleFX.file.resourceManagers.BaseGameResources;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.resourceManagers.GlobalResourceManager;
 import com.woogleFX.engine.inputEvents.*;
-import com.woogleFX.gameData.level.levelOpening.AssetLoader;
-import com.woogleFX.gameData.level.GameVersion;
+import com.woogleFX.assets.GameVersion;
 import javafx.concurrent.Task;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -77,6 +79,11 @@ public class Initializer {
         FXMenu.init();
         FXPropertiesView.init();
 
+        FXBallPaletteManager.regeneratePalettes();
+
+        WOG1AnimationGUI.init();
+        WOG1LevelGUI.init();
+
         // Event handlers
         FXStage.getStage().addEventFilter(MouseEvent.MOUSE_PRESSED, MousePressedManager::eventMousePressed);
         FXStage.getStage().addEventFilter(MouseEvent.MOUSE_RELEASED, MouseReleasedManager::eventMouseReleased);
@@ -130,11 +137,11 @@ public class Initializer {
         new Thread(task).start();
 
 
-        Stage stage = new Stage();
-        LoadingScreen loadingScreen = new LoadingScreen();
-        loadingScreen.setAssetName("Everything");
-        loadingScreen.setTask(task);
-        task.setOnFailed(event -> stage.close());
+        //Stage stage = new Stage();
+        //LoadingScreen loadingScreen = new LoadingScreen();
+        //loadingScreen.setAssetName("Everything");
+        //loadingScreen.setTask(task);
+        //task.setOnFailed(event -> stage.close());
         //loadingScreen.start(stage);
 
     }

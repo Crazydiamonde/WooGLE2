@@ -1,18 +1,18 @@
-<AttributeManifest>
+<AttributeManifest localName="StructureFillingLayer">
 
     <attributes>
         <EditorAttribute name="renderLayer" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.ball.Layer"/>
-        <EditorAttribute name="textureId" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="alpha" type="_2_STRING"/>
-        <EditorAttribute name="textureScale" type="_2_STRING"/>
-        <EditorAttribute name="animationTextureId" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc._2_ImageID"/>
-        <EditorAttribute name="animationDirectionUp" type="_2_STRING"/>
-        <EditorAttribute name="radialUvs" type="_2_STRING"/>
-        <EditorAttribute name="delay" type="_2_STRING"/>
-        <EditorAttribute name="speed" type="_2_STRING"/>
-        <EditorAttribute name="scaleAdjustOffset" type="_2_STRING"/>
-        <EditorAttribute name="borderAlphaBlendOffset" type="_2_STRING"/>
-        <EditorAttribute name="borderAlphaBlendWidth" type="_2_STRING"/>
+        <EditorAttribute name="textureId" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="alpha" type="NUMBER"/>
+        <EditorAttribute name="textureScale" type="NUMBER"/>
+        <EditorAttribute name="animationTextureId" type="_2_CHILD_HIDDEN" childAlias="com.worldOfGoo2.misc.ImageID"/>
+        <EditorAttribute name="animationDirectionUp" type="BOOLEAN"/>
+        <EditorAttribute name="radialUvs" type="BOOLEAN"/>
+        <EditorAttribute name="delay" type="NUMBER"/>
+        <EditorAttribute name="speed" type="NUMBER"/>
+        <EditorAttribute name="scaleAdjustOffset" type="NUMBER"/>
+        <EditorAttribute name="borderAlphaBlendOffset" type="NUMBER"/>
+        <EditorAttribute name="borderAlphaBlendWidth" type="NUMBER"/>
     </attributes>
 
     <metaAttributes>
