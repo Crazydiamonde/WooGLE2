@@ -141,7 +141,7 @@ public class Initializer {
         //LoadingScreen loadingScreen = new LoadingScreen();
         //loadingScreen.setAssetName("Everything");
         //loadingScreen.setTask(task);
-        //task.setOnFailed(event -> stage.close());
+        task.setOnFailed(event -> ErrorAlarm.show(task.getException()));
         //loadingScreen.start(stage);
 
     }

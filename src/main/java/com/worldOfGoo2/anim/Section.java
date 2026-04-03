@@ -27,6 +27,11 @@ public class Section extends EditorObject {
                 Keyframe keyframe = ObjectCreator.create(Keyframe.class, this, "", GameVersion.VERSION_WOG2);
                 keyframe.loadFromAnimation(simpleBinAnimationKeyframe, animation);
             }
+            if (simpleBinAnimationElement.type == 2) {
+                SimpleBinAnimation.SimpleBinAnimationPart simpleBinAnimationPart = animation.parts[index];
+                Part part = ObjectCreator.create(Part.class, this, "", GameVersion.VERSION_WOG2);
+                part.loadFromAnimation(simpleBinAnimationPart, animation);
+            }
         }
 
     }

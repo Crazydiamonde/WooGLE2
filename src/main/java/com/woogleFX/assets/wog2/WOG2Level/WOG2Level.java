@@ -180,7 +180,7 @@ public class WOG2Level extends Asset {
         getVisibilitySettings().addVisibilityStatus("graphics", 1);
         getVisibilitySettings().addVisibilityStatus("scene", 1);
 
-        AssetManager.setAsset(this);
+        // AssetManager.setAsset(this);
 
         resetCamera();
 
@@ -380,22 +380,25 @@ public class WOG2Level extends Asset {
 
                 long i = 0;
                 try {
+
                     for (EditorObject object : getObjects().toArray(new EditorObject[0])) {
                         object.onLoaded(WOG2Level.this);
                         i++;
                         updateProgress(i, count);
                     }
+                    System.out.println("Performance 1:");
+                    for (EditorObject ball : getLevel().getChildren("balls")) {
+                        EditorObject terrainBall = getLevel().getChildren("terrainBalls").get(0);
+                        getLevel().getChildren().remove(terrainBall);
+                        ball.setAttribute("terrainGroup", terrainBall.getAttribute("group").stringValue());
+                    }
+                    for (EditorObject terrainGroup : getLevel().getChildren("terrainGroups"))
+                        if (terrainGroup instanceof _2_Level_TerrainGroup terrainGroup1) {
+                        terrainGroup1.stopIgnoringUpdates();
+                        terrainGroup1.update();
+                    }
                 } catch (Exception e) {
                     logger.error("", e);
-                }
-
-                System.out.println("Performance 1:");
-
-                for (EditorObject ball : getLevel().getChildren("balls")) {
-                    EditorObject terrainBall = getLevel().getChildren("terrainBalls").get(0);
-                    getObjects().remove(terrainBall);
-                    getLevel().getChildren().remove(terrainBall);
-                    ball.setAttribute("terrainGroup", terrainBall.getAttribute("group").stringValue());
                 }
 
                 System.out.println("Finished.");

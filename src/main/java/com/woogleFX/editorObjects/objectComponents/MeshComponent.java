@@ -19,6 +19,10 @@ public abstract class MeshComponent extends ObjectComponent {
     
     public abstract Face[] getMesh();
 
+    public final void clearCachedMesh() {
+        cachedMesh = null;
+    }
+
     public abstract Image getImage();
 
     public abstract double getX();
@@ -39,6 +43,7 @@ public abstract class MeshComponent extends ObjectComponent {
             cachedMesh = getMesh();
         
         Image image = getImage();
+        if (image == null) return;
 
         double offsetX = AssetManager.getAsset().getOffsetX();
         double offsetY = AssetManager.getAsset().getOffsetY();

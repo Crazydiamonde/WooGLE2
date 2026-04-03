@@ -16,6 +16,7 @@ import com.woogleFX.editorObjects.objectComponents.TextComponent;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.engine.renderer.Depth;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.gameData.animation.SimpleBinAnimation;
@@ -30,6 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
+import java.io.IOException;
 import java.util.*;
 
 public class _2_Level_Item extends _2_Positionable {
@@ -74,8 +76,14 @@ public class _2_Level_Item extends _2_Positionable {
             @Override
             public void setValue(String value) {
                 temp.setValue(value);
-                _2_Item item1 = (_2_Item) WOG2Item.assetSelector.openInstance(value, GameVersion.VERSION_WOG2).getItem();
-                if (item1 == null) return;
+                _2_Item item1;
+                try {
+                    item1 = WOG2Item.assetSelector.openInstance(value, GameVersion.VERSION_WOG2).getItem();
+                    if (item1 == null) return;
+                } catch (IOException e) {
+                    ErrorAlarm.show(e);
+                    return;
+                }
                 setAttribute2("type", item1.getAttribute("uuid").stringValue());
                 updateImage();
                 refreshUserVariables();
@@ -224,7 +232,14 @@ public class _2_Level_Item extends _2_Positionable {
         if (AssetManager.getAsset() == null) return;
 
         if (!getAttribute2("type").stringValue().isEmpty()) {
-            item = (_2_Item)WOG2Item.assetSelector.openInstance(getAttribute2("type").stringValue(), GameVersion.VERSION_WOG2).getItem();
+            try {
+                WOG2Item wog2item = WOG2Item.assetSelector.openInstance(getAttribute("type").stringValue(), GameVersion.VERSION_WOG2);
+                if (wog2item == null) return;
+                item = wog2item.getItem();
+            } catch (IOException e) {
+                ErrorAlarm.show(e);
+                return;
+            }
             refreshObjectPositions();
         }
 
@@ -256,7 +271,6 @@ public class _2_Level_Item extends _2_Positionable {
 
 
     public void refreshObjectPositions() {
-
 
         clearObjectComponents();
 

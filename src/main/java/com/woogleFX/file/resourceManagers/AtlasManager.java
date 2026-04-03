@@ -40,7 +40,10 @@ public class AtlasManager {
         BufferedImage maybe = ImageIO.read(new File(FileManager.getGameDir(GameVersion.VERSION_WOG2) + "/res/balls/_atlas.image"));
 
         BufferedImage image = (maybe != null) ? maybe : KTXFileManager.readKTXImage(Path.of(FileManager.getGameDir(GameVersion.VERSION_WOG2) + "/res/balls/_atlas.image"));
-        if (image == null) return;
+        if (image == null) {
+            System.err.println("image was null?");
+            return;
+        }
 
         for (int i = 0; i < imageCount; i++) {
 

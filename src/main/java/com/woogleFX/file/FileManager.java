@@ -8,18 +8,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.stream.Stream;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import com.SupremeMain;
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.fileImport.EditorObjectXMLReader;
 import com.woogleFX.file.fileImport.ObjectGOOParser;
 import com.woogleFX.file.fileImport.PropertiesOpener;
 import com.woogleFX.engine.fx.PaletteManager;
 import com.woogleFX.assets.GameVersion;
 import com.worldOfGoo.resrc.ResourceManifest;
+import com.worldOfGoo.resrc.Resources;
 import com.worldOfGoo.text.strings;
 import com.worldOfGoo2.items._2_Item_Collection;
 import javafx.stage.FileChooser;
@@ -127,18 +132,39 @@ public class FileManager {
     }
 
 
-    public static ArrayList<EditorObject> openResources(GameVersion version) throws ParserConfigurationException, SAXException, IOException {
+    public static ArrayList<ResourceManifest> openResources(GameVersion version) throws ParserConfigurationException, SAXException, IOException {
 
-        String suffix = (version == GameVersion.VERSION_WOG1_OLD) ? ".xml.bin" : ".xml";
-
-        File resrcF = new File(FileManager.getGameDir(version) +
-                "/properties/resources" + suffix);
-        ResourceManifest resourceManifest = EditorObjectXMLReader.readEditorObject(
-                "com.worldOfGoo.resrc", version, resrcF, ResourceManifest.class);
-
-        ArrayList<EditorObject> objects = new ArrayList<>();
-        resourceManifest.addAllChildren(objects);
-        return objects;
+        // search EVERY SINGLE FILE for any resources.xml
+        ArrayList<ResourceManifest> resourceManifests = new ArrayList<>();
+        try (Stream<Path> paths = Files.find(Path.of(FileManager.getGameDir(version)), 24,
+                (val, val2) -> val.endsWith("resources.xml") || val.endsWith("resources.xml.bin") || val.endsWith("_resources.xml") || val.endsWith("manifest.resrc"))) {
+            paths.forEach(path -> {
+                ResourceManifest resourceManifest;
+                try {
+                    resourceManifest = EditorObjectXMLReader.readEditorObject(
+                            version, path.toFile(), ResourceManifest.class);
+                } catch (IOException e) {
+                    resourceManifest = null;
+                } catch (ClassCastException e) {
+                    // oops.. was it a Resources instead?
+                    // TODO: do this better
+                    try {
+                        Resources resources = EditorObjectXMLReader.readEditorObject(
+                                version, path.toFile(), Resources.class);
+                        resourceManifest = ObjectCreator.create(ResourceManifest.class, null, version);
+                        resourceManifest.getChildren().add(resources);
+                    } catch (IOException e2) {
+                        resourceManifest = null;
+                    }
+                }
+                if (resourceManifest == null) {
+                    ErrorAlarm.show("failed to parse resource file: " + path);
+                } else {
+                    resourceManifests.add(resourceManifest);
+                }
+            });
+        }
+        return resourceManifests;
 
     }
 
@@ -154,7 +180,7 @@ public class FileManager {
     public static strings openText(GameVersion version) throws ParserConfigurationException, SAXException, IOException {
         String suffix = (version == GameVersion.VERSION_WOG1_OLD) ? ".xml.bin" : ".xml";
         File textFile = new File(getGameDir(version) + "/properties/text" + suffix);
-        return EditorObjectXMLReader.readEditorObject("com.worldOfGoo.text", version, textFile, strings.class);
+        return EditorObjectXMLReader.readEditorObject(version, textFile, strings.class);
     }
 
 

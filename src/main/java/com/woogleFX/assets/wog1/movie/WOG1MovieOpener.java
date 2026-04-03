@@ -121,8 +121,14 @@ public class WOG1MovieOpener {
 
         String resrcSuffix = (version == GameVersion.VERSION_WOG1_OLD) ? ".resrc.bin" : ".resrc";
         File resrcF = new File(file.getPath().substring(0, file.getPath().length() - resrcSuffix.length() - 3) + resrcSuffix);
-        ResourceManifest resourceManifest = EditorObjectXMLReader.readEditorObject(
-                "com.worldOfGoo.resrc", version, resrcF, ResourceManifest.class);
+        ResourceManifest resourceManifest;
+        try {
+            resourceManifest = EditorObjectXMLReader.readEditorObject(
+                    version, resrcF, ResourceManifest.class);
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return null;
+        }
         assert resourceManifest != null;
         Resources resources = (Resources) resourceManifest.getChildren().get(0);
 

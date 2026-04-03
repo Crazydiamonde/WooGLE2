@@ -25,6 +25,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class FXMenu_Asset {
 
     private static final Menu levelMenu = new Menu();
@@ -486,7 +488,7 @@ public class FXMenu_Asset {
             menuItem.setOnAction(event1 -> {
                 try {
                     AssetLoader.openAsset((AssetSelector<?>) assetDescription.type().getField("assetSelector").get(null), assetDescription.file(), assetDescription.name(), assetDescription.version());
-                } catch (IllegalAccessException | NoSuchFieldException e) {
+                } catch (IllegalAccessException | NoSuchFieldException | IOException e) {
                     throw new RuntimeException(e);
                 }
             });

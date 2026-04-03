@@ -177,9 +177,9 @@ public class GlobalResourceManager {
             case VERSION_WOG2 -> sequelResources;
         };
 
-        ArrayList<EditorObject> resources;
+        ArrayList<ResourceManifest> resourceManifests;
         try {
-            resources = FileManager.openResources(version);
+            resourceManifests = FileManager.openResources(version);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             ErrorAlarm.show(e);
             return;
@@ -187,38 +187,57 @@ public class GlobalResourceManager {
 
         SetDefaults currentSetDefaults = null;
 
-        for (EditorObject editorObject : resources) {
+        for (ResourceManifest resourceManifest : resourceManifests) {
 
-            if (editorObject instanceof SetDefaults setDefaults) {
-                currentSetDefaults = setDefaults;
-            } else if (editorObject instanceof Resources) {
-                currentSetDefaults = null;
-            }
+            Stack<EditorObject> stack = new Stack<>();
+            stack.push(resourceManifest);
 
-            else if (editorObject instanceof ResourceInterface resourceInterface) {
-                resourceInterface.setSetDefaults(currentSetDefaults);
-                toAddTo.put(resourceInterface.getAdjustedID(), resourceInterface);
+            while (!stack.empty()) {
+                EditorObject resourceObject = stack.pop();
+                List<EditorObject> children = resourceObject.getChildren();
+                for (int i = 0; i < children.size(); i++)
+                    stack.push(children.get(children.size() - i - 1));
+
+                if (resourceObject instanceof SetDefaults setDefaults) {
+                    currentSetDefaults = setDefaults;
+                    } else if (resourceObject instanceof Resources) {
+                    currentSetDefaults = null;
+                }
+
+                else if (resourceObject instanceof ResourceInterface resourceInterface) {
+                    resourceInterface.setSetDefaults(currentSetDefaults);
+                    toAddTo.put(resourceInterface.getAdjustedID(), resourceInterface);
+                }
+
             }
 
         }
         
-        if (version == GameVersion.VERSION_WOG2) {
+        if (version == GameVersion.VERSION_WOG2 && false) {
             try {
 
                 Set<String> globalResourceDirs = new HashSet<>();
                 BaseGameResources.loadFileIntoSet(FileManager.getEditorLocation() + "/BaseGameResources/2/GlobalResourceDirs.txt", globalResourceDirs);
 
-                for (String dir : globalResourceDirs) {
-                    currentSetDefaults = null;
-                    ArrayList<EditorObject> ambience = FileManager.openWog2ResourceFile("/" + dir);
+                ArrayList<ResourceManifest> resourceManifests1 = FileManager.openResources(GameVersion.VERSION_WOG2);
 
-                    for (EditorObject editorObject : ambience) {
-                        if (editorObject instanceof SetDefaults setDefaults) {
+                for (EditorObject resourceManifest : resourceManifests1) {
+                    currentSetDefaults = null;
+                    //ArrayList<EditorObject> ambience = FileManager.openWog2ResourceFile("/" + dir);
+
+                    Stack<EditorObject> stack = new Stack<>();
+                    stack.add(resourceManifest);
+
+                    while (!stack.empty()) {
+                        EditorObject resourceObject = stack.pop();
+                        stack.addAll(resourceObject.getChildren());
+
+                        if (resourceObject instanceof SetDefaults setDefaults) {
                             currentSetDefaults = setDefaults;
-                        } else if (editorObject instanceof ResourceInterface resourceInterface) {
+                        } else if (resourceObject instanceof ResourceInterface resourceInterface) {
                             resourceInterface.setSetDefaults(currentSetDefaults);
                             sequelResources.put(resourceInterface.getAdjustedID(), resourceInterface);
-                        } else if (editorObject instanceof Resources) {
+                        } else if (resourceObject instanceof Resources) {
                             currentSetDefaults = null;
                         }
                     }
@@ -248,8 +267,8 @@ public class GlobalResourceManager {
             return;
         }
 
-        for (EditorObject string : textList.getChildren()) {
-            toAddTo.put(string.getAttribute("id").stringValue(), (ResourceInterface) string);
+        for (EditorObject string : textList.getChildren()) if (string instanceof ResourceInterface resourceInterface) {
+            toAddTo.put(string.getAttribute("id").stringValue(), resourceInterface);
         }
 
     }

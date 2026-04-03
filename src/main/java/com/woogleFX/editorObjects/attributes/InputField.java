@@ -6,6 +6,7 @@ import com.woogleFX.assets.wog1.ball.WOG1Ball;
 import com.woogleFX.assets.wog1.level.WOG1Level;
 import com.woogleFX.assets.wog1.particle.WOG1Particle;
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.worldOfGoo.ball.part;
@@ -339,17 +340,29 @@ public enum InputField {
     _1_ANIMATION {
         public boolean verify(EditorObject object, String s, boolean required) {
             if ((s == null || s.isEmpty()) && !required) return true;
-            return WOG1Animation.assetSelector.getItems(object.getVersion()).contains(s);
+            try {
+                return WOG1Animation.assetSelector.getItems(object.getVersion()).contains(s);
+            } catch (IOException e) {
+                return false;
+            }
         }
         public String[] getPossibleValues(EditorAttribute attribute) {
-            return WOG1Animation.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+            try {
+                return WOG1Animation.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+            } catch (IOException e) {
+                return new String[0];
+            }
         }
         public boolean hasSpecialClickBehavior(EditorObject object, String s) {
             return true;
         }
         public void onDoubleClick(EditorObject object, String s) {
-            if (WOG1Animation.assetSelector.getItems(object.getVersion()).contains(s))
-                AssetLoader.openAsset(WOG1Animation.assetSelector, null, s, object.getVersion());
+            try {
+                if (WOG1Animation.assetSelector.getItems(object.getVersion()).contains(s))
+                    AssetLoader.openAsset(WOG1Animation.assetSelector, null, s, object.getVersion());
+            } catch (IOException e) {
+                ErrorAlarm.show(e);
+            }
         }
     },
     _1_RANGE {
@@ -396,30 +409,54 @@ public enum InputField {
     _1_PARTICLES {
         public boolean verify(EditorObject object, String s, boolean required) {
             if ((s == null || s.isEmpty()) && !required) return true;
-            return WOG1Particle.assetSelector.getItems(object.getVersion()).contains(s);
+            try {
+                return WOG1Particle.assetSelector.getItems(object.getVersion()).contains(s);
+            } catch (IOException e) {
+                return false;
+            }
         }
         public String[] getPossibleValues(EditorAttribute attribute) {
-            return WOG1Particle.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+            try {
+                return WOG1Particle.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+            } catch (IOException e) {
+                return new String[0];
+            }
         }
         public boolean hasSpecialClickBehavior(EditorObject object, String s) {
             return true;
         }
         public void onDoubleClick(EditorObject object, String s) {
+            try {
             if (WOG1Particle.assetSelector.getItems(object.getVersion()).contains(s))
                 AssetLoader.openAsset(WOG1Particle.assetSelector, null, s, object.getVersion());
+            } catch (IOException e) {
+                ErrorAlarm.show(e);
+            }
         }
     },
     _1_BALL {
         public boolean verify(EditorObject object, String s, boolean required) {
             if ((s == null || s.isEmpty()) && !required) return true;
-            return WOG1Ball.assetSelector.getItems(object.getVersion()).contains(s);
+            try {
+                return WOG1Ball.assetSelector.getItems(object.getVersion()).contains(s);
+            } catch (IOException e) {
+                return false;
+            }
         }
         public String[] getPossibleValues(EditorAttribute attribute) {
-            return WOG1Ball.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+            try {
+                return WOG1Ball.assetSelector.getItems(attribute.getObject().getVersion()).toArray(String[]::new);
+            } catch (IOException e) {
+                return new String[0];
+            }
         }
         public void onDoubleClick(EditorObject object, String s) {
-            if (WOG1Ball.assetSelector.getItems(object.getVersion()).contains(s))
-                AssetLoader.openAsset(WOG1Ball.assetSelector, null, s, object.getVersion());
+            try {
+                if (WOG1Ball.assetSelector.getItems(object.getVersion()).contains(s))
+                    AssetLoader.openAsset(WOG1Ball.assetSelector, null, s, object.getVersion());
+            } catch (IOException e) {
+                ErrorAlarm.show(e);
+            }
         }
         public boolean hasSpecialClickBehavior(EditorObject object, String s) {
             return true;

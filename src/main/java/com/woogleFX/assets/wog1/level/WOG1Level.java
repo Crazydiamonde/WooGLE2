@@ -113,7 +113,7 @@ public class WOG1Level extends Asset {
             return WOG1LevelOpener.newLevel(name, version);
         }
 
-        protected WOG1Level secretOpenInstance(File file, String name, GameVersion version) {
+        protected WOG1Level secretOpenInstance(File file, String name, GameVersion version) throws IOException {
             return WOG1LevelOpener.openLevel(file, version);
         }
 

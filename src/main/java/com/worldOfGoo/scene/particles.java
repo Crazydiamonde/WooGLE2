@@ -7,6 +7,7 @@ import com.woogleFX.editorObjects.objectComponents.CircleComponent;
 import com.woogleFX.editorObjects.objectComponents.ObjectComponent;
 import com.woogleFX.editorObjects.objectComponents.TextComponent;
 import com.woogleFX.engine.AssetManager;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.engine.renderer.Depth;
 import com.woogleFX.gameData.font._Font;
 import com.woogleFX.assets.GameVersion;
@@ -16,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class particles extends EditorObject implements ParticleSpawner {
@@ -148,7 +150,13 @@ public class particles extends EditorObject implements ParticleSpawner {
         });
 
         String effectName = getAttribute("effect").stringValue();
-        WOG1Particle wog1Particle = WOG1Particle.assetSelector.openInstance(effectName, getVersion());
+        WOG1Particle wog1Particle;
+        try {
+            wog1Particle = WOG1Particle.assetSelector.openInstance(effectName, getVersion());
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            wog1Particle = null;
+        }
         if (wog1Particle != null) particleEffect = wog1Particle.getParticle();
 
     }

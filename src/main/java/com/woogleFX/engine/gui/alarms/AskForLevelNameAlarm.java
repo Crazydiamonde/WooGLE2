@@ -19,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class AskForLevelNameAlarm {
@@ -116,7 +117,11 @@ public class AskForLevelNameAlarm {
             case "clone" -> {
                 stage.setTitle("Clone Level");
                 okButton.setOnAction(event -> {
-                    AssetLoader.cloneLevel(enterNameHere.getText());
+                    try {
+                        AssetLoader.cloneLevel(enterNameHere.getText());
+                    } catch (IOException e) {
+                        ErrorAlarm.show(e);
+                    }
                     stage.close();
                 });
             }
@@ -148,7 +153,11 @@ public class AskForLevelNameAlarm {
                             return;
                         }
                     }
-                    AssetUpdater.renameLevel(AssetManager.getAsset(), enterNameHere.getText());
+                    try {
+                        AssetUpdater.renameLevel(AssetManager.getAsset(), enterNameHere.getText());
+                    } catch (IOException e) {
+                        ErrorAlarm.show(e);
+                    }
                     stage.close();
                 });
             }

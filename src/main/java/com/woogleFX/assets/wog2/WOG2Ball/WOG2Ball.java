@@ -93,7 +93,7 @@ public class WOG2Ball extends Asset {
 
         @Override
         protected File getDefaultFileForName(String name, GameVersion version) {
-            return null;
+            return new File(FileManager.getGameDir(version) + "/res/balls/" + name);
         }
 
         @Override
@@ -266,24 +266,26 @@ public class WOG2Ball extends Asset {
 
         loadingScreen.setAssetName("Ball");
         loadingScreen.setTask(task);
-        Stage stage = new Stage();
-        loadingScreen.start(stage);
-        task.setOnSucceeded(event -> stage.close());
-        task.setOnCancelled(event -> stage.close());
-        task.setOnFailed(event -> stage.close());
+        // TODO: send stage to main application thread so it works
+        //Stage stage = new Stage();
+        //loadingScreen.start(stage);
+        //task.setOnSucceeded(event -> stage.close());
+        //task.setOnCancelled(event -> stage.close());
+        //task.setOnFailed(event -> stage.close());
         new Thread(task).start();
 
-        stage.setOnCloseRequest(event -> {
-            task.cancel();
-            FXAssetSelectPane.getAssetSelectPane().getTabs().remove(getAssetTab());
-        });
+        //stage.setOnCloseRequest(event -> {
+        //    task.cancel();
+        //    FXAssetSelectPane.getAssetSelectPane().getTabs().remove(getAssetTab());
+        //});
 
-        ball.getTreeItem().setExpanded(true);
-        FXHierarchy.getHierarchy().setRoot(ball.getTreeItem());
+        // ball.getTreeItem().setExpanded(true);
+        // TODO: do this only when the ball is the main thing being loaded!!
+        //FXHierarchy.getHierarchy().setRoot(ball.getTreeItem());
 
-        FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(new EditorObject[]{ ball }));
+        // FXPropertiesView.getPropertiesView().setRoot(FXPropertiesView.makePropertiesViewTreeItem(new EditorObject[]{ ball }));
 
-        FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(0);
+        // FXHierarchySwitcherButtons.getHierarchySwitcherButtons().getSelectionModel().select(0);
 
     }
 

@@ -3,6 +3,7 @@ package com.worldOfGoo2.util;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.assets.wog2.WOG2TerrainType.WOG2TerrainType;
 import com.woogleFX.engine.AssetManager;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.fileImport.ObjectGOOParser;
 import com.woogleFX.file.resourceManagers.ResourceManager;
@@ -128,8 +129,13 @@ public class TerrainHelper {
 
         String terrainType = terrainGroup.getAttribute("typeUuid").stringValue();
 
-        EditorObject terrain = WOG2TerrainType.assetSelector.openInstance(terrainType, terrainGroup.getVersion()).getTerrainType();
-
+        EditorObject terrain;
+        try {
+            terrain = WOG2TerrainType.assetSelector.openInstance(terrainType, terrainGroup.getVersion()).getTerrainType();
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return null;
+        }
         BaseSettings baseSettings = (BaseSettings) terrain.getChildren("baseSettings").get(0);
 
         String imageId = baseSettings.getChildren("image").get(0).getAttribute("imageId").stringValue();

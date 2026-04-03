@@ -8,12 +8,14 @@ import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.assets.GameVersion;
 
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.worldOfGoo.anim.Animation;
 import com.worldOfGoo.anim.Keyframe;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -213,10 +215,14 @@ public class SceneLayer extends EditorObject {
 
         String suffix = (getVersion() == GameVersion.VERSION_WOG1_OLD) ? ".binltl" : ".binuni";
 
-        if (!getAttribute("anim").stringValue().isEmpty()) {
-            animation = WOG1Animation.assetSelector.openInstance(getAttribute("anim").stringValue(), getVersion());
-        } else if (Files.exists(Path.of(getAsset().getFile().toPath() + "/" + getAttribute("id").stringValue() + ".anim" + suffix))) {
-            animation = WOG1Animation.assetSelector.openInstance(new File(getAsset().getFile().toPath() + "/" + getAttribute("id").stringValue() + ".anim" + suffix), getAttribute("id").stringValue(), getVersion());
+        try {
+            if (!getAttribute("anim").stringValue().isEmpty()) {
+                animation = WOG1Animation.assetSelector.openInstance(getAttribute("anim").stringValue(), getVersion());
+            } else if (Files.exists(Path.of(getAsset().getFile().toPath() + "/" + getAttribute("id").stringValue() + ".anim" + suffix))) {
+                animation = WOG1Animation.assetSelector.openInstance(new File(getAsset().getFile().toPath() + "/" + getAttribute("id").stringValue() + ".anim" + suffix), getAttribute("id").stringValue(), getVersion());
+            }
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
         }
 
     }

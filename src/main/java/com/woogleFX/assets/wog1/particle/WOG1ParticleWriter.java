@@ -20,8 +20,14 @@ public class WOG1ParticleWriter {
 
     public static boolean saveParticleAsXML(WOG1Particle particle, String outputPathString, GameVersion version) {
 
-        effects effects = EditorObjectXMLReader.readEditorObject("com.worldOfGoo.particle", version, new File(outputPathString), effects.class);
-        if (effects == null) return false;
+        effects effects;
+        try {
+            effects = EditorObjectXMLReader.readEditorObject(version, new File(outputPathString), effects.class);
+            if (effects == null) return false;
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return false;
+        }
 
         // Load the particles into an ArrayList of just the particleeffect objects,
         // add the one we just made,

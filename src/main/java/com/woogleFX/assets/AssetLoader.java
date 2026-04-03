@@ -31,7 +31,7 @@ public class AssetLoader {
     public static final ArrayList<String> failedResources = new ArrayList<>();
 
 
-    public static void openAsset(AssetSelector<?> assetSelector, File file, String levelName, GameVersion version) {
+    public static void openAsset(AssetSelector<?> assetSelector, File file, String levelName, GameVersion version) throws IOException {
 
         // Don't open a level if none selected
         if (levelName == null || levelName.isEmpty()) return;
@@ -102,7 +102,7 @@ public class AssetLoader {
     }
 
 
-    public static void cloneLevel(String name) {
+    public static void cloneLevel(String name) throws IOException {
         FXAssetSelectPane.getAssetSelectPane().setMinHeight(30);
         FXAssetSelectPane.getAssetSelectPane().setMaxHeight(30);
 

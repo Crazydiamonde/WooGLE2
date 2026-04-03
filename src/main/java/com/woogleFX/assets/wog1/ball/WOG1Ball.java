@@ -72,33 +72,42 @@ public class WOG1Ball extends Asset implements HasBackground {
 
         // first off, open WooBLE
         WOG1Level ballEditorLevel;
-        if (!WOG1Level.assetSelector.getItems(getVersion()).contains("WooBLE")) {
+        try {
+            if (!WOG1Level.assetSelector.getItems(getVersion()).contains("WooBLE")) {
 
-            // install the level ourselves.
-            // first, get the level folder from the editor's directory
-            Path wooBLEPath = Path.of(FileManager.getEditorLocation() + "/WooBLE");
+                // install the level ourselves.
+                // first, get the level folder from the editor's directory
+                Path wooBLEPath = Path.of(FileManager.getEditorLocation() + "/WooBLE");
 
-            // then copy it into the game!
-            Path destinationPath = Path.of(FileManager.getGameDir(getVersion()) + "/res/levels/WooBLE");
+                // then copy it into the game!
+                Path destinationPath = Path.of(FileManager.getGameDir(getVersion()) + "/res/levels/WooBLE");
 
-            try {
-                Files.copy(wooBLEPath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                File[] children = wooBLEPath.toFile().listFiles();
-                if (children != null) for (File child : children) {
-                    Files.copy(child.toPath(), Path.of(destinationPath + child.getPath().substring(wooBLEPath.toString().length())), StandardCopyOption.REPLACE_EXISTING);
+                try {
+                    Files.copy(wooBLEPath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                    File[] children = wooBLEPath.toFile().listFiles();
+                    if (children != null) for (File child : children) {
+                        Files.copy(child.toPath(), Path.of(destinationPath + child.getPath().substring(wooBLEPath.toString().length())), StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } catch (IOException e) {
+                    ErrorAlarm.show(e);
+                    return;
+                    // TODO: better error alarm (like "an error occurred while trying to copy WooBLE: <error message>")
                 }
-            } catch (IOException e) {
-                ErrorAlarm.show(e);
-                return;
-                // TODO: better error alarm (like "an error occurred while trying to copy WooBLE: <error message>")
+
+                // TODO: make WooBLE levels for versions 1.5 and 2
+
             }
-
-            // TODO: make WooBLE levels for versions 1.5 and 2
-
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return;
         }
 
-        ballEditorLevel = WOG1Level.assetSelector.openInstance("WooBLE", getVersion());
-
+        try {
+            ballEditorLevel = WOG1Level.assetSelector.openInstance("WooBLE", getVersion());
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return;
+        }
         // remove all BallInstances whose names start with "testgoo"
         for (EditorObject objInWooBLE : ballEditorLevel.getObjects()) {
             if (objInWooBLE instanceof BallInstance &&
@@ -157,7 +166,7 @@ public class WOG1Ball extends Asset implements HasBackground {
             return WOG1BallOpener.newBall(name, version);
         }
 
-        protected WOG1Ball secretOpenInstance(File file, String name, GameVersion version) {
+        protected WOG1Ball secretOpenInstance(File file, String name, GameVersion version) throws IOException {
             return WOG1BallOpener.openBall(file, version);
         }
 

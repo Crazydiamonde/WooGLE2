@@ -86,7 +86,7 @@ public class AssetManager {
         SelectionManager.goToSelectedInHierarchy();
 
         if (asset.getFile() == null) {
-            System.err.println("Asset file is null: [" + levelName + "]");
+            new Exception("Asset file is null: [" + levelName + "]").printStackTrace();
         }
         addRecentlyOpenedAsset(new AssetDescription(asset.getClass(), asset.getFile(), asset.getName(), asset.getVersion()));
 

@@ -108,8 +108,8 @@ public class ResourceManager {
                 }
                 ItemHelper.terrainTypeNameMap.put(item.getAttribute("uuid").stringValue(), item.getAttribute("name").stringValue());
             }
-            for (EditorObject item : items) {
-                GlobalResourceManager.getSequelResources().put(item.getAttribute("uuid").stringValue(), (ResourceInterface) item);
+            for (EditorObject item : items) if (item instanceof ResourceInterface resourceInterface) {
+                GlobalResourceManager.getSequelResources().put(item.getAttribute("uuid").stringValue(), resourceInterface);
             }
         } catch (IOException e) {
             ErrorAlarm.show(e);

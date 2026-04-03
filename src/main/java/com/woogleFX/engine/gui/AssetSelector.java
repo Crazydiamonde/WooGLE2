@@ -7,6 +7,7 @@ import com.woogleFX.engine.fx.editorButtons.FXEditorButtons;
 import com.woogleFX.engine.fx.menu.FXMenu;
 import com.woogleFX.assets.GameVersion;
 import com.woogleFX.assets.AssetLoader;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,21 +126,35 @@ public abstract class AssetSelector<T extends Asset> extends Application {
 
                 // TODO: support directories for levels
 
-                AssetLoader.openAsset(this, file, getNameFromFile(file, version), version);
+                try {
+                    AssetLoader.openAsset(this, file, getNameFromFile(file, version), version);
+                } catch (IOException e) {
+                    ErrorAlarm.show(e);
+                }
 
                 stage.close();
 
             });
 
 
-            List<String> items = getItems(version);
+            List<String> items;
+            try {
+                items = getItems(version);
+            } catch (IOException e) {
+                ErrorAlarm.show(e);
+                return;
+            }
             for (String item : items) {
                 Label label = new Label(item);
 
                 label.setOnMouseClicked(event -> {
                     if (label == selectedLabel) {
                         File file = getDefaultFileForName(item, version);
-                        AssetLoader.openAsset(this, file, label.getText(), version);
+                        try {
+                            AssetLoader.openAsset(this, file, label.getText(), version);
+                        } catch (IOException e) {
+                            ErrorAlarm.show(e);
+                        }
                         stage.close();
                     } else {
                         if (selectedLabel != null) selectedLabel.setStyle(selectedLabel.getId());
@@ -184,13 +200,13 @@ public abstract class AssetSelector<T extends Asset> extends Application {
     }
 
 
-    public abstract List<String> getItems(GameVersion version);
+    public abstract List<String> getItems(GameVersion version) throws IOException;
 
     public abstract boolean isOriginal(String item, GameVersion version);
 
     protected abstract T secretNewInstance(String name, GameVersion version);
 
-    protected abstract T secretOpenInstance(File file, String name, GameVersion version);
+    protected abstract T secretOpenInstance(File file, String name, GameVersion version) throws IOException;
 
 
     protected abstract FileChooser.ExtensionFilter getCustomExtensionFilter(GameVersion version);
@@ -221,7 +237,7 @@ public abstract class AssetSelector<T extends Asset> extends Application {
     }
 
 
-    public final T openInstance(File file, String name, GameVersion version) {
+    public final T openInstance(File file, String name, GameVersion version) throws IOException {
         T importedAsset = importedAssets.get(new Pair<>(name, version));
         if (importedAsset != null) return importedAsset;
 
@@ -235,7 +251,7 @@ public abstract class AssetSelector<T extends Asset> extends Application {
     }
 
 
-    public final T openInstance(String name, GameVersion version) {
+    public final T openInstance(String name, GameVersion version) throws IOException {
         return openInstance(getDefaultFileForName(name, version), name, version);
     }
 

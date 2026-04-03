@@ -229,6 +229,7 @@ public class BinAnimationHelper {
                             byteIndex++;
                         }
                         Image image = ResourceManager.getImage((editorObject instanceof _2_Level_BallInstance ballInstance ? ballInstance.getBall().getResources() : null), stringBuilder.toString(), GameVersion.VERSION_WOG2);
+                        // System.out.println(stringBuilder.toString() + ", " + image);
                         if (image != null) objectComponents.add(new ImageComponent(editorObject) {
                             public Image getImage() {
                                 return image;

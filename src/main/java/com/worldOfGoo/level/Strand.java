@@ -6,6 +6,7 @@ import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.assets.wog1.ball.WOG1Ball;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.engine.renderer.Renderer;
 import com.woogleFX.assets.AssetLoader;
 import com.woogleFX.engine.AssetManager;
@@ -16,6 +17,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+
+import java.io.IOException;
 
 public class Strand extends EditorObject {
 
@@ -72,7 +75,13 @@ public class Strand extends EditorObject {
 
     private boolean setStrand(String type) {
 
-        WOG1Ball ball = WOG1Ball.assetSelector.openInstance(type, getVersion());
+        WOG1Ball ball;
+        try {
+            ball = WOG1Ball.assetSelector.openInstance(type, getVersion());
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return false;
+        }
         if (ball == null) return false;
 
         for (EditorObject object : ball.getObjects()) if (object instanceof com.worldOfGoo.ball.strand strand2) {

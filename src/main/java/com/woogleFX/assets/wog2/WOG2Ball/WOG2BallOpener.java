@@ -2,8 +2,11 @@ package com.woogleFX.assets.wog2.WOG2Ball;
 
 import com.woogleFX.assets.GameVersion;
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
+import com.woogleFX.file.fileImport.EditorObjectXMLReader;
 import com.woogleFX.file.fileImport.ObjectGOOParser;
+import com.worldOfGoo.resrc.ResourceManifest;
 import com.worldOfGoo.resrc.Resources;
 import com.worldOfGoo2.ball.Ball;
 import org.xml.sax.SAXException;
@@ -11,6 +14,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +29,7 @@ public class WOG2BallOpener {
         try {
             contents = Files.readString(Path.of(FileManager.getGameDir(version) + "/res/balls/" + ballName + "/ball.wog2"));
         } catch (IOException e) {
+            ErrorAlarm.show(e);
             return null;
         }
 
@@ -41,32 +46,27 @@ public class WOG2BallOpener {
 
         }
 
-        ArrayList<EditorObject> resources = new ArrayList<>();
-
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser saxParser;
+        // load resources
+        Resources resources;
+        File ballFileR = new File(FileManager.getGameDir(GameVersion.VERSION_WOG2)
+                + "/res/balls/" + ballName + "/resources.xml");
         try {
-            saxParser = factory.newSAXParser();
-        } catch (ParserConfigurationException | SAXException e) {
+            ResourceManifest resourceManifest = EditorObjectXMLReader.readEditorObject(
+                    GameVersion.VERSION_WOG2, ballFileR, ResourceManifest.class);
+            assert resourceManifest != null;
+            resources = (Resources) resourceManifest.getChildren().get(0);
+        } catch (IOException e) {
+            // display error to user and abort
+            ErrorAlarm.show(e);
             return null;
         }
 
-        /*
+        // load addin
+        // TODO: implement this
+        /*ArrayList<EditorObject> addin = new ArrayList<>();
 
-        DefaultXmlOpener defaultHandler = new DefaultXmlOpener(objects, resources, GameVersion.VERSION_WOG2);
-        defaultHandler.setPrefix("com.worldOfGoo.resrc");
-
-        File ballFileR = new File(wog2dir + "/res/balls/" + ballName + "/resources.xml");
-        defaultHandler.setMode(Mode.RESOURCE);
-        try {
-            saxParser.parse(ballFileR, defaultHandler);
-        } catch (SAXException | IOException e) {
-            return null;
-        }
-
-        ArrayList<EditorObject> addin = new ArrayList<>();
-
-        File addinF = new File(wog2dir + "/res/balls/" + ballName + ".addin.xml");
+        File addinF = new File(FileManager.getGameDir(GameVersion.VERSION_WOG2)
+                + "/res/balls/" + ballName + ".addin.xml");
         if (addinF.exists()) {
             try {
                 saxParser.parse(addinF, defaultHandler);
@@ -75,11 +75,9 @@ public class WOG2BallOpener {
             }
         }
         else supremeAddToList(addin, BlankObjectGenerator.generateBlankAddinObject(ballName, version));
-
-
-         */
+        */
         // TODO2:
-        return new WOG2Ball(objects, (Resources) resources.get(0), null);
+        return new WOG2Ball(objects, resources, null);
 
     }
 

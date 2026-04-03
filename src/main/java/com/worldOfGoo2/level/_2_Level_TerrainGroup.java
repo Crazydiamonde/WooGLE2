@@ -1,5 +1,6 @@
 package com.worldOfGoo2.level;
 
+import com.woogleFX.assets.wog2.WOG2TerrainType.WOG2TerrainTypeOpener;
 import com.woogleFX.editorObjects.EditorObject;
 import com.woogleFX.assets.Asset;
 import com.woogleFX.assets.wog2.WOG2TerrainType.WOG2TerrainType;
@@ -11,8 +12,13 @@ import com.woogleFX.engine.AssetManager;
 import com.woogleFX.engine.fx.propertiesView.FXPropertiesView;
 import com.woogleFX.assets.GameVersion;
 import com.woogleFX.assets.wog2.WOG2Level.WOG2Level;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
+import com.woogleFX.file.resourceManagers.ResourceManager;
+import com.worldOfGoo2.terrain._2_Terrain_TerrainType;
 import com.worldOfGoo2.util.ItemHelper;
+import javafx.scene.image.Image;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -49,8 +55,14 @@ public class _2_Level_TerrainGroup extends EditorObject {
 
             @Override
             public void setValue(String value) {
-                EditorObject terrainType = WOG2TerrainType.assetSelector.openInstance(value, getVersion()).getTerrainType();
-                if (terrainType == null) return;
+                _2_Terrain_TerrainType terrainType;
+                try {
+                    terrainType = WOG2TerrainType.assetSelector.openInstance(value, getVersion()).getTerrainType();
+                    if (terrainType == null) return;
+                } catch (IOException e) {
+                    ErrorAlarm.show(e);
+                    return;
+                }
                 temp.setValue(value);
                 setAttribute2("typeUuid", terrainType.getAttribute("uuid").stringValue());
                 if (Arrays.stream(getObjectComponents()).anyMatch(e -> AssetManager.getAsset().isSelected(e))) {
@@ -88,6 +100,23 @@ public class _2_Level_TerrainGroup extends EditorObject {
 
         getAttribute("type").addChangeListener((observable, oldValue, newValue) -> update());
 
+    }
+
+    private boolean ignoreUpdates = true;
+    public void stopIgnoringUpdates() {
+        ignoreUpdates = false;
+    }
+
+
+    private Image image = null;
+
+    @Override
+    public void update() {
+
+        if (ignoreUpdates) return;
+
+        balls.clear();
+
         int thisIndex = ((WOG2Level)AssetManager.getAsset()).getLevel().getChildren("terrainGroups").indexOf(this);
         for (EditorObject ball : ((WOG2Level)AssetManager.getAsset()).getLevel().getChildren("balls")) {
             if (ball.getAttribute("terrainGroup").intValue() == thisIndex) {
@@ -95,19 +124,23 @@ public class _2_Level_TerrainGroup extends EditorObject {
                 ((_2_Level_BallInstance) ball).setCurrentGroup(this);
             }
         }
-        update();
-
-    }
-
-    @Override
-    public void update() {
 
         clearObjectComponents();
 
-        if (WOG2TerrainType.assetSelector.openInstance(getAttribute("typeUuid").stringValue(), getVersion()) != null)
-            addObjectComponent(new TerrainMeshComponent(this, getStrands(), balls.toArray(_2_Level_BallInstance[]::new)) {
-                // TODO2: put stuff inside
-            });
+        try {
+            if (WOG2TerrainType.assetSelector.openInstance(getAttribute("typeUuid").stringValue(), getVersion()) != null)
+                addObjectComponent(new TerrainMeshComponent(this, getStrands(), balls.toArray(_2_Level_BallInstance[]::new)) {
+                    // TODO2: put stuff inside
+                    @Override
+                    public Image getImage() {
+                        return image;
+                    }
+                });
+        } catch (IOException ignored) {
+
+        }
+
+        image = ResourceManager.getImage(null, WOG2TerrainTypeOpener.openTerrainType(getAttribute("typeUuid").stringValue(), GameVersion.VERSION_WOG2).getTerrainType().getChild("baseSettings").getChild("image").getAttribute("imageId").stringValue(), GameVersion.VERSION_WOG2);
 
     }
 

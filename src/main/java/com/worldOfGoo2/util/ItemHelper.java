@@ -1,11 +1,13 @@
 package com.worldOfGoo2.util;
 
 import com.woogleFX.assets.wog2.WOG2Item.WOG2Item;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.assets.GameVersion;
 import com.worldOfGoo2.items._2_Item;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,7 +77,17 @@ public class ItemHelper {
 
         if (itemNameMap.containsKey(itemUUID)) return itemNameMap.get(itemUUID);
 
-        _2_Item item = (_2_Item)WOG2Item.assetSelector.openInstance(itemUUID, GameVersion.VERSION_WOG2).getItem();
+        _2_Item item;
+        try {
+            WOG2Item _2item = WOG2Item.assetSelector.openInstance(itemUUID, GameVersion.VERSION_WOG2);
+            if (_2item == null) {
+                return "(None)";
+            }
+            item = _2item.getItem();
+        } catch (IOException e) {
+            ErrorAlarm.show(e); // ugh
+            item = null;
+        }
         if (item == null) return "(None)";
         String actualName = item.getAttribute("name").stringValue();
         itemNameMap.put(itemUUID, actualName);

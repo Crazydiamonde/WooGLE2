@@ -28,7 +28,12 @@ public class AssetUpdater {
 
 
     public static void saveAsset(Asset asset) {
-        if (!saveSpecificAsset(asset, asset.getFile())) return;
+        try {
+            if (!saveSpecificAsset(asset, asset.getFile())) return;
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return;
+        }
         asset.setLastSavedUndoPosition(asset.undoActions.size());
         if (asset.getEditingStatus() != AssetTab.NO_UNSAVED_CHANGES)
             asset.setEditingStatus(AssetTab.NO_UNSAVED_CHANGES, true);
@@ -38,14 +43,19 @@ public class AssetUpdater {
     public static void saveAssetAs(Asset asset) {
         // TODO: select file to save to
         File file = asset.getFile();
-        if (!saveSpecificAsset(asset, file)) return;
+        try {
+            if (!saveSpecificAsset(asset, file)) return;
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return;
+        }
         asset.setLastSavedUndoPosition(asset.undoActions.size());
         if (asset.getEditingStatus() != AssetTab.NO_UNSAVED_CHANGES)
             asset.setEditingStatus(AssetTab.NO_UNSAVED_CHANGES, true);
     }
 
 
-    public static boolean saveSpecificAsset(Asset asset, File file) {
+    public static boolean saveSpecificAsset(Asset asset, File file) throws IOException {
 
         // Make sure it's not unmodifiable
         if (asset.getEditingStatus() == AssetTab.UNSAVED_CHANGES_UNMODIFIABLE) return false;
@@ -78,8 +88,12 @@ public class AssetUpdater {
         for (Tab tab : FXAssetSelectPane.getAssetSelectPane().getTabs().toArray(new Tab[0])) {
             AssetTab assetTab = (AssetTab) tab;
             if (assetTab.getAsset().getEditingStatus() == AssetTab.UNSAVED_CHANGES) {
-                if (saveSpecificAsset(assetTab.getAsset(), assetTab.getAsset().getFile())) {
-                    assetTab.getAsset().setEditingStatus(AssetTab.NO_UNSAVED_CHANGES, false);
+                try {
+                    if (saveSpecificAsset(assetTab.getAsset(), assetTab.getAsset().getFile())) {
+                        assetTab.getAsset().setEditingStatus(AssetTab.NO_UNSAVED_CHANGES, false);
+                    }
+                } catch (IOException e) {
+                    ErrorAlarm.show(e);
                 }
             }
         }
@@ -92,7 +106,7 @@ public class AssetUpdater {
         }
     }
 
-    public static void renameLevel(Asset level, String text) {
+    public static void renameLevel(Asset level, String text) throws IOException {
 
         logger.info("Renaming " + level.getName() + " to " + text);
 
@@ -150,7 +164,7 @@ public class AssetUpdater {
     }
 
 
-    public static void saveAddinData(Asset asset) {
+    public static void saveAddinData(Asset asset) throws IOException {
 
         File addinDataFile = new File(FileManager.getEditorLocation() + "/addin.xml");
 
@@ -164,7 +178,7 @@ public class AssetUpdater {
             }
             addins = ObjectCreator.create(com.worldOfGoo.addin.addins.class, null, null);
         } else {
-            addins = EditorObjectXMLReader.readEditorObject("com.worldOfGoo.addin", asset.getVersion(), addinDataFile, addins.class);
+            addins = EditorObjectXMLReader.readEditorObject(asset.getVersion(), addinDataFile, addins.class);
         }
         boolean wasThereAlready = false;
         for (EditorObject addin : addins.getChildren()) {

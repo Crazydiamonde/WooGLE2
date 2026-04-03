@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class WOG1Particle extends Asset implements HasBackground {
@@ -61,7 +62,7 @@ public class WOG1Particle extends Asset implements HasBackground {
     public static final AssetSelector<WOG1Particle> assetSelector = new AssetSelector<>("Particle") {
 
         @Override
-        public List<String> getItems(GameVersion version) {
+        public List<String> getItems(GameVersion version) throws IOException {
 
             List<String> items = new ArrayList<>();
 
@@ -70,7 +71,7 @@ public class WOG1Particle extends Asset implements HasBackground {
             File effectsF = new File(FileManager.getGameDir(version) +
                     "/properties/fx" + suffix);
             effects effectsObject = EditorObjectXMLReader.readEditorObject(
-                    "com.worldOfGoo.particle", version, effectsF, effects.class);
+                    version, effectsF, effects.class);
             assert effectsObject != null;
 
             for (EditorObject child : effectsObject.getChildren()) {
@@ -95,7 +96,7 @@ public class WOG1Particle extends Asset implements HasBackground {
         }
 
         @Override
-        protected WOG1Particle secretOpenInstance(File file, String name, GameVersion version) {
+        protected WOG1Particle secretOpenInstance(File file, String name, GameVersion version) throws IOException {
             return WOG1ParticleOpener.openParticle(file, name, version);
         }
 

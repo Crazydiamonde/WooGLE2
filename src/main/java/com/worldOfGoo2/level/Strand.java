@@ -1,5 +1,6 @@
 package com.worldOfGoo2.level;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.woogleFX.editorObjects.EditorObject;
@@ -11,6 +12,7 @@ import com.woogleFX.editorObjects.attributes.MetaEditorAttribute;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.engine.AssetManager;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.engine.renderer.Renderer;
 import com.woogleFX.engine.undoHandling.userActions.ObjectDestructionAction;
 import com.woogleFX.file.resourceManagers.ResourceManager;
@@ -113,16 +115,26 @@ public class Strand extends EditorObject {
             if (!goo1.containsStrand(this)) {
                 goo1.addStrand(this);
                 //goo1.onLoaded();
+                // goo1.updateTerrainGroup();
             }
         }
         if (goo2 != null) {
             if (!goo2.containsStrand(this)) {
                 goo2.addStrand(this);
                 //goo2.onLoaded();
+                // goo2.updateTerrainGroup();
             }
         }
 
-        WOG2Ball ball = WOG2Ball.assetSelector.openInstance(getAttribute("type").stringValue(), GameVersion.VERSION_WOG2);
+
+
+        WOG2Ball ball;
+        try {
+            ball = WOG2Ball.assetSelector.openInstance(getAttribute("type").stringValue(), GameVersion.VERSION_WOG2);
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            ball = null;
+        }
         if (ball != null) {
             String imageString = ball.getBall().getChildren("strandImageId").get(0).getAttribute("imageId").stringValue();
             strandImage = ResourceManager.getImage(ball.getResources(), imageString, GameVersion.VERSION_WOG2);
@@ -160,7 +172,13 @@ public class Strand extends EditorObject {
             }
         }
 
-        WOG2Ball ball = WOG2Ball.assetSelector.openInstance(getAttribute("type").stringValue(), GameVersion.VERSION_WOG2);
+        WOG2Ball ball;
+        try {
+            ball = WOG2Ball.assetSelector.openInstance(getAttribute("type").stringValue(), GameVersion.VERSION_WOG2);
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            ball = null;
+        }
         if (ball != null) {
             String imageString = ball.getBall().getChildren("strandImageId").get(0).getAttribute("imageId").stringValue();
             strandImage = ResourceManager.getImage(ball.getResources(), imageString, GameVersion.VERSION_WOG2);
@@ -217,7 +235,13 @@ public class Strand extends EditorObject {
 
             }
             public double getScaleX() {
-                WOG2Ball ball = WOG2Ball.assetSelector.openInstance(getAttribute("type").stringValue(), GameVersion.VERSION_WOG2);
+                WOG2Ball ball;
+                try {
+                  ball = WOG2Ball.assetSelector.openInstance(getAttribute("type").stringValue(), GameVersion.VERSION_WOG2);
+                } catch (IOException e) {
+                    ErrorAlarm.show(e);
+                    ball = null;
+                }
                 if (strandImage.getWidth() == 0 || ball == null || goo1 == null || goo2 == null || goo1.getBall() == null || goo2.getBall() == null) return 0;
 
                 double goo1Width = goo1.getBall().getBall().getAttribute("width").doubleValue();

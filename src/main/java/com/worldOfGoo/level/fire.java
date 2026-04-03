@@ -13,6 +13,7 @@ import com.worldOfGoo.particle.particle;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class fire extends EditorObject implements ParticleSpawner {
@@ -77,7 +78,12 @@ public class fire extends EditorObject implements ParticleSpawner {
         });
 
         String effectName = getAttribute("particles").stringValue();
-        WOG1Particle wog1Particle = WOG1Particle.assetSelector.openInstance(effectName, getVersion());
+        WOG1Particle wog1Particle;
+        try {
+            wog1Particle = WOG1Particle.assetSelector.openInstance(effectName, getVersion());
+        } catch (IOException e) {
+            wog1Particle = null;
+        }
         if (wog1Particle != null) particleEffect = wog1Particle.getParticle();
 
     }

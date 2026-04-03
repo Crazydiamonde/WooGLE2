@@ -10,6 +10,7 @@ import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
 import com.woogleFX.editorObjects.objectCreators.ObjectCreator;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.engine.fx.PaletteManager;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.worldOfGoo.ball.part;
 import com.worldOfGoo.level.BallInstance;
@@ -22,6 +23,7 @@ import javafx.scene.image.ImageView;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -51,7 +53,13 @@ public class FXBallPaletteManager {
             Button button;
             if (version == GameVersion.VERSION_WOG1_OLD || version == GameVersion.VERSION_WOG1_NEW) {
 
-                WOG1Ball ball = WOG1Ball.assetSelector.openInstance(paletteBall, version);
+                WOG1Ball ball;
+                try {
+                    ball = WOG1Ball.assetSelector.openInstance(paletteBall, version);
+                } catch (IOException e) {
+                    ErrorAlarm.show(e);
+                    continue;
+                }
                 if (ball == null) continue;
 
                 button = createTemplateForBall(size, ball);
@@ -59,7 +67,13 @@ public class FXBallPaletteManager {
 
             } else {
 
-                WOG2Ball ball2 = WOG2Ball.assetSelector.openInstance(paletteBall, version);
+                WOG2Ball ball2;
+                try {
+                    ball2 = WOG2Ball.assetSelector.openInstance(paletteBall, version);
+                } catch (IOException e) {
+                    ErrorAlarm.show(e);
+                    continue;
+                }
                 if (ball2 == null) continue;
 
                 button = createTemplateFor2Ball(size, ball2);

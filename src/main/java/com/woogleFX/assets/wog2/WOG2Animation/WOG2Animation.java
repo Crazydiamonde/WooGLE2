@@ -99,7 +99,7 @@ public class WOG2Animation extends Asset {
 
         @Override
         protected File getDefaultFileForName(String name, GameVersion version) {
-            return null;
+            return new File(FileManager.getGameDir(GameVersion.VERSION_WOG2) + "/res/anim/" + name);
         }
 
         @Override

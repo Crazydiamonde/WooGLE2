@@ -1,6 +1,7 @@
 package com.woogleFX.assets.wog2.WOG2TerrainType;
 
 import com.woogleFX.editorObjects.EditorObject;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.file.FileManager;
 import com.woogleFX.file.fileImport.ObjectGOOParser;
 import com.woogleFX.assets.GameVersion;
@@ -22,6 +23,7 @@ public class WOG2TerrainTypeOpener {
         try {
             terrainType2 = ObjectGOOParser.read(_2_Terrain_Collection.class, Files.readString(itemFile.toPath()), "terrain");
         } catch (IOException e) {
+            ErrorAlarm.show(e);
             return null;
         }
         Stack<EditorObject> stack = new Stack<>();

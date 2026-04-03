@@ -7,6 +7,7 @@ import com.woogleFX.editorObjects.attributes.AttributeAdapter;
 import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.engine.AssetManager;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.engine.renderer.Depth;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.gameData.animation.SimpleBinAnimation;
@@ -16,6 +17,8 @@ import com.worldOfGoo2.util.BinAnimationHelper;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+
+import java.io.IOException;
 
 public class _2_Level extends EditorObject {
 
@@ -179,7 +182,13 @@ public class _2_Level extends EditorObject {
 
         if (getAttribute("backgroundId").stringValue().isEmpty()) return;
 
-        Environment environment = (Environment) WOG2Environment.assetSelector.openInstance(getAttribute("backgroundId").stringValue(), getVersion()).getEnvironment();
+        Environment environment;
+        try {
+            environment = WOG2Environment.assetSelector.openInstance(getAttribute("backgroundId").stringValue(), getVersion()).getEnvironment();
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            return;
+        }
         if (environment == null) return;
 
         if (!environment.getAttribute("clearColor").stringValue().isEmpty())

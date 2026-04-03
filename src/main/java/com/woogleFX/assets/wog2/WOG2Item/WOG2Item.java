@@ -80,7 +80,7 @@ public class WOG2Item extends Asset {
                         // wog2Item.getObjects().add(item2.getChildren().get(0));
                         importedItems.put(new Pair<>(item2.getChildren().get(0).getAttribute("name").stringValue(), version), wog2Item);
                     }
-                System.out.println(ItemHelper.itemNameMap);
+                // System.out.println(ItemHelper.itemNameMap);
                 return importedItems.get(new Pair<>(name, version));
             } catch (IOException e) {
                 ErrorAlarm.show(e);

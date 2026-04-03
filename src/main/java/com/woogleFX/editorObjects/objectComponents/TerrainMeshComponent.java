@@ -1,5 +1,6 @@
 package com.woogleFX.editorObjects.objectComponents;
 
+import java.io.IOException;
 import java.util.*;
 
 import com.woogleFX.editorObjects.EditorObject;
@@ -7,6 +8,7 @@ import com.woogleFX.assets.wog2.WOG2TerrainType.WOG2TerrainType;
 import com.woogleFX.editorObjects.attributes.dataTypes.Position;
 import com.woogleFX.engine.AssetManager;
 import com.woogleFX.assets.wog2.WOG2Level.WOG2Level;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.worldOfGoo2.level._2_Level_BallInstance;
 import com.worldOfGoo2.level.Strand;
 import com.worldOfGoo2.level._2_Level_TerrainGroup;
@@ -33,7 +35,14 @@ public abstract class TerrainMeshComponent extends MeshComponent {
         image = TerrainHelper.buildTerrainImage(terrainGroup);
 
         String terrainType = terrainGroup.getAttribute("typeUuid").stringValue();
-        EditorObject terrain = WOG2TerrainType.assetSelector.openInstance(terrainType, terrainGroup.getVersion()).getTerrainType();
+        EditorObject terrain;
+        try {
+            terrain = WOG2TerrainType.assetSelector.openInstance(terrainType, terrainGroup.getVersion()).getTerrainType();
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            baseSettings = null;
+            return;
+        }
         baseSettings = (BaseSettings) terrain.getChildren("baseSettings").get(0);
     }
 
@@ -91,7 +100,7 @@ public abstract class TerrainMeshComponent extends MeshComponent {
             
             mergedPolygons.add(polygon);
         }
-        
+
         // Create polygons by walking gooballs' contours
         return mergedPolygons.stream().map(this::createPolygon).toArray(Face[]::new);
     }

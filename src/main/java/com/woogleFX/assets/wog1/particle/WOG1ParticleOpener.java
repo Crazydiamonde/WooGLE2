@@ -11,10 +11,11 @@ import com.worldOfGoo.particle.effects;
 import com.worldOfGoo.resrc.Resources;
 
 import java.io.File;
+import java.io.IOException;
 
 public class WOG1ParticleOpener {
 
-    public static WOG1Particle openParticle(File file, String name, GameVersion version) {
+    public static WOG1Particle openParticle(File file, String name, GameVersion version) throws IOException {
         // TODO: make use of file
 
         String suffix = (version == GameVersion.VERSION_WOG1_OLD) ? ".xml.bin" : ".xml";
@@ -22,7 +23,7 @@ public class WOG1ParticleOpener {
         File effectsF = new File(FileManager.getGameDir(version) +
                 "/properties/fx" + suffix);
         effects effectsObject = EditorObjectXMLReader.readEditorObject(
-                "com.worldOfGoo.particle", version, effectsF, effects.class);
+                version, effectsF, effects.class);
         if (effectsObject == null) return null;
 
         for (EditorObject child : effectsObject.getChildren()) {

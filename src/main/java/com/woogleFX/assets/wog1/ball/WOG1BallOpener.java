@@ -9,11 +9,12 @@ import com.worldOfGoo.resrc.ResourceManifest;
 import com.worldOfGoo.resrc.Resources;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 
 public class WOG1BallOpener {
 
-    public static WOG1Ball openBall(File file, GameVersion version) {
+    public static WOG1Ball openBall(File file, GameVersion version) throws IOException {
 
         // Make sure a ball from an invalid version isn't being opened (possible because of properties.xml)
         if (FileManager.getGameDir(version).isEmpty()) return null;
@@ -26,9 +27,9 @@ public class WOG1BallOpener {
         if (!Files.exists(ballFile.toPath())) return null;
 
         ball ball = EditorObjectXMLReader.readEditorObject(
-                "com.worldOfGoo.ball", version, ballFile, ball.class);
+                version, ballFile, ball.class);
         ResourceManifest resourceManifest = EditorObjectXMLReader.readEditorObject(
-                "com.worldOfGoo.resrc", version, ballFileR, ResourceManifest.class);
+                version, ballFileR, ResourceManifest.class);
         Resources resources = (Resources) resourceManifest.getChildren().get(0);
 
         return new WOG1Ball(version, ball, resources);

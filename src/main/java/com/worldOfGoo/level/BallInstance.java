@@ -8,6 +8,7 @@ import com.woogleFX.editorObjects.objectComponents.ImageComponent;
 import com.woogleFX.editorObjects.ObjectUtil;
 import com.woogleFX.editorObjects.objectComponents.RectangleComponent;
 import com.woogleFX.assets.wog1.ball.WOG1Ball;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.engine.undoHandling.userActions.ObjectDestructionAction;
 import com.woogleFX.file.resourceManagers.ResourceManager;
 import com.woogleFX.assets.AssetLoader;
@@ -20,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -89,7 +91,12 @@ public class BallInstance extends EditorObject {
 
         WOG1Ball previousBall = ball;
 
-        ball = WOG1Ball.assetSelector.openInstance(type, getVersion());
+        try {
+            ball = WOG1Ball.assetSelector.openInstance(type, getVersion());
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+            ball = null;
+        }
         if (ball == null) {
             if (!AssetLoader.failedResources.contains("Ball: " + getAttribute("type").stringValue() + " (version " + getVersion() + ")")) {
                 AssetLoader.failedResources.add("Ball: " + getAttribute("type").stringValue() + " (version " + getVersion() + ")");

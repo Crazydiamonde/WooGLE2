@@ -8,6 +8,7 @@ import com.woogleFX.editorObjects.attributes.EditorAttribute;
 import com.woogleFX.editorObjects.attributes.InputField;
 import com.woogleFX.editorObjects.objectCreators.ObjectAdder;
 import com.woogleFX.engine.AssetManager;
+import com.woogleFX.engine.gui.alarms.ErrorAlarm;
 import com.woogleFX.engine.undoHandling.userActions.ObjectCreationAction;
 import com.woogleFX.engine.undoHandling.userActions.ObjectDestructionAction;
 import com.woogleFX.file.resourceManagers.ResourceManager;
@@ -19,6 +20,7 @@ import com.woogleFX.assets.AssetLoader;
 import com.worldOfGoo2.util.BallInstanceHelper;
 import com.worldOfGoo2.util.BinAnimationHelper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,11 @@ public class _2_Level_BallInstance extends _2_Positionable {
     }
     private void updateBall() {
         String type = getAttribute("type").stringValue();
-        ball = WOG2Ball.assetSelector.openInstance(type, getVersion());
+        try {
+            ball = WOG2Ball.assetSelector.openInstance(type, getVersion());
+        } catch (IOException e) {
+            ErrorAlarm.show(e);
+        }
         if (ball == null) {
             String invalidBallDescription = "Ball: " + type + " (version " + getVersion() + ")";
             if (!AssetLoader.failedResources.contains(invalidBallDescription))

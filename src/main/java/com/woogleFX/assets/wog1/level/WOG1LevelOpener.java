@@ -20,24 +20,25 @@ import com.worldOfGoo.scene.scene;
 import com.worldOfGoo.text.strings;
 
 import java.io.File;
+import java.io.IOException;
 
 public class WOG1LevelOpener {
 
-    public static WOG1Level openLevel(File file, GameVersion version) {
+    public static WOG1Level openLevel(File file, GameVersion version) throws IOException {
 
         String suffix = (version == GameVersion.VERSION_WOG1_OLD) ? ".bin" : "";
 
         File sceneF = new File( file.getPath() + "/" + file.getName() + ".scene" + suffix);
         scene sceneObject = EditorObjectXMLReader.readEditorObject(
-                "com.worldOfGoo.scene", version, sceneF, scene.class);
+                version, sceneF, scene.class);
 
         File levelF = new File( file.getPath() + "/" + file.getName() + ".level" + suffix);
         level levelObject = EditorObjectXMLReader.readEditorObject(
-                "com.worldOfGoo.level", version, levelF, level.class);
+                version, levelF, level.class);
 
         File resrcF = new File(file.getPath() + "/" + file.getName()  + ".resrc" + suffix);
         ResourceManifest resourceManifest = EditorObjectXMLReader.readEditorObject(
-                "com.worldOfGoo.resrc", version, resrcF, ResourceManifest.class);
+                version, resrcF, ResourceManifest.class);
         if (resourceManifest == null) {
             // Create a new ResourceManifest and Resources
             resourceManifest = ObjectCreator.create(ResourceManifest.class, null, version);
